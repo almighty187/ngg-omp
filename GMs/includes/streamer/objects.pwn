@@ -1,4 +1,4 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 hook OnGameModeInit() {
 	
@@ -113,7 +113,7 @@ hook OnGameModeInit() {
 							  gFerrisCageOffsets[x][0],
 							  gFerrisCageOffsets[x][1],
 	  						  gFerrisCageOffsets[x][2],
-							  0.0, 0.0, -270.0, 0 );
+							  0.0, 0.0, -270.0, false );
 	}
 	
 	//FDSA Static object ground

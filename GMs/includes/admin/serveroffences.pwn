@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 CMD:prison(playerid, params[])
 {
@@ -94,9 +94,9 @@ CMD:reverse(playerid, params[])
 			PlayerInfo[giveplayerid][pVW] = 0;
 			strcpy(PlayerInfo[giveplayerid][pPrisonReason], "None", 128);
 			SetPlayerToTeamColor(giveplayerid);
-			for(new x = 0; x < 12; x++) GivePlayerValidWeapon(giveplayerid, PlayerInfo[giveplayerid][pJailedWeapons][x]);
+			for(new WEAPON_SLOT:x; x < WEAPON_SLOT_DETONATOR; x++) GivePlayerValidWeapon(giveplayerid, PlayerInfo[giveplayerid][pJailedWeapons][x]);
 			for(new y = 0; y < 5; y++) PlayerInfo[giveplayerid][pJailedInfo][y] = 0;
-			for(new z = 0; z < 12; z++) PlayerInfo[giveplayerid][pJailedWeapons][z] = 0;
+			for(new WEAPON_SLOT:z; z < WEAPON_SLOT_DETONATOR; z++) PlayerInfo[giveplayerid][pJailedWeapons][z] = WEAPON_FIST;
 			SendClientMessageEx(giveplayerid, COLOR_LIGHTBLUE, "Your punishment has been reversed by the administrator who jailed you.");
 		}
 		else SendClientMessageEx(playerid, COLOR_GREY, "USAGE: /reverse [playerid] [reason]");
@@ -121,7 +121,7 @@ CMD:dprison(playerid, params[])
 	return 1;
 }
 
-PrisonPlayer(playerid, giveplayerid, reason[], time=0, silent=0, custom=0)
+PrisonPlayer(playerid, giveplayerid, const reason[], time=0, silent=0, custom=0)
 {
 	new string[128], shortreason[5], jailtime, twarn, warn, fine, nonrp;
 	new rand = random(sizeof(OOCPrisonSpawns));
@@ -133,7 +133,7 @@ PrisonPlayer(playerid, giveplayerid, reason[], time=0, silent=0, custom=0)
 	PlayerInfo[giveplayerid][pJailedInfo][3] = 0;
 	PlayerInfo[giveplayerid][pJailedInfo][4] = 0;
 
-	for(new i = 0; i < 12; i++) PlayerInfo[giveplayerid][pJailedWeapons][i] = 0;
+	for(new WEAPON_SLOT:i; i < WEAPON_SLOT_DETONATOR; i++) PlayerInfo[giveplayerid][pJailedWeapons][i] = WEAPON_FIST;
 
 	if(time > 0) jailtime = time;
 
@@ -306,7 +306,7 @@ PrisonPlayer(playerid, giveplayerid, reason[], time=0, silent=0, custom=0)
 		PlayerInfo[giveplayerid][pJailedInfo][4] = PlayerInfo[giveplayerid][pWRestricted];
 		PlayerInfo[giveplayerid][pJailedInfo][3] = warn;
 	}
-	for(new x = 0; x < 12; x++) PlayerInfo[giveplayerid][pJailedWeapons][x] = PlayerInfo[giveplayerid][pGuns][x];
+	for(new WEAPON_SLOT:x; x < WEAPON_SLOT_DETONATOR; x++) PlayerInfo[giveplayerid][pJailedWeapons][x] = PlayerInfo[giveplayerid][pGuns][x];
 	ResetPlayerWeaponsEx(giveplayerid);
 
 	if(fine > 0) {
@@ -408,9 +408,9 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			PlayerInfo[releasedID][pVW] = 0;
 			strcpy(PlayerInfo[releasedID][pPrisonReason], "None", 128);
 			SetPlayerToTeamColor(releasedID);
-			for(new x = 0; x < 12; x++) GivePlayerValidWeapon(releasedID, PlayerInfo[releasedID][pJailedWeapons][x]);
+			for(new WEAPON_SLOT:x; x < WEAPON_SLOT_DETONATOR; x++) GivePlayerValidWeapon(releasedID, PlayerInfo[releasedID][pJailedWeapons][x]);
 			for(new y = 0; y < 5; y++) PlayerInfo[releasedID][pJailedInfo][y] = 0;
-			for(new z = 0; z < 12; z++) PlayerInfo[releasedID][pJailedWeapons][z] = 0;
+			for(new WEAPON_SLOT:z; z < WEAPON_SLOT_DETONATOR; z++) PlayerInfo[releasedID][pJailedWeapons][z] = WEAPON_FIST;
 			SendClientMessageEx(releasedID, COLOR_LIGHTBLUE, "Your punishment has been reversed by the administrator who jailed you.");
 		}
 		else {

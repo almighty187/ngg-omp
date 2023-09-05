@@ -2,7 +2,7 @@
 	Shipment System by Dom
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define MAX_SHIPMENT_POINTS		4
 new SHIPMENT_MATS_NEEDED = 60;
@@ -46,7 +46,7 @@ CMD:gshipmentstocks(playerid, params[]) {
 LoadShipment(playerid) {
 
 	SetPVarInt(playerid, "LoadShipmentTime", 5);
-	TogglePlayerControllable(playerid, 0);
+	TogglePlayerControllable(playerid, false);
 	SetPVarInt(playerid, "IsFrozen", 1);
 	SetTimerEx("OnLoadShipment", 1000, false, "i", playerid);
 	return 1;
@@ -157,7 +157,7 @@ public OnLoadShipment(playerid) {
 	SendClientMessageEx(playerid, COLOR_YELLOW, "Follow your way to the marker to deliver your shipment.");
 	DeletePVar(playerid, "LoadShipmentTime");
 	DeletePVar(playerid, "IsFrozen");
-	TogglePlayerControllable(playerid, 1);
+	TogglePlayerControllable(playerid, true);
 
 	return 1;
 }

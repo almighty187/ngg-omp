@@ -52,7 +52,7 @@ public PayNSpray(playerid, id, vehicleid)
 		else
 		{
 			SendClientMessage(playerid, COLOR_WHITE, "Your agency does not have enough money in their funds to pay for this!");
-			TogglePlayerControllable(playerid, 1);
+			TogglePlayerControllable(playerid, true);
 			return 1;
 		}
 	}
@@ -65,7 +65,7 @@ public PayNSpray(playerid, id, vehicleid)
 		else
 		{
 			SendClientMessage(playerid, COLOR_WHITE, "You don't have enough money to pay for this!");
-			TogglePlayerControllable(playerid, 1);
+			TogglePlayerControllable(playerid, true);
 			return 1;
 		}
 	}
@@ -78,7 +78,7 @@ public PayNSpray(playerid, id, vehicleid)
 	}
 	SendClientMessage(playerid, COLOR_WHITE, "Your vehicle has been repaired!");
 	PlayerPlaySound(playerid,1133,0.0,0.0,0.0);
-	TogglePlayerControllable(playerid, 1);
+	TogglePlayerControllable(playerid, true);
 	return 1;
 }
 
@@ -287,7 +287,7 @@ CMD:repaircar(playerid, params[])
 						else return SendClientMessage(playerid, COLOR_WHITE, "You don't have enough money to pay for this!");
 					}
 					SetTimerEx("PayNSpray", 5000, false, "iii", playerid, i, GetPlayerVehicleID(playerid));
-					TogglePlayerControllable(playerid, 0);
+					TogglePlayerControllable(playerid, false);
 					GameTextForPlayer(playerid, "Repairing...", 5000, 5);
 					return 1;
 				}
@@ -299,7 +299,7 @@ CMD:repaircar(playerid, params[])
 	return 1;
 }
 
-stock SavePayNSpray(id)
+SavePayNSpray(id)
 {
 	new string[1024];
 	mysql_format(MainPipeline, string, sizeof(string), "UPDATE `paynsprays` SET \
@@ -325,50 +325,14 @@ stock SavePayNSpray(id)
 	mysql_tquery(MainPipeline, string, "OnQueryFinish", "i", SENDDATA_THREAD);
 }
 
-stock SavePayNSprays()
-{
-	for(new i = 0; i < MAX_PAYNSPRAYS; i++)
-	{
-		SavePayNSpray(i);
-	}
-	return 1;
-}
-
-stock RehashPayNSpray(id)
-{
-	DestroyDynamicPickup(PayNSprays[id][pnsPickupID]);
-	DestroyDynamic3DTextLabel(PayNSprays[id][pnsTextID]);
-	DestroyDynamicMapIcon(PayNSprays[id][pnsMapIconID]);
-	PayNSprays[id][pnsSQLId] = -1;
-	PayNSprays[id][pnsStatus] = 0;
-	PayNSprays[id][pnsPosX] = 0.0;
-	PayNSprays[id][pnsPosY] = 0.0;
-	PayNSprays[id][pnsPosZ] = 0.0;
-	PayNSprays[id][pnsVW] = 0;
-	PayNSprays[id][pnsInt] = 0;
-	PayNSprays[id][pnsGroupCost] = 0;
-	PayNSprays[id][pnsRegCost] = 0;
-	LoadPayNSpray(id);
-}
-
-stock RehashPayNSprays()
-{
-	printf("[RehashPayNSprays] Deleting Pay N' Sprays from server...");
-	for(new i = 0; i < MAX_PAYNSPRAYS; i++)
-	{
-		RehashPayNSpray(i);
-	}
-	LoadPayNSprays();
-}
-
-stock LoadPayNSpray(id)
+LoadPayNSpray(id)
 {
 	new string[128];
 	format(string, sizeof(string), "SELECT * FROM `paynsprays` WHERE `id`=%d", id);
 	mysql_tquery(MainPipeline, string, "OnLoadPayNSpray", "i", id);
 }
 
-stock LoadPayNSprays()
+LoadPayNSprays()
 {
 	printf("[LoadPayNSprays] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `paynsprays`", "OnLoadPayNSprays", "");

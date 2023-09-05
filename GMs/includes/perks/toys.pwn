@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-stock CompleteToyTrade(playerid)
+CompleteToyTrade(playerid)
 {
 	new string[156],
 		sellerid = GetPVarInt(playerid, "ttSeller"),
@@ -193,7 +193,7 @@ stock CompleteToyTrade(playerid)
 	return 1;
 }
 
-stock ShowEditMenu(playerid)
+ShowEditMenu(playerid)
 {
 	new
 		iIndex = GetPVarInt(playerid, "ToySlot");
@@ -236,7 +236,7 @@ stock ShowEditMenu(playerid)
 	return 1;
 }
 
-stock FindFreeAttachedObjectSlot(playerid)
+FindFreeAttachedObjectSlot(playerid)
 {
 	new index;
  	while (index < MAX_PLAYER_ATTACHED_OBJECTS && IsPlayerAttachedObjectSlotUsed(playerid, index))
@@ -341,7 +341,7 @@ AttachToy(playerid, toyid, msg = 1)
 	return 1;
 }
 
-stock player_remove_vip_toys(iTargetID)
+player_remove_vip_toys(iTargetID)
 {
 	if(PlayerInfo[iTargetID][pDonateRank] >= 3) return 1;
 	else for(new iToyIter; iToyIter < MAX_PLAYER_ATTACHED_OBJECTS; ++iToyIter) {

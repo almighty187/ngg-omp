@@ -1,4 +1,7 @@
-#include <a_samp>
+#define FILTERSCRIPT
+#define MAX_PLAYERS 500
+
+#include <open.mp>
 #include <streamer>
 
 public OnFilterScriptExit()

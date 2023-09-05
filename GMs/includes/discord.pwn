@@ -41,7 +41,7 @@ hook OnGameModeInit()
 	return 1;
 }
 
-stock SendDiscordMessage(channel, message[])
+SendDiscordMessage(channel, message[])
 {
 	if(betaserver == 0) {
 		switch(channel)

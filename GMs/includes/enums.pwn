@@ -80,7 +80,7 @@ new const Drugs[][] = {
 enum eGroupData {
 	g_iGroupType,
 	g_szGroupName[GROUP_MAX_NAME_LEN],
-	g_iLockerGuns[MAX_GROUP_WEAPONS],
+	WEAPON:g_iLockerGuns[MAX_GROUP_WEAPONS],
 	g_iLockerCost[MAX_GROUP_WEAPONS],
 	g_iAllegiance,
 	g_iBugAccess,
@@ -198,7 +198,7 @@ enum eGroupVehData {
 	Float:gv_fRotZ, // Vehicle Z Rotation
 	gv_iUpkeep, // Upkeep fee - costs faction $
 	gv_iMod[15],
-	gv_iSiren
+	bool:gv_iSiren
 }
 
 enum eGroupVehObjectData {
@@ -329,7 +329,7 @@ enum CargoArrayData
 
 enum WeaponsEnum
 {
-	WeaponId,
+	WEAPON:WeaponId,
 	WeaponMats,
 	WeaponMinLevel
 }
@@ -425,7 +425,7 @@ enum crateInfo
 	cbOnVeh,
 	cbInt,
 	cbVw,
-	cbWep[16],
+	WEAPON:cbWep[16],
 	cbWepAmount[16],
 	cbMats,
 	cbPlacedBy[MAX_PLAYER_NAME],
@@ -679,7 +679,7 @@ enum EventKernelEnum
 	Float: EventPositionZ,
 	EventInterior,
 	EventWorld,
-	EventWeapons[5],
+	WEAPON:EventWeapons[5],
 	EventTeamColor[2],
     EventTeamSkin[2],
     EventLimit,
@@ -732,7 +732,7 @@ enum PaintBallArenaEnum
 	pbWorldBonds[3],
 	pbBidMoney,
 	pbMoneyPool,
-	pbWeapons[3],
+	WEAPON:pbWeapons[3],
 	pbVirtual,
 	pbInterior,
 	pbFlagRedActive,
@@ -1022,8 +1022,8 @@ enum pInfo
 	pBoatLic,
 	pFishLic,
 	pGunLic,
-	pGuns[12],
-	pAGuns[12],
+	WEAPON:pGuns[WEAPON_SLOT:12],
+	WEAPON:pAGuns[WEAPON_SLOT:12],
 	pConnectSeconds,
 	pPayDayHad,
 	pCDPlayer,
@@ -1047,7 +1047,7 @@ enum pInfo
 	pDice,
 	pBombs,
 	pDuty,
-	pFightStyle,
+	FIGHT_STYLE:pFightStyle,
 	pEmail[128],
 	pIP[16],
 	pSecureIP[16],
@@ -1239,7 +1239,7 @@ enum pInfo
 	pDedicatedEnabled,
 	pDedicatedMuted,
 	pDedicatedWarn,
-	pHolsteredWeapon,
+	WEAPON_SLOT:pHolsteredWeapon,
 	mInventory[MAX_MICROITEMS],
 	mPurchaseCount[MAX_MICROITEMS],
 	mCooldown[MAX_MICROITEMS],
@@ -1249,7 +1249,7 @@ enum pInfo
 	zFuelCan,
 	bTicket,
 	pJailedInfo[5], // 0 id - 1 fine - 2 time - 3 warn - 4 wep restriction
-	pJailedWeapons[12],
+	WEAPON:pJailedWeapons[WEAPON_SLOT:12],
 	pVIPMod,
 	pLastPass[65],
 	pEventTokens,
@@ -1316,7 +1316,7 @@ enum pvInfo
 	//pvNumberPlate[32], // sz
 	pvPrice,
 	pvTicket,
-	pvWeapons[3],
+	WEAPON:pvWeapons[3],
 	pvWepUpgrade,
 	pvImpounded,
 	pvSpawned,
@@ -1395,7 +1395,7 @@ enum hInfo
 	hHeroin,
 	hMeth,
 	hEcstasy,
-	hWeapons[ 5 ],
+	WEAPON:hWeapons[ 5 ],
 	hGLUpgrade,
 	hPickupID,
 	hPickupID_int,
@@ -1707,7 +1707,7 @@ enum HUNGER_PLAYER_INFO
 	Float: hgLastArmour,
 	hgLastVW,
 	hgLastInt,
-	hgLastWeapon[12],
+	WEAPON:hgLastWeapon[WEAPON_SLOT:12],
 	hgVoucher,
 	PlayerText: hgPlayerText,
 	PlayerText: hgLoadingText,

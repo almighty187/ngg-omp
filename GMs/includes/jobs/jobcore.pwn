@@ -35,9 +35,9 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
-stock SendJobMessage(job, color, string[])
+SendJobMessage(job, color, const string[])
 {
 	foreach(new i: Player)
 	{
@@ -48,7 +48,7 @@ stock SendJobMessage(job, color, string[])
 }
 
 /*
-stock GetJobName(job)
+GetJobName(job)
 {
 	new name[20];
 	switch(job)
@@ -77,7 +77,7 @@ stock GetJobName(job)
 }
 */
 
-stock GetJobLevel(playerid, job)
+GetJobLevel(playerid, job)
 {
 	new jlevel;
 	switch(job)
@@ -387,7 +387,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 CMD:join(playerid, params[])
 {
 	if(IsPlayerInAnyVehicle(playerid)) return SendClientMessageEx(playerid, COLOR_GRAD1, "You cannot do this while being inside a vehicle.");
-	if(GetPlayerState(playerid) == 1 && PlayerInfo[playerid][pJob] == 0 || (PlayerInfo[playerid][pJob2] == 0 && (PlayerInfo[playerid][pDonateRank] > 0 || PlayerInfo[playerid][pFamed] > 0)) || (PlayerInfo[playerid][pJob3] == 0 && PlayerInfo[playerid][pDonateRank] >= 3)) {
+	if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT && PlayerInfo[playerid][pJob] == 0 || (PlayerInfo[playerid][pJob2] == 0 && (PlayerInfo[playerid][pDonateRank] > 0 || PlayerInfo[playerid][pFamed] > 0)) || (PlayerInfo[playerid][pJob3] == 0 && PlayerInfo[playerid][pDonateRank] >= 3)) {
 		if(IsPlayerInRangeOfPoint(playerid,3.0,251.99, 117.36, 1003.22) || IsPlayerInRangeOfPoint(playerid,3.0, 1478.9515, -1755.7147, 3285.2859) || IsPlayerInRangeOfPoint(playerid,3.0,301.042633, 178.700408, 1007.171875) || IsPlayerInRangeOfPoint(playerid,3.0,-1385.6786,2625.6636,55.5572)) {
 			if(PlayerInfo[playerid][pJob] == 0) {
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "* If you are sure to become a Detective, type /accept job.");

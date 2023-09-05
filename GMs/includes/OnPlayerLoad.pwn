@@ -41,7 +41,7 @@ public OnPlayerLoad(playerid)
 	    if(PlayerInfo[playerid][pOnline] != servernumber)
 	    {
 		    SendClientMessage(playerid, COLOR_WHITE, "SERVER: This account is already online!");
-			SetTimerEx("KickEx", 1000, 0, "i", playerid);
+			SetTimerEx("KickEx", 1000, false, "i", playerid);
 			return 1;
 		}
 	}
@@ -53,7 +53,7 @@ public OnPlayerLoad(playerid)
 		ABroadCast(COLOR_YELLOW, string, 2);
 		SendClientMessage(playerid, COLOR_RED, "Your account is banned! You can appeal this at http://www.ng-gaming.net/forums");
 		SendClientMessage(playerid, COLOR_RED, "Your ban date will be set and when it's time it will automatically been banned. ");
-		SetTimerEx("KickEx", 1000, 0, "i", playerid);
+		SetTimerEx("KickEx", 1000, false, "i", playerid);
 		return 1;
 	}
 	ConnectionDBLog(playerid);
@@ -63,7 +63,7 @@ public OnPlayerLoad(playerid)
 	if(PlayerInfo[playerid][pDisabled] == 2)
 	{
 		ShowPlayerDialogEx(playerid, DIALOG_DISABLED, DIALOG_STYLE_MSGBOX, "Account Disabled - Visit http://www.ng-gaming.net/forums", "Your account has been disabled as it has been inactive for more than six months.\nPlease visit the forums and post an Administrative Request to begin the process to reactivate your account.", "Okay", "");
-		SetTimerEx("KickEx", 5000, 0, "i", playerid);
+		SetTimerEx("KickEx", 5000, false, "i", playerid);
 		return 1;
 	}
 	if(PlayerInfo[playerid][pDisabled] != 0)
@@ -78,7 +78,7 @@ public OnPlayerLoad(playerid)
 		if(PlayerInfo[playerid][pAP] > 1) PlayerInfo[playerid][pAP] = 0;
 		if(PlayerInfo[playerid][pSecurity] > 1) PlayerInfo[playerid][pSecurity] = 0;
 		SendClientMessage(playerid, COLOR_WHITE, "SERVER: This account is disabled!");
-		SetTimerEx("KickEx", 1000, 0, "i", playerid);
+		SetTimerEx("KickEx", 1000, false, "i", playerid);
 		return 1;
 	}
 
@@ -103,9 +103,9 @@ public OnPlayerLoad(playerid)
 			PlayerVehicleInfo[playerid][v][pvColor2] = 0;
 			PlayerVehicleInfo[playerid][v][pvPrice] = 0;
 			PlayerVehicleInfo[playerid][v][pvTicket] = 0;
-			PlayerVehicleInfo[playerid][v][pvWeapons][0] = 0;
-			PlayerVehicleInfo[playerid][v][pvWeapons][1] = 0;
-			PlayerVehicleInfo[playerid][v][pvWeapons][2] = 0;
+			PlayerVehicleInfo[playerid][v][pvWeapons][0] = WEAPON_FIST;
+			PlayerVehicleInfo[playerid][v][pvWeapons][1] = WEAPON_FIST;
+			PlayerVehicleInfo[playerid][v][pvWeapons][2] = WEAPON_FIST;
 			PlayerVehicleInfo[playerid][v][pvWepUpgrade] = 0;
 			PlayerVehicleInfo[playerid][v][pvFuel] = 0.0;
 			PlayerVehicleInfo[playerid][v][pvAllowedPlayerId] = INVALID_PLAYER_ID;
@@ -122,7 +122,7 @@ public OnPlayerLoad(playerid)
 			PlayerVehicleInfo[playerid][v][pvBeingPickLocked] = 0;
 			PlayerVehicleInfo[playerid][v][pvLastLockPickedBy] = 0;
 			ListItemTrackId[playerid][v] = -1;
-			for(new m = 0; m < MAX_MODS; m++)
+			for(new CARMODTYPE:m; m < MAX_MODS; m++)
 			{
 				PlayerVehicleInfo[playerid][v][pvMods][m] = 0;
 			}
@@ -648,12 +648,9 @@ public OnPlayerLoad(playerid)
 		else
 		{
 		    PriorityReport[playerid] = TextDrawCreate(261.000000, 373.000000, "New Report");
-			TextDrawBackgroundColor(PriorityReport[playerid], 255);
-			TextDrawFont(PriorityReport[playerid], 2);
+			TextDrawFont(PriorityReport[playerid], TEXT_DRAW_FONT_2);
 			TextDrawLetterSize(PriorityReport[playerid], 0.460000, 1.800000);
-			TextDrawColor(PriorityReport[playerid], -65281);
-			TextDrawSetOutline(PriorityReport[playerid], 0);
-			TextDrawSetProportional(PriorityReport[playerid], 1);
+			TextDrawColour(PriorityReport[playerid], -65281);
 			TextDrawSetShadow(PriorityReport[playerid], 1);
 
 			new year, month, day, tmphour, tmpminute, tmpsecond, query[300];
@@ -715,7 +712,7 @@ public OnPlayerLoad(playerid)
 	printf("%s has logged in.", GetPlayerNameEx(playerid));
 	format(string, sizeof(string), "SERVER: Welcome, %s.", GetPlayerNameEx(playerid));
 	SendClientMessageEx(playerid, COLOR_WHITE, string);
-	SetSpawnInfo(playerid, 0, PlayerInfo[playerid][pModel], PlayerInfo[playerid][pPos_x], PlayerInfo[playerid][pPos_y], PlayerInfo[playerid][pPos_z], 1.0, -1, -1, -1, -1, -1, -1);
+	SetSpawnInfo(playerid, 0, PlayerInfo[playerid][pModel], PlayerInfo[playerid][pPos_x], PlayerInfo[playerid][pPos_y], PlayerInfo[playerid][pPos_z], 1.0);
 	defer SkinDelay(playerid);
 
 	gPlayerLogged{playerid} = 1;
@@ -737,7 +734,7 @@ public OnPlayerLoad(playerid)
 		new tdate[11], thour[9], i_timestamp[3];
 		getdate(i_timestamp[0], i_timestamp[1], i_timestamp[2]);
 		format(tdate, sizeof(tdate), "%d-%02d-%02d", i_timestamp[0], i_timestamp[1], i_timestamp[2]);
-		format(thour, sizeof(thour), "%02d:00:00", hour);
+		format(thour, sizeof(thour), "%02d:00:00", hour_);
 		GetReportCount(playerid, tdate);
 		GetHourReportCount(playerid, thour, tdate);
 	}
@@ -747,7 +744,7 @@ public OnPlayerLoad(playerid)
 		new tdate[11], thour[9], i_timestamp[3];
 		getdate(i_timestamp[0], i_timestamp[1], i_timestamp[2]);
 		format(tdate, sizeof(tdate), "%d-%02d-%02d", i_timestamp[0], i_timestamp[1], i_timestamp[2]);
-		format(thour, sizeof(thour), "%02d:00:00", hour);
+		format(thour, sizeof(thour), "%02d:00:00", hour_);
 		GetRequestCount(playerid, tdate);
 		GetHourRequestCount(playerid, thour, tdate);
 	}
@@ -757,7 +754,7 @@ public OnPlayerLoad(playerid)
 		new tdate[11], thour[9], i_timestamp[3];
 		getdate(i_timestamp[0], i_timestamp[1], i_timestamp[2]);
 		format(tdate, sizeof(tdate), "%d-%02d-%02d", i_timestamp[0], i_timestamp[1], i_timestamp[2]);
-		format(thour, sizeof(thour), "%02d:00:00", hour);
+		format(thour, sizeof(thour), "%02d:00:00", hour_);
 		GetWDCount(playerid, tdate);
 		GetWDHourCount(playerid, thour, tdate);
 	}
@@ -769,7 +766,7 @@ public OnPlayerLoad(playerid)
 		//return 1;
 	}
 
-	TogglePlayerSpectating(playerid, 0);
+	TogglePlayerSpectating(playerid, false);
 	format(string, sizeof(string), "~w~Welcome,~n~~y~%s!", GetPlayerNameEx(playerid));
 	GameTextForPlayer(playerid, string, 5000, 1);
 	SendClientMessageEx(playerid, COLOR_YELLOW, GlobalMOTD);
@@ -793,7 +790,7 @@ public OnPlayerLoad(playerid)
 
 	if(PlayerInfo[playerid][pInt] > 0 || PlayerInfo[playerid][pVW] > 0)
 	{
-	    TogglePlayerControllable(playerid, 1);
+	    TogglePlayerControllable(playerid, true);
 	}
 
 	SetPlayerFightingStyle(playerid, PlayerInfo[playerid][pFightStyle]);

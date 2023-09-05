@@ -200,7 +200,7 @@ CMD:gotolabel(playerid, params[])
 	return 1;
 }
 
-stock CreateTxtLabel(labelid)
+CreateTxtLabel(labelid)
 {
 	if(IsValidDynamicPickup(TxtLabels[labelid][tlPickupID])) DestroyDynamicPickup(TxtLabels[labelid][tlPickupID]);
 	if(IsValidDynamic3DTextLabel(TxtLabels[labelid][tlTextID])) DestroyDynamic3DTextLabel(TxtLabels[labelid][tlTextID]);
@@ -257,42 +257,7 @@ stock CreateTxtLabel(labelid)
 	}
 }
 
-stock SaveTxtLabels()
-{
-	for(new i = 0; i < MAX_3DLABELS; i++)
-	{
-		SaveTxtLabel(i);
-	}
-	return 1;
-}
-
-stock RehashTxtLabel(labelid)
-{
-	printf("[RehashTxtLabel] Deleting Text Label #%d from server...", labelid);
-	if(IsValidDynamicPickup(TxtLabels[labelid][tlPickupID])) DestroyDynamicPickup(TxtLabels[labelid][tlPickupID]);
-	if(IsValidDynamic3DTextLabel(TxtLabels[labelid][tlTextID])) DestroyDynamic3DTextLabel(TxtLabels[labelid][tlTextID]);
-	TxtLabels[labelid][tlSQLId] = -1;
-	TxtLabels[labelid][tlPosX] = 0.0;
-	TxtLabels[labelid][tlPosY] = 0.0;
-	TxtLabels[labelid][tlPosZ] = 0.0;
-	TxtLabels[labelid][tlVW] = 0;
-	TxtLabels[labelid][tlInt] = 0;
-	TxtLabels[labelid][tlColor] = 0;
-	TxtLabels[labelid][tlPickupModel] = 0;
-	LoadTxtLabel(labelid);
-}
-
-stock RehashTxtLabels()
-{
-	printf("[RehashTxtLabels] Deleting text labels from server...");
-	for(new i = 0; i < MAX_3DLABELS; i++)
-	{
-		RehashTxtLabel(i);
-	}
-	LoadTxtLabels();
-}
-
-stock SaveTxtLabel(labelid)
+SaveTxtLabel(labelid)
 {
 	new string[1024];
 	mysql_format(MainPipeline, string, sizeof(string), "UPDATE `text_labels` SET \
@@ -318,14 +283,14 @@ stock SaveTxtLabel(labelid)
 	mysql_tquery(MainPipeline, string, "OnQueryFinish", "i", SENDDATA_THREAD);
 }
 
-stock LoadTxtLabel(labelid)
+LoadTxtLabel(labelid)
 {
 	new string[128];
 	mysql_format(MainPipeline, string, sizeof(string), "SELECT * FROM `text_labels` WHERE `id`=%d", labelid+1); // Array starts at zero, MySQL starts at 1.
 	mysql_tquery(MainPipeline, string, "OnLoadTxtLabel", "i", labelid);
 }
 
-stock LoadTxtLabels()
+LoadTxtLabels()
 {
 	printf("[LoadTxtLabels] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `text_labels`", "OnLoadTxtLabels", "");

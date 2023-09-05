@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 forward HijackTruck(playerid);
 public HijackTruck(playerid)
@@ -47,12 +47,12 @@ public HijackTruck(playerid)
 	new string[128];
 	format(string, sizeof(string), "~n~~n~~n~~n~~n~~n~~n~~n~~n~~w~%d seconds left", GetPVarInt(playerid, "LoadTruckTime"));
 	GameTextForPlayer(playerid, string, 1100, 3);
-	if(GetPVarInt(playerid, "LoadTruckTime") > 0) SetTimerEx("HijackTruck", 1000, 0, "d", playerid);
+	if(GetPVarInt(playerid, "LoadTruckTime") > 0) SetTimerEx("HijackTruck", 1000, false, "d", playerid);
 
 	if(GetPVarInt(playerid, "LoadTruckTime") <= 0)
 	{
 		DeletePVar(playerid, "IsFrozen");
-		TogglePlayerControllable(playerid, 1);
+		TogglePlayerControllable(playerid, true);
   		DeletePVar(playerid, "LoadTruckTime");
 
         if(!IsPlayerInVehicle(playerid, vehicleid))
@@ -185,13 +185,13 @@ public LoadTruckOld(playerid)
 	format(string, sizeof(string), "~n~~n~~n~~n~~n~~n~~n~~n~~n~~w~%d seconds left", GetPVarInt(playerid, "LoadTruckTime"));
 	GameTextForPlayer(playerid, string, 1100, 3);
 
-	if(GetPVarInt(playerid, "LoadTruckTime") > 0) SetTimerEx("LoadTruckOld", 1000, 0, "d", playerid);
+	if(GetPVarInt(playerid, "LoadTruckTime") > 0) SetTimerEx("LoadTruckOld", 1000, false, "d", playerid);
 
 	if(GetPVarInt(playerid, "LoadTruckTime") <= 0)
 	{
 		DeletePVar(playerid, "LoadTruckTime");
 		DeletePVar(playerid, "IsFrozen");
-		TogglePlayerControllable(playerid, 1);
+		TogglePlayerControllable(playerid, true);
 
   		new vehicleid = GetPlayerVehicleID(playerid);
   		new truckdeliver = GetPVarInt(playerid, "TruckDeliver");
@@ -306,13 +306,13 @@ public LoadTruck(playerid)
 	format(string, sizeof(string), "~n~~n~~n~~n~~n~~n~~n~~n~~n~~w~%d seconds left", GetPVarInt(playerid, "LoadTruckTime"));
 	GameTextForPlayer(playerid, string, 1100, 3);
 
-	if(GetPVarInt(playerid, "LoadTruckTime") > 0) SetTimerEx("LoadTruck", 1000, 0, "d", playerid);
+	if(GetPVarInt(playerid, "LoadTruckTime") > 0) SetTimerEx("LoadTruck", 1000, false, "d", playerid);
 
 	if(GetPVarInt(playerid, "LoadTruckTime") <= 0)
 	{
 		DeletePVar(playerid, "LoadTruckTime");
 		DeletePVar(playerid, "IsFrozen");
-		TogglePlayerControllable(playerid, 1);
+		TogglePlayerControllable(playerid, true);
 
   		new vehicleid = GetPlayerVehicleID(playerid);
   		new business = TruckDeliveringTo[vehicleid];
@@ -370,7 +370,7 @@ public LoadTruck(playerid)
 	return 1;
 }
 
-stock DisplayOrders(playerid)
+DisplayOrders(playerid)
 {
 	new szDialog[2048];
 	for (new i, j; i < MAX_BUSINESSES; i++)
@@ -389,7 +389,7 @@ stock DisplayOrders(playerid)
 	{
 
 		/*ShowPlayerDialogEx(playerid, DIALOG_NOTHING, DIALOG_STYLE_MSGBOX, "Error", "No jobs available right now. Try again later.", "OK", "");
-		TogglePlayerControllable(playerid, 1);
+		TogglePlayerControllable(playerid, true);
 		DeletePVar(playerid, "IsFrozen"); */
 		if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 456 || GetVehicleModel(GetPlayerVehicleID(playerid)) == 414 || GetVehicleModel(GetPlayerVehicleID(playerid)) == 413 || GetVehicleModel(GetPlayerVehicleID(playerid)) == 440 || GetVehicleModel(GetPlayerVehicleID(playerid)) == 482 || IsABoat(GetPlayerVehicleID(playerid)))
 		{
@@ -398,7 +398,7 @@ stock DisplayOrders(playerid)
 		else
 		{
 			ShowPlayerDialogEx(playerid, DIALOG_NOTHING, DIALOG_STYLE_MSGBOX, "Error", "No jobs available for this type of truck right now. Try again later.", "OK", "");
-			TogglePlayerControllable(playerid, 1);
+			TogglePlayerControllable(playerid, true);
 			DeletePVar(playerid, "IsFrozen");
 		}
 	}
@@ -470,8 +470,8 @@ CMD:checkcargo(playerid, params[])
 			SendClientMessageEx(playerid, COLOR_GRAD1, "You cannot search the contents of this vehicle while inside a vehicle.");
 			return 1;
 		}
-		new engine,lights,alarm,doors,bonnet,boot,objective;
-		GetVehicleParamsEx(closestcar,engine,lights,alarm,doors,bonnet,boot,objective);
+		new bool:boot;
+		GetVehicleParamsEx(closestcar, .boot = boot);
 		if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET)
 		{
 			SendClientMessageEx(playerid, COLOR_GRAD1, "The vehicle's trunk must be opened in order to search it.");
@@ -588,11 +588,11 @@ CMD:hijackcargo(playerid, params[])
 					else return SendClientMessageEx(playerid, COLOR_WHITE, "Water shipments are restricted to Level 4+ Shipment Contracter.");
 				}
 
-				TogglePlayerControllable(playerid, 0);
+				TogglePlayerControllable(playerid, false);
 				SetPVarInt(playerid, "IsFrozen", 1);
 
 				SetPVarInt(playerid, "LoadTruckTime", 10);
-				SetTimerEx("HijackTruck", 1000, 0, "dd", playerid);
+				SetTimerEx("HijackTruck", 1000, false, "dd", playerid);
 	        }
 	        else return SendClientMessageEx(playerid, COLOR_WHITE, "Please ensure that your current checkpoint is destroyed first (you either have material packages, or another existing checkpoint).");
 	    }

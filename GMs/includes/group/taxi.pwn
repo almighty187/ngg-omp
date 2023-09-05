@@ -34,7 +34,7 @@
 	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-stock SendTaxiMessage(color, string[])
+SendTaxiMessage(color, const string[])
 {
 	foreach(new i: Player)
 	{
@@ -78,7 +78,7 @@ CMD:fare(playerid, params[])
 			return 1;
 		}
 		if(GetPVarInt(playerid, "MechanicDuty") == 1 || GetPVarInt(playerid, "LawyerDuty") == 1) return SendClientMessageEx(playerid,COLOR_GREY,"You need to get off duty with your mechanic/lawyer job first.");
-		if(GetPlayerState(playerid) != 2) return SendClientMessageEx(playerid, COLOR_GREY, "   You are not the driver!");
+		if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER) return SendClientMessageEx(playerid, COLOR_GREY, "   You are not the driver!");
 		if(fare < 1 || fare > 2000) return SendClientMessageEx(playerid, COLOR_GREY, "   Fare price must be between $1 and $2000!");
 		new newcar = GetPlayerVehicleID(playerid);
 		if(IsAnBus(newcar))

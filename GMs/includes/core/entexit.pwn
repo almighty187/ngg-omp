@@ -1,4 +1,4 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 /* 	Jingles:
 
@@ -6,9 +6,9 @@
 	Enter/exit by pressing F/Enter or using /enter or /exit.
 
 	Put:
-	CreateDynamicDoor_int(doorid); under stock CreateDynamicDoor(doorid);
-	CreateHouse_int(houseid) under stock CreateHouse(houseid);
-	CreateBusiness_int(businessid) under stock CreateBusiness(businessid);
+	CreateDynamicDoor_int(doorid); under CreateDynamicDoor(doorid);
+	CreateHouse_int(houseid) under CreateHouse(houseid);
+	CreateBusiness_int(businessid) under CreateBusiness(businessid);
 
 	And it'll hopefully work like a charm! :)
 */
@@ -27,7 +27,7 @@ hook OnPlayerConnect(playerid) {
 	return 1;
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 
 	if(newkeys & ENTRANCE_SHORTCUT) {
 
@@ -38,7 +38,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 }
 
 // New Method:
-stock EntExit_GetID_New(playerid) {
+EntExit_GetID_New(playerid) {
 
 	new szAreaID[1];
 	GetPlayerDynamicAreas(playerid, szAreaID, sizeof(szAreaID));
@@ -247,7 +247,7 @@ ENT_DelVar(playerid) {
 }
 */
 
-hook OnPlayerStateChange(playerid, newstate, oldstate) {
+hook OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate) {
 
 	if(newstate == PLAYER_STATE_PASSENGER) {
 		new iVehID = GetPlayerVehicleID(playerid);
@@ -255,7 +255,7 @@ hook OnPlayerStateChange(playerid, newstate, oldstate) {
 	}
 }
 
-stock Vehicle_Enter(playerid, i) {
+Vehicle_Enter(playerid, i) {
 
 	if(CarryCrate[playerid] != -1) return SendClientMessageEx(playerid, COLOR_GRAD2, "You can't take crates into this type of interior!");
 	ClearAnimationsEx(playerid);
@@ -298,11 +298,11 @@ stock Vehicle_Enter(playerid, i) {
 	return 1;
 }
 
-stock Vehicle_Exit(playerid) {
+Vehicle_Exit(playerid) {
  	
  	if(!IsAPlane(InsidePlane[playerid]) && !GetPVarType(playerid, "InsideCar")) {
-	    PlayerInfo[playerid][pAGuns][GetWeaponSlot(46)] = 46;
-	    GivePlayerValidWeapon(playerid, 46);
+	    PlayerInfo[playerid][pAGuns][GetWeaponSlot(WEAPON_PARACHUTE)] = WEAPON_PARACHUTE;
+	    GivePlayerValidWeapon(playerid, WEAPON_PARACHUTE);
 	    SetPlayerPos(playerid, 0.000000, 0.000000, 420.000000); // lol nick
 	}
 	else {
@@ -320,8 +320,8 @@ stock Vehicle_Exit(playerid) {
 			SetPlayerPos(playerid, X-2.7912, Y+3.2304, Z);
 			Player_StreamPrep(playerid, X-2.7912,Y+3.2304,Z, FREEZE_TIME);
 			if(Z > 50.0) {
-				PlayerInfo[playerid][pAGuns][GetWeaponSlot(46)] = 46;
-				GivePlayerValidWeapon(playerid, 46);
+				PlayerInfo[playerid][pAGuns][GetWeaponSlot(WEAPON_PARACHUTE)] = WEAPON_PARACHUTE;
+				GivePlayerValidWeapon(playerid, WEAPON_PARACHUTE);
 			}
 		}
 	}
@@ -588,7 +588,7 @@ House_Exit(playerid, i) {
 
 	if(GetPVarType(playerid, "StreamPrep")) return SendClientMessageEx(playerid, COLOR_WHITE, "You can't do this right now. Wait for streaming to finish.");
 	if(gettime() < DoorTimer[playerid]) return SendClientMessageEx(playerid, COLOR_GREY, "You must wait %d seconds before being able to exit this door.", DoorTimer[playerid]-gettime());
-	if(GetPVarType(playerid, PVAR_FURNITURE)) cmd_furniture(playerid, "");
+	if(GetPVarType(playerid, PVAR_FURNITURE)) cmd_furniture(playerid);
 	House_VistorCheck(i);
 	SetPlayerInterior(playerid,0);
 	PlayerInfo[playerid][pInt] = 0;

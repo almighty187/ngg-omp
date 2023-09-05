@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 forward PickUpC4(playerid);
 public PickUpC4(playerid)
@@ -46,7 +46,7 @@ public PickUpC4(playerid)
 }
 
 
-stock SearchingHit(playerid)
+SearchingHit(playerid)
 {
 	new string[128], group = PlayerInfo[playerid][pMember];
    	SendClientMessageEx(playerid, COLOR_WHITE, "Available Contracts:");

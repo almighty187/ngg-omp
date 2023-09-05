@@ -88,9 +88,9 @@ CMD:fix(playerid, params[])
 
   			if(IsPlayerInRangeOfVehicle(playerid, closestcar, 10.0))
   			{
-				new engine,lights,alarm,doors,bonnet,boot,objective;
+				new bool:bonnet;
 				new level = PlayerInfo[playerid][pMechSkill];
-				GetVehicleParamsEx(closestcar,engine,lights,alarm,doors,bonnet,boot,objective);
+				GetVehicleParamsEx(closestcar, .bonnet = bonnet);
 				if(!IsABike(closestcar) && !IsAPlane(closestcar)) {
 					if(bonnet == VEHICLE_PARAMS_OFF || bonnet == VEHICLE_PARAMS_UNSET)
 					{
@@ -107,8 +107,8 @@ CMD:fix(playerid, params[])
     				format(string, sizeof(string), "* %s has began repairing the vehicle.", GetPlayerNameEx(playerid));
     				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 					SetPVarInt(playerid, "FixVehicleTimer", SetTimerEx("FixVehicle", 15000, false, "ii", playerid, closestcar));
-					TogglePlayerControllable(playerid, 0);
-					ApplyAnimation(playerid, "MISC", "Plunger_01", 4.1, 1, 1, 1, 1, 1, 1);
+					TogglePlayerControllable(playerid, false);
+					ApplyAnimation(playerid, "MISC", "Plunger_01", 4.1, true, true, true, true, 1, SYNC_ALL);
     			}
 				defer Fix_PlayerInVehicleCheck(playerid);
 			}
@@ -122,18 +122,16 @@ CMD:fix(playerid, params[])
 forward FixVehicle(playerid, vehicleid);
 public FixVehicle(playerid, vehicleid)
 {
-	TogglePlayerControllable(playerid, 1);
-	ApplyAnimation(playerid, "CARRY", "crry_prtial", 4.0, 0, 0, 0, 0, 0, 1);
+	TogglePlayerControllable(playerid, true);
+	ApplyAnimation(playerid, "CARRY", "crry_prtial", 4.0, false, false, false, false, 0, SYNC_ALL);
 	ClearAnimationsEx(playerid);
 	SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
 	PlayerInfo[playerid][pMechTime] = gettime()+60;
 	SetVehicleHealth(vehicleid, 1000.0);
 	Vehicle_Armor(vehicleid);
-	new engine,lights,alarm,doors,bonnet,boot,objective;
-	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
 	if(GetVehicleModel(vehicleid) == 481 && GetVehicleModel(vehicleid) == 509 && GetVehicleModel(vehicleid) == 510)
 	{
-		SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_ON,lights,alarm,doors,bonnet,boot,objective);
+		SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_ON);
 		arr_Engine{vehicleid} = 1;
 	}
 	format(szMiscArray, sizeof(szMiscArray), "* %s has repaired the vehicle.", GetPlayerNameEx(playerid));

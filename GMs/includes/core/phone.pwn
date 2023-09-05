@@ -55,7 +55,7 @@ public RingToner()
 			PlayerPlaySound(i, 1139, 0.0, 0.0, 0.0);
 		}
 	}
-	SetTimer("RingTonerRev", 1000, 0);
+	SetTimer("RingTonerRev", 1000, false);
 	return 1;
 }
 
@@ -79,7 +79,7 @@ public RingTonerRev()
 			RingTone[i] = 0;
 		}
 	}
-	SetTimer("RingToner", 1000, 0);
+	SetTimer("RingToner", 1000, false);
 	return 1;
 }
 
@@ -160,7 +160,7 @@ CMD:colorcar(playerid, params[]) {
 		if(IsPlayerInVehicle(playerid, PlayerVehicleInfo[playerid][i][pvId]))
 		{
 			PlayerVehicleInfo[playerid][i][pvColor1] = iColors[0], PlayerVehicleInfo[playerid][i][pvColor2] = iColors[1];
-			ChangeVehicleColor(PlayerVehicleInfo[playerid][i][pvId], PlayerVehicleInfo[playerid][i][pvColor1], PlayerVehicleInfo[playerid][i][pvColor2]);
+			ChangeVehicleColours(PlayerVehicleInfo[playerid][i][pvId], PlayerVehicleInfo[playerid][i][pvColor1], PlayerVehicleInfo[playerid][i][pvColor2]);
 			PlayerInfo[playerid][pSpraycan]--;
 			g_mysql_SaveVehicle(playerid, i);
 			format(szMessage, sizeof(szMessage), "You have changed the colors of your vehicle to ID %d, %d.", iColors[0], iColors[1]);
@@ -171,7 +171,7 @@ CMD:colorcar(playerid, params[]) {
 	{
 		if(IsPlayerInVehicle(playerid, VIPVehicles[i]))
 		{
-			ChangeVehicleColor(VIPVehicles[i], iColors[0], iColors[1]);
+			ChangeVehicleColours(VIPVehicles[i], iColors[0], iColors[1]);
 			PlayerInfo[playerid][pSpraycan]--;
 			format(szMessage, sizeof(szMessage), "You have changed the colors of this vehicle to ID %d, %d.", iColors[0], iColors[1]);
 			return SendClientMessageEx(playerid, COLOR_GRAD2, szMessage);
@@ -181,7 +181,7 @@ CMD:colorcar(playerid, params[]) {
 	{
 		if(IsPlayerInVehicle(playerid, FamedVehicles[i]))
 		{
-			ChangeVehicleColor(FamedVehicles[i], iColors[0], iColors[1]);
+			ChangeVehicleColours(FamedVehicles[i], iColors[0], iColors[1]);
 			PlayerInfo[playerid][pSpraycan]--;
 			format(szMessage, sizeof(szMessage), "You have changed the colors of this vehicle to ID %d, %d.", iColors[0], iColors[1]);
 			return SendClientMessageEx(playerid, COLOR_GRAD2, szMessage);
@@ -297,7 +297,7 @@ CMD:setautoreply(playerid, params[])
 	return 1;
 }
 
-CMD:call(playerid, params[])
+CMD:call(playerid, const params[])
 {
 	new string[128], phonenumb;
 
@@ -636,11 +636,11 @@ CMD:sms(playerid, params[])
 	return 1;
 }
 
-CMD:p(playerid, params[]) {
-	return cmd_pickup(playerid, params);
+CMD:p(playerid) {
+	return cmd_pickup(playerid);
 }
 
-CMD:pickup(playerid, params[])
+CMD:pickup(playerid)
 {
 	new string[128];
 	if(Mobile[playerid] != INVALID_PLAYER_ID)
@@ -714,7 +714,7 @@ CMD:hangup(playerid,params[])
 	if(GetPVarType(playerid, "Has911Call")) {
 
 		if(GetPVarType(playerid, "PayPhone")) TogglePlayerControllable(playerid, true);
-		cmd_cancelcall(playerid, "");
+		cmd_cancelcall(playerid);
 	}
 	new caller = Mobile[playerid];
 	if((IsPlayerConnected(caller)/* && caller != INVALID_PLAYER_ID*/))
@@ -723,7 +723,7 @@ CMD:hangup(playerid,params[])
 		{
 			if(GetPVarInt(caller, "_UsingJailPhone") == 1)
 			{
-				TogglePlayerControllable(caller, 1);
+				TogglePlayerControllable(caller, true);
 				DeletePVar(caller, "_UsingJailPhone");
 				bJailPhoneUse[GetClosestPrisonPhone(caller)] = false;
 			}

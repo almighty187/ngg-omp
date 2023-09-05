@@ -12,7 +12,7 @@ ALTER TABLE `accounts` ADD `PollKeyA` VARCHAR(128) NOT NULL AFTER `GuardsGiven`,
 	Documentation: https://docs.google.com/document/d/1emwrE9iCG4ZomJZ5s_BskzHcSBQXlJ7nnRIkR8ChpXs/
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define MIN_POLL_OPTIONS			(2) // No point having a poll for 1 option.
 #define DEFAULT_POLL_OPTIONS		(4)
@@ -63,7 +63,7 @@ new PollTypes[5][] = {"None", "VIP", "Group", "Business", "Admin"};
 	-- FUNCTIONS & CALLBACKS --
 */
 
-stock ShowPlayerEditPollDialog(playerid)
+ShowPlayerEditPollDialog(playerid)
 {
 	new szTitle[64], iPollID = GetPVarInt(playerid, "iEditingPoll");
 
@@ -82,9 +82,9 @@ stock ShowPlayerEditPollDialog(playerid)
 	return ShowPlayerDialogEx(playerid, DIALOG_EDIT_POLL, DIALOG_STYLE_LIST, szTitle, szMiscArray, "Select", "Cancel");
 }
 
-stock ParsePollType(type) return PollTypes[type];
+ParsePollType(type) return PollTypes[type];
 
-stock CalculatePlayerPollKeys(playerid)
+CalculatePlayerPollKeys(playerid)
 {
 	new iFound[3];
 	for(new i = 0; i < MAX_POLLS; i++)
@@ -104,10 +104,10 @@ stock CalculatePlayerPollKeys(playerid)
 	if(iFound[2] == 0) format(PlayerInfo[playerid][pPollKey3], 128, "Invalid Key");
 }
 
-stock GenerateRandomCharacter() return (random(1000) % 2 == 0) ? (65 + random(26)) : (97 + random(26)); // Decides whether it's upper / lower case, then generates a random ascii character based on that.
+GenerateRandomCharacter() return (random(1000) % 2 == 0) ? (65 + random(26)) : (97 + random(26)); // Decides whether it's upper / lower case, then generates a random ascii character based on that.
 
 // valstr fix by Slice
-stock FIX_valstr(dest[], value, bool:pack = false)
+FIX_valstr(dest[], value, bool:pack = false)
 {
     // format can't handle cellmin properly
     static const cellmin_value[] = !"-2147483648";

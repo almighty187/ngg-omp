@@ -36,9 +36,9 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 
 	if(newkeys & KEY_YES) {
 
@@ -65,7 +65,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 			if(arrPayPhoneData[i][pp_iCallerID] != INVALID_PLAYER_ID) {
 				
 				SetPVarInt(playerid, "PayPhone", i); 
-				cmd_pickup(playerid, "");
+				cmd_pickup(playerid);
 				return 1;
 			}
 			PayPhone_Menu(playerid, i);

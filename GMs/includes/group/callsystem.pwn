@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
@@ -89,7 +89,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 	return 0;
 }
 
-stock SendCallToQueue(callfrom, description[], area[], mainzone[], type, vehicleid = INVALID_VEHICLE_ID)
+SendCallToQueue(callfrom, description[], area[], mainzone[], type, vehicleid = INVALID_VEHICLE_ID)
 {
     new newid = INVALID_CALL_ID;
 
@@ -192,7 +192,7 @@ stock SendCallToQueue(callfrom, description[], area[], mainzone[], type, vehicle
 		Calls[newid][HasBeenUsed] = 1;
 		Calls[newid][BeingUsed] = 1;
 		Calls[newid][CallVehicleId] = vehicleid;
-		Calls[newid][CallExpireTimer] = SetTimerEx("CallTimer", 60000, 0, "d", newid);
+		Calls[newid][CallExpireTimer] = SetTimerEx("CallTimer", 60000, false, "d", newid);
 		new query[512];
 		mysql_format(MainPipeline, query, sizeof(query), "INSERT INTO `911Calls` (Caller, Phone, Area, MainZone, Description, Type, Time) VALUES ('%s', %d, '%e', '%s', '%e', %d, UNIX_TIMESTAMP())", GetPlayerNameEx(callfrom), PlayerInfo[callfrom][pPnumber], area, mainzone, description, type);
 		mysql_tquery(MainPipeline, query, "OnQueryFinish", "i", SENDDATA_THREAD);
@@ -204,7 +204,7 @@ stock SendCallToQueue(callfrom, description[], area[], mainzone[], type, vehicle
     }
 }
 
-stock ClearCalls()
+ClearCalls()
 {
 	for(new i; i < MAX_CALLS; i++)
 	{
@@ -233,7 +233,7 @@ public CallTimer(callid)
 	    if(Calls[callid][TimeToExpire] >= 0)
 	    {
 	        Calls[callid][TimeToExpire]++;
-  			Calls[callid][CallExpireTimer] = SetTimerEx("CallTimer", 60000, 0, "d", callid);
+  			Calls[callid][CallExpireTimer] = SetTimerEx("CallTimer", 60000, false, "d", callid);
 		}
 	}
 	return 1;
@@ -617,7 +617,7 @@ CMD:ignorecall(playerid, params[])
 	return 1;
 }
 
-CMD:cancelcall(playerid, params[])
+CMD:cancelcall(playerid)
 {
     for(new i = 0; i < MAX_CALLS; i++)
 	{

@@ -1,4 +1,4 @@
-stock SpectatePlayer(playerid, giveplayerid)
+SpectatePlayer(playerid, giveplayerid)
 {
 	if(IsPlayerConnected(giveplayerid)) {
 		if( InsideTut{giveplayerid} >= 1 ) {

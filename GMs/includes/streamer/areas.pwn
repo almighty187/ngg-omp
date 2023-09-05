@@ -1,4 +1,4 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define 	STREAMER_AREATYPE_DOOR 			(500)
 #define 	STREAMER_AREATYPE_HOUSE 		(501)
@@ -28,6 +28,6 @@ hook OnGameModeInit() {
 
 hook OnPlayerEnterDynamicArea(playerid, areaid) {
 
-	if(areaid == ParachuteArea) GivePlayerValidWeapon(playerid, 46);
+	if(areaid == ParachuteArea) GivePlayerValidWeapon(playerid, WEAPON_PARACHUTE);
 	return 1;
 }

@@ -1,4 +1,4 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 LoadParkingMeters()
 {
@@ -61,12 +61,6 @@ GetNearestParkingMeter(playerid)
 		}
 	}
 	return meterid;
-}
-
-strmatch(string1[], string2[], bool:casesensitive = false)
-{
-	if((strcmp(string1, string2, casesensitive, strlen(string2)) == 0) && (strlen(string2) == strlen(string1))) return true;
-	return false;
 }
 
 hook OnPlayerConnect(playerid)
@@ -168,13 +162,13 @@ CMD:parkingmeterhelp(playerid, params[])
 	if(PlayerInfo[playerid][pAdmin] >= 4 || PlayerInfo[playerid][pASM] >= 1)
 	{
 		SendClientMessageEx(playerid, COLOR_WHITE, "** Admin commands **");
-		SendClientMessageEx(playerid, COLOR_GREY, "» /createmeter [Rate] [Range] - Creates a new parking meter at your current position.");
-		SendClientMessageEx(playerid, COLOR_GREY, "» /setmeterrate [Meter ID] [Rate] - Changes the specified parking meter's rate.");
-		SendClientMessageEx(playerid, COLOR_GREY, "» /setmeterrange [Meter ID] [Range] - Changes the specified parking meter's range.");
-		SendClientMessageEx(playerid, COLOR_GREY, "» /gotometer [Meter ID] - Allows you to teleport to a parking meter.");
-		SendClientMessageEx(playerid, COLOR_GREY, "» /editmeterposition [Meter ID] [Type] - Allows you to edit the parking meter or parked position of a parking meter.");
-		SendClientMessageEx(playerid, COLOR_GREY, "» /deletemeter [Meter ID] - Allows you to delete a parking meter.");
-		SendClientMessageEx(playerid, COLOR_GREY, "» /reloadmeters - Allows you reload all parking meters (rebuilds existing parking meters).");
+		SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ /createmeter [Rate] [Range] - Creates a new parking meter at your current position.");
+		SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ /setmeterrate [Meter ID] [Rate] - Changes the specified parking meter's rate.");
+		SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ /setmeterrange [Meter ID] [Range] - Changes the specified parking meter's range.");
+		SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ /gotometer [Meter ID] - Allows you to teleport to a parking meter.");
+		SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ /editmeterposition [Meter ID] [Type] - Allows you to edit the parking meter or parked position of a parking meter.");
+		SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ /deletemeter [Meter ID] - Allows you to delete a parking meter.");
+		SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ /reloadmeters - Allows you reload all parking meters (rebuilds existing parking meters).");
 	}
 	return 1;
 }
@@ -188,19 +182,19 @@ CMD:meterstatus(playerid, params[])
 	if(meterid == -1 || !IsPlayerInRangeOfPoint(playerid, 2.0, ParkingMeterInformation[meterid][MeterPosition][0], ParkingMeterInformation[meterid][MeterPosition][1], ParkingMeterInformation[meterid][MeterPosition][2])) return SendClientMessageEx(playerid, COLOR_GREY, "You are not in range of a parking meter.");
 	format(string, sizeof(string), "** PARKING METER STATUS - METER ID %d: **", meterid);
 	SendClientMessageEx(playerid, COLOR_WHITE, string);
-	format(string, sizeof(string), "» Rate per five minutes: $%s.", number_format(ParkingMeterInformation[meterid][MeterRate]));
+	format(string, sizeof(string), "ï¿½ Rate per five minutes: $%s.", number_format(ParkingMeterInformation[meterid][MeterRate]));
 	SendClientMessageEx(playerid, COLOR_GREY, string);
 	if(PlayerInfo[playerid][pAdmin] >= 4 || PlayerInfo[playerid][pASM] >= 1)
 	{
-		format(string, sizeof(string), "» Range: %0.3f meters.", ParkingMeterInformation[meterid][MeterRange]);
+		format(string, sizeof(string), "ï¿½ Range: %0.3f meters.", ParkingMeterInformation[meterid][MeterRange]);
 		SendClientMessageEx(playerid, COLOR_GREY, string);
 	}
 	switch(ParkingMeterInformation[meterid][AssignedVehicle])
 	{
-		case INVALID_VEHICLE_ID: return SendClientMessageEx(playerid, COLOR_GREY, "» Current vehicle: Unoccupied and vacant.");
+		case INVALID_VEHICLE_ID: return SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ Current vehicle: Unoccupied and vacant.");
 		default:
 		{
-			format(string, sizeof(string), "» Current vehicle: %s (ID: %d).", VehicleName[GetVehicleModel(ParkingMeterInformation[meterid][AssignedVehicle]) - 400], ParkingMeterInformation[meterid][AssignedVehicle]);
+			format(string, sizeof(string), "ï¿½ Current vehicle: %s (ID: %d).", VehicleName[GetVehicleModel(ParkingMeterInformation[meterid][AssignedVehicle]) - 400], ParkingMeterInformation[meterid][AssignedVehicle]);
 			SendClientMessageEx(playerid, COLOR_GREY, string);
 			return 1;
 		}
@@ -211,7 +205,7 @@ CMD:meterstatus(playerid, params[])
 CMD:rentmeter(playerid, params[])
 {
 	if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER) return SendClientMessageEx(playerid, COLOR_GREY, "You must be the driver of a vehicle to rent a parking meter.");
-	new vehicleid, engine, lights, alarm, doors, bonnet, boot, objective, meterid, string[128];
+	new vehicleid, bool:engine, meterid, string[128];
 	meterid = GetNearestParkingMeter(playerid);
 	if(meterid == -1) return SendClientMessageEx(playerid, COLOR_GREY, "You are not in range of a parking meter.");
 	if(ParkingMeterInformation[meterid][AssignedVehicle] != INVALID_VEHICLE_ID) return SendClientMessageEx(playerid, COLOR_GREY, "This parking meter is already occupied. To add more time and renew it, use (/renewmeter).");
@@ -233,7 +227,7 @@ CMD:rentmeter(playerid, params[])
 	ParkingMeterInformation[meterid][PaymentExpiry] = gettime() + 300;
 	GivePlayerCash(playerid, -ParkingMeterInformation[meterid][MeterRate]);
 	Tax += ParkingMeterInformation[meterid][MeterRate];
-	GetVehicleParamsEx(vehicleid, engine, lights, alarm, doors, bonnet, boot, objective);
+	GetVehicleParamsEx(vehicleid, engine);
 	if(engine == VEHICLE_PARAMS_ON)
 	{
 		SetVehicleEngine(vehicleid, playerid);
@@ -287,8 +281,8 @@ CMD:editmeterposition(playerid, params[])
 	}
 	if(ParkingMeterInformation[meterid][MeterActive] == 0) return SendClientMessageEx(playerid, COLOR_GREY, "The specified parking meter isn't currently active.");
 	if(strlen(name) < 4 || strlen(name) > 6) return SendClientMessageEx(playerid, COLOR_GREY, "Invalid parking meter type specified. Types: Meter, Parked, ToMe.");
-	if(!strmatch(name, "Meter", true) && !strmatch(name, "Parked", true)&& !strmatch(name, "ToMe", true)) return SendClientMessageEx(playerid, COLOR_GREY, "Invalid parking meter type specified. Types: Meter, Parked, ToMe.");
-	if(strmatch(name, "Meter", true))
+	if(!strequal(name, "Meter", true) && !strequal(name, "Parked", true)&& !strequal(name, "ToMe", true)) return SendClientMessageEx(playerid, COLOR_GREY, "Invalid parking meter type specified. Types: Meter, Parked, ToMe.");
+	if(strequal(name, "Meter", true))
 	{
 		EditingMeterID[playerid] = meterid;
 		EditDynamicObject(playerid, ParkingMeterInformation[meterid][ParkingMeterObject]);
@@ -310,7 +304,7 @@ CMD:editmeterposition(playerid, params[])
 			GetVehicleZAngle(vehicleid, position[3]);
 		}
 	}
-	if(strmatch(name, "Parked", true))
+	if(strequal(name, "Parked", true))
 	{
 		for(new i = 0; i < 4; i ++) ParkingMeterInformation[meterid][ParkedPosition][i] = position[i];
 		SaveParkingMeter(meterid);
@@ -321,7 +315,7 @@ CMD:editmeterposition(playerid, params[])
 		Log("logs/admin.log", string);
 		return 1;
 	}
-	if(strmatch(name, "ToMe", true))
+	if(strequal(name, "ToMe", true))
 	{
 		for(new i = 0; i < 3; i ++) ParkingMeterInformation[meterid][MeterPosition][i] = position[i];
 		ParkingMeterInformation[meterid][MeterPosition][3] = 0.0;

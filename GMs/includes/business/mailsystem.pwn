@@ -36,7 +36,7 @@
 */
 #define		MAILBOX_RANGE	8.0
 
-stock SaveMailboxes()
+SaveMailboxes()
 {
 	for(new i = 0; i < MAX_MAILBOXES; i++)
 	{
@@ -45,12 +45,12 @@ stock SaveMailboxes()
 	return 1;
 }
 
-stock IsAtPostOffice(playerid)
+IsAtPostOffice(playerid)
 {
 	return IsPlayerInRangeOfPoint(playerid,100.0,-262.0643, 6.0924, 2000.9038);
 }
 
-stock IsNearHouseMailbox(playerid)
+IsNearHouseMailbox(playerid)
 {
 	if (PlayerInfo[playerid][pPhousekey] != INVALID_HOUSE_ID && IsPlayerInRangeOfPoint(playerid,3.0,HouseInfo[PlayerInfo[playerid][pPhousekey]][hMailX], HouseInfo[PlayerInfo[playerid][pPhousekey]][hMailY], HouseInfo[PlayerInfo[playerid][pPhousekey]][hMailZ])) return 1;
 	if (PlayerInfo[playerid][pPhousekey2] != INVALID_HOUSE_ID && IsPlayerInRangeOfPoint(playerid,3.0,HouseInfo[PlayerInfo[playerid][pPhousekey2]][hMailX], HouseInfo[PlayerInfo[playerid][pPhousekey2]][hMailY], HouseInfo[PlayerInfo[playerid][pPhousekey2]][hMailZ])) return 1;
@@ -58,18 +58,18 @@ stock IsNearHouseMailbox(playerid)
 	return 0;
 }
 
-stock IsNearPublicMailbox(playerid)
+IsNearPublicMailbox(playerid)
 {
     for(new i = 0; i < sizeof(MailBoxes); i++) if (IsPlayerInRangeOfPoint(playerid, 3.0, MailBoxes[i][mbPosX], MailBoxes[i][mbPosY], MailBoxes[i][mbPosZ])) return 1;
 	return 0;
 }
 
-stock DisplayStampDialog(playerid)
+DisplayStampDialog(playerid)
 {
 	ShowPlayerDialogEx(playerid, DIALOG_POSTAMP, DIALOG_STYLE_LIST, "Buy a stamp", "Regular Mail		$100\nPriority Mail		$250\nPremium Mail		$500 (Gold VIP+)\nGovernment Mail	Free", "Next", "Cancel");
 }
 
-stock RenderHouseMailbox(h)
+RenderHouseMailbox(h)
 {
 	DestroyDynamicObject(HouseInfo[h][hMailObjectId]);
 	DestroyDynamic3DTextLabel(HouseInfo[h][hMailTextID]);
@@ -82,7 +82,7 @@ stock RenderHouseMailbox(h)
 	}
 }
 
-stock RenderStreetMailbox(id)
+RenderStreetMailbox(id)
 {
 	DestroyDynamicObject(MailBoxes[id][mbObjectId]);
 	DestroyDynamic3DTextLabel(MailBoxes[id][mbTextId]);
@@ -95,7 +95,7 @@ stock RenderStreetMailbox(id)
 	}
 }
 
-stock HasMailbox(playerid)
+HasMailbox(playerid)
 {
 	if (PlayerInfo[playerid][pPhousekey] != INVALID_HOUSE_ID &&	HouseInfo[PlayerInfo[playerid][pPhousekey]][hMailX] != 0.0) return 1;
 	if (PlayerInfo[playerid][pPhousekey2] != INVALID_HOUSE_ID && HouseInfo[PlayerInfo[playerid][pPhousekey2]][hMailX] != 0.0) return 1;
@@ -103,7 +103,7 @@ stock HasMailbox(playerid)
 	return 0;
 }
 
-stock GetFreeMailboxId()
+GetFreeMailboxId()
 {
     for (new i; i < MAX_MAILBOXES; i++) {
 		if (MailBoxes[i][mbPosX] == 0.0) return i;
@@ -111,7 +111,7 @@ stock GetFreeMailboxId()
 	return -1;
 }
 
-stock ClearHouseMailbox(houseid)
+ClearHouseMailbox(houseid)
 {
 	HouseInfo[houseid][hMailX] = 0.0;
 	HouseInfo[houseid][hMailY] = 0.0;
@@ -121,7 +121,7 @@ stock ClearHouseMailbox(houseid)
 	SaveHouse(houseid);
 }
 
-stock ClearStreetMailbox(boxid)
+ClearStreetMailbox(boxid)
 {
 	MailBoxes[boxid][mbVW] = 0;
 	MailBoxes[boxid][mbInt] = 0;

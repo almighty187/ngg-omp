@@ -35,26 +35,18 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-stock vehicle_lock_doors(vehicle) {
+vehicle_lock_doors(vehicle) {
 
-	new
-		vParamArr[7];
-
-	GetVehicleParamsEx(vehicle, vParamArr[0], vParamArr[1], vParamArr[2], vParamArr[3], vParamArr[4], vParamArr[5], vParamArr[6]);
-	// if(IsABike(vehicle)) return SetVehicleParamsEx(vehicle, vParamArr[0], vParamArr[1], vParamArr[2], VEHICLE_PARAMS_OFF, vParamArr[4], vParamArr[5], vParamArr[6]);
-	return SetVehicleParamsEx(vehicle, vParamArr[0], vParamArr[1], vParamArr[2], VEHICLE_PARAMS_ON, vParamArr[4], vParamArr[5], vParamArr[6]);
+	// if(IsABike(vehicle)) return SetVehicleParamsEx(vehicle, .doors = VEHICLE_PARAMS_OFF);
+	return SetVehicleParamsEx(vehicle, .doors = VEHICLE_PARAMS_ON);
 }
 
-stock vehicle_unlock_doors(vehicle) {
+vehicle_unlock_doors(vehicle) {
 
-	new
-		vParamArr[7];
-
-	GetVehicleParamsEx(vehicle, vParamArr[0], vParamArr[1], vParamArr[2], vParamArr[3], vParamArr[4], vParamArr[5], vParamArr[6]);
-	return SetVehicleParamsEx(vehicle, vParamArr[0], vParamArr[1], vParamArr[2], VEHICLE_PARAMS_OFF, vParamArr[4], vParamArr[5], vParamArr[6]);
+	return SetVehicleParamsEx(vehicle, .doors = VEHICLE_PARAMS_OFF);
 }
 
-stock IsSeatAvailable(vehicleid, seat)
+IsSeatAvailable(vehicleid, seat)
 {
 	switch(GetVehicleModel(vehicleid)) {
 		case 425, 430, 432, 441, 446, 448, 452, 453, 454, 464, 465, 472, 473, 476, 481, 484, 485, 486, 493, 501, 509, 510, 519, 520, 530, 531, 532, 539, 553, 564, 568, 571, 572, 574, 583, 592, 594, 595: return 0;
@@ -63,7 +55,7 @@ stock IsSeatAvailable(vehicleid, seat)
 	return 1;
 }
 
-stock IsPlayerInInvalidNosVehicle(playerid)
+IsPlayerInInvalidNosVehicle(playerid)
 {
 	switch(GetVehicleModel(GetPlayerVehicleID(playerid))) {
 		case 430, 446, 448, 449, 452, 453, 454, 461, 462, 463, 468, 472, 473, 481, 484, 493, 509, 510, 521, 522, 523, 537, 538, 569, 570, 581, 586, 590, 595: return 1;
@@ -72,7 +64,7 @@ stock IsPlayerInInvalidNosVehicle(playerid)
 }
 
 
-stock IsARC(carid)
+IsARC(carid)
 {
 	switch(GetVehicleModel(carid)) {
 		case 441, 464, 465, 501, 564: return 1;
@@ -80,42 +72,42 @@ stock IsARC(carid)
 	return 0;
 }
 
-stock IsABoat(carid) {
+IsABoat(carid) {
 	switch(GetVehicleModel(carid)) {
 		case 472, 473, 493, 484, 430, 454, 453, 452, 446, 595: return 1;
 	}
 	return 0;
 }
 
-stock IsABike(carid) {
+IsABike(carid) {
 	switch(GetVehicleModel(carid)) {
 		case 509, 481, 510, 462, 448, 581, 522, 461, 521, 523, 463, 586, 468, 471: return 1;
 	}
 	return 0;
 }
 
-stock IsATrain(modelid) {
+IsATrain(modelid) {
 	switch(modelid) {
 		case 538, 537, 590, 569, 570: return 1;
 	}
 	return 0;
 }
 
-stock NoWindows(modelid) {
+NoWindows(modelid) {
 	switch(GetVehicleModel(modelid)) {
 		case 509, 481, 510, 462, 448, 581, 522, 461, 521, 523, 463, 586, 468, 471, 431, 437, 472, 473, 493, 484, 430, 454, 453, 452, 446, 595: return 1;
 	}
 	return 0;
 }
 
-stock IsASpawnedTrain(carid) {
+IsASpawnedTrain(carid) {
 	switch(GetVehicleModel(carid)) {
 		case 538, 537, 590, 569, 570: return 1;
 	}
 	return 0;
 }
 
-stock IsAPlane(carid, type = 0)
+IsAPlane(carid, type = 0)
 {
 	if(type == 0)
 	{
@@ -132,7 +124,7 @@ stock IsAPlane(carid, type = 0)
 	return 0;
 }
 
-stock IsRestrictedVehicle(modelid)
+IsRestrictedVehicle(modelid)
 {
 	switch(modelid) {
 		case 406, 407, 408, 416, 425, 430, 432, 433, 447, 464, 465, 476, 486, 488, 490, 497, 501, 520, 523, 524, 525, 528, 532, 544, 548, 552, 563, 564, 577, 582, 592, 594, 596, 597, 598, 599, 601, 610, 611: return 1;
@@ -140,7 +132,7 @@ stock IsRestrictedVehicle(modelid)
 	return 0;
 }
 
-stock IsWeaponizedVehicle(modelid)
+IsWeaponizedVehicle(modelid)
 {
 	switch(modelid) {
 		case 425, 432, 447, 476, 520: return 1;
@@ -148,7 +140,7 @@ stock IsWeaponizedVehicle(modelid)
 	return 0;
 }	
 
-stock IsATruckerCar(carid)
+IsATruckerCar(carid)
 {
 	for(new v = 0; v < sizeof(TruckerVehicles); v++) {
 	    if(carid == TruckerVehicles[v]) return 1;
@@ -156,7 +148,7 @@ stock IsATruckerCar(carid)
 	return 0;
 }
 
-stock IsInGarbageTruck(id)
+IsInGarbageTruck(id)
 {
 	for(new i = 0; i < sizeof(GarbageVehicles); i++)
 	{
@@ -165,7 +157,7 @@ stock IsInGarbageTruck(id)
 	return 0;
 }
 
-stock IsAPizzaCar(carid)
+IsAPizzaCar(carid)
 {
 	for (new v = 0; v < sizeof(PizzaVehicles); v++) {
 	    if(carid == PizzaVehicles[v]) return 1;
@@ -173,7 +165,7 @@ stock IsAPizzaCar(carid)
 	return 0;
 }
 
-stock IsATowTruck(carid)
+IsATowTruck(carid)
 {
 	if(GetVehicleModel(carid) == 525) {
 		return 1;
@@ -181,14 +173,14 @@ stock IsATowTruck(carid)
 	return 0;
 }
 
-stock IsAAircraftTowTruck(carid)
+IsAAircraftTowTruck(carid)
 {
 	if(GetVehicleModel(carid) == 485 || GetVehicleModel(carid) == 583) {
 		return 1;
 	}
 	return 0;
 }
-stock IsAHelicopter(carid)
+IsAHelicopter(carid)
 {
 	if(GetVehicleModel(carid) == 548 || GetVehicleModel(carid) == 425 || GetVehicleModel(carid) == 417 || GetVehicleModel(carid) == 487 || GetVehicleModel(carid) == 488 || GetVehicleModel(carid) == 497 || GetVehicleModel(carid) == 563 || GetVehicleModel(carid) == 447 || GetVehicleModel(carid) == 469 || GetVehicleModel(carid) == 593) {
 		return 1;
@@ -197,7 +189,7 @@ stock IsAHelicopter(carid)
 }
 
 
-stock IsAnBus(carid)
+IsAnBus(carid)
 {
 	if(GetVehicleModel(carid) == 431 || GetVehicleModel(carid) == 437) {
 		return 1;
@@ -205,7 +197,7 @@ stock IsAnBus(carid)
 	return 0;
 }
 
-stock IsAnTaxi(carid)
+IsAnTaxi(carid)
 {
 	if(GetVehicleModel(carid) == 420 || GetVehicleModel(carid) == 438) {
 		return 1;
@@ -213,64 +205,64 @@ stock IsAnTaxi(carid)
 	return 0;
 }
 
-stock partType(type)
+partType(CARMODTYPE:type)
 {
 	new name[32];
 	switch(type)
 	{
-	    case 0:
+	    case CARMODTYPE_SPOILER:
 		{
 			name = "Spoiler";
         }
-        case 1:
+        case CARMODTYPE_HOOD:
 		{
 			name = "Hood";
         }
-        case 2:
+        case CARMODTYPE_ROOF:
 		{
 			name = "Roof";
         }
-        case 3:
+        case CARMODTYPE_SIDESKIRT:
 		{
 			name = "Sideskirt";
         }
-        case 4:
+        case CARMODTYPE_LAMPS:
 		{
 			name = "Lamps";
         }
-        case 5:
+        case CARMODTYPE_NITRO:
 		{
 			name = "Nitro";
         }
-        case 6:
+        case CARMODTYPE_EXHAUST:
 		{
 			name = "Exhaust";
         }
-        case 7:
+        case CARMODTYPE_WHEELS:
 		{
 			name = "Wheels";
         }
-        case 8:
+        case CARMODTYPE_STEREO:
 		{
 			name = "Stereo";
         }
-        case 9:
+        case CARMODTYPE_HYDRAULICS:
 		{
 			name = "Hydraulics";
         }
-        case 10:
+        case CARMODTYPE_FRONT_BUMPER:
 		{
 			name = "Front Bumper";
         }
-        case 11:
+        case CARMODTYPE_REAR_BUMPER:
 		{
 			name = "Rear Bumper";
         }
-        case 12:
+        case CARMODTYPE_VENT_RIGHT:
 		{
 			name = "Left Vent";
         }
-        case 13:
+        case CARMODTYPE_VENT_LEFT:
 		{
 			name = "Right Vent";
         }
@@ -282,7 +274,7 @@ stock partType(type)
 	return name;
 }
 
-stock partName(part)
+partName(part)
 {
 	new name[32];
 	switch(part - 1000)
@@ -1051,7 +1043,7 @@ stock partName(part)
 	return name;
 }
 
-stock GetXYBehindVehicle(vehicleid, &Float:x, &Float:y, Float:distance)
+GetXYBehindVehicle(vehicleid, &Float:x, &Float:y, Float:distance)
 {
     new
         Float:a;
@@ -1061,7 +1053,7 @@ stock GetXYBehindVehicle(vehicleid, &Float:x, &Float:y, Float:distance)
     y += ( distance * floatcos( -a+180, degrees ));
 }
 
-stock GetPosBehindVehicle(vehicleid, &Float:x, &Float:y, &Float:z, Float:offset=1.0)
+GetPosBehindVehicle(vehicleid, &Float:x, &Float:y, &Float:z, Float:offset=1.0)
 {
 	new Float:vehicleSize[3], Float:vehiclePos[3];
 	GetVehiclePos(vehicleid, vehiclePos[0], vehiclePos[1], vehiclePos[2]);
@@ -1075,7 +1067,7 @@ stock GetPosBehindVehicle(vehicleid, &Float:x, &Float:y, &Float:z, Float:offset=
 
 TriggerVehicleAlarm(triggerid, ownerid, vehicleid)
 {
-	new szMessage[128], szCarLocation[MAX_ZONE_NAME], slot = GetPlayerVehicle(ownerid, vehicleid), Float: CarPos[3], engine, lights, alarm, doors, bonnet, boot, objective;
+	new szMessage[128], szCarLocation[MAX_ZONE_NAME], slot = GetPlayerVehicle(ownerid, vehicleid), Float: CarPos[3];
 	if(PlayerVehicleInfo[ownerid][slot][pvAlarm] > 0) {
 		ProxDetector(30.0, triggerid, "(( A vehicle alarm has been triggered. ))", COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 		GetVehiclePos(vehicleid, CarPos[0], CarPos[1], CarPos[2]);
@@ -1083,12 +1075,11 @@ TriggerVehicleAlarm(triggerid, ownerid, vehicleid)
 		format(szMessage, sizeof(szMessage), "SMS: Your %s(%d)'s Alarm at %s has been triggered, call 911, Sender: Vehicle Security Company", VehicleName[PlayerVehicleInfo[ownerid][slot][pvModelId] - 400], vehicleid, szCarLocation);
 		SendClientMessageEx(ownerid, COLOR_YELLOW, szMessage);
 		PlayerVehicleInfo[ownerid][slot][pvAlarmTriggered] = 1;
-		GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
-		SetVehicleParamsEx(vehicleid,engine,lights,VEHICLE_PARAMS_ON,doors,bonnet,boot,objective);
+		SetVehicleParamsEx(vehicleid, .alarm = VEHICLE_PARAMS_ON);
 	}
 }
 
-stock GetVehicleRelativePos(vehicleid, &Float:x, &Float:y, &Float:z, Float:xoff=0.0, Float:yoff=0.0, Float:zoff=0.0)
+GetVehicleRelativePos(vehicleid, &Float:x, &Float:y, &Float:z, Float:xoff=0.0, Float:yoff=0.0, Float:zoff=0.0)
 {
     new Float:rot;
     GetVehicleZAngle(vehicleid, rot);
@@ -1122,7 +1113,7 @@ stock RegisterVehicleNumberPlate(vehicleid, sz_NumPlate[]) {
 }
 
 
-stock legalRims(playerid, compenent, vehicleid)
+legalRims(playerid, compenent, vehicleid)
 {
 	if(IsPlayerInRangeOfPoint(playerid, 20, 617.5360,-1.9900,1000.6592)) // Transfender
 	{
@@ -1321,12 +1312,12 @@ UnLockPlayerVehicle(ownerid, carid, type)
 	}
 }
 
-encode_tires(tire1, tire2, tire3, tire4)
+VEHICLE_TYRE_STATUS:encode_tires(tire1, tire2, tire3, tire4)
 {
-	return tire1 | (tire2 << 1) | (tire3 << 2) | (tire4 << 3);
+	return VEHICLE_TYRE_STATUS:(tire1 | (tire2 << 1) | (tire3 << 2) | (tire4 << 3));
 }
 
-stock SurfingCheck(vehicleid)
+SurfingCheck(vehicleid)
 {
 	foreach(new p: Player)
 	{
@@ -1334,34 +1325,34 @@ stock SurfingCheck(vehicleid)
 		{
 			new Float:x, Float:y, Float:z;
 			GetPlayerPos(p, x, y, z);
-			SetTimerEx("SurfingFix", 2000, 0, "ifff", p, x, y, z);
+			SetTimerEx("SurfingFix", 2000, false, "ifff", p, x, y, z);
 		}
 	}	
 }
 
-stock InvalidModCheck(model, partid) {
+InvalidModCheck(model, partid) {
     switch(model) {
 		case 427, 430, 446, 452, 453, 454, 472, 473, 484, 493, 595, 573, 556, 557, 539, 471, 432, 406, 444,
 		448, 461, 462, 463, 468, 481, 509, 510, 521, 522, 581, 586, 417, 425, 447, 460, 469, 476, 487,
 		488, 511, 512, 513, 519, 520, 548, 553, 563, 577, 592, 593: return 0;
 		default: switch(GetVehicleComponentType(partid)) {
-			case 5: switch(partid) {
+			case CARMODTYPE_NITRO: switch(partid) {
 				case 1008, 1009, 1010: return 1;
 				default: return 0;
 			}
-			case 7: switch(partid) {
+			case CARMODTYPE_WHEELS: switch(partid) {
 				case 1073, 1074, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1082, 1083, 1084, 1085, 1096, 1097, 1098, 1025: return 1;
 				default: return 0;
 			}
-			case 8: switch(partid) {
+			case CARMODTYPE_STEREO: switch(partid) {
 				case 1086: return 1;
 				default: return 0;
 			}
-			case 9: switch(partid) {
+			case CARMODTYPE_HYDRAULICS: switch(partid) {
 				case 1087: return 1;
 				default: return 0;
 			}
-			case 12, 13: switch(partid) {
+			case CARMODTYPE_VENT_RIGHT, CARMODTYPE_VENT_LEFT: switch(partid) {
 				case 1142, 1144, 1143, 1145: return 1;
 				default: return 0;
 			}
@@ -1371,81 +1362,64 @@ stock InvalidModCheck(model, partid) {
 }
 
 
-stock SetVehicleLights(vehicleid, playerid)
+SetVehicleLights(vehicleid, playerid)
 {
-	new engine,lights,alarm,doors,bonnet,boot,objective;
-    GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	new bool:lights;
+    GetVehicleParamsEx(vehicleid, .lights = lights);
     if(lights == VEHICLE_PARAMS_ON)
 	{
-		SetVehicleParamsEx(vehicleid,engine,VEHICLE_PARAMS_OFF,alarm,doors,bonnet,boot,objective);
+		SetVehicleParamsEx(vehicleid, .lights = VEHICLE_PARAMS_OFF);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle lights successfully turned off.");
 	}
     else if(lights == VEHICLE_PARAMS_OFF || lights == VEHICLE_PARAMS_UNSET)
 	{
-		SetVehicleParamsEx(vehicleid,engine,VEHICLE_PARAMS_ON,alarm,doors,bonnet,boot,objective);
+		SetVehicleParamsEx(vehicleid, .lights = VEHICLE_PARAMS_ON);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle lights successfully turned on.");
 	}
 	return 1;
 }
 
-stock SetVehicleHood(vehicleid, playerid)
+SetVehicleHood(vehicleid, playerid)
 {
-	new engine,lights,alarm,doors,bonnet,boot,objective;
-    GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	new bool:bonnet;
+    GetVehicleParamsEx(vehicleid, .bonnet = bonnet);
     if(bonnet == VEHICLE_PARAMS_ON)
 	{
-		SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,VEHICLE_PARAMS_OFF,boot,objective);
+		SetVehicleParamsEx(vehicleid, .bonnet = VEHICLE_PARAMS_OFF);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle hood successfully closed.");
 	}
     else if(bonnet == VEHICLE_PARAMS_OFF || bonnet == VEHICLE_PARAMS_UNSET)
 	{
-		SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,VEHICLE_PARAMS_ON,boot,objective);
+		SetVehicleParamsEx(vehicleid, .bonnet = VEHICLE_PARAMS_ON);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle hood successfully opened.");
 	}
 	return 1;
 }
 
-stock SetVehicleTrunk(vehicleid, playerid)
+SetVehicleTrunk(vehicleid, playerid)
 {
-	new engine,lights,alarm,doors,bonnet,boot,objective;
-    GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	new bool:boot;
+    GetVehicleParamsEx(vehicleid, .boot = boot);
     if(boot == VEHICLE_PARAMS_ON)
 	{
-		SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,VEHICLE_PARAMS_OFF,objective);
+		SetVehicleParamsEx(vehicleid, .boot = VEHICLE_PARAMS_OFF);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle trunk successfully closed.");
 	}
     else if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET)
 	{
-		SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,VEHICLE_PARAMS_ON,objective);
+		SetVehicleParamsEx(vehicleid, .boot = VEHICLE_PARAMS_ON);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle trunk successfully opened.");
 	}
 	return 1;
 }
 
-stock SetVehicleDoors(vehicleid, playerid)
-{
-	new engine,lights,alarm,doors,bonnet,boot,objective;
-    GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
-    if(doors == VEHICLE_PARAMS_ON)
-	{
-		SetVehicleParamsEx(vehicleid,engine,lights,alarm,VEHICLE_PARAMS_OFF,bonnet,boot,objective);
-		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle {AA3333}Doors {FFFFFF}successfully {33AA33}closed{FFFFFF}.");
-	}
-    else if(doors == VEHICLE_PARAMS_OFF || doors == VEHICLE_PARAMS_UNSET)
-	{
-		SetVehicleParamsEx(vehicleid,engine,lights,alarm,VEHICLE_PARAMS_ON,bonnet,boot,objective);
-		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle {AA3333}Doors {FFFFFF}successfully {33AA33}opened{FFFFFF}.");
-	}
-	return 1;
-}
-
-stock IsValidVehicleID(vehicleid)
+IsValidVehicleID(vehicleid)
 {
    if(GetVehicleModel(vehicleid)) return 1;
    return 0;
 }
 
-stock GetClosestCar(iPlayer, iException = INVALID_VEHICLE_ID, Float: fRange = Float: 0x7F800000) {
+GetClosestCar(iPlayer, iException = INVALID_VEHICLE_ID, Float: fRange = Float: 0x7F800000) {
 
 	new
 		iReturnID = INVALID_VEHICLE_ID,
@@ -1461,7 +1435,7 @@ stock GetClosestCar(iPlayer, iException = INVALID_VEHICLE_ID, Float: fRange = Fl
 	return iReturnID;
 }
 
-stock Float: GetVehicleFuelCapacity(vehicleid)
+Float: GetVehicleFuelCapacity(vehicleid)
 {
 	new Float: capacity;
 	if (IsABike(vehicleid)) {
@@ -1474,7 +1448,7 @@ stock Float: GetVehicleFuelCapacity(vehicleid)
 	//TODO optimise more
 }
 
-stock RespawnNearbyVehicles(iPlayerID, Float: fRadius) {
+RespawnNearbyVehicles(iPlayerID, Float: fRadius) {
 
 	new
 		Float: fPlayerPos[3];
@@ -1495,7 +1469,7 @@ stock RespawnNearbyVehicles(iPlayerID, Float: fRadius) {
 	return 1;
 }
 
-stock IsRefuelableVehicle(vehicleid)
+IsRefuelableVehicle(vehicleid)
 {
 	new modelid = GetVehicleModel(vehicleid);
 	switch (modelid)
@@ -1505,35 +1479,15 @@ stock IsRefuelableVehicle(vehicleid)
 	return 1;
 }
 
-stock SetVehicleTireState(vehicleid, tire1, tire2, tire3, tire4)
+SetVehicleTireState(vehicleid, tire1, tire2, tire3, tire4)
 {
-    new panels, doors, Lights, tires;
+    new VEHICLE_PANEL_STATUS:panels, VEHICLE_DOOR_STATUS:doors, VEHICLE_LIGHT_STATUS:Lights, VEHICLE_TYRE_STATUS:tires;
    	GetVehicleDamageStatus(vehicleid, panels, doors, Lights, tires);
     tires = encode_tires(!tire1, !tire2, !tire3, !tire4);
     UpdateVehicleDamageStatus(vehicleid, panels, doors, Lights, tires);
 }
 
-stock GetVehicleTireState(vehicleid, &tire1, &tire2, &tire3, &tire4)
-{
-    new panels, doors, Lights, tires;
-   	GetVehicleDamageStatus(vehicleid, panels, doors, Lights, tires);
-    tire1 = !(tires >> 0 & 0x1);
-	tire2 = !(tires >> 1 & 0x1);
-	tire3 = !(tires >> 2 & 0x1);
-	tire4 = !(tires >> 3 & 0x1);
-}
-
-stock IsVehicleOccupied(iVehicleID, iSeatID = 0) {
-	foreach(new x : Player)
-	{
-		if(GetPlayerVehicleID(x) == iVehicleID && GetPlayerVehicleSeat(x) == iSeatID) {
-			return 1;
-		}
-	}	
-	return 0;
-}
-
-stock IsVehicleInTow(iVehicleID) {
+IsVehicleInTow(iVehicleID) {
 	foreach(new x : Player)
 	{
 		if(arr_Towing[x] == iVehicleID) {
@@ -1582,17 +1536,17 @@ public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
 		}
 		else if(PlayerCuffed[playerid] != 0) {
 			ClearAnimationsEx(playerid);
-			ApplyAnimation(playerid,"ped","cower",1,1,0,0,0,0,1);
+			ApplyAnimation(playerid,"ped","cower",1,true,false,false,false,0,SYNC_ALL);
 			TogglePlayerControllable(playerid, false);
 		}
 	}
 	SetPVarInt(playerid, "LastWeapon", GetPlayerWeapon(playerid));
 
-	new engine,lights,alarm,doors,bonnet,boot,objective;
-	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	new bool:engine;
+	GetVehicleParamsEx(vehicleid,engine);
 	if(engine == VEHICLE_PARAMS_UNSET) switch(GetVehicleModel(vehicleid)) {
-		case 509, 481, 510: VehicleFuel[vehicleid] = GetVehicleFuelCapacity(vehicleid), arr_Engine{vehicleid} = 1, SetVehicleParamsEx(vehicleid,VEHICLE_PARAMS_ON,lights,alarm,doors,bonnet,boot,objective);
-		default: SetVehicleParamsEx(vehicleid,VEHICLE_PARAMS_OFF,VEHICLE_PARAMS_OFF,alarm,doors,bonnet,boot,objective), arr_Engine{vehicleid} = 0;
+		case 509, 481, 510: VehicleFuel[vehicleid] = GetVehicleFuelCapacity(vehicleid), arr_Engine{vehicleid} = 1, SetVehicleParamsEx(vehicleid,VEHICLE_PARAMS_ON);
+		default: SetVehicleParamsEx(vehicleid,VEHICLE_PARAMS_OFF,VEHICLE_PARAMS_OFF), arr_Engine{vehicleid} = 0;
 	}
 
 	if(GetPVarInt(playerid, "UsingSprunk") == 1)
@@ -1614,7 +1568,7 @@ public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
 	}
 	if(!ispassenger)
 	{
-	    SetPlayerArmedWeapon(playerid, 0);
+	    SetPlayerArmedWeapon(playerid, WEAPON_FIST);
 		if(PlayerInfo[playerid][pAccountRestricted] == 1)
 		{
 			new Float:slx, Float:sly, Float:slz;
@@ -1801,8 +1755,8 @@ public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
 		}
 		else if(IsAHelicopter(vehicleid))
 		{
-		    PlayerInfo[playerid][pAGuns][GetWeaponSlot(46)] = 46;
-			GivePlayerValidWeapon(playerid, 46);
+		    PlayerInfo[playerid][pAGuns][GetWeaponSlot(WEAPON_PARACHUTE)] = WEAPON_PARACHUTE;
+			GivePlayerValidWeapon(playerid, WEAPON_PARACHUTE);
 		}
 		else if(IsAnTaxi(vehicleid) || IsAnBus(vehicleid))
 		{
@@ -1863,12 +1817,12 @@ CMD:car(playerid, params[])
 	}
 	if(strcmp(choice, "engine", true) == 0 && IsPlayerInAnyVehicle(playerid) && GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 	{
-		new engine,lights,alarm,doors,bonnet,boot,objective,vehicleid;
+		new bool:engine,vehicleid;
 		vehicleid = GetPlayerVehicleID(playerid);
 		if(GetVehicleModel(vehicleid) == 481 || GetVehicleModel(vehicleid) == 509 || GetVehicleModel(vehicleid) == 510 || DynVeh[vehicleid] != -1 && DynVehicleInfo[DynVeh[vehicleid]][gv_iType] == 1 && GetVehicleModel(vehicleid) == 592) return SendClientMessageEx(playerid,COLOR_WHITE,"This command can't be used in this vehicle.");
 		if(WheelClamp{vehicleid}) return SendClientMessageEx(playerid,COLOR_WHITE,"(( This vehicle has a wheel camp on its front tire, you will not be able to drive away with it. ))");
 
-		GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+		GetVehicleParamsEx(vehicleid,engine);
 		if(engine == VEHICLE_PARAMS_ON)
 		{
 			SetVehicleEngine(vehicleid, playerid);
@@ -1882,7 +1836,7 @@ CMD:car(playerid, params[])
 			format(string, sizeof(string), "{FF8000}** {C2A2DA}%s turns the key in the ignition and the engine starts.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle engine starting, please wait...");
-			SetTimerEx("SetVehicleEngine", 1000, 0, "dd",  vehicleid, playerid);
+			SetTimerEx("SetVehicleEngine", 1000, false, "dd",  vehicleid, playerid);
 			RemoveVehicleFromMeter(vehicleid);
 		}
 	}
@@ -1945,8 +1899,8 @@ CMD:car(playerid, params[])
 	else if(strcmp(choice, "fuel", true) == 0 && IsPlayerInAnyVehicle(playerid) && GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 	{
 		new vehicleid = GetPlayerVehicleID(playerid);
-		new engine,lights,alarm,doors,bonnet,boot,objective,enginestatus[4],lightstatus[4];
-		GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+		new bool:engine,bool:lights,enginestatus[4],lightstatus[4];
+		GetVehicleParamsEx(vehicleid,engine,lights);
 		if(!IsRefuelableVehicle(vehicleid)) return SendClientMessageEx(playerid,COLOR_RED,"This vehicle doesn't need fuel.");
 		if(engine != VEHICLE_PARAMS_ON) strcpy(enginestatus, "OFF", 4);
 		else strcpy(enginestatus, "ON", 3);
@@ -1960,8 +1914,8 @@ CMD:car(playerid, params[])
 	else if(strcmp(choice, "status", true) == 0 && IsPlayerInAnyVehicle(playerid) && GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 	{
 		new vehicleid = GetPlayerVehicleID(playerid), slot = GetPlayerVehicle(playerid, vehicleid);
-		new engine,lights,alarm,doors,bonnet,boot,objective,enginestatus[4],lightstatus[4];
-		GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+		new bool:engine,bool:lights,enginestatus[4],lightstatus[4];
+		GetVehicleParamsEx(vehicleid,engine,lights);
 		if(!IsRefuelableVehicle(vehicleid)) return SendClientMessageEx(playerid,COLOR_RED,"This vehicle doesn't need fuel.");
 		if(engine != VEHICLE_PARAMS_ON) strcpy(enginestatus, "OFF", 4);
 		else strcpy(enginestatus, "ON", 3);
@@ -1976,34 +1930,34 @@ CMD:car(playerid, params[])
 	{
 		if(PlayerTied[playerid] != 0 || PlayerCuffed[playerid] != 0) return SendClientMessageEx(playerid, COLOR_GREY, "You can't do that at this time.");
 		if(NoWindows(GetPlayerVehicleID(playerid))) return SendClientMessageEx(playerid, COLOR_GREY, "You can't do use this on this type of vehicle.");
-		new driver, passenger, backleft, backright;
+		new bool:driver, bool:passenger, bool:backleft, bool:backright;
 		GetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), driver, passenger, backleft, backright);
 		if((GetPlayerState(playerid) == PLAYER_STATE_DRIVER && id == 0) || (GetPlayerState(playerid) == PLAYER_STATE_PASSENGER && GetPlayerVehicleSeat(playerid) == 0))
 		{
 			if(VehInfo[GetPlayerVehicleID(playerid)][vCarWindow0]) VehInfo[GetPlayerVehicleID(playerid)][vCarWindow0] = 0;
 			else VehInfo[GetPlayerVehicleID(playerid)][vCarWindow0] = 1;
-			SetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), !driver, passenger, backleft, backright);
+			SetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), !driver);
 			format(string, sizeof(string), "{FF8000}** {C2A2DA}%s winds the driver-side window %s.", GetPlayerNameEx(playerid), (VehInfo[GetPlayerVehicleID(playerid)][vCarWindow0] == 0) ? ("up") : ("down"));
 		}
 		else if((GetPlayerState(playerid) == PLAYER_STATE_DRIVER && id == 1) || (GetPlayerState(playerid) == PLAYER_STATE_PASSENGER && GetPlayerVehicleSeat(playerid) == 1))
 		{
 			if(VehInfo[GetPlayerVehicleID(playerid)][vCarWindow1]) VehInfo[GetPlayerVehicleID(playerid)][vCarWindow1] = 0;
 			else VehInfo[GetPlayerVehicleID(playerid)][vCarWindow1] = 1;
-			SetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), driver, !passenger, backleft, backright);
+			SetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), .frontRight = !passenger);
 			format(string, sizeof(string), "{FF8000}** {C2A2DA}%s winds the passenger-side window %s.", GetPlayerNameEx(playerid), (VehInfo[GetPlayerVehicleID(playerid)][vCarWindow1] == 0) ? ("up") : ("down"));
 		}
 		else if((GetPlayerState(playerid) == PLAYER_STATE_DRIVER && id == 2) || (GetPlayerState(playerid) == PLAYER_STATE_PASSENGER && GetPlayerVehicleSeat(playerid) == 2))
 		{
 			if(VehInfo[GetPlayerVehicleID(playerid)][vCarWindow2]) VehInfo[GetPlayerVehicleID(playerid)][vCarWindow2] = 0;
 			else VehInfo[GetPlayerVehicleID(playerid)][vCarWindow2] = 1;
-			SetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), driver, passenger, !backleft, backright);
+			SetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), .rearLeft = !backleft);
 			format(string, sizeof(string), "{FF8000}** {C2A2DA}%s winds the rear driver-side window %s.", GetPlayerNameEx(playerid), (VehInfo[GetPlayerVehicleID(playerid)][vCarWindow2] == 0) ? ("up") : ("down"));
 		}
 		else if((GetPlayerState(playerid) == PLAYER_STATE_DRIVER && id == 3) || (GetPlayerState(playerid) == PLAYER_STATE_PASSENGER && GetPlayerVehicleSeat(playerid) == 3))
 		{
 			if(VehInfo[GetPlayerVehicleID(playerid)][vCarWindow3]) VehInfo[GetPlayerVehicleID(playerid)][vCarWindow3] = 0;
 			else VehInfo[GetPlayerVehicleID(playerid)][vCarWindow3] = 1;
-			SetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), driver, passenger, backleft, !backright);
+			SetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), .rearRight = !backright);
 			format(string, sizeof(string), "{FF8000}** {C2A2DA}%s winds the rear passenger-side window %s.", GetPlayerNameEx(playerid), (VehInfo[GetPlayerVehicleID(playerid)][vCarWindow3] == 0) ? ("up") : ("down"));
 		}
 		ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -2011,7 +1965,7 @@ CMD:car(playerid, params[])
 	else if(strcmp(choice, "windows", true) == 0 && IsPlayerInAnyVehicle(playerid) && !IsABike(GetPlayerVehicleID(playerid)) && !IsABoat(GetPlayerVehicleID(playerid)))
 	{
 		if(NoWindows(GetPlayerVehicleID(playerid))) return SendClientMessageEx(playerid, COLOR_GREY, "You can't do use this on this type of vehicle.");
-		new driver, passenger, backleft, backright;
+		new bool:driver, bool:passenger, bool:backleft, bool:backright;
 		GetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), driver, passenger, backleft, backright);
 		SetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), !driver, !passenger, !backleft, !backright);
 	    if(VehInfo[GetPlayerVehicleID(playerid)][vCarWindows])
@@ -2062,7 +2016,7 @@ CMD:window(playerid, params[]) {
         }
         else 
         {
-        	TogglePlayerSpectating(playerid, 0);
+        	TogglePlayerSpectating(playerid, false);
         	SetPlayerPos(playerid, GetPVarFloat(playerid, "air_Xpos"), GetPVarFloat(playerid, "air_Ypos"), GetPVarFloat(playerid, "air_Zpos"));
    		}
     }
@@ -2234,8 +2188,8 @@ CMD:unmodcar(playerid, params[]) {
 	for(new d = 0; d < MAX_PLAYERVEHICLES; d++) if(IsPlayerInVehicle(playerid, PlayerVehicleInfo[playerid][d][pvId])) {
 		new modList[512], string[16];
 		new count = 0;
-		for(new f = 0; f < MAX_MODS; f++) if(GetVehicleComponentInSlot(PlayerVehicleInfo[playerid][d][pvId], f) != 0) {
-			if(f != 9 && f != 7 && f != 8) {
+		for(new CARMODTYPE:f; f < MAX_MODS; f++) if(GetVehicleComponentInSlot(PlayerVehicleInfo[playerid][d][pvId], f) != 0) {
+			if(f != CARMODTYPE_HYDRAULICS && f != CARMODTYPE_WHEELS && f != CARMODTYPE_STEREO) {
 				format(modList, sizeof(modList), "%s\n%s - %s", modList, partType(f), partName(GetVehicleComponentInSlot(PlayerVehicleInfo[playerid][d][pvId], f)));
 			}
 			else format(modList, sizeof(modList), "%s\n%s", modList, partType(f));
@@ -2421,17 +2375,17 @@ CMD:carkeys(playerid, params[])
 	return 1;
 }
 
-CMD:sb(playerid, params[]) return cmd_seatbelt(playerid, params);
+CMD:sb(playerid) return cmd_seatbelt(playerid);
 
-CMD:seatbelt(playerid, params[])
+CMD:seatbelt(playerid)
 {
-    if(IsPlayerInAnyVehicle(playerid) == 0)
+    if(!IsPlayerInAnyVehicle(playerid))
 	{
         SendClientMessageEx(playerid, COLOR_GRAD2, "You are not in a vehicle!");
         return 1;
     }
 
-    if(IsPlayerInAnyVehicle(playerid) == 1 && Seatbelt[playerid] == 0)
+    if(IsPlayerInAnyVehicle(playerid) && Seatbelt[playerid] == 0)
 	{
         if(IsABike(GetPlayerVehicleID(playerid)))
             return SendClientMessageEx(playerid, COLOR_WHITE, "We have added a helmet feature, buy a helmet from any 24/7 and use /helmet(/hm).");
@@ -2443,7 +2397,7 @@ CMD:seatbelt(playerid, params[])
         }
 
     }
-    else if(IsPlayerInAnyVehicle(playerid) == 1 && Seatbelt[playerid] == 1)
+    else if(IsPlayerInAnyVehicle(playerid) && Seatbelt[playerid] == 1)
 	{
         if(IsABike(GetPlayerVehicleID(playerid)))
 		{
@@ -2833,7 +2787,7 @@ CMD:userimkit(playerid, params[])
 
 CMD:eject(playerid, params[])
 {
-	new State;
+	new PLAYER_STATE:State;
 	if(IsPlayerInAnyVehicle(playerid))
 	{
 		State=GetPlayerState(playerid);

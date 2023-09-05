@@ -35,19 +35,19 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 
 	if(newkeys & KEY_YES && InBusiness(playerid) != INVALID_BUSINESS_ID) {
-		if(IsAt247(playerid)) return cmd_buy(playerid, "");
-		else if(IsAtRestaurant(playerid)) return cmd_buyfood(playerid, "");
-		else if(IsAtClothingStore(playerid)) return cmd_buyclothes(playerid, "");
+		if(IsAt247(playerid)) return cmd_buy(playerid);
+		else if(IsAtRestaurant(playerid)) return cmd_buyfood(playerid);
+		else if(IsAtClothingStore(playerid)) return cmd_buyclothes(playerid);
 	}
 	return 1;
 }
 
-stock TaxSale(amount)
+TaxSale(amount)
 {
 	new iTaxAmount = floatround(amount / 100 * BUSINESS_TAX_PERCENT);
 	Tax += iTaxAmount;
@@ -64,9 +64,9 @@ stock TaxSale(amount)
 	return amount - iTaxAmount;
 }
 
-stock GivePlayerStoreItem(playerid, type, business, item, price)
+GivePlayerStoreItem(playerid, type, business, item, price)
 {
-	if(Businesses[business][bInventory] <= StoreItemCost[item-1][ItemValue]) return SendClientMessageEx(playerid, COLOR_GRAD2, "The store does not have enough stock for that item!");
+	if(Businesses[business][bInventory] <= StoreItemCost[item-1][ItemValue]) return SendClientMessageEx(playerid, COLOR_GRAD2, "The store does not have enough for that item!");
 	new string[256];
 	switch (item)
   	{
@@ -296,7 +296,7 @@ stock GivePlayerStoreItem(playerid, type, business, item, price)
 }
 
 
-stock DisplayItemPricesDialog(businessid, playerid)
+DisplayItemPricesDialog(businessid, playerid)
 {
 
 	new szDialog[612], pvar[25], iListIndex, i;
@@ -336,37 +336,37 @@ stock DisplayItemPricesDialog(businessid, playerid)
     }
 }
 
-stock IsAt247(playerid)
+IsAt247(playerid)
 {
     new iBusiness = InBusiness(playerid);
    	return (iBusiness != INVALID_BUSINESS_ID && (Businesses[iBusiness][bType] == BUSINESS_TYPE_STORE || Businesses[iBusiness][bType] == BUSINESS_TYPE_GASSTATION));
 }
 
-stock IsAtCasino(playerid)
+IsAtCasino(playerid)
 {
     new iBusiness = InBusiness(playerid);
    	return (iBusiness != INVALID_BUSINESS_ID && (Businesses[iBusiness][bType] == BUSINESS_TYPE_CASINO));
 }
 
-stock IsAtClothingStore(playerid)
+IsAtClothingStore(playerid)
 {
     new iBusiness = InBusiness(playerid);
    	return (iBusiness != INVALID_BUSINESS_ID && Businesses[iBusiness][bType] == BUSINESS_TYPE_CLOTHING);
 }
 
-stock IsAtRestaurant(playerid)
+IsAtRestaurant(playerid)
 {
 	new iBusiness = InBusiness(playerid);
 	return (iBusiness != INVALID_BUSINESS_ID && Businesses[iBusiness][bType] == BUSINESS_TYPE_RESTAURANT);
 }
 
-stock IsAtGym(playerid)
+IsAtGym(playerid)
 {
 	new iBusiness = InBusiness(playerid);
 	return (iBusiness != INVALID_BUSINESS_ID && Businesses[iBusiness][bType] == BUSINESS_TYPE_GYM);
 }
 
-stock StopRefueling(playerid, iBusinessID, iPumpID)
+StopRefueling(playerid, iBusinessID, iPumpID)
 {
 
 	new
@@ -420,7 +420,7 @@ stock StopRefueling(playerid, iBusinessID, iPumpID)
 	return true;
 }
 
-stock GetCarBusiness(carid)
+GetCarBusiness(carid)
 {
     for(new b = 0; b < MAX_BUSINESSES; b++)
     {
@@ -432,7 +432,7 @@ stock GetCarBusiness(carid)
 	return INVALID_BUSINESS_ID;
 }
 
-stock GetBusinessCarSlot(carid)
+GetBusinessCarSlot(carid)
 {
     for(new b = 0; b < MAX_BUSINESSES; b++)
     {
@@ -444,14 +444,14 @@ stock GetBusinessCarSlot(carid)
 	return INVALID_BUSINESS_ID;
 }
 
-stock IsValidBusinessID(id)
+IsValidBusinessID(id)
 {
 	if(id == INVALID_BUSINESS_ID) return 0;
 	else if(id >= 0 && id < MAX_BUSINESSES) return 1;
 	return 0;
 }
 
-stock DestroyDynamicGasPump(iBusiness, iPump)
+DestroyDynamicGasPump(iBusiness, iPump)
 {
 	DestroyDynamicObject(Businesses[iBusiness][GasPumpObjectID][iPump]);
 	DestroyDynamic3DTextLabel(Businesses[iBusiness][GasPumpInfoTextID][iPump]);
@@ -463,7 +463,7 @@ stock DestroyDynamicGasPump(iBusiness, iPump)
 	#endif
 }
 
-stock CreateDynamicGasPump(iPlayerID = INVALID_PLAYER_ID, iBusiness, iPump)
+CreateDynamicGasPump(iPlayerID = INVALID_PLAYER_ID, iBusiness, iPump)
 {
 	if (iPlayerID != INVALID_PLAYER_ID)
 	{
@@ -483,7 +483,7 @@ stock CreateDynamicGasPump(iPlayerID = INVALID_PLAYER_ID, iBusiness, iPump)
 	Businesses[iBusiness][GasPumpSaleTextID][iPump] = CreateDynamic3DTextLabel(szLabel, COLOR_YELLOW, Businesses[iBusiness][GasPumpPosX][iPump], Businesses[iBusiness][GasPumpPosY][iPump], Businesses[iBusiness][GasPumpPosZ][iPump] + 0.7, 10.00);
 }
 
-stock RefreshBusinessPickup(i)
+RefreshBusinessPickup(i)
 {
 	DestroyDynamic3DTextLabel(Businesses[i][bDoorText]);
   	DestroyDynamic3DTextLabel(Businesses[i][bStateText]);
@@ -547,7 +547,7 @@ stock RefreshBusinessPickup(i)
 }
 
 
-stock GetBusinessDefaultPickup(business)
+GetBusinessDefaultPickup(business)
 {
 	switch (Businesses[business][bType]) {
 		case BUSINESS_TYPE_GASSTATION: return 1650;
@@ -568,7 +568,7 @@ stock GetBusinessDefaultPickup(business)
 	return 1318;
 }
 
-stock GetBusinessRankName(rank)
+GetBusinessRankName(rank)
 {
 	new string[16];
 	switch (rank) {
@@ -583,7 +583,7 @@ stock GetBusinessRankName(rank)
 	return string;
 }
 
-stock GetBusinessTypeName(type)
+GetBusinessTypeName(type)
 {
 	new string[20];
 	switch (type) {
@@ -605,7 +605,7 @@ stock GetBusinessTypeName(type)
 	return string;
 }
 
-stock GetInventoryType(businessid)
+GetInventoryType(businessid)
 {
 	new string[30];
 	if(businessid == INVALID_BUSINESS_ID) {
@@ -625,7 +625,7 @@ stock GetInventoryType(businessid)
 	return string;
 }
 
-stock GetSupplyState(stateid)
+GetSupplyState(stateid)
 {
 	new string[28];
 	switch (stateid)	{
@@ -639,13 +639,13 @@ stock GetSupplyState(stateid)
 	return string;
 }
 
-stock InBusiness(playerid)
+InBusiness(playerid)
 {
     if(GetPVarType(playerid, "BusinessesID")) return GetPVarInt(playerid, "BusinessesID");
     else return INVALID_BUSINESS_ID;
 }
 
-stock GetClosestGasPump(playerid, &businessid, &pumpslot)
+GetClosestGasPump(playerid, &businessid, &pumpslot)
 {
 	new Float: minrange = 5.0, Float: range;
 
@@ -666,14 +666,14 @@ stock GetClosestGasPump(playerid, &businessid, &pumpslot)
  	}
 }
 
-stock IsBusinessGasAble(iBusinessType) {
+IsBusinessGasAble(iBusinessType) {
  	switch (iBusinessType) {
  		case 1,7,8: return 1;
 	}
 	return 0;
 }
 
-stock GetFreeGasPumpID(biz)
+GetFreeGasPumpID(biz)
 {
     for (new i; i < MAX_BUSINESS_GAS_PUMPS; i++) {
 		if (Businesses[biz][GasPumpPosX][i] == 0.0) return i;
@@ -826,7 +826,7 @@ CMD:bonline(playerid, params[]) {
     return 1;
 }
 
-CMD:buy(playerid, params[])
+CMD:buy(playerid)
 {
    	if (!IsAt247(playerid)) {
         SendClientMessageEx(playerid, COLOR_GRAD2, "   You are not in a 24/7!");
@@ -1151,8 +1151,8 @@ CMD:refuel(playerid, params[])
 		if (IsVIPcar(vehicleid)) return SendClientMessageEx(playerid, COLOR_RED, "This is a vehicle from the VIP garage and it has already unlimited amount of fuel.");
 		if (IsFamedVeh(vehicleid)) return SendClientMessageEx(playerid, COLOR_RED, "This is a vehicle from the Famed garage and it has already unlimited amount of fuel.");
 		if (IsAdminSpawnedVehicle(vehicleid)) return SendClientMessageEx(playerid, COLOR_RED, "This is an admin-spawned vehicle and it has already unlimited amount of fuel.");
-	    new engine,lights,alarm,doors,bonnet,boot,objective;
-    	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	    new bool:engine;
+    	GetVehicleParamsEx(vehicleid,engine);
 	    if(engine == VEHICLE_PARAMS_ON) return SendClientMessageEx(playerid, COLOR_RED, "You need to shut off the engine before filling up (press ~k~~CONVERSATION_YES~).");
      	if (Businesses[iBusinessID][GasPumpGallons][iPumpID] == 0.0) return SendClientMessageEx(playerid, COLOR_RED, "No gas left in the gas station tank.");
 	    if (!IsRefuelableVehicle(vehicleid)) return SendClientMessageEx(playerid,COLOR_RED,"This vehicle does not need fuel.");
@@ -1632,7 +1632,7 @@ CMD:shopbusinessname(playerid, params[])
 	return 1;
 }
 
-CMD:buyclothes(playerid, params[])
+CMD:buyclothes(playerid)
 {
 	new biz = InBusiness(playerid);
 
@@ -2679,7 +2679,7 @@ CMD:offermenu(playerid, params[])
     return 1;
 }
 
-CMD:buyfood(playerid, params[])
+CMD:buyfood(playerid)
 {
 	if (!IsAtRestaurant(playerid))
 	{
@@ -2900,7 +2900,7 @@ CMD:resupply(playerid, params[])
 
 	format(Businesses[iBusiness][bOrderBy], MAX_PLAYER_NAME, "%s", GetPlayerNameEx(playerid));
 	getdate(year, month, day);
-	format(Businesses[iBusiness][bOrderDate], 30, "%d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, minuite, second);
+	format(Businesses[iBusiness][bOrderDate], 30, "%d-%02d-%02d %02d:%02d:%02d", year, month, day, hour_, minuite, second_);
 	Businesses[iBusiness][bSafeBalance] -= floatround(amount * BUSINESS_ITEMS_COST);
 	Businesses[iBusiness][bOrderAmount] = amount;
 	Businesses[iBusiness][bOrderState] = 1;
@@ -3209,7 +3209,7 @@ CMD:bizlock(playerid, params[])
 	return 1;
 }
 
-stock LoadBusinesses() {
+LoadBusinesses() {
 	printf("[LoadBusinesses] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT OwnerName.Username, b.* FROM businesses b LEFT JOIN accounts OwnerName ON b.OwnerID = OwnerName.id", "BusinessesLoadQueryFinish", "");
 }
@@ -3363,7 +3363,7 @@ public BusinessesLoadQueryFinish()
 	else printf("[LoadBusinesses] Failed to load any businesses.");
 }
 
-stock SaveBusiness(id)
+SaveBusiness(id)
 {
 	new query[4019];
 
@@ -3402,7 +3402,7 @@ stock SaveBusiness(id)
 	return 1;
 }
 
-stock LoadBusinessSales() {
+LoadBusinessSales() {
 
 	print("[LoadBusinessSales] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `businesssales`", "LoadBusinessesSaless", "");
@@ -3430,7 +3430,7 @@ public LoadBusinessesSaless() {
 	return 1;
 }
 
-stock SaveBusinessSale(id)
+SaveBusinessSale(id)
 {
 	new query[200];
 	mysql_format(MainPipeline, query, 200, "UPDATE `businesssales` SET `BusinessID` = '%d', `Text` = '%e', `Price` = '%d', `Available` = '%d', `Purchased` = '%d', `Type` = '%d' WHERE `bID` = '%d'", BusinessSales[id][bBusinessID], BusinessSales[id][bText],
@@ -3440,7 +3440,7 @@ stock SaveBusinessSale(id)
 	return 1;
 }
 
-stock SaveDealershipSpawn(businessid) {
+SaveDealershipSpawn(businessid) {
 	new query[200];
 	mysql_format(MainPipeline, query, sizeof(query), "UPDATE `businesses` SET");
 	mysql_format(MainPipeline, query, sizeof(query), "%s `PurchaseX` = %0.5f, `PurchaseY` = %0.5f, `PurchaseZ` = %0.5f, `PurchaseAngle` = %0.5f", query, Businesses[businessid][bPurchaseX], Businesses[businessid][bPurchaseY], Businesses[businessid][bPurchaseZ], Businesses[businessid][bPurchaseAngle]);
@@ -3448,7 +3448,7 @@ stock SaveDealershipSpawn(businessid) {
     mysql_tquery(MainPipeline, query, "OnQueryFinish", "ii", SENDDATA_THREAD, INVALID_PLAYER_ID);
 }
 
-stock SaveDealershipVehicle(businessid, slotid)
+SaveDealershipVehicle(businessid, slotid)
 {
 	new query[256];
 	//slotid++;

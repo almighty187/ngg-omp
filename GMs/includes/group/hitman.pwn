@@ -35,7 +35,7 @@
     * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 // The new proposed Hitman Agency system. Approved by Rizi & Chapman on 07/08/16.
 // Relevant Documentation: https://docs.google.com/document/d/1rJzSK7MiNKJQOVSdhtc6RXgUr_X5ixkMYaG6nDvgTFc/
@@ -86,7 +86,7 @@ hook OnGameModeExit()
 	fclose(HMAFile);
 }
 
-stock GetPlayerIDEx(playername[]) // Uncomment this
+stock GetPlayerIDEx(const playername[]) // Uncomment this
 {
 	for(new i = 0; i <= MAX_PLAYERS; i++)
   	{
@@ -112,25 +112,25 @@ public PickUpC4(playerid)
     return 1;
 }
 
-stock IsAHitman(playerid)
+IsAHitman(playerid)
 {
 	if(PlayerInfo[playerid][pHitman] > -1) return 1;
 	return 0;
 }
 
-stock IsAHitmanLeader(playerid)
+IsAHitmanLeader(playerid)
 {
 	if(PlayerInfo[playerid][pHitmanLeader] == 1) return 1;
 	return 0;
 }
 
-stock IsBlacklisted(playerid)
+IsBlacklisted(playerid)
 {
 	if(PlayerInfo[playerid][pHitmanBlacklisted] > 0) return 1;
 	return 0;
 }
 
-stock GetHitmanRank(playerid)
+GetHitmanRank(playerid)
 {
 	new szRank[25];
 
@@ -149,7 +149,7 @@ stock GetHitmanRank(playerid)
 	return szRank;
 }
 
-stock SaveHitmanSafe()
+SaveHitmanSafe()
 {
 	if(HMAFile)
 	{
@@ -228,8 +228,8 @@ CMD:pcb(playerid, params[])
 					}
 					VehicleBomb{closestcar} = 1;
 					PlacedVehicleBomb[playerid] = closestcar;
-					ApplyAnimation(playerid,"BOMBER","BOM_Plant",4.0,0,0,0,0,0);
-					ApplyAnimation(playerid,"BOMBER","BOM_Plant",4.0,0,0,0,0,0);
+					ApplyAnimation(playerid,"BOMBER","BOM_Plant",4.0,false,false,false,false,0);
+					ApplyAnimation(playerid,"BOMBER","BOM_Plant",4.0,false,false,false,false,0);
 					SendClientMessageEx(playerid, COLOR_GREEN, "You have placed C4 on the vehicle engine, /pickupbomb to remove it.");
 					PlayerInfo[playerid][pC4] = 1;
 					PlayerInfo[playerid][pBombs]--;
@@ -581,7 +581,7 @@ CMD:quithma(playerid, params[])
 
 	SendClientMessage(playerid, COLOR_LIGHTBLUE, "*	You have quit the Hitman Agency. Your knife has been removed.");
 
-	if(PlayerInfo[playerid][pGuns][1] == 4) RemovePlayerWeapon(playerid, 4);
+	if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == 4) RemovePlayerWeapon(playerid, WEAPON_KNIFE);
 	return 1;
 }
 
@@ -677,7 +677,7 @@ CMD:removehitman(playerid, params[])
 
 		format(szMiscArray, sizeof szMiscArray, "* %s %s has kicked you from the Hitman Agency. Your knife has been removed.", GetHitmanRank(playerid), GetPlayerNameEx(playerid));
 		SendClientMessage(iTarget, COLOR_LIGHTBLUE, szMiscArray);
-		if(PlayerInfo[iTarget][pGuns][1] == 4) RemovePlayerWeapon(iTarget, 4);
+		if(PlayerInfo[iTarget][pGuns][WEAPON_SLOT_MELEE] == 4) RemovePlayerWeapon(iTarget, WEAPON_KNIFE);
 
 		format(szMiscArray, sizeof szMiscArray, "%s %s has kicked %s from the Hitman Agency.", GetHitmanRank(playerid), GetPlayerNameEx(playerid), GetPlayerNameEx(iTarget));
 		new file[256], month, day, year;
@@ -702,7 +702,7 @@ CMD:removehitman(playerid, params[])
 
 		format(szMiscArray, sizeof szMiscArray, "* Administrator %s has kicked you from the Hitman Agency. Your knife has been removed.",  GetPlayerNameEx(playerid));
 		SendClientMessage(iTarget, COLOR_LIGHTBLUE, szMiscArray);
-		if(PlayerInfo[iTarget][pGuns][1] == 4) RemovePlayerWeapon(iTarget, 4);
+		if(PlayerInfo[iTarget][pGuns][WEAPON_SLOT_MELEE] == 4) RemovePlayerWeapon(iTarget, WEAPON_KNIFE);
 
 		format(szMiscArray, sizeof szMiscArray, "Administrator %s has kicked %s from the Hitman Agency.", GetPlayerNameEx(playerid), GetPlayerNameEx(iTarget));
 		new file[256], month, day, year;
@@ -1222,7 +1222,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                 switch(listitem) {
                     case 0: { // tear gas - $5000
                         if(GetPlayerCash(playerid) >= 5000) {
-                            GivePlayerValidWeapon(playerid, 17);
+                            GivePlayerValidWeapon(playerid, WEAPON_TEARGAS);
                             GivePlayerCash(playerid, - 5000);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken teargas (17) from the locker at $5,000.", GetPlayerNameEx(playerid));
@@ -1235,7 +1235,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 1: { // knife - $12000
                         if(GetPlayerCash(playerid) >= 12000) {
-                            GivePlayerValidWeapon(playerid, 4);
+                            GivePlayerValidWeapon(playerid, WEAPON_KNIFE);
                             GivePlayerCash(playerid, - 12000);
                             format(szMiscArray, sizeof szMiscArray, "%s has taken a knife (4) from the locker at $12,000.", GetPlayerNameEx(playerid));
                             new file[256], month, day, year;
@@ -1247,7 +1247,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 2: {// baton - $5000
                         if(GetPlayerCash(playerid) >= 5000) {
-                            GivePlayerValidWeapon(playerid, 3);
+                            GivePlayerValidWeapon(playerid, WEAPON_NITESTICK);
                             GivePlayerCash(playerid, - 5000);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken a baton (3) from the locker at $5,000.", GetPlayerNameEx(playerid));
@@ -1260,7 +1260,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 3: { // Spraycan - $4500
                         if(GetPlayerCash(playerid) >= 4500) {
-                            GivePlayerValidWeapon(playerid, 41);
+                            GivePlayerValidWeapon(playerid, WEAPON_SPRAYCAN);
                             GivePlayerCash(playerid, - 4500);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken a spraycan (41) from the locker at $4,500.", GetPlayerNameEx(playerid));
@@ -1273,7 +1273,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 4: { // Colt.45 - $5000
                         if(GetPlayerCash(playerid) >= 5000) {
-                            GivePlayerValidWeapon(playerid, 22);
+                            GivePlayerValidWeapon(playerid, WEAPON_COLT45);
                             GivePlayerCash(playerid, - 5000);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken a 9mm (22) from the locker at $5,000.", GetPlayerNameEx(playerid));
@@ -1286,7 +1286,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 5: { // SD Pistol - $7500
                         if(GetPlayerCash(playerid) >= 7500) {
-                            GivePlayerValidWeapon(playerid, 23);
+                            GivePlayerValidWeapon(playerid, WEAPON_SILENCED);
                             GivePlayerCash(playerid, - 7500);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken an SD pistol (23) from the locker at $7,500.", GetPlayerNameEx(playerid));
@@ -1299,7 +1299,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 6: { // Deagle - $12000
                         if(GetPlayerCash(playerid) >= 12000) {
-                            GivePlayerValidWeapon(playerid, 24);
+                            GivePlayerValidWeapon(playerid, WEAPON_DEAGLE);
                             GivePlayerCash(playerid, - 12000);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken a deagle (24) from the locker at $12,000.", GetPlayerNameEx(playerid));
@@ -1312,7 +1312,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 7: { // MP5 - $17500
                         if(GetPlayerCash(playerid) >= 17500) {
-                            GivePlayerValidWeapon(playerid, 29);
+                            GivePlayerValidWeapon(playerid, WEAPON_MP5);
                             GivePlayerCash(playerid, - 17500);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken an MP5 (29) from the locker at $17,500.", GetPlayerNameEx(playerid));
@@ -1325,7 +1325,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 8: { // UZI - $17500
                         if(GetPlayerCash(playerid) >= 17500) {
-                            GivePlayerValidWeapon(playerid, 28);
+                            GivePlayerValidWeapon(playerid, WEAPON_UZI);
                             GivePlayerCash(playerid, - 17500);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken an uzi (28) from the locker at $17,500.", GetPlayerNameEx(playerid));
@@ -1338,7 +1338,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 9: { // TEC9 - $17500
                         if(GetPlayerCash(playerid) >= 17500) {
-                            GivePlayerValidWeapon(playerid, 32);
+                            GivePlayerValidWeapon(playerid, WEAPON_TEC9);
                             GivePlayerCash(playerid, - 17500);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken a tec9 (32) from the locker at $17,500.", GetPlayerNameEx(playerid));
@@ -1351,7 +1351,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 10: { // Shotgun - $11000
                         if(GetPlayerCash(playerid) >= 11000) {
-                            GivePlayerValidWeapon(playerid, 25);
+                            GivePlayerValidWeapon(playerid, WEAPON_SHOTGUN);
                             GivePlayerCash(playerid, - 11000);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken a shotgun (25) from the locker at $11,000.", GetPlayerNameEx(playerid));
@@ -1364,7 +1364,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 11: { // SPAS - $90000
                         if(GetPlayerCash(playerid) >= 90000) {
-                            GivePlayerValidWeapon(playerid, 27);
+                            GivePlayerValidWeapon(playerid, WEAPON_SHOTGSPA);
                             GivePlayerCash(playerid, - 90000);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken a SPAS-12 (27) from the locker at $90,000.", GetPlayerNameEx(playerid));
@@ -1377,7 +1377,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 12: { // AK47 - $35000
                         if(GetPlayerCash(playerid) >= 35000) {
-                            GivePlayerValidWeapon(playerid, 30);
+                            GivePlayerValidWeapon(playerid, WEAPON_AK47);
                             GivePlayerCash(playerid, - 35000);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken an AK47 (30) from the locker at $35,000.", GetPlayerNameEx(playerid));
@@ -1390,7 +1390,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 13: { // M4 - $70000
                         if(GetPlayerCash(playerid) >= 70000) {
-                            GivePlayerValidWeapon(playerid, 31);
+                            GivePlayerValidWeapon(playerid, WEAPON_M4);
                             GivePlayerCash(playerid, - 70000);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken an m4 (31) from the locker at $70,000.", GetPlayerNameEx(playerid));
@@ -1403,7 +1403,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 14: { // Rifle - $10000
                         if(GetPlayerCash(playerid) >= 10000) {
-                            GivePlayerValidWeapon(playerid, 33);
+                            GivePlayerValidWeapon(playerid, WEAPON_RIFLE);
                             GivePlayerCash(playerid, - 10000);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken a rifle (33) from the locker at $10,000.", GetPlayerNameEx(playerid));
@@ -1416,7 +1416,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 15: { // Sniper - $65000
                         if(GetPlayerCash(playerid) >= 65000) {
-                            GivePlayerValidWeapon(playerid, 34);
+                            GivePlayerValidWeapon(playerid, WEAPON_SNIPER);
                             GivePlayerCash(playerid, - 65000);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken a sniper (34) from the locker at $65,000.", GetPlayerNameEx(playerid));
@@ -1429,7 +1429,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
                     }
                     case 16: { // Chainsaws - $20000
                         if(GetPlayerCash(playerid) >= 20000) {
-                            GivePlayerValidWeapon(playerid, 9);
+                            GivePlayerValidWeapon(playerid, WEAPON_CHAINSAW);
                             GivePlayerCash(playerid, - 20000);
 
                             format(szMiscArray, sizeof szMiscArray, "%s has taken a chainsaw (9) from the locker at $20,000.", GetPlayerNameEx(playerid));
@@ -1477,7 +1477,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 }
 
 
-stock SearchingHit(playerid)
+SearchingHit(playerid)
 {
     new string[128];
     SendClientMessageEx(playerid, COLOR_WHITE, "Available Contracts:");
@@ -1840,13 +1840,13 @@ CMD:knife(playerid, params[])
 {
     if(IsAHitman(playerid)) {
         if(GetPVarInt(playerid, "HidingKnife") == 1) {
-            GivePlayerValidWeapon(playerid, 4);
+            GivePlayerValidWeapon(playerid, WEAPON_KNIFE);
             DeletePVar(playerid, "HidingKnife");
             SendClientMessageEx(playerid, COLOR_YELLOW, "You have pulled out your knife.");
         }
         else {
-            if(PlayerInfo[playerid][pGuns][1] == WEAPON_KNIFE) {
-                RemovePlayerWeapon(playerid, 4); // Remove Knife
+            if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == 4) {
+                RemovePlayerWeapon(playerid, WEAPON_KNIFE); // Remove Knife
                 SetPVarInt(playerid, "HidingKnife", 1);
                 SendClientMessageEx(playerid, COLOR_YELLOW, "You have hidden your knife.");
             }

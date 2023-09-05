@@ -1,4 +1,4 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define BANK					10004
 #define BANK_AMOUNT 			10005
@@ -72,7 +72,7 @@ LoadBanks() {
 
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 
 	if((newkeys & KEY_YES) && (IsPlayerInDynamicArea(playerid, BankPoint[0]) || IsPlayerInDynamicArea(playerid, BankPoint[1]))) {
 		format(szMiscArray, sizeof(szMiscArray), "{FF8000}** {C2A2DA}%s approaches the banker and begins speaking with them.", GetPlayerNameEx(playerid));
@@ -91,11 +91,11 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 		case BANK: {
 			
 			if(!response) {
-				TogglePlayerControllable(playerid, 1);
+				TogglePlayerControllable(playerid, true);
 				return SendClientMessageEx(playerid, COLOR_YELLOW, "   You are no longer being attended by the banker.");
 			}
 
-			TogglePlayerControllable(playerid, 0);
+			TogglePlayerControllable(playerid, false);
 
 			switch(listitem) {		
 				case 0: ShowBankMenu(playerid, 1);

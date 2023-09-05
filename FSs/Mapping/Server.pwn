@@ -1,8 +1,8 @@
-#include <a_samp>
-#include <streamer>
+#define FILTERSCRIPT
+#define MAX_PLAYERS 500
 
-#undef MAX_PLAYERS
-#define MAX_PLAYERS (500)
+#include <open.mp>
+#include <streamer>
 
 public OnFilterScriptExit()
 {
@@ -2688,8 +2688,8 @@ public OnFilterScriptInit()
 	CreateDynamicObject(1281,-2472.24438477,493.23858643,29.86957550,0.00000000,0.00000000,1.99426270, .streamdistance = 200); //object(parktable1) (4)
 
 	// Mile High Club (Admin Island)
-	CreateDynamicObject(10771,1722.5996094,1448.8994141,1132.9019775,0.0000000,0.0000000,0.0000000, 400.0); //object(carrier_hull_sfse) (1)
-	CreateDynamicObject(10771,1722.5996094,1474.7998047,1132.8999023,0.0000000,0.0000000,0.0000000, 400.0); //object(carrier_hull_sfse) (2)
+	CreateDynamicObject(10771,1722.5996094,1448.8994141,1132.9019775,0.0000000,0.0000000,0.0000000, .streamdistance = 400.0); //object(carrier_hull_sfse) (1)
+	CreateDynamicObject(10771,1722.5996094,1474.7998047,1132.8999023,0.0000000,0.0000000,0.0000000, .streamdistance = 400.0); //object(carrier_hull_sfse) (2)
 	CreateDynamicObject(9584, 1631.39941, 1460.89941, 1154.50000,   0.00000, 0.00000, 0.00000);
 	CreateDynamicObject(8356, 1740.09961, 1461.29980, 1144.80005,   0.00000, 0.00000, 270.24719);
 	CreateDynamicObject(8356, 1740.09998, 1461.30005, 1144.69995,   0.00000, 180.00000, 270.24719);
@@ -13352,55 +13352,55 @@ public OnFilterScriptInit()
 
 	// New Prison Exterior
 	new iRetexture = CreateDynamicObject(19353, 522.4406, 1419.2597, 6002.2841, 0.0000, 0.0000, -89.9587);
-	SetObjectMaterialText(iRetexture, "DeMorgan Correctional Facility", 0, 100, "Arial", 16, 1, -1, 0, 1);
+	SetObjectMaterialText(iRetexture, "DeMorgan Correctional Facility", 0, OBJECT_MATERIAL_SIZE_256x256, "Arial", 16, true, -1, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, 125.9313, 1977.6586, 21.1906, 0.0000, 0.0000, 68.1762);
-	SetObjectMaterialText(iRetexture, "DeMorgan Maximum", 0, 90, "Arial", 20, 1, -1, 0, 1);
+	SetObjectMaterialText(iRetexture, "DeMorgan Maximum", 0, OBJECT_MATERIAL_SIZE_256x128, "Arial", 20, true, -1, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, 126.0498, 1977.6102, 20.7546, 0.0000, 0.0000, 68.2165);
-	SetObjectMaterialText(iRetexture, "Security Prison", 0, 90, "Arial", 20, 1, -1, 0, 1);
+	SetObjectMaterialText(iRetexture, "Security Prison", 0, OBJECT_MATERIAL_SIZE_256x128, "Arial", 20, true, -1, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, 125.9579, 1977.6445, 20.3446, 0.0000, 0.0000, 68.2166);
-	SetObjectMaterialText(iRetexture, "NO UNAUTHORIZED ENTRY", 0, 100, "Arial", 17, 1, -65536, 0, 1);
+	SetObjectMaterialText(iRetexture, "NO UNAUTHORIZED ENTRY", 0, OBJECT_MATERIAL_SIZE_256x256, "Arial", 17, true, -65536, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, 131.8870, 1911.1531, 19.3853, 0.0000, 0.0000, 90.1648);
-	SetObjectMaterialText(iRetexture, "Welcome to DMCF", 0, 140, "Arial", 30, 1, -1, 0, 1);
+	SetObjectMaterialText(iRetexture, "Welcome to DMCF", 0, OBJECT_MATERIAL_SIZE_512x512, "Arial", 30, true, -1, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, 131.9247, 1911.1518, 19.0576, 0.0000, 0.0000, 90.0329);
-	SetObjectMaterialText(iRetexture, "<- Main Entrance", 0, 140, "Arial", 26, 1, -1, 0, 1);
+	SetObjectMaterialText(iRetexture, "<- Main Entrance", 0, OBJECT_MATERIAL_SIZE_512x512, "Arial", 26, true, -1, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, 198.5418, 1896.4757, 18.9506, 0.0000, 0.0000, -0.0402);
-	SetObjectMaterialText(iRetexture, "- DMCF -", 0, 140, "Arial", 36, 1, -1, 0, 1);
+	SetObjectMaterialText(iRetexture, "- DMCF -", 0, OBJECT_MATERIAL_SIZE_512x512, "Arial", 36, true, -1, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, 198.5370, 1896.4593, 18.5919, -0.1999, 0.0000, -0.0442);
-	SetObjectMaterialText(iRetexture, "Main Entrance", 0, 140, "Arial", 32, 1, -1, 0, 1);
+	SetObjectMaterialText(iRetexture, "Main Entrance", 0, OBJECT_MATERIAL_SIZE_512x512, "Arial", 32, true, -1, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, 213.9138, 1875.8563, 15.9106, 0.0000, 0.0000, 90.0647);
-	SetObjectMaterialText(iRetexture, "AUTHORIZED VEHICLES ONLY", 0, 140, "Arial", 38, 1, -65536, 0, 1);
+	SetObjectMaterialText(iRetexture, "AUTHORIZED VEHICLES ONLY", 0, OBJECT_MATERIAL_SIZE_512x512, "Arial", 38, true, -65536, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, 231.7829, 1906.2478, 18.8906, 0.0000, 0.0000, 179.8935);
-	SetObjectMaterialText(iRetexture, "Memorial Center", 0, 140, "Arial", 34, 1, -1, 0, 1);
+	SetObjectMaterialText(iRetexture, "Memorial Center", 0, OBJECT_MATERIAL_SIZE_512x512, "Arial", 34, true, -1, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, 127.1819, 2040.6617, 18.0162, 0.0000, 0.0000, 85.1440);
-	SetObjectMaterialText(iRetexture, "Gate AHEAD", 0, 140, "Arial", 21, 1, -1, 0, 1);
+	SetObjectMaterialText(iRetexture, "Gate AHEAD", 0, OBJECT_MATERIAL_SIZE_512x512, "Arial", 21, true, -1, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, -101.7442, 1588.3365, 20.5303, 0.0000, 0.0000, -99.5481);
-	SetObjectMaterialText(iRetexture, "ENTERING HIGH", 0, 140, "Arial", 50, 1, -65536, 0, 1);
+	SetObjectMaterialText(iRetexture, "ENTERING HIGH", 0, OBJECT_MATERIAL_SIZE_512x512, "Arial", 50, true, -65536, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, -101.7275, 1588.3293, 20.2661, 0.0000, 0.0000, -99.8805);
-	SetObjectMaterialText(iRetexture, "SECURITY AREA", 0, 140, "Arial", 50, 1, -65536, 0, 1);
+	SetObjectMaterialText(iRetexture, "SECURITY AREA", 0, OBJECT_MATERIAL_SIZE_512x512, "Arial", 50, true, -65536, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, -101.7204, 1588.3348, 19.8906, 0.0000, 0.0000, -99.4882);
-	SetObjectMaterialText(iRetexture, "DO NOT DEVIATE", 0, 140, "Arial", 50, 1, -1, 0, 1);
+	SetObjectMaterialText(iRetexture, "DO NOT DEVIATE", 0, OBJECT_MATERIAL_SIZE_512x512, "Arial", 50, true, -1, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, -101.7085, 1588.3242, 19.5834, 0.0000, 0.0000, -99.5362);
-	SetObjectMaterialText(iRetexture, "FROM ROADWAY", 0, 140, "Arial", 50, 1, -1, 0, 1);
+	SetObjectMaterialText(iRetexture, "FROM ROADWAY", 0, OBJECT_MATERIAL_SIZE_512x512, "Arial", 50, true, -1, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, -59.7788, 1274.9405, 12.9072, 0.0000, 0.0000, -179.9984);
-	SetObjectMaterialText(iRetexture, "DeMorgan", 0, 140, "Arial", 50, 1, -1, 0, 1);
+	SetObjectMaterialText(iRetexture, "DeMorgan", 0, OBJECT_MATERIAL_SIZE_512x512, "Arial", 50, true, -1, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	iRetexture = CreateDynamicObject(19353, -59.7792, 1275.0030, 12.5092, 0.0000, 0.0000, -179.8983);
-	SetObjectMaterialText(iRetexture, "Correctional Facility", 0, 140, "Arial", 45, 1, -1, 0, 1);
+	SetObjectMaterialText(iRetexture, "Correctional Facility", 0, OBJECT_MATERIAL_SIZE_512x512, "Arial", 45, true, -1, 0, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 
 	CreateDynamicObject(987, 266.62589, 1784.22083, 16.40000,   0.00000, 0.10000, -68.16010);
 	CreateDynamicObject(987, 271.02609, 1773.11914, 16.38360,   0.00000, 0.10000, 0.00000);
@@ -23659,7 +23659,7 @@ public OnPlayerConnect(playerid)
 	return 1;
 }
 
-stock RemoveBuildingsFromPlayer(playerid)
+RemoveBuildingsFromPlayer(playerid)
 {
 	if(GetPVarInt(playerid, "BuildingRemoved") == 0)
 	{

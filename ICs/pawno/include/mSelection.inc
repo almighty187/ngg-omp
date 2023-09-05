@@ -119,12 +119,9 @@ stock PlayerText:mS_CreateCurrentPageTextDraw(playerid, Float:Xpos, Float:Ypos)
 {
 	new PlayerText:txtInit;
    	txtInit = CreatePlayerTextDraw(playerid, Xpos, Ypos, "0/0");
-   	PlayerTextDrawUseBox(playerid, txtInit, 0);
 	PlayerTextDrawLetterSize(playerid, txtInit, 0.4, 1.1);
-	PlayerTextDrawFont(playerid, txtInit, 1);
-	PlayerTextDrawSetShadow(playerid, txtInit, 0);
     PlayerTextDrawSetOutline(playerid, txtInit, 1);
-    PlayerTextDrawColor(playerid, txtInit, 0xACCBF1FF);
+    PlayerTextDrawColour(playerid, txtInit, 0xACCBF1FF);
     PlayerTextDrawShow(playerid, txtInit);
     return txtInit;
 }
@@ -132,20 +129,17 @@ stock PlayerText:mS_CreateCurrentPageTextDraw(playerid, Float:Xpos, Float:Ypos)
 //------------------------------------------------
 // Creates a button textdraw and returns the textdraw ID.
 
-stock PlayerText:mS_CreatePlayerDialogButton(playerid, Float:Xpos, Float:Ypos, Float:Width, Float:Height, button_text[])
+stock PlayerText:mS_CreatePlayerDialogButton(playerid, Float:Xpos, Float:Ypos, Float:Width, Float:Height, const button_text[])
 {
  	new PlayerText:txtInit;
    	txtInit = CreatePlayerTextDraw(playerid, Xpos, Ypos, button_text);
-   	PlayerTextDrawUseBox(playerid, txtInit, 1);
-   	PlayerTextDrawBoxColor(playerid, txtInit, 0x000000FF);
-   	PlayerTextDrawBackgroundColor(playerid, txtInit, 0x000000FF);
+   	PlayerTextDrawUseBox(playerid, txtInit, true);
+   	PlayerTextDrawBoxColour(playerid, txtInit, 0x000000FF);
 	PlayerTextDrawLetterSize(playerid, txtInit, 0.4, 1.1);
-	PlayerTextDrawFont(playerid, txtInit, 1);
 	PlayerTextDrawSetShadow(playerid, txtInit, 0); // no shadow
-    PlayerTextDrawSetOutline(playerid, txtInit, 0);
-    PlayerTextDrawColor(playerid, txtInit, 0x4A5A6BFF);
-    PlayerTextDrawSetSelectable(playerid, txtInit, 1);
-    PlayerTextDrawAlignment(playerid, txtInit, 2);
+    PlayerTextDrawColour(playerid, txtInit, 0x4A5A6BFF);
+    PlayerTextDrawSetSelectable(playerid, txtInit, true);
+    PlayerTextDrawAlignment(playerid, txtInit, TEXT_DRAW_ALIGN_CENTRE);
     PlayerTextDrawTextSize(playerid, txtInit, Height, Width); // The width and height are reversed for centering.. something the game does <g>
     PlayerTextDrawShow(playerid, txtInit);
     return txtInit;
@@ -153,16 +147,14 @@ stock PlayerText:mS_CreatePlayerDialogButton(playerid, Float:Xpos, Float:Ypos, F
  
 //------------------------------------------------
 
-stock PlayerText:mS_CreatePlayerHeaderTextDraw(playerid, Float:Xpos, Float:Ypos, header_text[])
+stock PlayerText:mS_CreatePlayerHeaderTextDraw(playerid, Float:Xpos, Float:Ypos, const header_text[])
 {
 	new PlayerText:txtInit;
    	txtInit = CreatePlayerTextDraw(playerid, Xpos, Ypos, header_text);
-   	PlayerTextDrawUseBox(playerid, txtInit, 0);
 	PlayerTextDrawLetterSize(playerid, txtInit, 1.25, 3.0);
-	PlayerTextDrawFont(playerid, txtInit, 0);
-	PlayerTextDrawSetShadow(playerid, txtInit, 0);
+	PlayerTextDrawFont(playerid, txtInit, TEXT_DRAW_FONT_0);
     PlayerTextDrawSetOutline(playerid, txtInit, 1);
-    PlayerTextDrawColor(playerid, txtInit, 0xACCBF1FF);
+    PlayerTextDrawColour(playerid, txtInit, 0xACCBF1FF);
     PlayerTextDrawShow(playerid, txtInit);
     return txtInit;
 }
@@ -172,15 +164,14 @@ stock PlayerText:mS_CreatePlayerHeaderTextDraw(playerid, Float:Xpos, Float:Ypos,
 stock PlayerText:mS_CreatePlayerBGTextDraw(playerid, Float:Xpos, Float:Ypos, Float:Width, Float:Height, bgcolor)
 {
 	new PlayerText:txtBackground = CreatePlayerTextDraw(playerid, Xpos, Ypos,"                                            ~n~"); // enough space for everyone
-    PlayerTextDrawUseBox(playerid, txtBackground, 1);
-    PlayerTextDrawBoxColor(playerid, txtBackground, bgcolor);
+    PlayerTextDrawUseBox(playerid, txtBackground, true);
+    PlayerTextDrawBoxColour(playerid, txtBackground, bgcolor);
 	PlayerTextDrawLetterSize(playerid, txtBackground, 5.0, 5.0);
-	PlayerTextDrawFont(playerid, txtBackground, 0);
+	PlayerTextDrawFont(playerid, txtBackground, TEXT_DRAW_FONT_0);
 	PlayerTextDrawSetShadow(playerid, txtBackground, 0);
-    PlayerTextDrawSetOutline(playerid, txtBackground, 0);
-    PlayerTextDrawColor(playerid, txtBackground,0x000000FF);
+    PlayerTextDrawColour(playerid, txtBackground,0x000000FF);
     PlayerTextDrawTextSize(playerid, txtBackground, Width, Height);
-   	PlayerTextDrawBackgroundColor(playerid, txtBackground, bgcolor);
+   	PlayerTextDrawBackgroundColour(playerid, txtBackground, bgcolor);
     PlayerTextDrawShow(playerid, txtBackground);
     return txtBackground;
 }
@@ -192,12 +183,12 @@ stock PlayerText:mS_CreateMPTextDraw(playerid, modelindex, Float:Xpos, Float:Ypo
 {
     new PlayerText:txtPlayerSprite = CreatePlayerTextDraw(playerid, Xpos, Ypos, ""); // it has to be set with SetText later
     PlayerTextDrawFont(playerid, txtPlayerSprite, TEXT_DRAW_FONT_MODEL_PREVIEW);
-    PlayerTextDrawColor(playerid, txtPlayerSprite, 0xFFFFFFFF);
-    PlayerTextDrawBackgroundColor(playerid, txtPlayerSprite, bgcolor);
+    PlayerTextDrawColour(playerid, txtPlayerSprite, 0xFFFFFFFF);
+    PlayerTextDrawBackgroundColour(playerid, txtPlayerSprite, bgcolor);
     PlayerTextDrawTextSize(playerid, txtPlayerSprite, width, height); // Text size is the Width:Height
     PlayerTextDrawSetPreviewModel(playerid, txtPlayerSprite, modelindex);
     PlayerTextDrawSetPreviewRot(playerid,txtPlayerSprite, Xrot, Yrot, Zrot, mZoom);
-    PlayerTextDrawSetSelectable(playerid, txtPlayerSprite, 1);
+    PlayerTextDrawSetSelectable(playerid, txtPlayerSprite, true);
     PlayerTextDrawShow(playerid,txtPlayerSprite);
     return txtPlayerSprite;
 }
@@ -299,7 +290,7 @@ stock mS_UpdatePageTextDraw(playerid)
 
 //------------------------------------------------
 
-stock ShowModelSelectionMenu(playerid, ListID, header_text[], dialogBGcolor = 0x4A5A6BBB, previewBGcolor = 0x88888899 , tdSelectionColor = 0xFFFF00AA)
+stock ShowModelSelectionMenu(playerid, ListID, const header_text[], dialogBGcolor = 0x4A5A6BBB, previewBGcolor = 0x88888899 , tdSelectionColor = 0xFFFF00AA)
 {
 	if(!(0 <= ListID < mS_TOTAL_LISTS && gLists[ListID][mS_LIST_START] != gLists[ListID][mS_LIST_END])) return 0;
 	mS_DestroySelectionMenu(playerid);
@@ -325,7 +316,7 @@ stock ShowModelSelectionMenu(playerid, ListID, header_text[], dialogBGcolor = 0x
 
 //------------------------------------------------------------
 
-stock ShowModelSelectionMenuEx(playerid, items_array[], item_amount, header_text[], extraid, Float:Xrot = 0.0, Float:Yrot = 0.0, Float:Zrot = 0.0, Float:mZoom = 1.0, dialogBGcolor = 0x4A5A6BBB, previewBGcolor = 0x88888899 , tdSelectionColor = 0xFFFF00AA)
+stock ShowModelSelectionMenuEx(playerid, const items_array[], item_amount, const header_text[], extraid, Float:Xrot = 0.0, Float:Yrot = 0.0, Float:Zrot = 0.0, Float:mZoom = 1.0, dialogBGcolor = 0x4A5A6BBB, previewBGcolor = 0x88888899 , tdSelectionColor = 0xFFFF00AA)
 {
 	mS_DestroySelectionMenu(playerid);
 	if(item_amount > mS_CUSTOM_MAX_ITEMS)
@@ -597,7 +588,7 @@ forward MP_OPCPTD(playerid, PlayerText:playertextid);
 //------------------------------------------------------------------
 
 
-stock LoadModelSelectionMenu(f_name[])
+stock LoadModelSelectionMenu(const f_name[])
 {
 	new File:f, str[75];
 	format(str, sizeof(str), "%s", f_name);

@@ -36,7 +36,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 CMD:getmats(playerid, params[])
 {
@@ -185,7 +185,7 @@ CMD:capture(playerid, params[])
 
 	DynPoints[point][poCapping] = playerid;
 	DynPoints[point][poTimeCapLeft] = 10;
-	SetTimerEx("ProgressTimer", 1000, 0, "d", point);
+	SetTimerEx("ProgressTimer", 1000, false, "d", point);
 	return 1;
 }
 
@@ -200,7 +200,7 @@ public ProgressTimer(id)
 			GameTextForPlayer(DynPoints[id][poCapping], szMiscArray, 1100, 3);
 			format(szMiscArray, sizeof(szMiscArray), "%s is attempting to capture the point, time left: %d", GetPlayerNameEx(DynPoints[id][poCapping]), DynPoints[id][poTimeCapLeft]);
 			UpdateDynamic3DTextLabelText(DynPoints[id][poTextID], COLOR_RED, szMiscArray);
-			SetTimerEx("ProgressTimer", 1000, 0, "d", id);
+			SetTimerEx("ProgressTimer", 1000, false, "d", id);
 		} else {
 			GetPlayerPos(DynPoints[id][poCapping], x, y, z);
 			if (DynPoints[id][CapturePos][0] != x || DynPoints[id][CapturePos][1] != y || DynPoints[id][CapturePos][2] != z || GetPVarInt(DynPoints[id][poCapping],"Injured") == 1) {
@@ -259,7 +259,7 @@ public ProgressTimer(id)
 			DynPoints[id][poCapperGroup] = fam;
 			DynPoints[id][poTimeLeft] = 10;
 			if(DynPoints[id][CapTimer] != 0) KillTimer(DynPoints[id][CapTimer]);
-			DynPoints[id][CapTimer] = SetTimerEx("CaptureTimer", 60000, 1, "d", id);
+			DynPoints[id][CapTimer] = SetTimerEx("CaptureTimer", 60000, true, "d", id);
 		}
 	} else {
 		DynPoints[id][poCapping] = INVALID_PLAYER_ID;
@@ -293,7 +293,7 @@ public CaptureTimer(id)
 	return 1;
 }
 
-stock FetchPoint(playerid, &point, Float:range)
+FetchPoint(playerid, &point, Float:range)
 {
 	point = -1;
     for(new p = 0; p < MAX_POINTS; p++)
@@ -664,7 +664,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 	return 0;
 }
 
-stock ResetDialog(playerid) {
+ResetDialog(playerid) {
 	new szDialogStr[1256];
 	format(szDialogStr, sizeof szDialogStr, "Name: %s\n\
 		Type: %s\n\
@@ -698,7 +698,7 @@ PointTypeToName(id)
 	return type;
 }
 
-stock SavePoint(point) {
+SavePoint(point) {
 	new szQuery[2048];
 	mysql_format(MainPipeline, szQuery, sizeof(szQuery), "UPDATE `dynpoints` SET \
 	`pointname` = '%e', \
@@ -753,7 +753,7 @@ stock SavePoint(point) {
 	mysql_tquery(MainPipeline, szQuery, "OnQueryFinish", "i", SENDDATA_THREAD);
 }
 
-stock UpdatePoint(id)
+UpdatePoint(id)
 {
 	new string[256];
 	if(IsValidDynamicPickup(DynPoints[id][poPickupID])) DestroyDynamicPickup(DynPoints[id][poPickupID]);
@@ -776,7 +776,7 @@ stock UpdatePoint(id)
 	return 1;
 }
 
-stock LoadPoints()
+LoadPoints()
 {
 	printf("[Dynamic Points] Loading Dynamic Points from the database, please wait...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `dynpoints`", "OnLoadPoints", "");

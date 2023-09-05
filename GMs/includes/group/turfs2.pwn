@@ -49,7 +49,7 @@
 	- Pre-defined turfs.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 // All player booleans variables go here to reduce memory:
 
@@ -121,7 +121,7 @@ hook OnPlayerEnterDynamicArea(playerid, areaid) {
 	}
 }
 
-hook OnPlayerDeath(playerid, killerid, reason) {
+hook OnPlayerDeath(playerid, killerid, WEAPON:reason) {
 
 	/*
 	if(GetPVarType(playerid, "TW_CapLeader")) {

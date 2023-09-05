@@ -1,4 +1,4 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define 	MAX_MULTIPLE_CHARACTERS		3
 #define 	PVAR_LOGIN_CHARCAM			"P_LCC"
@@ -109,7 +109,7 @@ public Login_OnLoadCharacter(playerid)
 }
 
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
 	if(GetPVarInt(playerid, PVAR_LOGIN_CHARCAM))
 	{

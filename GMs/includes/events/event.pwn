@@ -236,8 +236,8 @@ CMD:eventstaff(playerid, params[])
 					SetPlayerPos( playerid, EventKernel[ EventPositionX ], EventKernel[ EventPositionY ], EventKernel[ EventPositionZ ] );
 					SetPlayerInterior( playerid, EventKernel[ EventInterior ] );
 					SetPlayerVirtualWorld( playerid, EventKernel[ EventWorld ] );
-					PlayerInfo[playerid][pAGuns][GetWeaponSlot(38)] = 38;
-					GivePlayerValidWeapon(playerid, 38);
+					PlayerInfo[playerid][pAGuns][GetWeaponSlot(WEAPON_MINIGUN)] = WEAPON_MINIGUN;
+					GivePlayerValidWeapon(playerid, WEAPON_MINIGUN);
 					EventKernel[EventStaff][i] = playerid;
 					GetHealth(playerid,health);
 					SetPVarFloat(playerid, "pPreGodHealth", health);
@@ -272,7 +272,7 @@ CMD:quitevent(playerid, params[])
         			SetPlayerFacingAngle(playerid, EventFloats[playerid][0]);
         			SetPlayerInterior(playerid,EventLastInt[playerid]);
         			Player_StreamPrep(playerid, EventFloats[playerid][1],EventFloats[playerid][2],EventFloats[playerid][3], FREEZE_TIME);
-        			RemovePlayerWeapon(playerid, 38);
+        			RemovePlayerWeapon(playerid, WEAPON_MINIGUN);
         			for(new i = 0; i < 6; i++) {
         	   			EventFloats[playerid][i] = 0.0;
     	   			}
@@ -302,7 +302,7 @@ CMD:quitevent(playerid, params[])
         }
         EventLastVW[playerid] = 0;
         EventLastInt[playerid] = 0;
-        RemovePlayerWeapon(playerid, 38);
+        RemovePlayerWeapon(playerid, WEAPON_MINIGUN);
 		health = GetPVarFloat(playerid, "pPreGodHealth");
 		SetHealth(playerid,health);
 		armor = GetPVarFloat(playerid, "pPreGodArmor");
@@ -334,7 +334,7 @@ CMD:quitevent(playerid, params[])
         				SetArmour(playerid, EventFloats[playerid][5]);
         			}
         			Player_StreamPrep(playerid, EventFloats[playerid][1],EventFloats[playerid][2],EventFloats[playerid][3], FREEZE_TIME);
-        			RemovePlayerWeapon(playerid, 38);
+        			RemovePlayerWeapon(playerid, WEAPON_MINIGUN);
         			for(new i = 0; i < 6; i++) {
         	   			EventFloats[playerid][i] = 0.0;
     	   			}
@@ -368,7 +368,7 @@ CMD:quitevent(playerid, params[])
         }
         EventLastVW[playerid] = 0;
         EventLastInt[playerid] = 0;
-        RemovePlayerWeapon(playerid, 38);
+        RemovePlayerWeapon(playerid, WEAPON_MINIGUN);
 		health = GetPVarFloat(playerid, "pPreGodHealth");
 		if(health > 0) {
 			SetHealth(playerid,health);
@@ -499,11 +499,11 @@ CMD:denyevent(playerid, params[])
         EventKernel[ EventType ] = 0;
         EventKernel[ EventLimit ] = 0;
         EventKernel[ EventPlayers ] = 0;
-        EventKernel[ EventWeapons ][0] = 0;
-        EventKernel[ EventWeapons ][1] = 0;
-        EventKernel[ EventWeapons ][2] = 0;
-        EventKernel[ EventWeapons ][3] = 0;
-        EventKernel[ EventWeapons ][4] = 0;
+        EventKernel[ EventWeapons ][0] = WEAPON_FIST;
+        EventKernel[ EventWeapons ][1] = WEAPON_FIST;
+        EventKernel[ EventWeapons ][2] = WEAPON_FIST;
+        EventKernel[ EventWeapons ][3] = WEAPON_FIST;
+        EventKernel[ EventWeapons ][4] = WEAPON_FIST;
         EventKernel[EventCreator] = INVALID_PLAYER_ID;
         EventKernel[VipOnly] = 0;
         EventKernel[EventJoinStaff] = 0;
@@ -917,9 +917,9 @@ CMD:editevent(playerid, params[])
 					return 1;
 				}
 
-				new weapon;
-				weapon = strval(opstring);
-				if(weapon == 16 || weapon == 18 || weapon == 35 || weapon == 37 || weapon == 38 || weapon == 39) return SendClientMessageEx(playerid, COLOR_WHITE, "This weapon cannot be set as an event weapon!");
+				new WEAPON:weapon;
+				weapon = WEAPON:strval(opstring);
+				if(weapon == WEAPON_GRENADE || weapon == WEAPON_MOLTOV || weapon == WEAPON_ROCKETLAUNCHER || weapon == WEAPON_FLAMETHROWER || weapon == WEAPON_MINIGUN || weapon == WEAPON_SATCHEL) return SendClientMessageEx(playerid, COLOR_WHITE, "This weapon cannot be set as an event weapon!");
 				EventKernel[EventWeapons][0] = weapon;
 				SendClientMessageEx(playerid, COLOR_WHITE, "You have successfully adjusted the event gun 1.");
 			}
@@ -937,9 +937,9 @@ CMD:editevent(playerid, params[])
 					return 1;
 				}
 
-				new weapon;
-				weapon = strval(opstring);
-				if(weapon == 16 || weapon == 18 || weapon == 35 || weapon == 37 || weapon == 38 || weapon == 39) return SendClientMessageEx(playerid, COLOR_WHITE, "This weapon cannot be set as an event weapon!");
+				new WEAPON:weapon;
+				weapon = WEAPON:strval(opstring);
+				if(weapon == WEAPON_GRENADE || weapon == WEAPON_MOLTOV || weapon == WEAPON_ROCKETLAUNCHER || weapon == WEAPON_FLAMETHROWER || weapon == WEAPON_MINIGUN || weapon == WEAPON_SATCHEL) return SendClientMessageEx(playerid, COLOR_WHITE, "This weapon cannot be set as an event weapon!");
 				EventKernel[EventWeapons][1] = weapon;
 				SendClientMessageEx(playerid, COLOR_WHITE, "You have successfully adjusted the event gun 2.");
 			}
@@ -957,9 +957,9 @@ CMD:editevent(playerid, params[])
 					return 1;
 				}
 
-				new weapon;
-				weapon = strval(opstring);
-				if(weapon == 16 || weapon == 18 || weapon == 35 || weapon == 37 || weapon == 38 || weapon == 39) return SendClientMessageEx(playerid, COLOR_WHITE, "This weapon cannot be set as an event weapon!");
+				new WEAPON:weapon;
+				weapon = WEAPON:strval(opstring);
+				if(weapon == WEAPON_GRENADE || weapon == WEAPON_MOLTOV || weapon == WEAPON_ROCKETLAUNCHER || weapon == WEAPON_FLAMETHROWER || weapon == WEAPON_MINIGUN || weapon == WEAPON_SATCHEL) return SendClientMessageEx(playerid, COLOR_WHITE, "This weapon cannot be set as an event weapon!");
 				EventKernel[EventWeapons][2] = weapon;
 				SendClientMessageEx(playerid, COLOR_WHITE, "You have successfully adjusted the event gun 3.");
 			}
@@ -977,9 +977,9 @@ CMD:editevent(playerid, params[])
 					return 1;
 				}
 
-				new weapon;
-				weapon = strval(opstring);
-				if(weapon == 35 || weapon == 37 || weapon == 38) return SendClientMessageEx(playerid, COLOR_WHITE, "This weapon cannot be set as an event weapon!");
+				new WEAPON:weapon;
+				weapon = WEAPON:strval(opstring);
+				if(weapon == WEAPON_ROCKETLAUNCHER || weapon == WEAPON_FLAMETHROWER || weapon == WEAPON_MINIGUN) return SendClientMessageEx(playerid, COLOR_WHITE, "This weapon cannot be set as an event weapon!");
 				EventKernel[EventWeapons][3] = weapon;
 				SendClientMessageEx(playerid, COLOR_WHITE, "You have successfully adjusted the event gun 4.");
 			}
@@ -997,9 +997,9 @@ CMD:editevent(playerid, params[])
 					return 1;
 				}
 
-				new weapon;
-				weapon = strval(opstring);
-				if(weapon == 35 || weapon == 37 || weapon == 38) return SendClientMessageEx(playerid, COLOR_WHITE, "This weapon cannot be set as an event weapon!");
+				new WEAPON:weapon;
+				weapon = WEAPON:strval(opstring);
+				if(weapon == WEAPON_ROCKETLAUNCHER || weapon == WEAPON_FLAMETHROWER || weapon == WEAPON_MINIGUN) return SendClientMessageEx(playerid, COLOR_WHITE, "This weapon cannot be set as an event weapon!");
 				EventKernel[EventWeapons][4] = weapon;
 				SendClientMessageEx(playerid, COLOR_WHITE, "You have successfully adjusted the event gun 5.");
 			}
@@ -1074,8 +1074,8 @@ CMD:endevent(playerid, params[])
 				{
 					ResetPlayerWeapons( i );
 					DeletePVar(i, "EventToken");
-					for(new w = 0; w < 12; w++)
-						if(PlayerInfo[i][pAGuns][w]) PlayerInfo[i][pGuns][w] = 0, PlayerInfo[i][pAGuns][w] = 0;
+					for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
+						if(PlayerInfo[i][pAGuns][w]) PlayerInfo[i][pGuns][w] = WEAPON_FIST, PlayerInfo[i][pAGuns][w] = WEAPON_FIST;
 					SetPlayerWeapons(i);
 					SetPlayerToTeamColor(i);
 					SetPlayerSkin(i, PlayerInfo[i][pModel]);
@@ -1096,7 +1096,7 @@ CMD:endevent(playerid, params[])
 					}
 					EventLastVW[i] = 0;
 					EventLastInt[i] = 0;
-					RemovePlayerWeapon(i, 38);
+					RemovePlayerWeapon(i, WEAPON_MINIGUN);
 					health = GetPVarFloat(i, "pPreGodHealth");
 					SetHealth(i,health);
 					armor = GetPVarFloat(i, "pPreGodArmor");
@@ -1118,8 +1118,8 @@ CMD:endevent(playerid, params[])
 						if(GetPVarType(i, "pEventZombie")) DeletePVar(i, "pEventZombie");
 					}
 					ResetPlayerWeapons( i );
-					for(new w = 0; w < 12; w++)
-						if(PlayerInfo[i][pAGuns][w]) PlayerInfo[i][pGuns][w] = 0, PlayerInfo[i][pAGuns][w] = 0;
+					for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
+						if(PlayerInfo[i][pAGuns][w]) PlayerInfo[i][pGuns][w] = WEAPON_FIST, PlayerInfo[i][pAGuns][w] = WEAPON_FIST;
 					SetPlayerWeapons(i);
 					SetPlayerToTeamColor(i);
 					SetPlayerSkin(i, PlayerInfo[i][pModel]);
@@ -1157,11 +1157,11 @@ CMD:endevent(playerid, params[])
 			EventKernel[ EventLimit ] = 0;
 			EventKernel[ EventPlayers ] = 0;
 			EventKernel[ EventTime ] = 0;
-			EventKernel[ EventWeapons ][0] = 0;
-			EventKernel[ EventWeapons ][1] = 0;
-			EventKernel[ EventWeapons ][2] = 0;
-			EventKernel[ EventWeapons ][3] = 0;
-			EventKernel[ EventWeapons ][4] = 0;
+			EventKernel[ EventWeapons ][0] = WEAPON_FIST;
+			EventKernel[ EventWeapons ][1] = WEAPON_FIST;
+			EventKernel[ EventWeapons ][2] = WEAPON_FIST;
+			EventKernel[ EventWeapons ][3] = WEAPON_FIST;
+			EventKernel[ EventWeapons ][4] = WEAPON_FIST;
 			for(new i = 0; i < 20; i++)
 			{
 				EventRCPU[i] = 0;
@@ -1259,27 +1259,27 @@ CMD:startevent(playerid, params[])
 					ABroadCast( COLOR_GRAD2, string, 4 );
 					format( string, sizeof( string ), "Event Health: %f Event Armor: %f.", EventKernel[EventHealth], EventKernel[EventArmor] );
 					ABroadCast( COLOR_GRAD2, string, 4 );
-					if(EventKernel[EventWeapons][0] != 0)
+					if(EventKernel[EventWeapons][0] != WEAPON_FIST)
 					{
 						format( string, sizeof( string ), "Event Gun1: %d.", EventKernel[EventWeapons][0] );
 						ABroadCast( COLOR_GRAD2, string, 4 );
 					}
-					if(EventKernel[EventWeapons][1] != 0)
+					if(EventKernel[EventWeapons][1] != WEAPON_FIST)
 					{
 						format( string, sizeof( string ), "Event Gun2: %d.", EventKernel[EventWeapons][1] );
 						ABroadCast( COLOR_GRAD2, string, 4 );
 					}
-					if(EventKernel[EventWeapons][2] != 0)
+					if(EventKernel[EventWeapons][2] != WEAPON_FIST)
 					{
 						format( string, sizeof( string ), "Event Gun3: %d.", EventKernel[EventWeapons][2] );
 						ABroadCast( COLOR_GRAD2, string, 4 );
 					}
-					if(EventKernel[EventWeapons][3] != 0)
+					if(EventKernel[EventWeapons][3] != WEAPON_FIST)
 					{
 						format( string, sizeof( string ), "Event Gun4: %d.", EventKernel[EventWeapons][3] );
 						ABroadCast( COLOR_GRAD2, string, 4 );
 					}
-					if(EventKernel[EventWeapons][4] != 0)
+					if(EventKernel[EventWeapons][4] != WEAPON_FIST)
 					{
       					format( string, sizeof( string ), "Event Gun5: %d.", EventKernel[EventWeapons][4] );
 						ABroadCast( COLOR_GRAD2, string, 4 );
@@ -1327,7 +1327,7 @@ CMD:beginevent(playerid, params[])
    			new zombiemade;
 			foreach(new i: Player)
 			{
-				if( GetPVarType( i, "EventToken" ) == 1 )
+				if( GetPVarType( i, "EventToken" ) == VARTYPE_INT )
 				{
 					if( EventKernel[ EventType ] == 1 )
 					{

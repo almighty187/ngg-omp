@@ -157,7 +157,7 @@ CMD:gotoimpoundpoint(playerid, params[])
 	return 1;
 }
 
-stock IsAtImpoundingPoint(playerid)
+IsAtImpoundingPoint(playerid)
 {
 	if(IsPlayerConnected(playerid))
 	{
@@ -172,7 +172,7 @@ stock IsAtImpoundingPoint(playerid)
 	return 0;
 }
 
-stock SaveImpoundPoint(id)
+SaveImpoundPoint(id)
 {
 	new string[1024];
 	mysql_format(MainPipeline, string, sizeof(string), "UPDATE `impoundpoints` SET \
@@ -192,45 +192,14 @@ stock SaveImpoundPoint(id)
 	mysql_tquery(MainPipeline, string, "OnQueryFinish", "i", SENDDATA_THREAD);
 }
 
-stock SaveImpoundPoints()
-{
-	for(new i = 0; i < MAX_ImpoundPoints; i++)
-	{
-		SaveImpoundPoint(i);
-	}
-	return 1;
-}
-
-stock RehashImpoundPoint(id)
-{
-	DestroyDynamic3DTextLabel(ImpoundPoints[id][impoundTextID]);
-	ImpoundPoints[id][impoundSQLId] = -1;
-	ImpoundPoints[id][impoundPosX] = 0.0;
-	ImpoundPoints[id][impoundPosY] = 0.0;
-	ImpoundPoints[id][impoundPosZ] = 0.0;
-	ImpoundPoints[id][impoundVW] = 0;
-	ImpoundPoints[id][impoundInt] = 0;
-	LoadImpoundPoint(id);
-}
-
-stock RehashImpoundPoints()
-{
-	printf("[RehashImpoundPoints] Deleting impound Points from server...");
-	for(new i = 0; i < MAX_ImpoundPoints; i++)
-	{
-		RehashImpoundPoint(i);
-	}
-	LoadImpoundPoints();
-}
-
-stock LoadImpoundPoint(id)
+LoadImpoundPoint(id)
 {
 	new string[128];
 	format(string, sizeof(string), "SELECT * FROM `impoundpoints` WHERE `id`=%d", id);
 	mysql_tquery(MainPipeline, string, "OnLoadImpoundPoint", "i", id);
 }
 
-stock LoadImpoundPoints()
+LoadImpoundPoints()
 {
 	printf("[LoadImpoundPoints] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `impoundpoints`", "OnLoadImpoundPoints", "");

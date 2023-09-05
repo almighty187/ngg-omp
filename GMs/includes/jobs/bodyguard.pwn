@@ -137,9 +137,9 @@ PlayerFriskPlayer(playerid, giveplayerid)
 	if(PlayerInfo[giveplayerid][pCDPlayer] > 0) SendClientMessageEx(playerid, COLOR_GREY, "Music player.");
 	new weaponname[50];
 	SendClientMessageEx(playerid, COLOR_WHITE, "** Weapons **");
-	for (new i = 0; i < 12; i++)
+	for (new WEAPON_SLOT:i; i < WEAPON_SLOT_DETONATOR; i++)
 	{
-		if(PlayerInfo[giveplayerid][pGuns][i] > 0)
+		if(PlayerInfo[giveplayerid][pGuns][i] > WEAPON_FIST)
 		{
 			GetWeaponName(PlayerInfo[giveplayerid][pGuns][i], weaponname, sizeof(weaponname));
 			format(szMiscArray, sizeof(szMiscArray), "Weapon: %s.", weaponname);

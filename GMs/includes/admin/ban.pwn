@@ -1,4 +1,4 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
@@ -21,7 +21,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 }
 
 
-CreateBan(iBanCreator, iBanned, iPlayerID, szIPAddress[], szReason[], iLength, iSilentBan = 0, iPermBan = 0) {
+CreateBan(iBanCreator, iBanned, iPlayerID, const szIPAddress[], const szReason[], iLength, iSilentBan = 0, iPermBan = 0) {
 
 	// SPECIFY INVALID ID for iBanCreator for System Bans
 	// SPECIFY INVALID ID for iBanned when banning IP Addresses

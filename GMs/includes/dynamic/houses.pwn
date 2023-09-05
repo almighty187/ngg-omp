@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
 	if(arrAntiCheat[playerid][ac_iFlags][AC_DIALOGSPOOFING] > 0) return 1;
@@ -77,7 +77,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 	return 0;
 }
 
-stock SaveHouse(houseid) {
+SaveHouse(houseid) {
 
 	szMiscArray[0] = 0;
 	mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "UPDATE `houses` SET \
@@ -250,7 +250,7 @@ public OnSaveHouse(i, thread) {
 	return 1;
 }
 
-stock LoadHouse(houseid)
+LoadHouse(houseid)
 {
 	new string[128];
 	//printf("[LoadHouse] Loading HouseID %d's data from database...", houseid);
@@ -258,7 +258,7 @@ stock LoadHouse(houseid)
 	mysql_tquery(MainPipeline, string, "OnLoadHouse", "i", houseid);
 }
 
-stock LoadHouses()
+LoadHouses()
 {
 	printf("[LoadHouses] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT OwnerName.Username, h.* FROM houses h LEFT JOIN accounts OwnerName ON h.OwnerID = OwnerName.id", "OnLoadHouses", "");
@@ -467,7 +467,7 @@ public OnLoadHouses()
 	else printf("[LoadHouses] Failed to load any houses.");
 }
 
-stock ReloadHouseText(houseid)
+ReloadHouseText(houseid)
 {
 	new string[128];
 	if(HouseInfo[houseid][hOwned])
@@ -479,7 +479,7 @@ stock ReloadHouseText(houseid)
 	UpdateDynamic3DTextLabelText(HouseInfo[houseid][hTextID], HouseInfo[houseid][hInactive] ? COLOR_LIGHTBLUE : COLOR_GREEN, string);
 }
 
-stock ReloadHousePickup(houseid)
+ReloadHousePickup(houseid)
 {
 	if(IsValidDynamicPickup(HouseInfo[houseid][hPickupID])) DestroyDynamicPickup(HouseInfo[houseid][hPickupID]), HouseInfo[houseid][hPickupID] = -1;
 	if(IsValidDynamic3DTextLabel(HouseInfo[houseid][hTextID])) DestroyDynamic3DTextLabel(HouseInfo[houseid][hTextID]), HouseInfo[houseid][hTextID] = Text3D:-1;
@@ -518,7 +518,7 @@ stock ReloadHousePickup(houseid)
 	return 1;
 }
 
-stock SaveHouses()
+SaveHouses()
 {
 	for(new i = 0; i < MAX_HOUSES; i++)
 	{
@@ -528,7 +528,7 @@ stock SaveHouses()
 	return 1;
 }
 
-stock RehashHouse(houseid)
+RehashHouse(houseid)
 {
 	HouseInfo[houseid][hSQLId] = -1;
 	HouseInfo[houseid][hOwned] = 0;
@@ -561,11 +561,11 @@ stock RehashHouse(houseid)
 	HouseInfo[houseid][hHeroin] = 0;
 	HouseInfo[houseid][hEcstasy] = 0;
 	HouseInfo[houseid][hMeth] = 0;
-	HouseInfo[houseid][hWeapons][0] = 0;
-	HouseInfo[houseid][hWeapons][1] = 0;
-	HouseInfo[houseid][hWeapons][2] = 0;
-	HouseInfo[houseid][hWeapons][3] = 0;
-	HouseInfo[houseid][hWeapons][4] = 0;
+	HouseInfo[houseid][hWeapons][0] = WEAPON_FIST;
+	HouseInfo[houseid][hWeapons][1] = WEAPON_FIST;
+	HouseInfo[houseid][hWeapons][2] = WEAPON_FIST;
+	HouseInfo[houseid][hWeapons][3] = WEAPON_FIST;
+	HouseInfo[houseid][hWeapons][4] = WEAPON_FIST;
 	HouseInfo[houseid][hGLUpgrade] = 0;
 	if(IsValidDynamicPickup(HouseInfo[houseid][hPickupID])) DestroyDynamicPickup(HouseInfo[houseid][hPickupID]);
 	if(IsValidDynamic3DTextLabel(HouseInfo[houseid][hTextID])) DestroyDynamic3DTextLabel(HouseInfo[houseid][hTextID]);
@@ -584,7 +584,7 @@ stock RehashHouse(houseid)
 	LoadHouse(houseid);
 }
 
-stock RehashHouses()
+RehashHouses()
 {
 	printf("[RehashHouses] Deleting houses from server...");
 	for(new i = 0; i < MAX_HOUSES; i++)
@@ -1070,11 +1070,11 @@ CMD:hedit(playerid, params[])
 		HouseInfo[houseid][hHeroin] = 0;
 		HouseInfo[houseid][hEcstasy] = 0;
 		HouseInfo[houseid][hMeth] = 0;
-		HouseInfo[houseid][hWeapons][0] = 0;
-		HouseInfo[houseid][hWeapons][1] = 0;
-		HouseInfo[houseid][hWeapons][2] = 0;
-		HouseInfo[houseid][hWeapons][3] = 0;
-		HouseInfo[houseid][hWeapons][4] = 0;
+		HouseInfo[houseid][hWeapons][0] = WEAPON_FIST;
+		HouseInfo[houseid][hWeapons][1] = WEAPON_FIST;
+		HouseInfo[houseid][hWeapons][2] = WEAPON_FIST;
+		HouseInfo[houseid][hWeapons][3] = WEAPON_FIST;
+		HouseInfo[houseid][hWeapons][4] = WEAPON_FIST;
 		HouseInfo[houseid][hGLUpgrade] = 0;
 		if(IsValidDynamicPickup(HouseInfo[houseid][hPickupID])) DestroyDynamicPickup(HouseInfo[houseid][hPickupID]);
 		if(IsValidDynamic3DTextLabel(HouseInfo[houseid][hTextID])) DestroyDynamic3DTextLabel(HouseInfo[houseid][hTextID]);
@@ -1757,7 +1757,7 @@ CMD:houselights(playerid, params[]) {
 }
 
 
-stock ClearHouse(houseid) {
+ClearHouse(houseid) {
 	HouseInfo[houseid][hOwned] = 0;
 	HouseInfo[houseid][hSafeMoney] = 0;
 	HouseInfo[houseid][hPot] = 0;
@@ -1768,7 +1768,7 @@ stock ClearHouse(houseid) {
 	HouseInfo[houseid][hHeroin] = 0;
 	for(new i = 0; i < 5; i++)
 	{
-		HouseInfo[houseid][hWeapons][i] = 0;
+		HouseInfo[houseid][hWeapons][i] = WEAPON_FIST;
 	}
 	HouseInfo[houseid][hGLUpgrade] = 1;
 	HouseInfo[houseid][hClosetX] = 0.0;
@@ -1785,7 +1785,7 @@ stock ClearHouse(houseid) {
 	if(IsValidDynamic3DTextLabel(HouseInfo[houseid][hSignText])) DestroyDynamic3DTextLabel(HouseInfo[houseid][hSignText]);
 }
 
-stock InRangeOfWhichHouse(playerid, Float: range)
+InRangeOfWhichHouse(playerid, Float: range)
 {
 	if (PlayerInfo[playerid][pPhousekey] != INVALID_HOUSE_ID && IsPlayerInRangeOfPoint(playerid,range,HouseInfo[PlayerInfo[playerid][pPhousekey]][hExteriorX], HouseInfo[PlayerInfo[playerid][pPhousekey]][hExteriorY], HouseInfo[PlayerInfo[playerid][pPhousekey]][hExteriorZ]) && GetPlayerInterior(playerid) == HouseInfo[PlayerInfo[playerid][pPhousekey]][hExtIW] && GetPlayerVirtualWorld(playerid) == HouseInfo[PlayerInfo[playerid][pPhousekey]][hExtVW]) return PlayerInfo[playerid][pPhousekey];
 	if (PlayerInfo[playerid][pPhousekey2] != INVALID_HOUSE_ID && IsPlayerInRangeOfPoint(playerid,range,HouseInfo[PlayerInfo[playerid][pPhousekey2]][hExteriorX], HouseInfo[PlayerInfo[playerid][pPhousekey2]][hExteriorY], HouseInfo[PlayerInfo[playerid][pPhousekey2]][hExteriorZ]) && GetPlayerInterior(playerid) == HouseInfo[PlayerInfo[playerid][pPhousekey2]][hExtIW] && GetPlayerVirtualWorld(playerid) == HouseInfo[PlayerInfo[playerid][pPhousekey2]][hExtVW]) return PlayerInfo[playerid][pPhousekey2];
@@ -1823,11 +1823,11 @@ public DeleteHouse(houseid, adminid)
 	HouseInfo[houseid][hPot] = 0;
 	HouseInfo[houseid][hCrack] = 0;
 	HouseInfo[houseid][hMaterials] = 0;
-	HouseInfo[houseid][hWeapons][0] = 0;
-	HouseInfo[houseid][hWeapons][1] = 0;
-	HouseInfo[houseid][hWeapons][2] = 0;
-	HouseInfo[houseid][hWeapons][3] = 0;
-	HouseInfo[houseid][hWeapons][4] = 0;
+	HouseInfo[houseid][hWeapons][0] = WEAPON_FIST;
+	HouseInfo[houseid][hWeapons][1] = WEAPON_FIST;
+	HouseInfo[houseid][hWeapons][2] = WEAPON_FIST;
+	HouseInfo[houseid][hWeapons][3] = WEAPON_FIST;
+	HouseInfo[houseid][hWeapons][4] = WEAPON_FIST;
 	HouseInfo[houseid][hGLUpgrade] = 0;
 	if(IsValidDynamicPickup(HouseInfo[houseid][hPickupID])) DestroyDynamicPickup(HouseInfo[houseid][hPickupID]), HouseInfo[houseid][hPickupID] = -1;
 	if(IsValidDynamic3DTextLabel(HouseInfo[houseid][hTextID])) DestroyDynamic3DTextLabel(HouseInfo[houseid][hTextID]), HouseInfo[houseid][hTextID] = Text3D:-1;

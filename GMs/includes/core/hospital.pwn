@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 new InsurancePoint[2];
 
@@ -55,7 +55,7 @@ hook OnGameModeInit() {
 	return 1;
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 
 	if(newkeys & KEY_YES && (IsPlayerInDynamicArea(playerid, InsurancePoint[0]) || IsPlayerInDynamicArea(playerid, InsurancePoint[1]))) {
 		format(szMiscArray, sizeof(szMiscArray), "Level 1 Healthcare\t\t$1000\nLevel 2 Healthcare\t\t$2000\nLevel 3 Healthcare\t\t$3000\nLevel 4 Healthcare\t\t$4000\nBuy Insurance");
@@ -67,7 +67,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 
 DeliverPlayerToHospital(playerid, iHospital)
 {
-	TogglePlayerControllable(playerid, 0);
+	TogglePlayerControllable(playerid, false);
 	SetHealth(playerid, 0.5);
 	SetPlayerInterior(playerid, 1);
 	PlayerInfo[playerid][pInt] = 1;
@@ -218,8 +218,8 @@ public Hospital_StreamIn(playerid, iHospital, index)
 		SetPlayerFacingAngle(playerid, 180);
 	}
 	
-	TogglePlayerControllable(playerid, 1);
-	ApplyAnimation(playerid, "SWAT", "gnstwall_injurd", 4.0, 1, 0, 0, 0, 0, 1);
+	TogglePlayerControllable(playerid, true);
+	ApplyAnimation(playerid, "SWAT", "gnstwall_injurd", 4.0, true, false, false, false, 0, SYNC_ALL);
 	
 	return 1;
 }
@@ -297,7 +297,7 @@ public ReleaseFromHospital(playerid, iHospital, iBed)
 	
 	if(--arrHospitalBedData[iHospital][iCountDown][iBed] <= 0)
 	{
-		ApplyAnimation(playerid, "SUNBATHE", "Lay_Bac_out", 4.0, 0, 1, 1, 0, 0, 1);
+		ApplyAnimation(playerid, "SUNBATHE", "Lay_Bac_out", 4.0, false, true, true, false, 0, SYNC_ALL);
 		DeletePVar(playerid, "_SpawningAtHospital");
 		DeletePVar(playerid, "_HospitalBeingDelivered");
 		arrHospitalBedData[iHospital][bBedOccupied][iBed] = false;
@@ -365,7 +365,7 @@ public ReleaseFromHospital(playerid, iHospital, iBed)
 		{
 			if(!IsPlayerInRangeOfPoint(playerid, 7.0, HospitalSpawns[iBed][0], HospitalSpawns[iBed][1], HospitalSpawns[iBed][2]))
 			{
-				TogglePlayerControllable(playerid, 0);
+				TogglePlayerControllable(playerid, false);
 				SetTimerEx("Hospital_StreamIn", FREEZE_TIME, false, "iii", playerid, iHospital, iBed);
 				Streamer_UpdateEx(playerid, HospitalSpawns[iBed][0], HospitalSpawns[iBed][1], HospitalSpawns[iBed][2]);
 				SetPlayerPos(playerid, HospitalSpawns[iBed][0], HospitalSpawns[iBed][1], HospitalSpawns[iBed][2]);

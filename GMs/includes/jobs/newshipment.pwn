@@ -47,7 +47,7 @@
                             <18:54:17> "Matthew": AddPlayerClass(172,1662.7423,-1563.4584,13.3906,356.6844,0,0,0,0,0,0); // Fertilizer
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define MAX_SHIPMENTS 24
 
@@ -135,13 +135,13 @@ new ShipmentTypes[MAX_SHIPMENTS] =
 
 new ShipmentTrucks[13][3]; // 0 = id, 1 = model, 2 = cargo max amt.
 
-stock IsATrucker(playerid)
+IsATrucker(playerid)
 {
     if(PlayerInfo[playerid][pJob] != 20 && PlayerInfo[playerid][pJob2] != 20 && PlayerInfo[playerid][pJob3] != 20) return 0;
     return 1;
 }
 
-stock IsATruck(vehicleid)
+IsATruck(vehicleid)
 {
     new model = GetVehicleModel(vehicleid);
     switch(model)
@@ -151,7 +151,7 @@ stock IsATruck(vehicleid)
     }
 }
 
-stock IsTrailer(vehicleid)
+IsTrailer(vehicleid)
 {
     new model = GetVehicleModel(vehicleid);
     switch(model)
@@ -162,7 +162,7 @@ stock IsTrailer(vehicleid)
     return 0;
 }
 
-stock IsTruckingVehicle(vehicleid)
+IsTruckingVehicle(vehicleid)
 {
     for(new i = 0; i < sizeof ShipmentTrucks; i++)
     {
@@ -171,7 +171,7 @@ stock IsTruckingVehicle(vehicleid)
     return 0;
 }
 
-stock GetVehicleCargoSize(modelid)
+GetVehicleCargoSize(modelid)
 {
     // This function takes a vehicle's model and returns the cargo size for that vehicle.
     switch(modelid)
@@ -188,13 +188,13 @@ stock GetVehicleCargoSize(modelid)
     return 0;
 }
 
-stock GetVehicleCargo(vehicleid)
+GetVehicleCargo(vehicleid)
 {
     format(szMiscArray, sizeof szMiscArray, "%s\n", ShipmentContents[TruckHolding[vehicleid]]);
     return szMiscArray;
 }
 
-stock ShowLoadTruckDialog(playerid)
+ShowLoadTruckDialog(playerid)
 {
     // Generate a random set of 10 values from the current ones.
     for(new i = 0; i < 10; i++)
@@ -526,7 +526,7 @@ CMD:loadtruck(playerid, params[])
     return 1;
 }
 
-stock GetTrunkPos(vehicleid, &Float:fX, &Float:fY, &Float:fZ)
+GetTrunkPos(vehicleid, &Float:fX, &Float:fY, &Float:fZ)
 {
     new model = GetVehicleModel(vehicleid);
     new Float:X, Float:Y, Float:Z;
@@ -815,7 +815,7 @@ public TruckAbuseCheck(playerid, vehicleid)
     return 1;
 }
 
-hook OnPlayerStateChange(playerid, newstate, oldstate)
+hook OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate)
 {
     if(newstate == PLAYER_STATE_DRIVER && oldstate == PLAYER_STATE_ONFOOT && IsTruckingVehicle(GetPlayerVehicleID(playerid)))
     {

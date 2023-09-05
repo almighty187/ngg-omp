@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-CMD:service(playerid, params[])
+CMD:service(playerid, const params[])
 {
 	new string[128], choice[32];
 	if(sscanf(params, "s[32]", choice))
@@ -120,7 +120,6 @@ CMD:service(playerid, params[])
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "* You have called for a medic, wait for a reply.");
 			MedicCall = playerid;
 			PlayerInfo[playerid][pServiceTime] = gettime()+30;
-			OnDutyMedics = 0;
 			return 1;
 		}
 	}

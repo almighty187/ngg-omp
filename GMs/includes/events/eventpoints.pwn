@@ -90,7 +90,7 @@ SaveEventPoints() {
 }
 
 
-stock InitEventPoints()
+InitEventPoints()
 {
 	for(new i = 0; i < MAX_EVENTPOINTS; i++)
 	{

@@ -35,9 +35,9 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
-stock ShowAdMuteFine(playerid)
+ShowAdMuteFine(playerid)
 {
 	new string[128];
 	new playername[MAX_PLAYER_NAME];
@@ -147,7 +147,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						return ShowPlayerDialogEx(playerid, DIALOG_ADCATEGORYPLACEP, DIALOG_STYLE_LIST, "Select a category", "Real Estate\nAutomobile\nBuying\nSelling\nMiscellaneous", "Select", "Cancel");
 				}
 			}
-			case 4: cmd_houselistings(playerid, "");
+			case 4: cmd_houselistings(playerid);
 		}
 		case DIALOG_ADCATEGORYPLACE: {
 			if(response) switch(listitem) {
@@ -373,11 +373,11 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 	return 0;
 }
 
-CMD:ads(playerid, params[]) {
-	return cmd_advertisements(playerid, params);
+CMD:ads(playerid) {
+	return cmd_advertisements(playerid);
 }
 
-CMD:advertisements(playerid, params[]) {
+CMD:advertisements(playerid) {
 	if(gPlayerLogged{playerid} == 0) {
 		SendClientMessageEx(playerid, COLOR_GREY, "You're not logged in.");
 	}

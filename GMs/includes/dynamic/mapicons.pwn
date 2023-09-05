@@ -35,14 +35,14 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-stock LoadDynamicMapIcon(mapiconid)
+LoadDynamicMapIcon(mapiconid)
 {
 	new string[128];
 	mysql_format(MainPipeline, string, sizeof(string), "SELECT * FROM `dmapicons` WHERE `id`=%d", mapiconid);
 	mysql_tquery(MainPipeline, string, "OnLoadDynamicMapIcon", "i", mapiconid);
 }
 
-stock LoadDynamicMapIcons()
+LoadDynamicMapIcons()
 {
 	printf("[LoadDynamicMapIcons] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `dmapicons`", "OnLoadDynamicMapIcons", "");
@@ -100,7 +100,7 @@ public OnLoadDynamicMapIcons()
 	return 1;
 }
 
-stock SaveDynamicMapIcon(mapiconid)
+SaveDynamicMapIcon(mapiconid)
 {
 	new string[512];
 
@@ -125,7 +125,7 @@ stock SaveDynamicMapIcon(mapiconid)
 	mysql_tquery(MainPipeline, string, "OnQueryFinish", "i", SENDDATA_THREAD);
 }
 
-stock SaveDynamicMapIcons()
+SaveDynamicMapIcons()
 {
 	for(new i = 1; i < MAX_DMAPICONS; i++)
 	{
@@ -134,7 +134,7 @@ stock SaveDynamicMapIcons()
 	return 1;
 }
 
-stock RehashDynamicMapIcon(mapiconid)
+RehashDynamicMapIcon(mapiconid)
 {
 	if(IsValidDynamicMapIcon(DMPInfo[mapiconid][dmpMapIconID])) DestroyDynamicMapIcon(DMPInfo[mapiconid][dmpMapIconID]);
 	DMPInfo[mapiconid][dmpMarkerType] = 0;
@@ -147,7 +147,7 @@ stock RehashDynamicMapIcon(mapiconid)
 	LoadDynamicMapIcon(mapiconid);
 }
 
-stock RehashDynamicMapIcons()
+RehashDynamicMapIcons()
 {
 	printf("[RehashDynamicMapIcons] Deleting map icons from server...");
 	for(new i = 1; i < MAX_DMAPICONS; i++)

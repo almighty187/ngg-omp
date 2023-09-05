@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 CMD:gate(playerid, params[])
 {
@@ -835,7 +835,7 @@ CMD:gedittexture(playerid, params[])
 		}
 		else if(strcmp(option, "color", true) == 0)
 		{
-			if(strlen(var) > 6 || !ishex(var)) return SendClientMessageEx(playerid, COLOR_GREY, "Color must be a valid hexadecimal color (ie: BCA3FF)");
+			if(strlen(var) > 6 || !IsHex(var)) return SendClientMessageEx(playerid, COLOR_GREY, "Color must be a valid hexadecimal color (ie: BCA3FF)");
 			new value;
 			sscanf(var, "h", value);
 		    GateInfo[gateid][gTColor] = value;
@@ -976,7 +976,7 @@ CreateGate(gateid) {
 	return 1;
 }
 
-stock LoadGates()
+LoadGates()
 {
 	printf("[LoadGates] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `gates`", "OnLoadGates", "");
@@ -1027,7 +1027,7 @@ public OnLoadGates()
 	}
 }
 
-stock SaveGate(id) {
+SaveGate(id) {
 
 	mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "UPDATE `gates` SET \
 		`HID`=%d, \
@@ -1101,7 +1101,7 @@ stock SaveGate(id) {
 	return 0;
 }
 
-stock SaveGates()
+SaveGates()
 {
 	for(new i = 0; i < MAX_GATES; i++)
 	{
@@ -1125,7 +1125,7 @@ public MoveTimerGate(gateid)
 	return 1;
 }
 
-stock MoveGate(playerid, gateid)
+MoveGate(playerid, gateid)
 {
 	new string[128];
 	if(GateInfo[gateid][gStatus] == 0)
@@ -1161,7 +1161,7 @@ stock MoveGate(playerid, gateid)
 	return 1;
 }
 
-stock MoveAutomaticGate(playerid, gateid)
+MoveAutomaticGate(playerid, gateid)
 {
 	MoveDynamicObject(GateInfo[gateid][gGATE], GateInfo[gateid][gPosXM], GateInfo[gateid][gPosYM], GateInfo[gateid][gPosZM], GateInfo[gateid][gSpeed], GateInfo[gateid][gRotXM], GateInfo[gateid][gRotYM], GateInfo[gateid][gRotZM]);
 	GateInfo[gateid][gStatus] = 1;

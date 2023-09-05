@@ -1,6 +1,6 @@
 // g_mysql_SaveVehicle(int playerid, int slotid)
 // Description: Saves a account's specified vehicle slot.
-stock g_mysql_SaveVehicle(playerid, slotid)
+g_mysql_SaveVehicle(playerid, slotid)
 {
 	szMiscArray[0] = 0;
 	printf("%s (%i) saving their %s (slot %i) (Model %i)...", GetPlayerNameEx(playerid), playerid, VehicleName[PlayerVehicleInfo[playerid][slotid][pvModelId] - 400], slotid, PlayerVehicleInfo[playerid][slotid][pvModelId]);
@@ -55,9 +55,9 @@ stock g_mysql_SaveVehicle(playerid, slotid)
 		PlayerVehicleInfo[playerid][slotid][pvDrugs][3],
 		PlayerVehicleInfo[playerid][slotid][pvDrugs][4]);
 
-	for(new m = 0; m < MAX_MODS; m++)
+	for(new CARMODTYPE:m; m < MAX_MODS; m++)
 	{
-		if(m == MAX_MODS-1)
+		if(_:m == _:MAX_MODS-1)
 		{
 			mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "%s `pvMod%d` = %d WHERE `id` = '%d'", szMiscArray, m, PlayerVehicleInfo[playerid][slotid][pvMods][m], PlayerVehicleInfo[playerid][slotid][pvSlotId]);
 		}
@@ -75,7 +75,7 @@ stock g_mysql_SaveVehicle(playerid, slotid)
 	mysql_tquery(MainPipeline, szMiscArray, "OnQueryFinish", "ii", SENDDATA_THREAD, playerid);
 }
 
-stock CreatePlayerVehicle(playerid, playervehicleid, modelid, Float: x, Float: y, Float: z, Float: angle, color1, color2, price, VW, Int)
+CreatePlayerVehicle(playerid, playervehicleid, modelid, Float: x, Float: y, Float: z, Float: angle, color1, color2, price, VW, Int)
 {
 	szMiscArray[0] = 0;
 	if(PlayerVehicleInfo[playerid][playervehicleid][pvId] == INVALID_PLAYER_VEHICLE_ID)
@@ -93,7 +93,7 @@ stock CreatePlayerVehicle(playerid, playervehicleid, modelid, Float: x, Float: y
 		PlayerVehicleInfo[playerid][playervehicleid][pvPrice] = price;
 		for(new w = 0; w < 3; w++)
 	    {
-	    	PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][w] = 0;
+	    	PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][w] = WEAPON_FIST;
 		}
 		PlayerVehicleInfo[playerid][playervehicleid][pvWepUpgrade] = 0;
 		PlayerVehicleInfo[playerid][playervehicleid][pvImpounded] = 0;
@@ -110,7 +110,7 @@ stock CreatePlayerVehicle(playerid, playervehicleid, modelid, Float: x, Float: y
 
 		for(new m; m < sizeof(Drugs); ++m) PlayerVehicleInfo[playerid][playervehicleid][pvDrugs][m] = 0;
 		
-		for(new m = 0; m < MAX_MODS; m++)
+		for(new CARMODTYPE:m; m < MAX_MODS; m++)
 	    {
 	    	PlayerVehicleInfo[playerid][playervehicleid][pvMods][m] = 0;
 		}
@@ -131,7 +131,7 @@ stock CreatePlayerVehicle(playerid, playervehicleid, modelid, Float: x, Float: y
 	return INVALID_PLAYER_VEHICLE_ID;
 }
 
-stock DestroyPlayerVehicle(playerid, playervehicleid)
+DestroyPlayerVehicle(playerid, playervehicleid)
 {
 	if(PlayerVehicleInfo[playerid][playervehicleid][pvModelId])
 	{
@@ -160,9 +160,9 @@ stock DestroyPlayerVehicle(playerid, playervehicleid)
 		PlayerVehicleInfo[playerid][playervehicleid][pvVW] = 0;
 		PlayerVehicleInfo[playerid][playervehicleid][pvInt] = 0;
 		PlayerVehicleInfo[playerid][playervehicleid][pvTicket] = 0;
-		PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][0] = 0;
-		PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][1] = 0;
-		PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][2] = 0;
+		PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][0] = WEAPON_FIST;
+		PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][1] = WEAPON_FIST;
+		PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][2] = WEAPON_FIST;
 		PlayerVehicleInfo[playerid][playervehicleid][pvPlate] = 0;
 		PlayerVehicleInfo[playerid][playervehicleid][pvLock] = 0;
 		PlayerVehicleInfo[playerid][playervehicleid][pvLocksLeft] = 0;
@@ -191,7 +191,7 @@ stock DestroyPlayerVehicle(playerid, playervehicleid)
 	}
 }
 
-stock LoadPlayerVehicles(playerid, logoff = 0) {
+LoadPlayerVehicles(playerid, logoff = 0) {
 	for(new v = 0; v < MAX_PLAYERVEHICLES; v++) {
 		if(PlayerVehicleInfo[playerid][v][pvBeingPickLocked] > 0 && logoff == 0) continue;
 		if(vehicleSpawnCountCheck(playerid)) {
@@ -253,7 +253,7 @@ stock LoadPlayerVehicles(playerid, logoff = 0) {
 	return 1;
 }
 
-stock UnloadPlayerVehicles(playerid, logoff = 0, reason = 0) {
+UnloadPlayerVehicles(playerid, logoff = 0, reason = 0) {
 	for(new v = 0; v < MAX_PLAYERVEHICLES; v++) if(PlayerVehicleInfo[playerid][v][pvId] != INVALID_PLAYER_VEHICLE_ID && !PlayerVehicleInfo[playerid][v][pvImpounded] && PlayerVehicleInfo[playerid][v][pvSpawned]) {
 		if(PlayerVehicleInfo[playerid][v][pvBeingPickLocked] > 0 && logoff == 0) continue;
 		if(WheelClamp{PlayerVehicleInfo[playerid][v][pvId]} && logoff == 1) {
@@ -315,7 +315,7 @@ stock UnloadPlayerVehicles(playerid, logoff = 0, reason = 0) {
 	VehicleSpawned[playerid] = 0;
 }
 
-stock UpdatePlayerVehicleParkPosition(playerid, playervehicleid, Float:newx, Float:newy, Float:newz, Float:newangle, Float:health, VW, Int)
+UpdatePlayerVehicleParkPosition(playerid, playervehicleid, Float:newx, Float:newy, Float:newz, Float:newangle, Float:health, VW, Int)
 {
 	if(PlayerVehicleInfo[playerid][playervehicleid][pvId] != INVALID_PLAYER_VEHICLE_ID && GetVehicleModel(PlayerVehicleInfo[playerid][playervehicleid][pvId]))
 	{
@@ -333,7 +333,7 @@ stock UpdatePlayerVehicleParkPosition(playerid, playervehicleid, Float:newx, Flo
 		PlayerVehicleInfo[playerid][playervehicleid][pvInt] = Int;
 		oldfuel = VehicleFuel[PlayerVehicleInfo[playerid][playervehicleid][pvId]];
 		UpdatePlayerVehicleMods(playerid, playervehicleid);
-		GetVehicleDamageStatus(PlayerVehicleInfo[playerid][playervehicleid][pvId], arrDamage[0], arrDamage[1], arrDamage[2], arrDamage[3]);
+		GetVehicleDamageStatus(PlayerVehicleInfo[playerid][playervehicleid][pvId], VEHICLE_PANEL_STATUS:arrDamage[0], VEHICLE_DOOR_STATUS:arrDamage[1], VEHICLE_LIGHT_STATUS:arrDamage[2], VEHICLE_TYRE_STATUS:arrDamage[3]);
 		
 		switch(PlayerVehicleInfo[playerid][playervehicleid][pvModelId]) {
 			case 519, 553, 508: {
@@ -362,7 +362,7 @@ stock UpdatePlayerVehicleParkPosition(playerid, playervehicleid, Float:newx, Flo
 		SetVehicleHealth(carcreated, health);
 		if(PlayerVehicleInfo[playerid][playervehicleid][pvLocked] == 1) LockPlayerVehicle(playerid, PlayerVehicleInfo[playerid][playervehicleid][pvId], PlayerVehicleInfo[playerid][playervehicleid][pvLock]);
 		LoadPlayerVehicleMods(playerid, playervehicleid);
-		UpdateVehicleDamageStatus(PlayerVehicleInfo[playerid][playervehicleid][pvId], arrDamage[0], arrDamage[1], arrDamage[2], arrDamage[3]);
+		UpdateVehicleDamageStatus(PlayerVehicleInfo[playerid][playervehicleid][pvId], VEHICLE_PANEL_STATUS:arrDamage[0], VEHICLE_DOOR_STATUS:arrDamage[1], VEHICLE_LIGHT_STATUS:arrDamage[2], VEHICLE_TYRE_STATUS:arrDamage[3]);
 
 		g_mysql_SaveVehicle(playerid, playervehicleid);
 		return 1;
@@ -370,7 +370,7 @@ stock UpdatePlayerVehicleParkPosition(playerid, playervehicleid, Float:newx, Flo
 	return 0;
 }
 
-stock UpdatePlayerVehicleMods(playerid, playervehicleid)
+UpdatePlayerVehicleMods(playerid, playervehicleid)
 {
 	if(GetVehicleModel(PlayerVehicleInfo[playerid][playervehicleid][pvId]) && PlayerVehicleInfo[playerid][playervehicleid][pvImpounded] == 0 && PlayerVehicleInfo[playerid][playervehicleid][pvSpawned] == 1 && !PlayerVehicleInfo[playerid][playervehicleid][pvDisabled]) {
 		new carid = PlayerVehicleInfo[playerid][playervehicleid][pvId];
@@ -391,27 +391,27 @@ stock UpdatePlayerVehicleMods(playerid, playervehicleid)
 		stereo = GetVehicleComponentInSlot(carid, CARMODTYPE_STEREO);
 		ventright = GetVehicleComponentInSlot(carid, CARMODTYPE_VENT_RIGHT);
 		ventleft = GetVehicleComponentInSlot(carid, CARMODTYPE_VENT_LEFT);
-		if(spoilers >= 1000)    PlayerVehicleInfo[playerid][playervehicleid][pvMods][0] = spoilers;
-		if(hood >= 1000)        PlayerVehicleInfo[playerid][playervehicleid][pvMods][1] = hood;
-		if(roof >= 1000)        PlayerVehicleInfo[playerid][playervehicleid][pvMods][2] = roof;
-		if(sideskirt1 >= 1000)  PlayerVehicleInfo[playerid][playervehicleid][pvMods][3] = sideskirt1;
-		if(lamps >= 1000)       PlayerVehicleInfo[playerid][playervehicleid][pvMods][4] = lamps;
-		if(nitro >= 1000)       PlayerVehicleInfo[playerid][playervehicleid][pvMods][5] = nitro;
-		if(exhaust >= 1000)     PlayerVehicleInfo[playerid][playervehicleid][pvMods][6] = exhaust;
-		if(wheels >= 1000)      PlayerVehicleInfo[playerid][playervehicleid][pvMods][7] = wheels;
-		if(stereo >= 1000)      PlayerVehicleInfo[playerid][playervehicleid][pvMods][8] = stereo;
-		if(hydraulics >= 1000)  PlayerVehicleInfo[playerid][playervehicleid][pvMods][9] = hydraulics;
-		if(frontbumper >= 1000) PlayerVehicleInfo[playerid][playervehicleid][pvMods][10] = frontbumper;
-		if(rearbumper >= 1000)  PlayerVehicleInfo[playerid][playervehicleid][pvMods][11] = rearbumper;
-		if(ventright >= 1000)   PlayerVehicleInfo[playerid][playervehicleid][pvMods][12] = ventright;
-		if(ventleft >= 1000)    PlayerVehicleInfo[playerid][playervehicleid][pvMods][13] = ventleft;
-		if(sideskirt2 >= 1000)  PlayerVehicleInfo[playerid][playervehicleid][pvMods][14] = sideskirt2;
+		if(spoilers >= 1000)    PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_SPOILER] = spoilers;
+		if(hood >= 1000)        PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_HOOD] = hood;
+		if(roof >= 1000)        PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_ROOF] = roof;
+		if(sideskirt1 >= 1000)  PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_SIDESKIRT] = sideskirt1;
+		if(lamps >= 1000)       PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_LAMPS] = lamps;
+		if(nitro >= 1000)       PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_NITRO] = nitro;
+		if(exhaust >= 1000)     PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_EXHAUST] = exhaust;
+		if(wheels >= 1000)      PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_WHEELS] = wheels;
+		if(stereo >= 1000)      PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_STEREO] = stereo;
+		if(hydraulics >= 1000)  PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_HYDRAULICS] = hydraulics;
+		if(frontbumper >= 1000) PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_FRONT_BUMPER] = frontbumper;
+		if(rearbumper >= 1000)  PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_REAR_BUMPER] = rearbumper;
+		if(ventright >= 1000)   PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_VENT_RIGHT] = ventright;
+		if(ventleft >= 1000)    PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_VENT_LEFT] = ventleft;
+		if(sideskirt2 >= 1000)  PlayerVehicleInfo[playerid][playervehicleid][pvMods][CARMODTYPE_FRONT_BULLBAR] = sideskirt2;
 
 		g_mysql_SaveVehicle(playerid, playervehicleid);
 	}
 }
 
-stock LoadPlayerVehicleMods(playerid, playervehicleid)
+LoadPlayerVehicleMods(playerid, playervehicleid)
 {
 	if(GetVehicleModel(PlayerVehicleInfo[playerid][playervehicleid][pvId]) && PlayerVehicleInfo[playerid][playervehicleid][pvImpounded] == 0 && PlayerVehicleInfo[playerid][playervehicleid][pvSpawned] == 1) {
 
@@ -425,9 +425,9 @@ stock LoadPlayerVehicleMods(playerid, playervehicleid)
 		if(PlayerVehicleInfo[playerid][playervehicleid][pvPaintJob] != -1)
 		{
 			 ChangeVehiclePaintjob(PlayerVehicleInfo[playerid][playervehicleid][pvId], PlayerVehicleInfo[playerid][playervehicleid][pvPaintJob]);
-			 ChangeVehicleColor(PlayerVehicleInfo[playerid][playervehicleid][pvId], PlayerVehicleInfo[playerid][playervehicleid][pvColor1], PlayerVehicleInfo[playerid][playervehicleid][pvColor2]);
+			 ChangeVehicleColours(PlayerVehicleInfo[playerid][playervehicleid][pvId], PlayerVehicleInfo[playerid][playervehicleid][pvColor1], PlayerVehicleInfo[playerid][playervehicleid][pvColor2]);
 		}
-		for(new m = 0; m < MAX_MODS; m++)
+		for(new CARMODTYPE:m; m < MAX_MODS; m++)
 		{
 		    if (PlayerVehicleInfo[playerid][playervehicleid][pvMods][m] >= 1000  && PlayerVehicleInfo[playerid][playervehicleid][pvMods][m] <= 1193)
 		    {
@@ -507,14 +507,14 @@ LoadPlayerDisabledVehicles(playerid)
 	return 1;
 }	
 
-stock GetPlayerFreeVehicleId(playerid) {
+GetPlayerFreeVehicleId(playerid) {
 	for(new i; i < MAX_PLAYERVEHICLES; ++i) {
 		if(PlayerVehicleInfo[playerid][i][pvModelId] == 0) return i;
 	}
 	return -1;
 }
 
-stock GetPlayerVehicle(playerid, vehicleid)
+GetPlayerVehicle(playerid, vehicleid)
 {
     for(new v = 0; v < MAX_PLAYERVEHICLES; v++)
     {
@@ -526,7 +526,7 @@ stock GetPlayerVehicle(playerid, vehicleid)
     return -1;
 }
 
-stock FindPlayerVehicleWithSQLId(ownerid, sqlid)
+FindPlayerVehicleWithSQLId(ownerid, sqlid)
 {
 	new
 		i = 0;
@@ -555,7 +555,7 @@ public ParkVehicle(playerid, ownerid, vehicleid, d, Float:X, Float:Y, Float:Z)
 			UpdatePlayerVehicleParkPosition(ownerid, d, x, y, z, angle, health, GetPlayerVirtualWorld(playerid), GetPlayerInterior(playerid));
 			IsPlayerEntering{playerid} = true;
 			PutPlayerInVehicle(playerid, vehicleid, 0);
-			SetPlayerArmedWeapon(playerid, 0);
+			SetPlayerArmedWeapon(playerid, WEAPON_FIST);
 			format(string, sizeof(string), "* %s has parked %s's vehicle.", GetPlayerNameEx(playerid), GetPlayerNameEx(ownerid));
 		}
 		else
@@ -566,7 +566,7 @@ public ParkVehicle(playerid, ownerid, vehicleid, d, Float:X, Float:Y, Float:Z)
 			UpdatePlayerVehicleParkPosition(playerid, d, x, y, z, angle, health, GetPlayerVirtualWorld(playerid), GetPlayerInterior(playerid));
 			IsPlayerEntering{playerid} = true;
 			PutPlayerInVehicle(playerid, vehicleid, 0);
-			SetPlayerArmedWeapon(playerid, 0);
+			SetPlayerArmedWeapon(playerid, WEAPON_FIST);
 			format(string, sizeof(string), "* %s has parked their vehicle.", GetPlayerNameEx(playerid), GetPlayerNameEx(ownerid));
 		}
 		ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);

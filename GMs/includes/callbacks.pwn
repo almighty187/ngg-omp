@@ -74,8 +74,8 @@ public OnVehicleSpawn(vehicleid) {
 			}
 			if(PlayerVehicleInfo[i][v][pvLocked] == 1) LockPlayerVehicle(i, iVehicleID, PlayerVehicleInfo[i][v][pvLock]);
 			ChangeVehiclePaintjob(iVehicleID, PlayerVehicleInfo[i][v][pvPaintJob]);
-			ChangeVehicleColor(iVehicleID, PlayerVehicleInfo[i][v][pvColor1], PlayerVehicleInfo[i][v][pvColor2]);
-			for(new m = 0; m < MAX_MODS; m++)
+			ChangeVehicleColours(iVehicleID, PlayerVehicleInfo[i][v][pvColor1], PlayerVehicleInfo[i][v][pvColor2]);
+			for(new CARMODTYPE:m; m < MAX_MODS; m++)
 			{
 				if (PlayerVehicleInfo[i][v][pvMods][m] >= 1000 && PlayerVehicleInfo[i][v][pvMods][m] <= 1193)
 				{
@@ -102,14 +102,14 @@ public OnVehicleSpawn(vehicleid) {
 	{
 		if(InsidePlane[i] == vehicleid)
 		{
-			TogglePlayerSpectating(i, 0);
+			TogglePlayerSpectating(i, false);
 			GetVehiclePos(InsidePlane[i], X, Y, Z);
 			SetPlayerPos(i, X-4, Y-2.3, Z);
 			GetVehiclePos(InsidePlane[i], XB, YB, ZB);
 			if(ZB > 50.0)
 			{
-				PlayerInfo[i][pAGuns][GetWeaponSlot(46)] = 46;
-				GivePlayerValidWeapon(i, 46);
+				PlayerInfo[i][pAGuns][GetWeaponSlot(WEAPON_PARACHUTE)] = WEAPON_PARACHUTE;
+				GivePlayerValidWeapon(i, WEAPON_PARACHUTE);
 			}
 			PlayerInfo[i][pVW] = 0;
 			SetPlayerVirtualWorld(i, 0);
@@ -219,7 +219,7 @@ public OnDynamicObjectMoved(objectid)
 	    Label_Elevator	= CreateDynamic3DTextLabel("Press '~k~~GROUP_CONTROL_BWD~' to use elevator", COLOR_YELLOW, 1784.9822, -1302.0426, z - 0.9, 4.0);
 
 	    ElevatorState 	= ELEVATOR_STATE_WAITING;
-	    SetTimer("Elevator_TurnToIdle", ELEVATOR_WAIT_TIME, 0);
+	    SetTimer("Elevator_TurnToIdle", ELEVATOR_WAIT_TIME, false);
 	}
 
 	if (objectid == BikeParkourObjects[0]) // container
@@ -323,10 +323,11 @@ public OnPlayerLeaveDynamicArea(playerid, areaid)
 public OnPlayerUpdate(playerid)
 {
 	// Do not put heavy cpu checks in here. Use the 1 second timer.
-	new Float:health = GetHealth(playerid, health);
+	new Float:health;
+	GetHealth(playerid, health);
 	if(health <= 0)
 	{
-		OnPlayerDeath(playerid, INVALID_PLAYER_ID, 0);
+		OnPlayerDeath(playerid, INVALID_PLAYER_ID, WEAPON_FIST);
 	}
 	if(playerTabbed[playerid] >= 1)
 	{
@@ -334,7 +335,7 @@ public OnPlayerUpdate(playerid)
 	}
 	playerSeconds[playerid] = gettime();
 
-	new pCurWeap = GetPlayerWeapon(playerid);
+	new WEAPON:pCurWeap = GetPlayerWeapon(playerid);
     if(pCurWeap != pCurrentWeapon{playerid}) {
         OnPlayerChangeWeapon(playerid, pCurWeap);
 		pCurrentWeapon{playerid} = pCurWeap;
@@ -342,7 +343,7 @@ public OnPlayerUpdate(playerid)
 
     /*
     switch(pCurWeap) {
-    	case 9, 16, 17, 18, 35, 36, 37, 38: {
+    	case WEAPON_CHAINSAW, WEAPON_GRENADE, WEAPON_TEARGAS, WEAPON_MOLTOV, WEAPON_ROCKETLAUNCHER, WEAPON_HEATSEEKER, WEAPON_FLAMETHROWER, WEAPON_MINIGUN: {
     		if(PlayerInfo[playerid][pGuns][GetWeaponSlot(pCurWeap)] != pCurWeap) {
 
     			if(GetPVarType(playerid, "IsInArena") || GetPVarType(playerid, "EventToken")) return 1;
@@ -397,25 +398,25 @@ public OnPlayerUpdate(playerid)
 	}
 	GetPlayerPos(playerid, acstruct[playerid][LastOnFootPosition][0], acstruct[playerid][LastOnFootPosition][1], acstruct[playerid][LastOnFootPosition][2]);
 
-	new newkeys,
+	new KEY:newkeys,
 		updown,
 		leftright;
 
     GetPlayerKeys(playerid, newkeys, updown, leftright); // playervar for phone.
 
 	// night vision and thermal goggle fixes added by Dom
-	if(GetPlayerWeapon(playerid) == 44 || GetPlayerWeapon(playerid) == 45) {
+	if(GetPlayerWeapon(playerid) == WEAPON_NIGHT_VISION_GOGGLES || GetPlayerWeapon(playerid) == WEAPON_THERMAL_GOGGLES) {
 
 		if((newkeys & KEY_FIRE) && (!IsPlayerInAnyVehicle(playerid))) return 0;
 	}
-	if(updown == KEY_UP) {
+	if(updown == _:KEY_UP) {
 
 		if(Bit_State(arrPlayerBits[playerid], phone_bitState)) {
 			new iPMenuItem = GetPVarInt(playerid, "PMenuItem");
 			if(iPMenuItem != 0) {
 				SetPVarInt(playerid, "PMenuItem", iPMenuItem-1);
-				PlayerTextDrawBoxColor(playerid, phone_PTextDraw[playerid][12 + iPMenuItem-1], 0x22222266);
-				PlayerTextDrawBoxColor(playerid, phone_PTextDraw[playerid][12 + iPMenuItem], 0xFFFFFF00);
+				PlayerTextDrawBoxColour(playerid, phone_PTextDraw[playerid][12 + iPMenuItem-1], 0x22222266);
+				PlayerTextDrawBoxColour(playerid, phone_PTextDraw[playerid][12 + iPMenuItem], 0xFFFFFF00);
 				PlayerTextDrawHide(playerid, phone_PTextDraw[playerid][12 + iPMenuItem-1]);
 				PlayerTextDrawHide(playerid, phone_PTextDraw[playerid][12 + iPMenuItem]);
 				PlayerTextDrawShow(playerid, phone_PTextDraw[playerid][12 + iPMenuItem-1]);
@@ -423,14 +424,14 @@ public OnPlayerUpdate(playerid)
 			}
 		}
 	}
-	if(updown == KEY_DOWN) {
+	if(updown == _:KEY_DOWN) {
 
 		if(Bit_State(arrPlayerBits[playerid], phone_bitState)) {
 			new iPMenuItem = GetPVarInt(playerid, "PMenuItem");
 			if(iPMenuItem < 9) { // max menu item
 				SetPVarInt(playerid, "PMenuItem", GetPVarInt(playerid, "PMenuItem")+1);
-				PlayerTextDrawBoxColor(playerid, phone_PTextDraw[playerid][12 + iPMenuItem+1], 0x22222266);
-				PlayerTextDrawBoxColor(playerid, phone_PTextDraw[playerid][12 + iPMenuItem], 0xFFFFFF00);
+				PlayerTextDrawBoxColour(playerid, phone_PTextDraw[playerid][12 + iPMenuItem+1], 0x22222266);
+				PlayerTextDrawBoxColour(playerid, phone_PTextDraw[playerid][12 + iPMenuItem], 0xFFFFFF00);
 				PlayerTextDrawHide(playerid, phone_PTextDraw[playerid][12 + iPMenuItem+1]);
 				PlayerTextDrawHide(playerid, phone_PTextDraw[playerid][12 + iPMenuItem]);
 				PlayerTextDrawShow(playerid, phone_PTextDraw[playerid][12 + iPMenuItem+1]);
@@ -442,7 +443,7 @@ public OnPlayerUpdate(playerid)
 }
 
 
-public OnPlayerEditAttachedObject(playerid, response, index, modelid, boneid,
+public OnPlayerEditAttachedObject(playerid, EDIT_RESPONSE:response, index, modelid, boneid,
                                    Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ,
                                    Float:fRotX, Float:fRotY, Float:fRotZ,
                                    Float:fScaleX, Float:fScaleY, Float:fScaleZ)
@@ -567,7 +568,7 @@ public OnPlayerPressButton(playerid, buttonid)
 		if(IsACop(playerid))
 		{
 			MoveDynamicObject(SASDDoors[0], 14.92530, 53.51950, 996.84857, 4, 0.00000, 0.00000, 180.00000);
-			SetTimer("CloseSASDNew1", 2500, 0);
+			SetTimer("CloseSASDNew1", 2500, false);
 		}
 		else
 		{
@@ -581,7 +582,7 @@ public OnPlayerPressButton(playerid, buttonid)
 		if(IsACop(playerid))
 		{
 			MoveDynamicObject(SASDDoors[1], 8.70370, 57.32530, 991.03699, 4, 0.00000, 0.00000, 0.00000);
-			SetTimer("CloseSASDNew2", 2500, 0);
+			SetTimer("CloseSASDNew2", 2500, false);
 		}
 		else
 		{
@@ -597,7 +598,7 @@ public OnPlayerPressButton(playerid, buttonid)
 	    {
 	        MoveDynamicObject(sasd1A,2510.65332031,-1697.00976562,561.79223633,4);
 	 		MoveDynamicObject(sasd1B,2515.67211914,-1696.97485352,561.79223633,4);
-			SetTimer("CloseSASD1", 2500, 0);
+			SetTimer("CloseSASD1", 2500, false);
 	    }
 	    else
 	    {
@@ -613,7 +614,7 @@ public OnPlayerPressButton(playerid, buttonid)
 	 		MoveDynamicObject(sasd5B,2518.84228516,-1660.10888672,561.80004883,4);
 	 		//2522.86059570,-1660.07177734,561.80206299
 			//2519.84228516,-1660.10888672,561.80004883
-			SetTimer("CloseSASD5", 2500, 0);
+			SetTimer("CloseSASD5", 2500, false);
 	    }
 	    else
 	    {
@@ -627,7 +628,7 @@ public OnPlayerPressButton(playerid, buttonid)
 	    {
 	        MoveDynamicObject(sasd3A,2521.15600586,-1697.01550293,561.79223633,4);
 	 		MoveDynamicObject(sasd3B,2526.15893555,-1696.98010254,561.79223633,4);
-			SetTimer("CloseSASD3", 2500, 0);
+			SetTimer("CloseSASD3", 2500, false);
 	    }
 	    else
 	    {
@@ -641,7 +642,7 @@ public OnPlayerPressButton(playerid, buttonid)
 	    {
             MoveDynamicObject(sasd2A,2515.87548828,-1697.01525879,561.79223633,4);
 	 		MoveDynamicObject(sasd2B,2520.89257812,-1696.97509766,561.79223633,4);
-			SetTimer("CloseSASD2", 2500, 0);
+			SetTimer("CloseSASD2", 2500, false);
 	    }
 	    else
 	    {
@@ -655,7 +656,7 @@ public OnPlayerPressButton(playerid, buttonid)
 	    {
 	        MoveDynamicObject(sasd4A,2510.84130859,-1660.08081055,561.79528809,4);
 	 		MoveDynamicObject(sasd4B,2515.81982422,-1660.04650879,561.80004883,4);
-			SetTimer("CloseSASD4", 2500, 0);
+			SetTimer("CloseSASD4", 2500, false);
 	    }
 	    else
 	    {
@@ -672,7 +673,7 @@ public OnPlayerPressButton(playerid, buttonid)
 		}
 		MoveDynamicObject(westlobby1,239.71582031,115.09179688,1002.21502686,4);
 		MoveDynamicObject(westlobby2,239.67968750,120.09960938,1002.21502686,4);
-		SetTimer("CloseWestLobby", 2500, 0);
+		SetTimer("CloseWestLobby", 2500, false);
 	}
 	if(buttonid == eastout)
 	{
@@ -683,7 +684,7 @@ public OnPlayerPressButton(playerid, buttonid)
 		}
  		MoveDynamicObject(eastlobby1,253.14941406,111.59960938,1002.21502686,4);
  		MoveDynamicObject(eastlobby2,253.18457031,106.59960938,1002.21502686,4);
-		SetTimer("CloseEastLobby", 2500, 0);
+		SetTimer("CloseEastLobby", 2500, false);
 	}
 	if(buttonid == lockerin || buttonid == lockerout)
 	{
@@ -694,7 +695,7 @@ public OnPlayerPressButton(playerid, buttonid)
 		}
 		MoveDynamicObject(locker1,268.29980469,112.56640625,1003.61718750,4);
 		MoveDynamicObject(locker2,263.29980469,112.52929688,1003.61718750,4);
-		SetTimer("CloseLocker", 2500, 0);
+		SetTimer("CloseLocker", 2500, false);
 	}
 	if(buttonid == cctvin || buttonid == cctvout)
 	{
@@ -705,7 +706,7 @@ public OnPlayerPressButton(playerid, buttonid)
 		}
 		MoveDynamicObject(cctv1,263.44921875,115.79980469,1003.61718750,4);
 		MoveDynamicObject(cctv2,268.46875000,115.83691406,1003.61718750,4);
-		SetTimer("CloseCCTV", 2500, 0);
+		SetTimer("CloseCCTV", 2500, false);
 	}
 	if(buttonid == chiefin || buttonid == chiefout)
 	{
@@ -716,7 +717,7 @@ public OnPlayerPressButton(playerid, buttonid)
 		}
 		MoveDynamicObject(chief1,228.0,119.50000000,1009.21875000,4);
 		MoveDynamicObject(chief2,230.0,119.53515625,1009.21875000,4);
-	    SetTimer("CloseChief", 2500, 0);
+	    SetTimer("CloseChief", 2500, false);
 	}
 	if(buttonid == elevator)
 	{
@@ -752,13 +753,13 @@ public OnPlayerPressButton(playerid, buttonid)
 	{
 		MoveDynamicObject(westlobby1,239.71582031,115.09179688,1002.21502686,4);
 		MoveDynamicObject(westlobby2,239.67968750,120.09960938,1002.21502686,4);
-		SetTimer("CloseWestLobby", 2500, 0);
+		SetTimer("CloseWestLobby", 2500, false);
 	}
 	if(buttonid == eastin)
 	{
 	    MoveDynamicObject(eastlobby1,253.14941406,111.59960938,1002.21502686,4);
 	    MoveDynamicObject(eastlobby2,253.18457031,106.59960938,1002.21502686,4);
-		SetTimer("CloseEastLobby", 2500, 0);
+		SetTimer("CloseEastLobby", 2500, false);
 	}
 	for(new i = 0; i < sizeof(DocButton); i++) {
 		if (buttonid == DocButton[i]) {
@@ -1303,8 +1304,8 @@ public OnPlayerConnect(playerid)
 	gRadio{playerid} = 1;
 	playerLastTyped[playerid] = 0;
 	pTazer{playerid} = 0;
-	pTazerReplace{playerid} = 0;
-	pCurrentWeapon{playerid} = 0;
+	pTazerReplace{playerid} = WEAPON_FIST;
+	pCurrentWeapon{playerid} = WEAPON_FIST;
 	MedicAccepted[playerid] = INVALID_PLAYER_ID;
 	DefendOffer[playerid] = INVALID_PLAYER_ID;
 	AppealOffer[playerid] = INVALID_PLAYER_ID;
@@ -1529,7 +1530,7 @@ public OnPlayerConnect(playerid)
 	PlayerInfo[playerid][pGroupToy][7] = 1.0;
 	PlayerInfo[playerid][pGroupToy][8] = 1.0;
 
-	PlayerInfo[playerid][pHolsteredWeapon] = 0;
+	PlayerInfo[playerid][pHolsteredWeapon] = WEAPON_SLOT_UNARMED;
 	IsDoingAnim[playerid] = 0;
 	GhostHacker[playerid][0] = 0;
 	GhostHacker[playerid][1] = gettime();
@@ -1543,9 +1544,9 @@ public OnPlayerConnect(playerid)
 	    ShotPlayer[playerid][x] = 0;
 	}
 
-	for(new s = 0; s < 12; s++) {
-		PlayerInfo[playerid][pAGuns][s] = 0;
-		PlayerInfo[playerid][pGuns][s] = 0;
+	for(new WEAPON_SLOT:s; s < WEAPON_SLOT_DETONATOR; s++) {
+		PlayerInfo[playerid][pAGuns][s] = WEAPON_FIST;
+		PlayerInfo[playerid][pGuns][s] = WEAPON_FIST;
 	}
 
 	for(new s = 0; s < 40; s++) {
@@ -1573,7 +1574,7 @@ public OnPlayerConnect(playerid)
 	CheckBanEx(playerid);
 
 	new string[128], serial[64];
-	gpci(playerid, serial, sizeof(serial));
+	GPCI(playerid, serial);
 	format(string, sizeof(string), "%s/checks/gpci.php?g=%s&n=%s&i=%s", SAMP_WEB, serial, GetPlayerNameExt(playerid), GetPlayerIpEx(playerid));
 	HTTP(0, HTTP_HEAD, string, "", "");
 
@@ -1593,9 +1594,9 @@ public OnPlayerConnect(playerid)
 
 	ShowNoticeGUIFrame(playerid, 1);
 
-	logincheck[playerid] = SetTimerEx("LoginCheck", 120000, 0, "i", playerid);
+	logincheck[playerid] = SetTimerEx("LoginCheck", 120000, false, "i", playerid);
 
-	SetTimerEx("LoginCheckEx", 5000, 0, "i", playerid);
+	SetTimerEx("LoginCheckEx", 5000, false, "i", playerid);
 
 	gPlayerCheckpointStatus[playerid] = CHECKPOINT_NONE;
 	SetHealth(playerid, 100);
@@ -1674,10 +1675,10 @@ public OnPlayerDisconnect(playerid, reason)
 					PlayerInfo[playerid][pRewardDrawChance] += 10;
 					SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "** You have been given 10 Draw Chances for the Fall Into Fun Event.");
 
-					for(new w = 0; w < 12; w++)
+					for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 					{
 						PlayerInfo[playerid][pGuns][w] = HungerPlayerInfo[playerid][hgLastWeapon][w];
-						if(PlayerInfo[playerid][pGuns][w] > 0 && PlayerInfo[playerid][pAGuns][w] == 0)
+						if(PlayerInfo[playerid][pGuns][w] > WEAPON_FIST && PlayerInfo[playerid][pAGuns][w] == WEAPON_FIST)
 						{
 							GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pGuns][w]);
 						}
@@ -1703,10 +1704,10 @@ public OnPlayerDisconnect(playerid, reason)
 					PlayerInfo[playerid][pRewardDrawChance] += 25;
 					SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "** You have been given 25 Draw Chances for the Fall Into Fun Event.");
 
-					for(new w = 0; w < 12; w++)
+					for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 					{
 						PlayerInfo[playerid][pGuns][w] = HungerPlayerInfo[playerid][hgLastWeapon][w];
-						if(PlayerInfo[playerid][pGuns][w] > 0 && PlayerInfo[playerid][pAGuns][w] == 0)
+						if(PlayerInfo[playerid][pGuns][w] > WEAPON_FIST && PlayerInfo[playerid][pAGuns][w] == WEAPON_FIST)
 						{
 							GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pGuns][w]);
 						}
@@ -1734,10 +1735,10 @@ public OnPlayerDisconnect(playerid, reason)
 							SendClientMessageEx(i, COLOR_LIGHTBLUE, "** You have been given 50 Draw Chances for the Fall Into Fun Event.");
 							hgActive = 0;
 
-							for(new w = 0; w < 12; w++)
+							for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 							{
 								PlayerInfo[i][pGuns][w] = HungerPlayerInfo[i][hgLastWeapon][w];
-								if(PlayerInfo[i][pGuns][w] > 0 && PlayerInfo[i][pAGuns][w] == 0)
+								if(PlayerInfo[i][pGuns][w] > WEAPON_FIST && PlayerInfo[i][pAGuns][w] == WEAPON_FIST)
 								{
 									GivePlayerValidWeapon(i, PlayerInfo[i][pGuns][w]);
 								}
@@ -1776,10 +1777,10 @@ public OnPlayerDisconnect(playerid, reason)
 
 					HideHungerGamesTextdraw(playerid);
 
-					for(new w = 0; w < 12; w++)
+					for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 					{
 						PlayerInfo[playerid][pGuns][w] = HungerPlayerInfo[playerid][hgLastWeapon][w];
-						if(PlayerInfo[playerid][pGuns][w] > 0 && PlayerInfo[playerid][pAGuns][w] == 0)
+						if(PlayerInfo[playerid][pGuns][w] > WEAPON_FIST && PlayerInfo[playerid][pAGuns][w] == WEAPON_FIST)
 						{
 							GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pGuns][w]);
 						}
@@ -1928,7 +1929,7 @@ public OnPlayerDisconnect(playerid, reason)
             DeletePVar(GetPVarInt(playerid, "DraggingPlayer"), "BeingDragged");
 		}
 		if(pTazer{playerid} == 1) GivePlayerValidWeapon(playerid,pTazerReplace{playerid});
-		if(GetPVarInt(playerid, "SpeedRadar") == 1) GivePlayerValidWeapon(playerid, GetPVarInt(playerid, "RadarReplacement"));
+		if(GetPVarInt(playerid, "SpeedRadar") == 1) GivePlayerValidWeapon(playerid, WEAPON:GetPVarInt(playerid, "RadarReplacement"));
 
 		if(GetPVarType(playerid, "MovingStretcher")) {
 			KillTimer(GetPVarInt(playerid, "TickEMSMove"));
@@ -1984,7 +1985,7 @@ public OnPlayerDisconnect(playerid, reason)
 		if(gettime() >= PlayerInfo[playerid][pDrugsTime]) PlayerInfo[playerid][pDrugsTime] = 0;
 		if(gettime() >= PlayerInfo[playerid][pSexTime]) PlayerInfo[playerid][pSexTime] = 0;
 
-		if(GetPVarInt(playerid, "HidingKnife") == 1) PlayerInfo[playerid][pGuns][1] = 4;
+		if(GetPVarInt(playerid, "HidingKnife") == 1) PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] = WEAPON_KNIFE;
 
 		//if(GetPVarType(playerid, "IsInArena")) LeavePaintballArena(playerid, GetPVarInt(playerid, "IsInArena"));
 
@@ -2243,7 +2244,7 @@ public OnPlayerDisconnect(playerid, reason)
 		for(new x; x < sizeof(EventKernel[EventStaff]); x++) {
 			if(EventKernel[EventStaff][x] == playerid) {
 				EventKernel[EventStaff][x] = INVALID_PLAYER_ID;
-				RemovePlayerWeapon(playerid, 38);
+				RemovePlayerWeapon(playerid, WEAPON_MINIGUN);
 				break;
 			}
 		}
@@ -2324,7 +2325,7 @@ public OnPlayerDisconnect(playerid, reason)
 		{
 			if(!IsAPlane(InsidePlane[playerid]))
 			{
-				GivePlayerValidWeapon(playerid, 46);
+				GivePlayerValidWeapon(playerid, WEAPON_PARACHUTE);
 				PlayerInfo[playerid][pPos_x] = 0.000000;
 				PlayerInfo[playerid][pPos_y] = 0.000000;
 				PlayerInfo[playerid][pPos_z] = 420.000000;
@@ -2338,7 +2339,7 @@ public OnPlayerDisconnect(playerid, reason)
 				PlayerInfo[playerid][pPos_z] = Z;
 				if(Z > 50.0)
 				{
-					GivePlayerValidWeapon(playerid, 46);
+					GivePlayerValidWeapon(playerid, WEAPON_PARACHUTE);
 				}
 			}
 			PlayerInfo[playerid][pVW] = 0;
@@ -2555,7 +2556,7 @@ public OnPlayerDisconnect(playerid, reason)
 			if(JobDuty[playerid] == 1) { Coastguard -= 1; }
 		}
 		new Float:health, Float:armor;
-		if(GetPVarType(playerid, "pGodMode") == 1)
+		if(GetPVarType(playerid, "pGodMode") == VARTYPE_INT)
 		{
 			health = GetPVarFloat(playerid, "pPreGodHealth");
 			SetHealth(playerid,health);
@@ -2652,14 +2653,14 @@ public OnVehicleDeath(vehicleid) {
 		}
 		if(InsidePlane[i] == vehicleid)
 		{
-			TogglePlayerSpectating(i, 0);
+			TogglePlayerSpectating(i, false);
 			GetVehiclePos(InsidePlane[i], X, Y, Z);
 			SetPlayerPos(i, X-4, Y-2.3, Z);
 			GetVehiclePos(InsidePlane[i], XB, YB, ZB);
 			if(ZB > 50.0)
 			{
-				PlayerInfo[i][pAGuns][GetWeaponSlot(46)] = 46;
-				GivePlayerValidWeapon(i, 46);
+				PlayerInfo[i][pAGuns][GetWeaponSlot(WEAPON_PARACHUTE)] = WEAPON_PARACHUTE;
+				GivePlayerValidWeapon(i, WEAPON_PARACHUTE);
 			}
 			PlayerInfo[i][pVW] = 0;
 			SetPlayerVirtualWorld(i, 0);
@@ -2670,7 +2671,7 @@ public OnVehicleDeath(vehicleid) {
 		}
 		if(GetPVarInt(i, "NGPassengerVeh") == vehicleid)
 		{
-			TogglePlayerSpectating(i, 0);
+			TogglePlayerSpectating(i, false);
 		}
 	}
 	/*if(DynVeh[vehicleid] != -1)
@@ -2687,7 +2688,7 @@ public OnPlayerSpawn(playerid)
     if(!gPlayerLogged{playerid})
     {
         SendClientMessageEx(playerid, COLOR_WHITE, "ERROR: You are not logged in!");
-        SetTimerEx("KickEx", 1000, 0, "i", playerid);
+        SetTimerEx("KickEx", 1000, false, "i", playerid);
         return 1;
 	}
 
@@ -2845,7 +2846,7 @@ public OnPlayerSpawn(playerid)
 			        if(PlayerInfo[playerid][pHospital] == 0)
 			        {
 					    sobeitCheckIsDone[playerid] = 1;
-					    SetTimerEx("sobeitCheck", 10000, 0, "i", playerid);
+					    SetTimerEx("sobeitCheck", 10000, false, "i", playerid);
 						TogglePlayerControllable(playerid, false);
 					}
 				}
@@ -2859,7 +2860,7 @@ public OnPlayerSpawn(playerid)
 	    GetVehiclePos(GetPVarInt(playerid, "NGPassengerVeh"), X, Y, Z);
 	    SetPlayerPos(playerid, (X-2.557), (Y-3.049), Z);
 	    SetPlayerWeaponsEx(playerid);
-        GivePlayerValidWeapon(playerid, 46);
+        GivePlayerValidWeapon(playerid, WEAPON_PARACHUTE);
         SetPlayerSkin(playerid, GetPVarInt(playerid, "NGPassengerSkin"));
         SetHealth(playerid, GetPVarFloat(playerid, "NGPassengerHP"));
         if(GetPVarFloat(playerid, "NGPassengerArmor") > 0) {
@@ -2910,7 +2911,7 @@ public OnPlayerSpawn(playerid)
 	SetPlayerToTeamColor(playerid);
 	IsSpawned[playerid] = 1;
 	SpawnKick[playerid] = 0;
-	SetPlayerArmedWeapon(playerid, 0); // making sure players spawn with their fists.
+	SetPlayerArmedWeapon(playerid, WEAPON_FIST); // making sure players spawn with their fists.
 	if(PlayerInfo[playerid][pTut] != -1)
 	{
 		if(PlayerInfo[playerid][pTut] < 14) PlayerInfo[playerid][pTut] = 0;
@@ -2971,7 +2972,7 @@ public OnPlayerEnterCheckpoint(playerid)
 	    if(EventRCPT[RCPIdCurrent[playerid]] == 3 && PlayerInfo[playerid][pHydration] < 60) {
 		    SendClientMessageEx(playerid, COLOR_WHITE, "You have entered a Watering Station checkpoint, you need to stay here in order to get rehydrated again.");
 		    SendClientMessageEx(playerid, COLOR_WHITE, "You may choose to leave at any point or wait until you get the message of fully rehydrated.");
-            SetPVarInt(playerid, "WSRCPTimerId", SetTimerEx("WateringStation", 4000, 1, "i", playerid));
+            SetPVarInt(playerid, "WSRCPTimerId", SetTimerEx("WateringStation", 4000, true, "i", playerid));
             SetPVarInt(playerid, "InWaterStationRCP", 1);
             return 1;
 		}
@@ -3346,7 +3347,7 @@ public OnPlayerEnterCheckpoint(playerid)
 		return 1;
 	}
 	// Pizza Delivery
-	if(GetPVarType(playerid, "Pizza") > 0 && GetPVarInt(playerid, "pizzaTimer") > 0 && IsPlayerInRangeOfPoint(playerid, 5.0, HouseInfo[GetPVarInt(playerid, "Pizza")][hExteriorX], HouseInfo[GetPVarInt(playerid, "Pizza")][hExteriorY], HouseInfo[GetPVarInt(playerid, "Pizza")][hExteriorZ]) && GetPlayerInterior(playerid) == HouseInfo[GetPVarInt(playerid, "Pizza")][hExtIW] && GetPlayerVirtualWorld(playerid) == HouseInfo[GetPVarInt(playerid, "Pizza")][hExtVW])
+	if(GetPVarType(playerid, "Pizza") > VARTYPE_NONE && GetPVarInt(playerid, "pizzaTimer") > 0 && IsPlayerInRangeOfPoint(playerid, 5.0, HouseInfo[GetPVarInt(playerid, "Pizza")][hExteriorX], HouseInfo[GetPVarInt(playerid, "Pizza")][hExteriorY], HouseInfo[GetPVarInt(playerid, "Pizza")][hExteriorZ]) && GetPlayerInterior(playerid) == HouseInfo[GetPVarInt(playerid, "Pizza")][hExtIW] && GetPlayerVirtualWorld(playerid) == HouseInfo[GetPVarInt(playerid, "Pizza")][hExtVW])
 	{
 	    new string[128];
 		if (GetPVarInt(playerid, "tpPizzaTimer") != 0)
@@ -3444,7 +3445,7 @@ public OnPlayerEnterCheckpoint(playerid)
 				    	PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);
 				    	DisablePlayerCheckpoint(playerid);
 				    	gPlayerCheckpointStatus[playerid] = CHECKPOINT_NONE;
-						TogglePlayerControllable(playerid, 0);
+						TogglePlayerControllable(playerid, false);
 						SetPVarInt(playerid, "IsFrozen", 1);
 						DisplayOrders(playerid);
 					}
@@ -3703,7 +3704,7 @@ public OnPlayerEnterCheckpoint(playerid)
 	return 1;
 }
 
-public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
 	if(GetPVarInt(playerid, "Injured") == 1) return 1;
 	if(PlayerInfo[playerid][pHospital] > 0) return 1;
@@ -3712,7 +3713,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	    StopLoopingAnim(playerid);
         TextDrawHideForPlayer(playerid,txtAnimHelper);
     }
-	if(newkeys & KEY_JUMP && !(oldkeys & KEY_JUMP) && GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_CUFFED) ApplyAnimation(playerid, "GYMNASIUM", "gym_jog_falloff",4.1,0,1,1,0,0);
+	if(newkeys & KEY_JUMP && !(oldkeys & KEY_JUMP) && GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_CUFFED) ApplyAnimation(playerid, "GYMNASIUM", "gym_jog_falloff",4.1,false,true,true,false,0);
 	if(newkeys & KEY_SECONDARY_ATTACK)
 	{
 	    new string[128];
@@ -3764,9 +3765,9 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 					{
 						format(string, sizeof(string), "** %s leaps at %s attempting to tackle them but is not able.", GetPlayerNameEx(playerid), GetPlayerNameEx(GetPlayerTargetPlayer(playerid)));
 						ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-						TogglePlayerControllable(playerid, 0);
-						SetTimerEx("CopGetUp", 2500, 0, "i", playerid);
-						ApplyAnimation(playerid, "SWEET", "Sweet_injuredloop", 4.0, 1, 1, 1, 1, 0, 1);
+						TogglePlayerControllable(playerid, false);
+						SetTimerEx("CopGetUp", 2500, false, "i", playerid);
+						ApplyAnimation(playerid, "SWEET", "Sweet_injuredloop", 4.0, true, true, true, true, 0, SYNC_ALL);
 					}
 	            }
 	        }
@@ -3850,14 +3851,14 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 						format(string, sizeof(string), "License Plate: %d. Speed: %.0f MPH", GetPlayerVehicleID(i), fVehSpeed[i]);
 						SendClientMessageEx(playerid, COLOR_GRAD4, string);
 						SetPVarInt(playerid, "RadarTimeout", 1);
-						SetTimerEx("RadarCooldown", 3000, 0, "i", playerid);
+						SetTimerEx("RadarCooldown", 3000, false, "i", playerid);
 						return 1;
 					}
 				}
 			}
 		}
 	}
-	else if((newkeys & 16) && GetPlayerState(playerid) == PLAYER_STATE_ONFOOT && PlayerCuffed[playerid] == 0 && PlayerInfo[playerid][pBeingSentenced] == 0 && GetPVarType(playerid,"UsingAnim") && !GetPVarType(playerid, "IsFrozen"))
+	else if((newkeys & KEY_SECONDARY_ATTACK) && GetPlayerState(playerid) == PLAYER_STATE_ONFOOT && PlayerCuffed[playerid] == 0 && PlayerInfo[playerid][pBeingSentenced] == 0 && GetPVarType(playerid,"UsingAnim") && !GetPVarType(playerid, "IsFrozen"))
 	{
 		ClearAnimationsEx(playerid);
 		DeletePVar(playerid,"UsingAnim");
@@ -3879,7 +3880,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				SetHealth(playerid, 100);
 		    }
 			DeletePVar(playerid, "DrinkCooledDown");
-		    SetTimerEx("DrinkCooldown", 2500, 0, "i", playerid);
+		    SetTimerEx("DrinkCooldown", 2500, false, "i", playerid);
 			return 1;
 		}
 	}
@@ -3900,7 +3901,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				SetHealth(playerid, 100);
 		    }
 			DeletePVar(playerid, "DrinkCooledDown");
-		    SetTimerEx("DrinkCooldown", 2500, 0, "i", playerid);
+		    SetTimerEx("DrinkCooldown", 2500, false, "i", playerid);
 			return 1;
 		}
 	}
@@ -3923,7 +3924,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				SetHealth(playerid, 100);
 			}
 			DeletePVar(playerid, "DrinkCooledDown");
-			SetTimerEx("DrinkCooldown", 2500, 0, "i", playerid);
+			SetTimerEx("DrinkCooldown", 2500, false, "i", playerid);
 			return 1;
 		}
 	}
@@ -3931,7 +3932,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	{
 	    if(GetPVarInt(playerid, "NGPassenger") == 1)
 	    {
-	        TogglePlayerSpectating(playerid, 0);
+	        TogglePlayerSpectating(playerid, false);
 		}
 		if(GetPVarInt(playerid, "UsingSprunk"))
 		{
@@ -4128,14 +4129,14 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			SetPlayerInterior(GetPVarInt(playerid, "DraggingPlayer"), GetPlayerInterior(playerid));
 			SetPlayerVirtualWorld(GetPVarInt(playerid, "DraggingPlayer"), GetPlayerVirtualWorld(playerid));
 			ClearAnimationsEx(GetPVarInt(playerid, "DraggingPlayer"));
-			ApplyAnimation(GetPVarInt(playerid, "DraggingPlayer"), "ped","cower",1,1,0,0,0,0,1);
+			ApplyAnimation(GetPVarInt(playerid, "DraggingPlayer"), "ped","cower",1.0,true,false,false,false,0,SYNC_ALL);
             DeletePVar(GetPVarInt(playerid, "DraggingPlayer"), "BeingDragged");
             format(string, sizeof(string), "* You have stopped dragging %s.", GetPlayerNameEx(GetPVarInt(playerid, "DraggingPlayer")));
 			DeletePVar(playerid, "DraggingPlayer");
             SendClientMessage(playerid, COLOR_GRAD2, string);
 		}
 	}
-	else if((newkeys & KEY_SPRINT) && GetPlayerState(playerid) == 2)// Pressing the gas, detonates the bomb.
+	else if((newkeys & KEY_SPRINT) && GetPlayerState(playerid) == PLAYER_STATE_DRIVER)// Pressing the gas, detonates the bomb.
 	{
 		new string[128], vehicleid = GetPlayerVehicleID(playerid);
 		if(GetChased[playerid] != INVALID_PLAYER_ID && VehicleBomb{vehicleid} == 1)
@@ -4178,7 +4179,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	return 1;
 }
 
-public OnPlayerStateChange(playerid, newstate, oldstate)
+public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate)
 {
     if(newstate == PLAYER_STATE_DRIVER || newstate == PLAYER_STATE_PASSENGER)
 	{
@@ -4241,9 +4242,9 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 		}
 		if(newstate == PLAYER_STATE_DRIVER || newstate == PLAYER_STATE_PASSENGER)
 		{
-			if(GetPlayerWeapon(playerid) == 24)
+			if(GetPlayerWeapon(playerid) == WEAPON_DEAGLE)
 			{
-				SetPlayerArmedWeapon(playerid, 0);
+				SetPlayerArmedWeapon(playerid, WEAPON_FIST);
 			}
 		}
 	    new vehicleid = GetPlayerVehicleID(playerid);
@@ -4280,7 +4281,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 			}
 		}
 	}
-    if(newstate != 2) NOPTrigger[playerid] = 0;
+    if(newstate != PLAYER_STATE_DRIVER) NOPTrigger[playerid] = 0;
 	//Specating
 	if(newstate == PLAYER_STATE_DRIVER || newstate == PLAYER_STATE_PASSENGER || newstate == PLAYER_STATE_ONFOOT)
 	{
@@ -4452,14 +4453,14 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 			SetPVarFloat(playerid, "NGPassengerHP", health);
 			SetPVarFloat(playerid, "NGPassengerArmor", armour);
 		}*/
-        if(!IsADriveByWeapon(GetPlayerWeapon(playerid)) && !IsADriveByWeapon(GetPVarInt(playerid, "LastWeapon"))) SetPlayerArmedWeapon(playerid,0);
-        //if(PlayerInfo[playerid][pGuns][4] > 0)	SetPlayerArmedWeapon(playerid,PlayerInfo[playerid][pGuns][4]);
-		//else SetPlayerArmedWeapon(playerid,0);
+        if(!IsADriveByWeapon(GetPlayerWeapon(playerid)) && !IsADriveByWeapon(WEAPON:GetPVarInt(playerid, "LastWeapon"))) SetPlayerArmedWeapon(playerid,WEAPON_FIST);
+        //if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_MACHINE_GUN] > WEAPON_FIST)	SetPlayerArmedWeapon(playerid,PlayerInfo[playerid][pGuns][WEAPON_SLOT_MACHINE_GUN]);
+		//else SetPlayerArmedWeapon(playerid,WEAPON_FIST);
 
 	    gLastCar[playerid] = vehicleid;
 	    foreach(new i: Player)
 		{
-			if(IsPlayerInVehicle(i, vehicleid) && GetPlayerState(i) == 2 && TransportDuty[i] > 0)
+			if(IsPlayerInVehicle(i, vehicleid) && GetPlayerState(i) == PLAYER_STATE_DRIVER && TransportDuty[i] > 0)
 			{
 				if(GetPlayerCash(playerid) < TransportValue[i])
 				{
@@ -4470,7 +4471,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 					new Float:X, Float:Y, Float:Z;
 					GetPlayerPos(playerid, X, Y, Z);
 					SetPlayerPos(playerid, X, Y, Z+2);
-					TogglePlayerControllable(playerid, 1);
+					TogglePlayerControllable(playerid, true);
 				}
 				else
 				{
@@ -4542,11 +4543,11 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
    			PlayAudioStreamForPlayerEx(playerid, stationidv[GetPlayerVehicleID(playerid)]);
 		}
 
-		SetPlayerArmedWeapon(playerid, 0);
+		SetPlayerArmedWeapon(playerid, WEAPON_FIST);
 
 		new
 			newcar = GetPlayerVehicleID(playerid),
-			engine, lights, alarm, doors, bonnet, boot, objective, v;
+			bool:engine, v;
 
 		gLastCar[playerid] = newcar;
 		if(GetPVarInt(playerid, "EventToken") == 1) {
@@ -4585,9 +4586,8 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 					SendClientMessageEx(playerid, COLOR_GREY, string);
 				}
 				else if(PlayerVehicleInfo[i][v][pvLocked] == 1 && PlayerVehicleInfo[i][v][pvLock] == 1) {
-					GetVehicleParamsEx(newcar,engine,lights,alarm,doors,bonnet,boot,objective);
-					SetVehicleParamsEx(newcar,engine,lights,VEHICLE_PARAMS_ON,doors,bonnet,boot,objective);
-					SetTimerEx("DisableVehicleAlarm", 20000, 0, "d",  newcar);
+					SetVehicleParamsEx(newcar, .alarm = VEHICLE_PARAMS_ON);
+					SetTimerEx("DisableVehicleAlarm", 20000, false, "d",  newcar);
 				}
 				else if(PlayerVehicleInfo[i][v][pvLocked] == 1 && PlayerVehicleInfo[i][v][pvLock] == 2 && PlayerVehicleInfo[i][v][pvLocksLeft] > 0) { // Electronic Lock System
 
@@ -4708,8 +4708,8 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 		}
 		else if(IsAHelicopter(vehicleid))
 		{
-		    PlayerInfo[playerid][pAGuns][GetWeaponSlot(46)] = 46;
-			GivePlayerValidWeapon(playerid, 46);
+		    PlayerInfo[playerid][pAGuns][GetWeaponSlot(WEAPON_PARACHUTE)] = WEAPON_PARACHUTE;
+			GivePlayerValidWeapon(playerid, WEAPON_PARACHUTE);
 		}
 		else if(IsAnTaxi(vehicleid) || IsAnBus(vehicleid))
 		{
@@ -4767,7 +4767,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 	        SendClientMessageEx(playerid, COLOR_GRAD1, "Crate Related Commands: /loadforklift /(un)loadplane /cargo /announcetakeoff /cgun /crates /destroycrate /cratelimit");
 	        SendClientMessageEx(playerid, COLOR_GRAD1, " /(un)loadcrate /delivercrate");
 	    }
-		GetVehicleParamsEx(newcar,engine,lights,alarm,doors,bonnet,boot,objective);
+		GetVehicleParamsEx(newcar,engine);
 		if((engine == VEHICLE_PARAMS_UNSET || engine == VEHICLE_PARAMS_OFF) && GetVehicleModel(newcar) != 509 && GetVehicleModel(newcar) != 481 && GetVehicleModel(newcar) != 510 && (DynVeh[newcar] != -1 && GetVehicleModel(newcar) == 592 && DynVehicleInfo[DynVeh[newcar]][gv_iType] != 1) ) {
 			SendClientMessageEx(playerid, COLOR_WHITE, "This vehicle's engine is not running - if you wish to start it, press ~k~~CONVERSATION_YES~.");
 		}
@@ -4776,9 +4776,9 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 			SendClientMessageEx(playerid, COLOR_WHITE, "You must request clearance to take off. /announcetakeoff to put in the request.");
 		}
 	}
-	if((newstate == 2 || newstate == 3 || newstate == 7 || newstate == 9) && pTazer{playerid} == 1)
+	if((newstate == PLAYER_STATE_DRIVER || newstate == PLAYER_STATE_PASSENGER || newstate == PLAYER_STATE_WASTED || newstate == PLAYER_STATE_SPECTATING) && pTazer{playerid} == 1)
 	{
-		RemovePlayerWeapon(playerid, 23);
+		RemovePlayerWeapon(playerid, WEAPON_SILENCED);
 		GivePlayerValidWeapon(playerid, pTazerReplace{playerid});
 		pTazer{playerid} = 0;
 	}
@@ -4867,14 +4867,20 @@ public OnPlayerRequestClass(playerid, classid)
     if(IsPlayerNPC(playerid)) return 1;
 	if(gPlayerLogged{playerid} == 1)
 	{
-		TogglePlayerSpectating(playerid, 0);
+		TogglePlayerSpectating(playerid, false);
 		SetTimerEx("ForceSpawn", 10, false, "i", playerid);
 	}
 	else
 	{
-		TogglePlayerSpectating(playerid, 1);
+		TogglePlayerSpectating(playerid, true);
 		//SetPlayerJoinCamera(playerid);
 	}
+	return 1;
+}
+
+timer HideServerError[5000](playerid) {
+
+	TextDrawHideForPlayer(playerid, TD_ServerError);
 	return 1;
 }
 
@@ -4886,12 +4892,6 @@ public OnPlayerCommandPerformed(playerid, cmdtext[], success)
 		TextDrawShowForPlayer(playerid, TD_ServerError);
 		defer HideServerError(playerid);
 	}
-	return 1;
-}
-
-timer HideServerError[5000](playerid) {
-
-	TextDrawHideForPlayer(playerid, TD_ServerError);
 	return 1;
 }
 
@@ -5370,7 +5370,7 @@ public OnPlayerText(playerid, text[])
 		new str[128];
 		foreach(new i: Player)
 		{
-			if((InsidePlane[playerid] == GetPlayerVehicleID(i) && GetPlayerState(i) == 2) || (InsidePlane[i] == GetPlayerVehicleID(playerid) && GetPlayerState(playerid) == 2) || (InsidePlane[playerid] != INVALID_VEHICLE_ID && InsidePlane[playerid] == InsidePlane[i])) {
+			if((InsidePlane[playerid] == GetPlayerVehicleID(i) && GetPlayerState(i) == PLAYER_STATE_DRIVER) || (InsidePlane[i] == GetPlayerVehicleID(playerid) && GetPlayerState(playerid) == PLAYER_STATE_DRIVER) || (InsidePlane[playerid] != INVALID_VEHICLE_ID && InsidePlane[playerid] == InsidePlane[i])) {
 				//if(PlayerInfo[playerid][pDuty] || IsAHitman(playerid)) format(string, sizeof(string), "%s{%06x}%s{E6E6E6} says: %s", accent, GetPlayerColor(playerid), sendername, text);
 				format(string, sizeof(string), "%s%s says: %s", accent, sendername, text);
 				SendClientMessageEx(i, COLOR_FADE1, string);
@@ -5571,8 +5571,8 @@ public OnPlayerModelSelectionEx(playerid, response, extraid, modelid, extralist_
 		{
 			if(modelid == 1654) PlayerInfo[playerid][pC4] = CreateDynamicObject(modelid, GetPVarFloat(playerid, "DYN_C4_FLOAT_X"), GetPVarFloat(playerid, "DYN_C4_FLOAT_Y"), GetPVarFloat(playerid, "DYN_C4_FLOAT_Z")-0.9, 0, 89.325012207031, 3.9700012207031);
 			else PlayerInfo[playerid][pC4] = CreateDynamicObject(modelid, GetPVarFloat(playerid, "DYN_C4_FLOAT_X"), GetPVarFloat(playerid, "DYN_C4_FLOAT_Y"), GetPVarFloat(playerid, "DYN_C4_FLOAT_Z")-0.7, 0, 0, 0);
-			ApplyAnimation(playerid,"BOMBER","BOM_Plant",4.0,0,0,0,0,0);
-			ApplyAnimation(playerid,"BOMBER","BOM_Plant",4.0,0,0,0,0,0);
+			ApplyAnimation(playerid,"BOMBER","BOM_Plant",4.0,false,false,false,false,0);
+			ApplyAnimation(playerid,"BOMBER","BOM_Plant",4.0,false,false,false,false,0);
 			PlayerInfo[playerid][pBombs]--;
 			PlayerInfo[playerid][pC4Used] = 1;
 			SendClientMessageEx(playerid, COLOR_GREEN, "You have placed C4 on the ground, /pickupbomb to remove it.");
@@ -5754,7 +5754,7 @@ public OnPlayerModelSelectionEx(playerid, response, extraid, modelid, extralist_
 	return 1;
 }
 
-public OnPlayerClickPlayer(playerid, clickedplayerid, source)
+public OnPlayerClickPlayer(playerid, clickedplayerid, CLICK_SOURCE:source)
 {
 	if((PlayerInfo[playerid][pAdmin] >= 1 || PlayerInfo[playerid][pSMod] >= 2) && source == CLICK_SOURCE_SCOREBOARD)
 	{

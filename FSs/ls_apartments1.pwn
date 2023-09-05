@@ -34,18 +34,14 @@
 
 
 // -----------------------------------------------------------------------------
-// Includes
-// --------
-
-// SA-MP include
-#include <a_samp>
-
-// For PlaySoundForPlayersInRange()
-#include "../include/gl_common.inc"
-
-// -----------------------------------------------------------------------------
 // Defines
 // -------
+
+// Filterscript declaration
+#define FILTERSCRIPT
+
+// MAX_PLAYERS redefine
+#define MAX_PLAYERS			(500)
 
 // Movement speed of the elevator
 #define ELEVATOR_SPEED      (5.0)
@@ -82,6 +78,16 @@
 
 // Used for chat text messages
 #define COLOR_MESSAGE_YELLOW        0xFFDD00AA
+
+// -----------------------------------------------------------------------------
+// Includes
+// --------
+
+// open.mp include
+#include <open.mp>
+
+// For PlaySoundForPlayersInRange()
+#include "../include/gl_common.inc"
 
 // -----------------------------------------------------------------------------
 // Constants
@@ -357,10 +363,10 @@ public OnObjectMoved(objectid)
 	    Floor_OpenDoors(ElevatorFloor);
 
 	    GetObjectPos(Obj_Elevator, x, y, z);
-	    Label_Elevator	= Create3DTextLabel("{CCCCCC}Press '{FFFFFF}~k~~CONVERSATION_YES~{CCCCCC}' to use elevator", 0xCCCCCCAA, X_ELEVATOR_POS - 1.7, Y_ELEVATOR_POS - 1.75, z - 0.4, 4.0, 0, 1);
+	    Label_Elevator	= Create3DTextLabel("{CCCCCC}Press '{FFFFFF}~k~~CONVERSATION_YES~{CCCCCC}' to use elevator", 0xCCCCCCAA, X_ELEVATOR_POS - 1.7, Y_ELEVATOR_POS - 1.75, z - 0.4, 4.0, 0, true);
 
 	    ElevatorState 	= ELEVATOR_STATE_WAITING;
-	    SetTimer("Elevator_TurnToIdle", ELEVATOR_WAIT_TIME, 0);
+	    SetTimer("Elevator_TurnToIdle", ELEVATOR_WAIT_TIME, false);
 	}
 
 	return 1;
@@ -386,7 +392,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	return 0;
 }
 
-public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
     // Check if the player is not in a vehicle and pressed the conversation yes key (Y by default)
 	if (!IsPlayerInAnyVehicle(playerid) && (newkeys & KEY_YES))
@@ -489,7 +495,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 }
 
 // ------------------------ Functions ------------------------
-stock Elevator_Initialize()
+Elevator_Initialize()
 {
 	// Create the elevator and elevator door objects
 	Obj_Elevator 			= CreateObject(18755, X_ELEVATOR_POS, Y_ELEVATOR_POS, GROUND_Z_COORD + ELEVATOR_OFFSET, 0.000000, 0.000000, 0.000000);
@@ -497,7 +503,7 @@ stock Elevator_Initialize()
 	Obj_ElevatorDoors[1] 	= CreateObject(18756, X_ELEVATOR_POS, Y_ELEVATOR_POS, GROUND_Z_COORD + ELEVATOR_OFFSET, 0.000000, 0.000000, 0.000000);
 
     // Create the 3D text label for inside the elevator
-	Label_Elevator = Create3DTextLabel("{CCCCCC}Press '{FFFFFF}~k~~CONVERSATION_YES~{CCCCCC}' to use elevator", 0xCCCCCCAA, X_ELEVATOR_POS - 1.7, Y_ELEVATOR_POS - 1.75, GROUND_Z_COORD - 0.4, 4.0, 0, 1);
+	Label_Elevator = Create3DTextLabel("{CCCCCC}Press '{FFFFFF}~k~~CONVERSATION_YES~{CCCCCC}' to use elevator", 0xCCCCCCAA, X_ELEVATOR_POS - 1.7, Y_ELEVATOR_POS - 1.75, GROUND_Z_COORD - 0.4, 4.0, 0, true);
 
 	// Create variables
 	new string[128], Float:z;
@@ -516,7 +522,7 @@ stock Elevator_Initialize()
 		z = GetDoorsZCoordForFloor(i);
 
 		// Create floor label
-		Label_Floors[i] = Create3DTextLabel(string, 0xCCCCCCAA, X_ELEVATOR_POS - 2.5, Y_ELEVATOR_POS - 2.5, z - 0.2, 10.5, 0, 1);
+		Label_Floors[i] = Create3DTextLabel(string, 0xCCCCCCAA, X_ELEVATOR_POS - 2.5, Y_ELEVATOR_POS - 2.5, z - 0.2, 10.5, 0, true);
 	}
 
 	// Open the car park floor doors and the elevator doors
@@ -527,7 +533,7 @@ stock Elevator_Initialize()
 	return 1;
 }
 
-stock Elevator_Destroy()
+Elevator_Destroy()
 {
 	// Destroys the elevator.
 
@@ -546,7 +552,7 @@ stock Elevator_Destroy()
 	return 1;
 }
 
-stock Elevator_OpenDoors()
+Elevator_OpenDoors()
 {
 	// Opens the elevator's doors.
 
@@ -559,7 +565,7 @@ stock Elevator_OpenDoors()
 	return 1;
 }
 
-stock Elevator_CloseDoors()
+Elevator_CloseDoors()
 {
     // Closes the elevator's doors.
 
@@ -575,7 +581,7 @@ stock Elevator_CloseDoors()
 	return 1;
 }
 
-stock Floor_OpenDoors(floorid)
+Floor_OpenDoors(floorid)
 {
     // Opens the doors at the specified floor.
 
@@ -587,7 +593,7 @@ stock Floor_OpenDoors(floorid)
 	return 1;
 }
 
-stock Floor_CloseDoors(floorid)
+Floor_CloseDoors(floorid)
 {
     // Closes the doors at the specified floor.
 
@@ -599,7 +605,7 @@ stock Floor_CloseDoors(floorid)
 	return 1;
 }
 
-stock Elevator_MoveToFloor(floorid)
+Elevator_MoveToFloor(floorid)
 {
 	// Moves the elevator to specified floor (doors are meant to be already closed).
 
@@ -612,7 +618,7 @@ stock Elevator_MoveToFloor(floorid)
     MoveObject(Obj_ElevatorDoors[1], X_ELEVATOR_POS, Y_ELEVATOR_POS, GetDoorsZCoordForFloor(floorid), 0.25);
     Delete3DTextLabel(Label_Elevator);
 
-	ElevatorBoostTimer = SetTimerEx("Elevator_Boost", 2000, 0, "i", floorid);
+	ElevatorBoostTimer = SetTimerEx("Elevator_Boost", 2000, false, "i", floorid);
 
 	return 1;
 }
@@ -639,7 +645,7 @@ public Elevator_TurnToIdle()
 	return 1;
 }
 
-stock RemoveFirstQueueFloor()
+RemoveFirstQueueFloor()
 {
 	// Removes the data in ElevatorQueue[0], and reorders the queue accordingly.
 
@@ -651,7 +657,7 @@ stock RemoveFirstQueueFloor()
 	return 1;
 }
 
-stock AddFloorToQueue(floorid)
+AddFloorToQueue(floorid)
 {
  	// Adds 'floorid' at the end of the queue.
 
@@ -680,7 +686,7 @@ stock AddFloorToQueue(floorid)
 	return 0;
 }
 
-stock ResetElevatorQueue()
+ResetElevatorQueue()
 {
 	// Resets the queue.
 
@@ -693,7 +699,7 @@ stock ResetElevatorQueue()
 	return 1;
 }
 
-stock IsFloorInQueue(floorid)
+IsFloorInQueue(floorid)
 {
 	// Checks if the specified floor is currently part of the queue.
 
@@ -704,7 +710,7 @@ stock IsFloorInQueue(floorid)
 	return 0;
 }
 
-stock ReadNextFloorInQueue()
+ReadNextFloorInQueue()
 {
 	// Reads the next floor in the queue, closes doors, and goes to it.
 
@@ -717,7 +723,7 @@ stock ReadNextFloorInQueue()
 	return 1;
 }
 
-stock DidPlayerRequestElevator(playerid)
+DidPlayerRequestElevator(playerid)
 {
 	for(new i; i < sizeof(FloorRequestedBy); i ++)
 	    if(FloorRequestedBy[i] == playerid)
@@ -726,7 +732,7 @@ stock DidPlayerRequestElevator(playerid)
 	return 0;
 }
 
-stock ShowElevatorDialog(playerid)
+ShowElevatorDialog(playerid)
 {
 	new string[512];
 	for(new i; i < sizeof(ElevatorQueue); i ++)
@@ -743,7 +749,7 @@ stock ShowElevatorDialog(playerid)
 	return 1;
 }
 
-stock CallElevator(playerid, floorid)
+CallElevator(playerid, floorid)
 {
 	// Calls the elevator (also used with the elevator dialog).
 
@@ -756,13 +762,13 @@ stock CallElevator(playerid, floorid)
 	return 1;
 }
 
-stock Float:GetElevatorZCoordForFloor(floorid)
+Float:GetElevatorZCoordForFloor(floorid)
 {
     // Return Z height value plus a small offset
     return (GROUND_Z_COORD + FloorZOffsets[floorid] + ELEVATOR_OFFSET);
 }
 
-stock Float:GetDoorsZCoordForFloor(floorid)
+Float:GetDoorsZCoordForFloor(floorid)
 {
 	// Return Z height value plus a small offset
 	return (GROUND_Z_COORD + FloorZOffsets[floorid] + ELEVATOR_OFFSET);

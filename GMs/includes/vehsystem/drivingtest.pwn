@@ -43,7 +43,7 @@
    		This module will control the driving school (LV), and any other's created afterwards.
         Module created by Connor.
 */
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 #define DIALOG_DSVEH_CAUTION 6941
 #define DIALOG_DSVEH_RULES 6942
 #define DIALOG_DSVEH_TESTBASE 6943
@@ -152,9 +152,9 @@ hook OnGameModeInit()
 	return 1;
 }
 
-hook OnPlayerStateChange(playerid, newstate, oldstate)
+hook OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate)
 {
-	if(GetPVarType(playerid, "pDTest") > 0)
+	if(GetPVarType(playerid, "pDTest") > VARTYPE_NONE)
 	{
 		new pTestVeh = GetPVarInt(playerid, "pTestVeh");
 		if(oldstate == PLAYER_STATE_DRIVER && newstate == PLAYER_STATE_ONFOOT)
@@ -179,7 +179,7 @@ hook OnPlayerStateChange(playerid, newstate, oldstate)
 
 public checkTestVehicle(playerid)
 {
-	if(GetPVarType(playerid, "pDTest") > 0)
+	if(GetPVarType(playerid, "pDTest") > VARTYPE_NONE)
 	{
 		if(GetPlayerVehicleID(playerid) > 0) return 1;
 		new pTestVeh = GetPVarInt(playerid, "PTestVeh");

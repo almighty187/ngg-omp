@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define			MAX_FIRES				100
 #define			MAX_FIRE_HEALTH			1000
@@ -95,7 +95,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 	return 0;
 }
 
-stock CreateTypeFire(iTypeID) {
+CreateTypeFire(iTypeID) {
 
 	new iTargetID;
 	switch(iTypeID) {
@@ -141,7 +141,7 @@ stock CreateTypeFire(iTypeID) {
 	}
 }
 
-stock Fire_GetRandomValidID(iTypeID) {
+Fire_GetRandomValidID(iTypeID) {
 
 	new iCheckID,
 		iTargetID = -1,

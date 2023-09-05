@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-stock HigherBid(playerid)
+HigherBid(playerid)
 {
 	new
     	AuctionItem = GetPVarInt(playerid, "AuctionItem");

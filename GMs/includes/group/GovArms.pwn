@@ -1,4 +1,4 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 /*
 BRIEFING (TIM)
@@ -65,7 +65,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			if(response)
 			{
 				szMiscArray[0] = 0;
-				new wepid = ListItemTrackId[playerid][listitem];
+				new WEAPON:wepid = WEAPON:ListItemTrackId[playerid][listitem];
 				SetPVarInt(playerid, "_GovGun", wepid);
 				format(szMiscArray, sizeof(szMiscArray), "Edit the purchase price of the {00FFFF}%s {FFFFFF}\n\n Current purchase price: $%s", Weapon_ReturnName(wepid), number_format(arrWeaponCosts[wepid]));
 				return ShowPlayerDialogEx(playerid, DIALOG_GOVGUN_EDITPRICE2, DIALOG_STYLE_INPUT, "Government Arms | Edit Weapon Price", szMiscArray, "Proceed", "Cancel");
@@ -76,7 +76,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			if(response)
 			{
 				szMiscArray[0] = 0;
-				new wepid = ListItemTrackId[playerid][listitem];
+				new WEAPON:wepid = WEAPON:ListItemTrackId[playerid][listitem];
 				SetPVarInt(playerid, "_GovGun", wepid);
 				format(szMiscArray, sizeof(szMiscArray), "Are you sure you want to sell your %s for: {FF0000}$%s{FFFFFF}?", Weapon_ReturnName(wepid), number_format(arrWeaponCosts[wepid]));
 				return ShowPlayerDialogEx(playerid, DIALOG_GOVGUN_SELL2, DIALOG_STYLE_MSGBOX, "Government Arms | Sell Gun", szMiscArray, "Sell", "Cancel");
@@ -87,7 +87,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			if(response)
 			{
 				szMiscArray[0] = 0;
-				new wepid = GetPVarInt(playerid, "_GovGun");
+				new WEAPON:wepid = WEAPON:GetPVarInt(playerid, "_GovGun");
 				arrWeaponCosts[wepid] = strval(inputtext);
 				mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "UPDATE `govgunsales` SET `wepprice` = %d WHERE `wepid` = %d", strval(inputtext), wepid);
 				mysql_tquery(MainPipeline, szMiscArray, "OnQueryFinish", "ii", SENDDATA_THREAD, playerid);
@@ -107,7 +107,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				{
 					if(arrGroupData[iGroupID][g_iGroupType] == 5) break;
 				}
-				new wepid = GetPVarInt(playerid, "_GovGun");
+				new WEAPON:wepid = WEAPON:GetPVarInt(playerid, "_GovGun");
 				if(arrGroupData[iGroupID][g_iBudget] < arrWeaponCosts[wepid]) return SendClientMessageEx(playerid, COLOR_GRAD1, "The government doesn't have enough funds to pay you.");
 				GivePlayerCash(playerid, arrWeaponCosts[wepid]);
 				RemovePlayerWeapon(playerid, wepid);
@@ -140,12 +140,12 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					if(!response) return ShowArmsMenu(playerid);
 
 					new szWeaponName[32],
-						iCount, iAmmo, iWepID;
+						iCount, iAmmo, WEAPON:iWepID;
 
 					if(!IsPlayerInRangeOfPoint(playerid, 5.0, 1464.3099, -1747.5853, 15.6267)) return SendClientMessageEx(playerid, COLOR_GRAD1, "You aren't at the government arms point at City Hall in Los Santos.");
 					if(arrWeaponCosts[46] == 0) return SendClientMessageEx(playerid, COLOR_GRAD1, "The government arms center is currently closed.");
 					szMiscArray = "Name\tSale Price\n";
-					for(new i; i < 12; ++i) {
+					for(new WEAPON_SLOT:i; i < WEAPON_SLOT_DETONATOR; ++i) {
 						
 						GetPlayerWeaponData(playerid, i, iWepID, iAmmo);
 						if(PlayerInfo[playerid][pGuns][i] == iWepID && GovGuns_IsSelling(iWepID)) {
@@ -202,20 +202,20 @@ GovGuns_Streamer()
 	GovArmsPoint = CreateDynamicSphere(1464.3186,-1747.9330,15.445, 5.00);
 }
 
-GovGuns_IsSellingEdit(i)
+GovGuns_IsSellingEdit(WEAPON:i)
 {
 	switch(i)
 	{
-		case 22 .. 34: return 1; // enter IDs of weapons that are enabled for sale.
+		case WEAPON_COLT45 .. WEAPON_SNIPER: return 1; // enter IDs of weapons that are enabled for sale.
 	}
 	return 0;
 }
 
-GovGuns_IsSelling(i)
+GovGuns_IsSelling(WEAPON:i)
 {
 	switch(i)
 	{
-		case 22 .. 34: if(arrWeaponCosts[i] > 0) return 1; // enter IDs of weapons that are enabled for sale.
+		case WEAPON_COLT45 .. WEAPON_SNIPER: if(arrWeaponCosts[i] > 0) return 1; // enter IDs of weapons that are enabled for sale.
 	}
 	return 0;
 }
@@ -226,7 +226,7 @@ GovGuns_EditPrices(playerid)
 	szMiscArray[0] = 0;
 	new iCount;
 	szMiscArray = "Name\tPurchase Price\n";
-	for(new i; i < 46; ++i)
+	for(new WEAPON:i; i < WEAPON_PARACHUTE; ++i)
 	{
 		if(GovGuns_IsSellingEdit(i)) 
 		{
@@ -255,11 +255,11 @@ public GovGuns_OnLoadCosts()
 forward GovGuns_OnShowSales(playerid);
 public GovGuns_OnShowSales(playerid)
 {
-	new iRows, iCount;
+	new iRows, WEAPON:iCount;
 	cache_get_row_count(iRows);
 	if(!iRows) return SendClientMessageEx(playerid, COLOR_GRAD1, "Something went wrong. Please try again later.");
 	szMiscArray = "Name\tSold\n";
-	while(iCount < iRows) 
+	while(_:iCount < iRows) 
 	{
 		if(GovGuns_IsSellingEdit(iCount))
 		{
@@ -317,7 +317,7 @@ ShowArmsMenu(playerid) {
 	return 1;
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 
 	if(newkeys & KEY_YES && IsPlayerInDynamicArea(playerid, GovArmsPoint)) {
 		ShowArmsMenu(playerid);

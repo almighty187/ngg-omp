@@ -29,11 +29,7 @@ static
 	s_DialogOpened[MAX_PLAYERS]
 ;
 
-forward OnDialogPerformed(playerid, dialog[], response, success);
-
-forward @dialog_format(); @dialog_format() {
-	format("", 0, "");
-}
+forward OnDialogPerformed(playerid, const dialog[], response, success);
 
 forward Dialog_IsOpened(playerid);
 public Dialog_IsOpened(playerid)
@@ -46,51 +42,16 @@ stock Dialog_Close(playerid)
 	s_DialogName[playerid]{0} = 0;
 	s_DialogOpened[playerid] = 0;
 
-	return ShowPlayerDialog(playerid, -1, DIALOG_STYLE_MSGBOX, " ", " ", " ", "");
+	return HidePlayerDialog(playerid);
 }
 
-stock Dialog_Open(playerid, function[], style, caption[], info[], button1[], button2[], {Float,_}:...)
+stock Dialog_Open(playerid, const function[], DIALOG_STYLE:style, const caption[], const info[], const button1[], const button2[], OPEN_MP_TAGS:...)
 {
-	static
-	    string[4096],
-		args
-	;
-
 	if (!strlen(info))
 	{
 	    return 0;
 	}
-	if ((args = numargs()) > 7)
-	{
-	    while (--args >= 7)
-		{
-			#emit LCTRL 5
-			#emit LOAD.alt args
-			#emit SHL.C.alt 2
-			#emit ADD.C 12
-			#emit ADD
-			#emit LOAD.I
-			#emit PUSH.pri
-		}
-		#emit PUSH.S info
-		#emit PUSH.C 4096
-		#emit PUSH.C string
-
-		#emit LOAD.S.pri 8
-		#emit CONST.alt 16
-		#emit SUB
-		#emit PUSH.pri
-
-		#emit SYSREQ.C format
-		#emit LCTRL 5
-		#emit SCTRL 4
-
-		ShowPlayerDialog(playerid, 32700, style, caption, string, button1, button2);
-	}
-	else
-	{
-		ShowPlayerDialog(playerid, 32700, style, caption, info, button1, button2);
-	}
+	ShowPlayerDialog(playerid, 32700, style, caption, info, button1, button2, ___(7));
 	s_DialogOpened[playerid] = 1;
 
 	strpack(s_DialogName[playerid], function, 32 char);

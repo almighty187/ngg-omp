@@ -72,9 +72,9 @@ timer SkinDelay[1000](playerid)
 // Timer Name: NOPCheck(playerid)
 timer NOPCheck[5000](playerid)
 {
-	if(GetPlayerState(playerid) != 2) NOPTrigger[playerid] = 0;
+	if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER) NOPTrigger[playerid] = 0;
 	new newcar = GetPlayerVehicleID(playerid);
-	if(PlayerInfo[playerid][pAdmin] > 1 || GetPlayerState(playerid) != 2) return 1;
+	if(PlayerInfo[playerid][pAdmin] > 1 || GetPlayerState(playerid) != PLAYER_STATE_DRIVER) return 1;
     else if(IsAPlane(newcar) && (PlayerInfo[playerid][pFlyLic] != 1)) ExecuteNOPAction(playerid);
     else if(IsAPizzaCar(newcar) && PlayerInfo[playerid][pJob] != 21 && PlayerInfo[playerid][pJob2] != 21 && PlayerInfo[playerid][pJob3] != 21) ExecuteNOPAction(playerid);
     else if(IsVIPcar(newcar) && PlayerInfo[playerid][pDonateRank] == 0) ExecuteNOPAction(playerid);
@@ -272,7 +272,7 @@ task SyncTime[60000]()
 			getdate(year,month,day);
 			if(month == 4 && (day == 25 || day == 26)) // NGG B-Day 2015
 			{
-				foreach(Player, i)
+				foreach(new i: Player)
 				{
 					PlayerInfo[i][pReceivedPrize] = 0;
 				}
@@ -425,7 +425,7 @@ task SyncTime[60000]()
 		new year, month, day;
 		getdate(year, month, day);
 
-		new ttTime = CalculateWorldGameTime(hour, minuite);
+		new ttTime = CalculateWorldGameTime(hour_, minuite);
 
 		format(szMiscArray, sizeof(szMiscArray), "The time is now %s. ((ST: %s))", ConvertToTwelveHour(ttTime), ConvertToTwelveHour(tmphour));
 		SendClientMessageToAllEx(COLOR_WHITE, szMiscArray);
@@ -478,7 +478,7 @@ task SyncTime[60000]()
 				}
 			}
 		}
-		new iTempHour = CalculateWorldGameTime(hour, minuite);
+		new iTempHour = CalculateWorldGameTime(hour_, minuite);
 		SetWorldTime(iTempHour);
 
 		if(tmphour == 0) CountCitizens();
@@ -619,14 +619,14 @@ task ProductionUpdate[300000]()
 task MoneyUpdate[1000]()
 {
 	new minuitet=minuite;
-	gettime(hour,minuite,second);
-	FixHour(hour);
-	hour = shifthour;
+	gettime(hour_,minuite,second_);
+	FixHour(hour_);
+	hour_ = shifthour;
 
 	if(minuitet != minuite)
 	{
-		if(minuite < 10)format(szMiscArray, sizeof(szMiscArray), "%d:0%d", hour, minuite);
-		else format(szMiscArray, sizeof(szMiscArray), "%d:%d", hour, minuite);
+		if(minuite < 10)format(szMiscArray, sizeof(szMiscArray), "%d:0%d", hour_, minuite);
+		else format(szMiscArray, sizeof(szMiscArray), "%d:%d", hour_, minuite);
 		TextDrawSetString(WristWatch, szMiscArray);
 	}
 	if(EventKernel[EventStatus] >= 2 && EventKernel[EventTime] > 0)
@@ -680,11 +680,11 @@ task MoneyUpdate[1000]()
 			EventKernel[ EventHealth ] = 0;
 			EventKernel[ EventLimit ] = 0;
 			EventKernel[ EventPlayers ] = 0;
-			EventKernel[ EventWeapons ][0] = 0;
-			EventKernel[ EventWeapons ][1] = 0;
-			EventKernel[ EventWeapons ][2] = 0;
-			EventKernel[ EventWeapons ][3] = 0;
-			EventKernel[ EventWeapons ][4] = 0;
+			EventKernel[ EventWeapons ][0] = WEAPON_FIST;
+			EventKernel[ EventWeapons ][1] = WEAPON_FIST;
+			EventKernel[ EventWeapons ][2] = WEAPON_FIST;
+			EventKernel[ EventWeapons ][3] = WEAPON_FIST;
+			EventKernel[ EventWeapons ][4] = WEAPON_FIST;
 			for(new i = 0; i < 20; i++)
 			{
 			    EventRCPU[i] = 0;
@@ -833,7 +833,7 @@ task PaintballArenaUpdate[1000]()
 					new arenaid = GetPVarInt(p, "IsInArena");
 					if(arenaid == i)
 					{
-						TogglePlayerControllable(p, 0);
+						TogglePlayerControllable(p, false);
 						PaintballScoreboard(p, arenaid);
 					}
 				}
@@ -853,7 +853,7 @@ task PaintballArenaUpdate[1000]()
 					if(arenaid == i)
 					{
 						PaintballScoreboard(p, arenaid);
-						TogglePlayerControllable(p, 1);
+						TogglePlayerControllable(p, true);
 					}
 				}
 			    foreach(new p: Player)
@@ -874,7 +874,7 @@ task PaintballArenaUpdate[1000]()
 // TickRate: 60 secs.
 task VehicleUpdate[60000]() {
 
-    static engine, lights, alarm, doors, bonnet, boot, objective;
+    static bool:engine;
 
     foreach(new v : Vehicles) {
 
@@ -884,18 +884,18 @@ task VehicleUpdate[60000]() {
     		case 481, 509, 510: {}
     		default: {
 
-    			GetVehicleParamsEx(v, engine, lights, alarm, doors, bonnet, boot, objective);
+    			GetVehicleParamsEx(v, engine);
 
 			    if(engine == VEHICLE_PARAMS_ON) {
 
-					if(arr_Engine{v} == 0) SetVehicleParamsEx(v, VEHICLE_PARAMS_OFF, lights, alarm, doors, bonnet, boot, objective);
+					if(arr_Engine{v} == 0) SetVehicleParamsEx(v, VEHICLE_PARAMS_OFF);
 
 					else if(!IsVIPcar(v) && !IsFamedVeh(v)) {
 
 						if(VehicleFuel[v] > 0.0) {
 
 							VehicleFuel[v] -= 1.0;
-							if(VehicleFuel[v] <= 0.0) SetVehicleParamsEx(v, VEHICLE_PARAMS_OFF, lights, alarm, doors, bonnet, boot, objective);
+							if(VehicleFuel[v] <= 0.0) SetVehicleParamsEx(v, VEHICLE_PARAMS_OFF);
 						}
 					}
 				}
@@ -956,7 +956,7 @@ task hungerGames[1000]()
 
 					if(GetPVarInt(i, "HungerVoucher") == 1)
 					{
-						GivePlayerValidWeapon(i, 29);
+						GivePlayerValidWeapon(i, WEAPON_MP5);
 						SetHealth(i, 100.0);
 						DeletePVar(i, "HungerVoucher");
 					}
@@ -985,7 +985,8 @@ foreach(new i: Player)
 		// alerttimer - Merged by Jingles
 		if(AlertTime[i] != 0) AlertTime[i]--;
 
-		new Float:playerArmour = GetArmour(i, playerArmour);
+		new Float:playerArmour;
+		GetArmour(i, playerArmour);
         // playertabbedloop - Merged by Jingles
         new
             iTick = gettime() - 1;
@@ -995,7 +996,7 @@ foreach(new i: Player)
             SetPlayerArmour(i, 0);
         }
 
-		if(1 <= GetPlayerState(i) <= 3) {
+		if(PLAYER_STATE_ONFOOT <= GetPlayerState(i) <= PLAYER_STATE_PASSENGER) {
 			if(playerTabbed[i] >= 1) {
 				if(++playerTabbed[i] >= 1200 && PlayerInfo[i][pAdmin] < 2) {
 					SendClientMessageEx(i, COLOR_WHITE, "You have been automatically kicked for alt-tabbing.");
@@ -1019,7 +1020,7 @@ foreach(new i: Player)
 			SendClientMessageEx(i, COLOR_WHITE, "SERVER: You have been kicked for PaintBall Exploiting.");
 			format(szMiscArray, sizeof(szMiscArray), " %s(%d) (ID: %d) (IP: %s) has been kicked for attempting to Paint Ball Exploit.", GetPlayerNameEx(i), GetPlayerSQLId(i), i, GetPlayerIpEx(i));
 			Log("logs/pbexploit.log", szMiscArray);
-			SetTimerEx("KickEx", 1000, 0, "i", i);
+			SetTimerEx("KickEx", 1000, false, "i", i);
 		}
 		// MoneyHeartBeat - Merged by Jingles
 		if(gPlayerLogged{i})
@@ -1035,7 +1036,7 @@ foreach(new i: Player)
 					SendClientMessageEx(i, COLOR_WHITE, "SERVER: You have been kicked for being AFK.");
 					format(szMiscArray, sizeof(szMiscArray), " %s(%d) (ID: %d) (IP: %s) has been kicked for not being spawned over 2 minutes.", GetPlayerNameEx(i), GetPlayerSQLId(i), i, GetPlayerIpEx(i));
 					Log("logs/spawnafk.log", szMiscArray);
-					SetTimerEx("KickEx", 1000, 0, "i", i);
+					SetTimerEx("KickEx", 1000, false, "i", i);
 				}
 			}
 			if(IsSpawned[i] > 0 && SpawnKick[i] > 0)
@@ -1057,7 +1058,7 @@ foreach(new i: Player)
 							ABroadCast(COLOR_YELLOW, szMiscArray, 2);
 							SendClientMessageEx(i, COLOR_WHITE, "You have been kicked because your ping is higher than the maximum.");
 							SetPVarInt(i, "BeingKicked", 1);
-							SetTimerEx("KickEx", 1000, 0, "i", i);
+							SetTimerEx("KickEx", 1000, false, "i", i);
 						}
 					}
 				}
@@ -1118,9 +1119,9 @@ foreach(new i: Player)
 									SendClientMessageEx(i, COLOR_GREEN, "You're able to push the officer off you and escape.");
 									format(szMiscArray, sizeof(szMiscArray), "** %s pushes %s aside and is able to escape.", GetPlayerNameEx(i), GetPlayerNameEx(GetPVarInt(i, "IsTackled")));
 									ProxDetector(30.0, i, szMiscArray, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-									TogglePlayerControllable(GetPVarInt(i, "IsTackled"), 0);
-									ApplyAnimation(GetPVarInt(i, "IsTackled"), "SWEET", "Sweet_injuredloop", 4.0, 1, 1, 1, 1, 0, 1);
-									SetTimerEx("CopGetUp", 2500, 0, "i", GetPVarInt(i, "IsTackled"));
+									TogglePlayerControllable(GetPVarInt(i, "IsTackled"), false);
+									ApplyAnimation(GetPVarInt(i, "IsTackled"), "SWEET", "Sweet_injuredloop", 4.0, true, true, true, true, 0, SYNC_ALL);
+									SetTimerEx("CopGetUp", 2500, false, "i", GetPVarInt(i, "IsTackled"));
 									ClearTackle(i);
 								}
 							}
@@ -1136,9 +1137,9 @@ foreach(new i: Player)
 									SendClientMessageEx(i, COLOR_GREEN, "You're able to push the officer off you and escape.");
 									format(szMiscArray, sizeof(szMiscArray), "** %s pushes %s aside and is able to escape.", GetPlayerNameEx(i), GetPlayerNameEx(GetPVarInt(i, "IsTackled")));
 									ProxDetector(30.0, i, szMiscArray, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-									TogglePlayerControllable(GetPVarInt(i, "IsTackled"), 0);
-									ApplyAnimation(GetPVarInt(i, "IsTackled"), "SWEET", "Sweet_injuredloop", 4.0, 1, 1, 1, 1, 0, 1);
-									SetTimerEx("CopGetUp", 2500, 0, "i", GetPVarInt(i, "IsTackled"));
+									TogglePlayerControllable(GetPVarInt(i, "IsTackled"), false);
+									ApplyAnimation(GetPVarInt(i, "IsTackled"), "SWEET", "Sweet_injuredloop", 4.0, true, true, true, true, 0, SYNC_ALL);
+									SetTimerEx("CopGetUp", 2500, false, "i", GetPVarInt(i, "IsTackled"));
 									ClearTackle(i);
 								}
 							}
@@ -1175,8 +1176,8 @@ foreach(new i: Player)
 				GetPlayer3DZone(i, zone, MAX_ZONE_NAME);
 				PlayerTextDrawSetString(i, GPS[i], zone);
 			}
-			if(GetPVarType(i, "Injured")) SetPlayerArmedWeapon(i, 0);
-			if(GetPVarType(i, "IsFrozen")) TogglePlayerControllable(i, 0);
+			if(GetPVarType(i, "Injured")) SetPlayerArmedWeapon(i, WEAPON_FIST);
+			if(GetPVarType(i, "IsFrozen")) TogglePlayerControllable(i, false);
 			if(PlayerCuffed[i] > 1) {
 				SetHealth(i, 1000);
 				SetArmour(i, GetPVarFloat(i, "cuffarmor"));
@@ -1286,9 +1287,7 @@ foreach(new i: Player)
 							PlayerInfo[i][pLockPickVehCount] = 0;
 						}
 						ClearCheckpoint(i);
-						new engine, lights, alarm, doors, bonnet, boot, objective;
-						GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
-						SetVehicleParamsEx(vehicleid,engine,lights,VEHICLE_PARAMS_OFF,doors,bonnet,boot,objective);
+						SetVehicleParamsEx(vehicleid, .alarm = VEHICLE_PARAMS_OFF);
 						SendClientMessageEx(i, COLOR_YELLOW, "You have successfully picked this vehicle lock, you may now deliver this to the checkpoint mark to get money.");
 						if(PlayerInfo[i][pCrowBar] > 0) SendClientMessageEx(i, COLOR_CYAN, "Optionally, you may try to open the trunk to see what's inside (/cracktrunk).");
 						PlayerPlaySound(i, 1145, 0.0, 0.0, 0.0);
@@ -1310,7 +1309,7 @@ foreach(new i: Player)
 						DeletePVar(i, "AttemptingLockPick");
 						DeletePVar(i, "LockPickCountdown");
 						DeletePVar(i, "LockPickTotalTime");
-						ClearAnimationsEx(i, 1);
+						ClearAnimationsEx(i, SYNC_ALL);
 
 						if(PlayerInfo[i][pDoubleEXP] > 0) {
 							format(szMiscArray, sizeof(szMiscArray), "You have gained 2 Vehicle Lock Picking skill points instead of 1. You have %d hours left on the Double EXP token.", PlayerInfo[i][pDoubleEXP]);
@@ -1347,7 +1346,7 @@ foreach(new i: Player)
 						DeletePVar(i, "LockPickVehicle");
 						DeletePVar(i, "LockPickPlayer");
 						DestroyVLPTextDraws(i);
-						ClearAnimationsEx(i, 1);
+						ClearAnimationsEx(i, SYNC_ALL);
 					}
 				}
 				else {
@@ -1369,7 +1368,7 @@ foreach(new i: Player)
 					DeletePVar(i, "LockPickVehicle");
 					DeletePVar(i, "LockPickPlayer");
 					DestroyVLPTextDraws(i);
-					ClearAnimationsEx(i, 1);
+					ClearAnimationsEx(i, SYNC_ALL);
 				}
 			}
 			if(GetPVarType(i, "AttemptingCrackTrunk") && GetPVarType(i, "CrackTrunkCountdown")) {
@@ -1386,10 +1385,8 @@ foreach(new i: Player)
 							ownerid = GetPVarInt(i, "LockPickPlayer");
 						SendClientMessageEx(i, COLOR_PURPLE, "(( The trunk cracks, you begin to search for any items ))");
 						PlayerPlaySound(i, 1145, 0.0, 0.0, 0.0);
-						new engine, lights, alarm, doors, bonnet, boot, objective;
-						GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
-						SetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,VEHICLE_PARAMS_ON,objective);
-						ClearAnimationsEx(i, 1);
+						SetVehicleParamsEx(vehicleid, .boot = VEHICLE_PARAMS_ON);
+						ClearAnimationsEx(i, SYNC_ALL);
 						SetPlayerSkin(i, GetPlayerSkin(i));
 						SetPlayerSpecialAction(i, SPECIAL_ACTION_NONE);
 						if(GetPVarType(i, "LockPickVehicleSQLId")) {
@@ -1403,7 +1400,7 @@ foreach(new i: Player)
 								format(szMiscArray, sizeof(szMiscArray), "You found a %s.", GetWeaponNameEx(PlayerVehicleInfo[ownerid][slot][pvWeapons][wslot]));
 								SendClientMessageEx(i, COLOR_YELLOW, szMiscArray);
 								GivePlayerValidWeapon(i, PlayerVehicleInfo[ownerid][slot][pvWeapons][wslot]);
-								PlayerVehicleInfo[ownerid][slot][pvWeapons][wslot] = 0;
+								PlayerVehicleInfo[ownerid][slot][pvWeapons][wslot] = WEAPON_FIST;
 								g_mysql_SaveVehicle(ownerid, slot);
 								new ip[MAX_PLAYER_NAME], ip2[MAX_PLAYER_NAME];
 								GetPlayerIp(i, ip, sizeof(ip));
@@ -1424,7 +1421,7 @@ foreach(new i: Player)
 						SendClientMessageEx(i, COLOR_YELLOW, "Warning{FFFFFF}: You have moved from your current position therefore you have failed this lock pick.");
 						DeletePVar(i, "AttemptingCrackTrunk");
 						DeletePVar(i, "CrackTrunkCountdown");
-						ClearAnimationsEx(i, 1);
+						ClearAnimationsEx(i, SYNC_ALL);
 					}
 				}
 				else {
@@ -1432,7 +1429,7 @@ foreach(new i: Player)
 					SendClientMessageEx(i, COLOR_YELLOW, "Warning{FFFFFF}: You have moved from your current position therefore you have failed this lock pick.");
 					DeletePVar(i, "AttemptingCrackTrunk");
 					DeletePVar(i, "CrackTrunkCountdown");
-					ClearAnimationsEx(i, 1);
+					ClearAnimationsEx(i, SYNC_ALL);
 				}
 			}
 			if(GetPVarType(i, "TrackVehicleBurglary")) {
@@ -1466,7 +1463,7 @@ foreach(new i: Player)
 				SetPVarInt(i, "wheelclampcountdown", GetPVarInt(i, "wheelclampcountdown")-1);
 				new vehicleid = GetPVarInt(i, "wheelclampvehicle"),
 					Float:CarPos[3],
-					arrVehParams[7];
+					bool:vehEngine;
 				GetVehiclePos(vehicleid, CarPos[0], CarPos[1], CarPos[2]);
 				if(!IsPlayerInRangeOfPoint(i, 5.0, CarPos[0], CarPos[1], CarPos[2]) || IsPlayerInAnyVehicle(i)) {
 					DeletePVar(i, "wheelclampvehicle");
@@ -1476,8 +1473,8 @@ foreach(new i: Player)
 				else if(GetPVarInt(i, "wheelclampcountdown") <= 0) {
 					WheelClamp{vehicleid} = 1;
 					arr_Engine{vehicleid} = 0;
-					GetVehicleParamsEx(vehicleid, arrVehParams[0], arrVehParams[1], arrVehParams[2], arrVehParams[3], arrVehParams[4], arrVehParams[5], arrVehParams[6]);
-					if(arrVehParams[0] == VEHICLE_PARAMS_ON) SetVehicleParamsEx(vehicleid,VEHICLE_PARAMS_OFF, arrVehParams[1], arrVehParams[2], arrVehParams[3], arrVehParams[4], arrVehParams[5], arrVehParams[6]);
+					GetVehicleParamsEx(vehicleid, vehEngine);
+					if(vehEngine == VEHICLE_PARAMS_ON) SetVehicleParamsEx(vehicleid,VEHICLE_PARAMS_OFF);
 					DeletePVar(i, "wheelclampvehicle");
 					DeletePVar(i, "wheelclampcountdown");
 					format(szMiscArray, sizeof(szMiscArray), "* %s has attached a Wheel Clamp on the %s's front tire.", GetPlayerNameEx(i), GetVehicleName(vehicleid), vehicleid);
@@ -1543,7 +1540,7 @@ foreach(new i: Player)
 
 					if(IsPlayerInAnyVehicle(i))
 					{
-						if(GetPlayerState(i) == 2)
+						if(GetPlayerState(i) == PLAYER_STATE_DRIVER)
 						{
 							new Float:angle;
 							GetPlayerFacingAngle(i, angle);
@@ -1552,7 +1549,7 @@ foreach(new i: Player)
 					}
 					else
 					{
-						ApplyAnimation(i,"PED", "WALK_DRUNK",4.0,0,1,0,0,0);
+						ApplyAnimation(i,"PED", "WALK_DRUNK",4.0,false,true,false,false,0);
 					}
 				}
 			}
@@ -1575,7 +1572,7 @@ foreach(new i: Player)
 					BoxWaitTime[i] = 0;
 					PlayerPlaySound(i, 1057, 0.0, 0.0, 0.0);
 					GameTextForPlayer(i, "~g~Match Started", 5000, 1);
-					TogglePlayerControllable(i, 1);
+					TogglePlayerControllable(i, true);
 					RoundStarted = 1;
 				}
 				else
@@ -1915,7 +1912,6 @@ foreach(new i: Player)
 						Boxer1 = INVALID_PLAYER_ID;
 						Boxer2 = INVALID_PLAYER_ID;
 						TBoxer = INVALID_PLAYER_ID;
-						trigger = 0;
 					}
 				}
 			}
@@ -2028,7 +2024,7 @@ foreach(new i: Player)
 				{
 					//Frozen[i] = 0;
 					DeletePVar(i, "IsFrozen");
-					TogglePlayerControllable(i, 1);
+					TogglePlayerControllable(i, true);
 					PlayerCuffed[i] = 0;
 					DeletePVar(i, "PlayerCuffed");
 					PlayerCuffedTime[i] = 0;
@@ -2067,7 +2063,7 @@ foreach(new i: Player)
 						//Frozen[i] = 0;
 						DeletePVar(i, "IsFrozen");
 						GameTextForPlayer(i, "~r~No-one is looking, run!", 2500, 3);
-						TogglePlayerControllable(i, 1);
+						TogglePlayerControllable(i, true);
 						PlayerCuffed[i] = 3;
 						//SetHealth(i, GetPVarFloat(i, "cuffhealth"));
 						//SetArmour(i, GetPVarFloat(i, "cuffarmor"));
@@ -2104,7 +2100,7 @@ foreach(new i: Player)
 				}
 
 				if(copinrange == 1) {
-					TogglePlayerControllable(i, 0);
+					TogglePlayerControllable(i, false);
 					PlayerCuffed[i] = 2;
 					GameTextForPlayer(i, "~r~They caught you again!", 2500, 3);
 				}
@@ -2117,7 +2113,7 @@ foreach(new i: Player)
 						//Frozen[i] = 0;
 						DeletePVar(i, "IsFrozen");
 						GameTextForPlayer(i, "~r~The cuffs broke!", 2500, 3);
-						TogglePlayerControllable(i, 1);
+						TogglePlayerControllable(i, true);
 						PlayerCuffed[i] = 0;
 						SetHealth(i, GetPVarFloat(i, "cuffhealth"));
 						SetArmour(i, GetPVarFloat(i, "cuffarmor"));
@@ -2192,8 +2188,8 @@ foreach(new i: Player)
 								ResetPlayerWeapons(i);
 								ResetPlayerWeapons(ii);
 
-								TogglePlayerControllable(i, 0);
-								TogglePlayerControllable(ii, 0);
+								TogglePlayerControllable(i, false);
+								TogglePlayerControllable(ii, false);
 
 								SetPVarInt(i, "_BoxingFight", ii + 1);
 								SetPVarInt(ii, "_BoxingFight", i + 1);
@@ -2240,8 +2236,8 @@ foreach(new i: Player)
 								RemoveArmor(i);
 								RemoveArmor(ii);
 
-								TogglePlayerControllable(i, 0);
-								TogglePlayerControllable(ii, 0);
+								TogglePlayerControllable(i, false);
+								TogglePlayerControllable(ii, false);
 
 								SetPVarInt(i, "_BoxingFight", ii + 1);
 								SetPVarInt(ii, "_BoxingFight", i + 1);
@@ -2289,8 +2285,8 @@ foreach(new i: Player)
 				SendClientMessageEx(i, COLOR_RED, "Fight!");
 				SendClientMessageEx(ii, COLOR_RED, "Fight!");
 				DeletePVar(i, "_BoxingFightCountdown");
-				TogglePlayerControllable(i, 1);
-				TogglePlayerControllable(ii, 1);
+				TogglePlayerControllable(i, true);
+				TogglePlayerControllable(ii, true);
 			}
 		}
 		if(GetPVarInt(i, "_BoxingFightOver") != 0 && gettime() >= GetPVarInt(i, "_BoxingFightOver"))
@@ -2326,8 +2322,8 @@ foreach(new i: Player)
 
 		// ServerHeartBeatTwo (merged by Jingles)
 		if(IsPlayerInAnyVehicle(i)) {
-			if(GetPlayerState(i) == PLAYER_STATE_DRIVER) SetPlayerArmedWeapon(i, 0);
-			else if(!IsADriveByWeapon(GetPlayerWeapon(i)) && !IsADriveByWeapon(GetPVarInt(i, "LastWeapon"))) SetPlayerArmedWeapon(i,0);
+			if(GetPlayerState(i) == PLAYER_STATE_DRIVER) SetPlayerArmedWeapon(i, WEAPON_FIST);
+			else if(!IsADriveByWeapon(GetPlayerWeapon(i)) && !IsADriveByWeapon(WEAPON:GetPVarInt(i, "LastWeapon"))) SetPlayerArmedWeapon(i,WEAPON_FIST);
 		}
 		if(GetPlayerSpecialAction(i) == SPECIAL_ACTION_USEJETPACK && JetPack[i] == 0 && PlayerInfo[i][pAdmin] < 4)
 		{
@@ -2589,7 +2585,7 @@ ptask PlayerUpdate[1000](i) {
 				SendClientMessageEx(i, COLOR_WHITE, "SERVER: You have been kicked for being AFK.");
 				format(string, sizeof(string), " %s(%d) (ID: %d) (IP: %s) has been kicked for not being spawned over 2 minutes.", GetPlayerNameEx(i), GetPlayerSQLId(i), i, GetPlayerIpEx(i));
 				Log("logs/spawnafk.log", string);
-				SetTimerEx("KickEx", 1000, 0, "i", i);
+				SetTimerEx("KickEx", 1000, false, "i", i);
 			}
 		}
 		if(IsSpawned[i] > 0 && SpawnKick[i] > 0)
@@ -2612,7 +2608,7 @@ ptask PlayerUpdate[1000](i) {
 						ABroadCast(COLOR_YELLOW, string, 2);
 						SendClientMessageEx(i, COLOR_WHITE, "You have been kicked because your ping is higher than the maximum.");
 						SetPVarInt(i, "BeingKicked", 1);
-						SetTimerEx("KickEx", 1000, 0, "i", i);
+						SetTimerEx("KickEx", 1000, false, "i", i);
 					}
 				}
 			}
@@ -2670,9 +2666,9 @@ ptask PlayerUpdate[1000](i) {
 								SendClientMessageEx(i, COLOR_GREEN, "You're able to push the officer off you and escape.");
 								format(string, sizeof(string), "** %s pushes %s aside and is able to escape.", GetPlayerNameEx(i), GetPlayerNameEx(GetPVarInt(i, "IsTackled")));
 								ProxDetector(30.0, i, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-								TogglePlayerControllable(GetPVarInt(i, "IsTackled"), 0);
-								ApplyAnimation(GetPVarInt(i, "IsTackled"), "SWEET", "Sweet_injuredloop", 4.0, 1, 1, 1, 1, 0, 1);
-								SetTimerEx("CopGetUp", 2500, 0, "i", GetPVarInt(i, "IsTackled"));
+								TogglePlayerControllable(GetPVarInt(i, "IsTackled"), false);
+								ApplyAnimation(GetPVarInt(i, "IsTackled"), "SWEET", "Sweet_injuredloop", 4.0, true, true, true, true, 0, SYNC_ALL);
+								SetTimerEx("CopGetUp", 2500, false, "i", GetPVarInt(i, "IsTackled"));
 								ClearTackle(i);
 							}
 						}
@@ -2688,9 +2684,9 @@ ptask PlayerUpdate[1000](i) {
 								SendClientMessageEx(i, COLOR_GREEN, "You're able to push the officer off you and escape.");
 								format(string, sizeof(string), "** %s pushes %s aside and is able to escape.", GetPlayerNameEx(i), GetPlayerNameEx(GetPVarInt(i, "IsTackled")));
 								ProxDetector(30.0, i, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-								TogglePlayerControllable(GetPVarInt(i, "IsTackled"), 0);
-								ApplyAnimation(GetPVarInt(i, "IsTackled"), "SWEET", "Sweet_injuredloop", 4.0, 1, 1, 1, 1, 0, 1);
-								SetTimerEx("CopGetUp", 2500, 0, "i", GetPVarInt(i, "IsTackled"));
+								TogglePlayerControllable(GetPVarInt(i, "IsTackled"), false);
+								ApplyAnimation(GetPVarInt(i, "IsTackled"), "SWEET", "Sweet_injuredloop", 4.0, true, true, true, true, 0, SYNC_ALL);
+								SetTimerEx("CopGetUp", 2500, false, "i", GetPVarInt(i, "IsTackled"));
 								ClearTackle(i);
 							}
 						}
@@ -2727,8 +2723,8 @@ ptask PlayerUpdate[1000](i) {
 			GetPlayer3DZone(i, zone, MAX_ZONE_NAME);
 			PlayerTextDrawSetString(i, GPS[i], zone);
 		}
-		if(GetPVarType(i, "Injured")) SetPlayerArmedWeapon(i, 0);
-		if(GetPVarType(i, "IsFrozen")) TogglePlayerControllable(i, 0);
+		if(GetPVarType(i, "Injured")) SetPlayerArmedWeapon(i, WEAPON_FIST);
+		if(GetPVarType(i, "IsFrozen")) TogglePlayerControllable(i, false);
 		if(PlayerCuffed[i] > 1) {
 			SetHealth(i, 1000);
 			SetArmour(i, GetPVarFloat(i, "cuffarmor"));
@@ -2872,7 +2868,7 @@ ptask PlayerMicroBeat[500](i) {
 		Float: fVehicleHealth,
 		iVehicle,
 		//szSpeed[42],
-		arrVehParams[7];
+		bool:vehEngine;
 
 	if(_vhudVisible[i] == 1 && !IsPlayerInAnyVehicle(i))
 	{
@@ -2913,10 +2909,10 @@ ptask PlayerMicroBeat[500](i) {
 			if(fVehicleHealth < 350.0)
 			{
 				SetVehicleHealth(iVehicle, 251.0);
-				GetVehicleParamsEx(iVehicle, arrVehParams[0], arrVehParams[1], arrVehParams[2], arrVehParams[3], arrVehParams[4], arrVehParams[5], arrVehParams[6]);
-				if(arrVehParams[0] == VEHICLE_PARAMS_ON)
+				GetVehicleParamsEx(iVehicle, vehEngine);
+				if(vehEngine == VEHICLE_PARAMS_ON)
 				{
-					SetVehicleParamsEx(iVehicle,VEHICLE_PARAMS_OFF, arrVehParams[1], arrVehParams[2], arrVehParams[3], arrVehParams[4], arrVehParams[5], arrVehParams[6]);
+					SetVehicleParamsEx(iVehicle,VEHICLE_PARAMS_OFF);
 					/*if(!PlayerInfo[i][pShopNotice])
 					{
 						PlayerTextDrawSetString(i, MicroNotice[i], ShopMsg[8]);

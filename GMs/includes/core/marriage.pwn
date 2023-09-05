@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-stock ClearMarriage(playerid)
+ClearMarriage(playerid)
 {
 	if(IsPlayerConnected(playerid)) {
 		new string[MAX_PLAYER_NAME];

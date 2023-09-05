@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 stock SendAudioURLToRange(url[], Float:x, Float:y, Float:z, Float:range)
 {
@@ -48,18 +48,10 @@ stock SendAudioURLToRange(url[], Float:x, Float:y, Float:z, Float:range)
 	return 1;
 }
 
-stock PlayerPlayMusic(playerid)
+PlayerFixRadio(playerid)
 {
 	if(IsPlayerConnected(playerid)) {
-		SetTimer("StopMusic", 5000, 0);
-		PlayerPlaySound(playerid, 1068, 0.0, 0.0, 0.0);
-	}
-}
-
-stock PlayerFixRadio(playerid)
-{
-	if(IsPlayerConnected(playerid)) {
-		SetTimer("PlayerFixRadio2", 1000, 0);
+		SetTimer("PlayerFixRadio2", 1000, false);
 		PlayerPlaySound(playerid, 1068, 0.0, 0.0, 0.0);
 		Fixr[playerid] = 1;
 	}
@@ -94,7 +86,7 @@ public PlayerFixRadio2()
 	}	
 }
 
-stock PlayAudioStreamForPlayerEx(playerid, url[], Float:posX = 0.0, Float:posY = 0.0, Float:posZ = 0.0, Float:distance = 50.0, usepos = 0)
+PlayAudioStreamForPlayerEx(playerid, const url[], Float:posX = 0.0, Float:posY = 0.0, Float:posZ = 0.0, Float:distance = 50.0, bool:usepos = false)
 {
 	if(GetPVarType(playerid, "pAudioStream"))
 	{
@@ -105,7 +97,7 @@ stock PlayAudioStreamForPlayerEx(playerid, url[], Float:posX = 0.0, Float:posY =
     PlayAudioStreamForPlayer(playerid, url, posX, posY, posZ, distance, usepos);
 }
 
-stock StopAudioStreamForPlayerEx(playerid, reset = 0)
+StopAudioStreamForPlayerEx(playerid, reset = 0)
 {
 	if(reset == 0) DeletePVar(playerid, "pAudioStream");
     StopAudioStreamForPlayer(playerid);
@@ -218,7 +210,7 @@ public StationSelectHTTP(index, response_code, data[])
 			{
 				if(IsPlayerInDynamicArea(i, GetPVarInt(index, "pBoomBoxArea")))
 				{
-					PlayAudioStreamForPlayerEx(i, data, GetPVarFloat(index, "pBoomBoxX"), GetPVarFloat(index, "pBoomBoxY"), GetPVarFloat(index, "pBoomBoxZ"), 30.0, 1);
+					PlayAudioStreamForPlayerEx(i, data, GetPVarFloat(index, "pBoomBoxX"), GetPVarFloat(index, "pBoomBoxY"), GetPVarFloat(index, "pBoomBoxZ"), 30.0, true);
 				}
 			}	
 		  	SetPVarString(index, "pBoomBoxStation", data);
@@ -232,7 +224,7 @@ public StationSelectHTTP(index, response_code, data[])
 	return 1;
 }
 
-stock ShowSetStation(playerid, title[] = "Radio Menu")
+ShowSetStation(playerid, const title[] = "Radio Menu")
 {
 	new string[256];
 	format(string, sizeof(string), "Favorite Station\nGenres\nTop 50 Stations\nSearch\nK-LSR\nRadio New Robada\nNick's Radio\nCustom Audio URL\n%sTurn radio off", ((!isnull(PlayerInfo[playerid][pFavStation])) ? ("Favorite Station Settings\n") : ("")));
@@ -284,7 +276,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					{
 						foreach(new i: Player) 
 						{
-							if(IsPlayerInDynamicArea(i, GetPVarInt(playerid, "pBoomBoxArea"))) PlayAudioStreamForPlayerEx(i, PlayerInfo[playerid][pFavStation], GetPVarFloat(playerid, "pBoomBoxX"), GetPVarFloat(playerid, "pBoomBoxY"), GetPVarFloat(playerid, "pBoomBoxZ"), 30.0, 1);
+							if(IsPlayerInDynamicArea(i, GetPVarInt(playerid, "pBoomBoxArea"))) PlayAudioStreamForPlayerEx(i, PlayerInfo[playerid][pFavStation], GetPVarFloat(playerid, "pBoomBoxX"), GetPVarFloat(playerid, "pBoomBoxY"), GetPVarFloat(playerid, "pBoomBoxZ"), 30.0, true);
 						}	
 						SetPVarString(playerid, "pBoomBoxStation", PlayerInfo[playerid][pFavStation]);
 					}
@@ -345,7 +337,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					{
 						if(IsPlayerInDynamicArea(i, GetPVarInt(playerid, "pBoomBoxArea")))
 						{
-							PlayAudioStreamForPlayerEx(i, "http://shoutcast.ng-gaming.net:8000/listen.pls?sid=1", GetPVarFloat(playerid, "pBoomBoxX"), GetPVarFloat(playerid, "pBoomBoxY"), GetPVarFloat(playerid, "pBoomBoxZ"), 30.0, 1);
+							PlayAudioStreamForPlayerEx(i, "http://shoutcast.ng-gaming.net:8000/listen.pls?sid=1", GetPVarFloat(playerid, "pBoomBoxX"), GetPVarFloat(playerid, "pBoomBoxY"), GetPVarFloat(playerid, "pBoomBoxZ"), 30.0, true);
 						}
 					}	
 					SetPVarString(playerid, "pBoomBoxStation", "http://shoutcast.ng-gaming.net:8000/listen.pls?sid=1");
@@ -376,7 +368,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					{
 						if(IsPlayerInDynamicArea(i, GetPVarInt(playerid, "pBoomBoxArea")))
 						{
-							PlayAudioStreamForPlayerEx(i, "https://radio.newrobada.com/radio/8000/autodj.mp3", GetPVarFloat(playerid, "pBoomBoxX"), GetPVarFloat(playerid, "pBoomBoxY"), GetPVarFloat(playerid, "pBoomBoxZ"), 30.0, 1);
+							PlayAudioStreamForPlayerEx(i, "https://radio.newrobada.com/radio/8000/autodj.mp3", GetPVarFloat(playerid, "pBoomBoxX"), GetPVarFloat(playerid, "pBoomBoxY"), GetPVarFloat(playerid, "pBoomBoxZ"), 30.0, true);
 						}
 					}	
 					SetPVarString(playerid, "pBoomBoxStation", "https://radio.newrobada.com/radio/8000/autodj.mp3");
@@ -407,7 +399,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					{
 						if(IsPlayerInDynamicArea(i, GetPVarInt(playerid, "pBoomBoxArea")))
 						{
-							PlayAudioStreamForPlayerEx(i, "http://nick.ng-gaming.net:8000/listen.pls", GetPVarFloat(playerid, "pBoomBoxX"), GetPVarFloat(playerid, "pBoomBoxY"), GetPVarFloat(playerid, "pBoomBoxZ"), 30.0, 1);
+							PlayAudioStreamForPlayerEx(i, "http://nick.ng-gaming.net:8000/listen.pls", GetPVarFloat(playerid, "pBoomBoxX"), GetPVarFloat(playerid, "pBoomBoxY"), GetPVarFloat(playerid, "pBoomBoxZ"), 30.0, true);
 						}
 					}	
 					SetPVarString(playerid, "pBoomBoxStation", "http://nick.ng-gaming.net:8000/listen.pls");
@@ -488,7 +480,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				{
 					if(IsPlayerInDynamicArea(i, GetPVarInt(playerid, "pBoomBoxArea")))
 					{
-						PlayAudioStreamForPlayerEx(i, inputtext, GetPVarFloat(playerid, "pBoomBoxX"), GetPVarFloat(playerid, "pBoomBoxY"), GetPVarFloat(playerid, "pBoomBoxZ"), 30.0, 1);
+						PlayAudioStreamForPlayerEx(i, inputtext, GetPVarFloat(playerid, "pBoomBoxX"), GetPVarFloat(playerid, "pBoomBoxY"), GetPVarFloat(playerid, "pBoomBoxZ"), 30.0, true);
 					}
 				}
 				SetPVarString(playerid, "pBoomBoxStation", inputtext);
@@ -882,7 +874,7 @@ CMD:music(playerid, params[])
 	return 1;
 }
 
-CMD:mp3(playerid, params[])
+CMD:mp3(playerid)
 {
 	if(PlayerInfo[playerid][pCDPlayer] || PlayerInfo[playerid][pAdmin] >= 2)
 	{

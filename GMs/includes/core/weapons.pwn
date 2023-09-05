@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-stock GetWeaponParam(id, WeaponsEnum: param)
+GetWeaponParam(WEAPON:id, WeaponsEnum: param)
 {
 	for (new i; i < sizeof(Weapons); i++)
 	{
@@ -44,7 +44,7 @@ stock GetWeaponParam(id, WeaponsEnum: param)
 	return 0;
 }
 
-stock GivePlayerValidWeapon( playerid, WeaponID )
+GivePlayerValidWeapon( playerid, WEAPON:WeaponID )
 {
     #if defined zombiemode
    	if(zombieevent == 1 && GetPVarType(playerid, "pIsZombie")) return SendClientMessageEx(playerid, COLOR_GREY, "Zombies can't have guns.");
@@ -55,64 +55,64 @@ stock GivePlayerValidWeapon( playerid, WeaponID )
 	}
 	switch( WeaponID )
 	{
-  		case 0, 1:
+  		case WEAPON_FIST, WEAPON_BRASSKNUCKLE:
 		{
-			PlayerInfo[playerid][pGuns][ 0 ] = WeaponID;
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_UNARMED ] = WeaponID;
 			GivePlayerWeapon( playerid, WeaponID, 99999 );
 		}
-		case 2, 3, 4, 5, 6, 7, 8, 9:
+		case WEAPON_GOLFCLUB, WEAPON_NITESTICK, WEAPON_KNIFE, WEAPON_BAT, WEAPON_SHOVEL, WEAPON_POOLSTICK, WEAPON_KATANA, WEAPON_CHAINSAW:
 		{
-			PlayerInfo[playerid][pGuns][ 1 ] = WeaponID;
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] = WeaponID;
 			GivePlayerWeapon( playerid, WeaponID, 99999 );
 		}
-		case 22, 23, 24:
+		case WEAPON_COLT45, WEAPON_SILENCED, WEAPON_DEAGLE:
 		{
-			PlayerInfo[playerid][pGuns][ 2 ] = WeaponID;
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] = WeaponID;
 			GivePlayerWeapon( playerid, WeaponID, 99999 );
 		}
-		case 25, 26, 27:
+		case WEAPON_SHOTGUN, WEAPON_SAWEDOFF, WEAPON_SHOTGSPA:
 		{
-			PlayerInfo[playerid][pGuns][ 3 ] = WeaponID;
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] = WeaponID;
 			GivePlayerWeapon( playerid, WeaponID, 99999 );
 		}
-		case 28, 29, 32:
+		case WEAPON_UZI, WEAPON_MP5, WEAPON_TEC9:
 		{
-			PlayerInfo[playerid][pGuns][ 4 ] = WeaponID;
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] = WeaponID;
 			GivePlayerWeapon( playerid, WeaponID, 99999 );
 		}
-		case 30, 31:
+		case WEAPON_AK47, WEAPON_M4:
 		{
-			PlayerInfo[playerid][pGuns][ 5 ] = WeaponID;
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] = WeaponID;
 			GivePlayerWeapon( playerid, WeaponID, 99999 );
 		}
-		case 33, 34:
+		case WEAPON_RIFLE, WEAPON_SNIPER:
 		{
-			PlayerInfo[playerid][pGuns][ 6 ] = WeaponID;
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] = WeaponID;
 			GivePlayerWeapon( playerid, WeaponID, 99999 );
 		}
-		case 35, 36, 37, 38:
+		case WEAPON_ROCKETLAUNCHER, WEAPON_HEATSEEKER, WEAPON_FLAMETHROWER, WEAPON_MINIGUN:
 		{
-			PlayerInfo[playerid][pGuns][ 7 ] = WeaponID;
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ARTILLERY ] = WeaponID;
 			GivePlayerWeapon( playerid, WeaponID, 99999 );
 		}
-		case 16, 17, 18, 39, 40:
+		case WEAPON_GRENADE, WEAPON_TEARGAS, WEAPON_MOLTOV, WEAPON_SATCHEL, WEAPON_BOMB:
 		{
-			PlayerInfo[playerid][pGuns][ 8 ] = WeaponID;
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EXPLOSIVES ] = WeaponID;
 			GivePlayerWeapon( playerid, WeaponID, 99999 );
 		}
-		case 41, 42, 43:
+		case WEAPON_SPRAYCAN, WEAPON_FIREEXTINGUISHER, WEAPON_CAMERA:
 		{
-			PlayerInfo[playerid][pGuns][ 9 ] = WeaponID;
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EQUIPMENT ] = WeaponID;
 			GivePlayerWeapon( playerid, WeaponID, 99999 );
 		}
-		case 10, 11, 12, 13, 14, 15:
+		case WEAPON_DILDO, WEAPON_DILDO2, WEAPON_VIBRATOR, WEAPON_VIBRATOR2, WEAPON_FLOWER, WEAPON_CANE:
 		{
-			PlayerInfo[playerid][pGuns][ 10 ] = WeaponID;
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] = WeaponID;
 			GivePlayerWeapon( playerid, WeaponID, 99999 );
 		}
-		case 44, 45, 46:
+		case WEAPON_NIGHT_VISION_GOGGLES, WEAPON_THERMAL_GOGGLES, WEAPON_PARACHUTE:
 		{
-			PlayerInfo[playerid][pGuns][ 11 ] = WeaponID;
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GADGET ] = WeaponID;
 			GivePlayerWeapon( playerid, WeaponID, 99999 );
 		}
 	}
@@ -121,18 +121,18 @@ stock GivePlayerValidWeapon( playerid, WeaponID )
 	return 1;
 }
 
-stock IsWeaponHandgun(weaponid) {
+IsWeaponHandgun(WEAPON:weaponid) {
 	switch(weaponid) {
-		case 2..8: return true;
-		case 10..24: return true;
+		case WEAPON_GOLFCLUB..WEAPON_KATANA: return true;
+		case WEAPON_DILDO..WEAPON_DEAGLE: return true;
 		default: return false;
 	}
 	return false;
 }
 
-stock IsWeaponPrimary(weaponid) {
+IsWeaponPrimary(WEAPON:weaponid) {
 	switch(weaponid) {
-		case 25..34: return true;
+		case WEAPON_SHOTGUN..WEAPON_SNIPER: return true;
 		default: return false;
 	}
 	return false;
@@ -144,9 +144,9 @@ public SetPlayerWeapons(playerid)
 	if(HungerPlayerInfo[playerid][hgInEvent] == 1) { return 1;}
     if(GetPVarType(playerid, "IsInArena")) return 1;
 	ResetPlayerWeapons(playerid);
-	for(new s = 0; s < 12; s++)
+	for(new WEAPON_SLOT:s; s < WEAPON_SLOT_DETONATOR; s++)
 	{
-		if(PlayerInfo[playerid][pGuns][s] > 0 && PlayerInfo[playerid][pAGuns][s] == 0)
+		if(PlayerInfo[playerid][pGuns][s] > WEAPON_FIST && PlayerInfo[playerid][pAGuns][s] == WEAPON_FIST)
 		{
 			if(zombieevent) GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pGuns][s]);
 			else GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pGuns][s]);
@@ -155,60 +155,60 @@ public SetPlayerWeapons(playerid)
 	return 1;
 }
 
-stock SetPlayerWeaponsEx(playerid)
+SetPlayerWeaponsEx(playerid)
 {
 	if(GetPVarType(playerid, "IsInArena")) return 1;
 	ResetPlayerWeapons(playerid);
-	for(new s = 0; s < 12; s++)
+	for(new WEAPON_SLOT:s; s < WEAPON_SLOT_DETONATOR; s++)
 	{
-		if(PlayerInfo[playerid][pGuns][s] > 0)
+		if(PlayerInfo[playerid][pGuns][s] > WEAPON_FIST)
 		{
 			if(zombieevent) GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pGuns][s]);
 			else GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pGuns][s]);
 		}
 	}
-	SetPlayerArmedWeapon(playerid, GetPVarInt(playerid, "LastWeapon"));
+	SetPlayerArmedWeapon(playerid, WEAPON:GetPVarInt(playerid, "LastWeapon"));
 	return 1;
 }
 
-stock ResetPlayerWeaponsEx( playerid )
+ResetPlayerWeaponsEx( playerid )
 {
 	DeletePVar(playerid, "HidingKnife");
 	ResetPlayerWeapons(playerid);
-	PlayerInfo[playerid][pGuns][ 0 ] = 0;
-	PlayerInfo[playerid][pGuns][ 1 ] = 0;
-	PlayerInfo[playerid][pGuns][ 2 ] = 0;
-	PlayerInfo[playerid][pGuns][ 3 ] = 0;
-	PlayerInfo[playerid][pGuns][ 4 ] = 0;
-	PlayerInfo[playerid][pGuns][ 5 ] = 0;
-	PlayerInfo[playerid][pGuns][ 6 ] = 0;
-	PlayerInfo[playerid][pGuns][ 7 ] = 0;
-	PlayerInfo[playerid][pGuns][ 8 ] = 0;
-	PlayerInfo[playerid][pGuns][ 9 ] = 0;
-	PlayerInfo[playerid][pGuns][ 10 ] = 0;
-	PlayerInfo[playerid][pGuns][ 11 ] = 0;
-	PlayerInfo[playerid][pAGuns][ 0 ] = 0;
-	PlayerInfo[playerid][pAGuns][ 1 ] = 0;
-	PlayerInfo[playerid][pAGuns][ 2 ] = 0;
-	PlayerInfo[playerid][pAGuns][ 3 ] = 0;
-	PlayerInfo[playerid][pAGuns][ 4 ] = 0;
-	PlayerInfo[playerid][pAGuns][ 5 ] = 0;
-	PlayerInfo[playerid][pAGuns][ 6 ] = 0;
-	PlayerInfo[playerid][pAGuns][ 7 ] = 0;
-	PlayerInfo[playerid][pAGuns][ 8 ] = 0;
-	PlayerInfo[playerid][pAGuns][ 9 ] = 0;
-	PlayerInfo[playerid][pAGuns][ 10 ] = 0;
-	PlayerInfo[playerid][pAGuns][ 11 ] = 0;
+	PlayerInfo[playerid][pGuns][ WEAPON_SLOT_UNARMED ] = WEAPON_FIST;
+	PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] = WEAPON_FIST;
+	PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] = WEAPON_FIST;
+	PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] = WEAPON_FIST;
+	PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] = WEAPON_FIST;
+	PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] = WEAPON_FIST;
+	PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] = WEAPON_FIST;
+	PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ARTILLERY ] = WEAPON_FIST;
+	PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EXPLOSIVES ] = WEAPON_FIST;
+	PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EQUIPMENT ] = WEAPON_FIST;
+	PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] = WEAPON_FIST;
+	PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GADGET ] = WEAPON_FIST;
+	PlayerInfo[playerid][pAGuns][ WEAPON_SLOT_UNARMED ] = WEAPON_FIST;
+	PlayerInfo[playerid][pAGuns][ WEAPON_SLOT_MELEE ] = WEAPON_FIST;
+	PlayerInfo[playerid][pAGuns][ WEAPON_SLOT_PISTOL ] = WEAPON_FIST;
+	PlayerInfo[playerid][pAGuns][ WEAPON_SLOT_SHOTGUN ] = WEAPON_FIST;
+	PlayerInfo[playerid][pAGuns][ WEAPON_SLOT_MACHINE_GUN ] = WEAPON_FIST;
+	PlayerInfo[playerid][pAGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] = WEAPON_FIST;
+	PlayerInfo[playerid][pAGuns][ WEAPON_SLOT_LONG_RIFLE ] = WEAPON_FIST;
+	PlayerInfo[playerid][pAGuns][ WEAPON_SLOT_ARTILLERY ] = WEAPON_FIST;
+	PlayerInfo[playerid][pAGuns][ WEAPON_SLOT_EXPLOSIVES ] = WEAPON_FIST;
+	PlayerInfo[playerid][pAGuns][ WEAPON_SLOT_EQUIPMENT ] = WEAPON_FIST;
+	PlayerInfo[playerid][pAGuns][ WEAPON_SLOT_GIFT ] = WEAPON_FIST;
+	PlayerInfo[playerid][pAGuns][ WEAPON_SLOT_GADGET ] = WEAPON_FIST;
 	return 1;
 }
 
 
-forward UnholsterWeapon(playerid, iWeaponSlot);
-public UnholsterWeapon(playerid, iWeaponSlot)
+forward UnholsterWeapon(playerid, WEAPON_SLOT:iWeaponSlot);
+public UnholsterWeapon(playerid, WEAPON_SLOT:iWeaponSlot)
 {
 	new string[128];
 	
-	if(iWeaponSlot == 0)
+	if(iWeaponSlot == WEAPON_SLOT_UNARMED)
 	{
 		SetPVarInt(playerid, "WeaponsHolstered", 1);
 		format(string, sizeof(string), "* %s holsters their weapon.", GetPlayerNameEx(playerid), ReturnWeaponName(PlayerInfo[playerid][pGuns][iWeaponSlot]));
@@ -230,99 +230,69 @@ public UnholsterWeapon(playerid, iWeaponSlot)
 	return 1;
 }
 
-ReturnWeaponName(iWeaponID) {
+ReturnWeaponName(WEAPON:iWeaponID) {
 
 	new
 		szName[32];
 
 	switch(iWeaponID) {
-		case 0: szName = "fist";
-		case 1: szName = "brass knuckles";
-		case 2: szName = "golf club";
-		case 3: szName = "nitestick";
-		case 4: szName = "knife";
-		case 5: szName = "baseball bat";
-		case 6: szName = "shovel";
-		case 7: szName = "pool cue";
-		case 8: szName = "katana";
-		case 9: szName = "chainsaw";
-		case 10: szName = "purple dildo";
-		case 11: szName = "white vibrator";
-		case 12: szName = "white vibrator";
-		case 13: szName = "silver vibrator";
-		case 14: szName = "flowers";
-		case 15: szName = "cane";
-		case 16: szName = "grenade";
-		case 17: szName = "tear gas";
-		case 18: szName = "molotov cocktail";
-		case 19: szName = "jetpack";
-		case 20: szName = "";
-		case 21: szName = "";
-		case 22: szName = "Colt .45";
-		case 23: szName = "silenced Colt .45";
-		case 24: szName = "Desert Eagle";
-		case 25: szName = "shotgun";
-		case 26: szName = "sawn-off shotgun";
-		case 27: szName = "SPAS-12";
-		case 28: szName = "Micro Uzi";
-		case 29: szName = "MP5";
-		case 30: szName = "AK-47";
-		case 31: szName = "M4A1";
-		case 32: szName = "TEC-9";
-		case 33: szName = "rifle";
-		case 34: szName = "sniper rifle";
-		case 35: szName = "RPG";
-		case 36: szName = "heatseeker";
-		case 37: szName = "flamethrower";
-		case 38: szName = "minigun";
-		case 39: szName = "satchel charge";
-		case 40: szName = "detonator";
-		case 41: szName = "spray can";
-		case 42: szName = "fire extinguisher";
-		case 43: szName = "camera";
-		case 44: szName = "nightvision goggles";
-		case 45: szName = "thermal goggles";
-		case 46: szName = "parachute";
+		case WEAPON_FIST: szName = "fist";
+		case WEAPON_BRASSKNUCKLE: szName = "brass knuckles";
+		case WEAPON_GOLFCLUB: szName = "golf club";
+		case WEAPON_NITESTICK: szName = "nitestick";
+		case WEAPON_KNIFE: szName = "knife";
+		case WEAPON_BAT: szName = "baseball bat";
+		case WEAPON_SHOVEL: szName = "shovel";
+		case WEAPON_POOLSTICK: szName = "pool cue";
+		case WEAPON_KATANA: szName = "katana";
+		case WEAPON_CHAINSAW: szName = "chainsaw";
+		case WEAPON_DILDO: szName = "purple dildo";
+		case WEAPON_DILDO2: szName = "white vibrator";
+		case WEAPON_VIBRATOR: szName = "white vibrator";
+		case WEAPON_VIBRATOR2: szName = "silver vibrator";
+		case WEAPON_FLOWER: szName = "flowers";
+		case WEAPON_CANE: szName = "cane";
+		case WEAPON_GRENADE: szName = "grenade";
+		case WEAPON_TEARGAS: szName = "tear gas";
+		case WEAPON_MOLTOV: szName = "molotov cocktail";
+		case (WEAPON:19): szName = "jetpack";
+		case (WEAPON:20): szName = "";
+		case (WEAPON:21): szName = "";
+		case WEAPON_COLT45: szName = "Colt .45";
+		case WEAPON_SILENCED: szName = "silenced Colt .45";
+		case WEAPON_DEAGLE: szName = "Desert Eagle";
+		case WEAPON_SHOTGUN: szName = "shotgun";
+		case WEAPON_SAWEDOFF: szName = "sawn-off shotgun";
+		case WEAPON_SHOTGSPA: szName = "SPAS-12";
+		case WEAPON_UZI: szName = "Micro Uzi";
+		case WEAPON_MP5: szName = "MP5";
+		case WEAPON_AK47: szName = "AK-47";
+		case WEAPON_M4: szName = "M4A1";
+		case WEAPON_TEC9: szName = "TEC-9";
+		case WEAPON_RIFLE: szName = "rifle";
+		case WEAPON_SNIPER: szName = "sniper rifle";
+		case WEAPON_ROCKETLAUNCHER: szName = "RPG";
+		case WEAPON_HEATSEEKER: szName = "heatseeker";
+		case WEAPON_FLAMETHROWER: szName = "flamethrower";
+		case WEAPON_MINIGUN: szName = "minigun";
+		case WEAPON_SATCHEL: szName = "satchel charge";
+		case WEAPON_BOMB: szName = "detonator";
+		case WEAPON_SPRAYCAN: szName = "spray can";
+		case WEAPON_FIREEXTINGUISHER: szName = "fire extinguisher";
+		case WEAPON_CAMERA: szName = "camera";
+		case WEAPON_NIGHT_VISION_GOGGLES: szName = "nightvision goggles";
+		case WEAPON_THERMAL_GOGGLES: szName = "thermal goggles";
+		case WEAPON_PARACHUTE: szName = "parachute";
 	}
 	return szName;
 }
 
-GetWeaponSlot(iWeaponID) {
-	switch(iWeaponID) {
-		case 0, 1:
-			return 0;
-		case 2 .. 9:
-			return 1;
-		case 22 .. 24:
-			return 2;
-		case 25 .. 27:
-			return 3;
-		case 28, 29, 32:
-			return 4;
-		case 30, 31:
-			return 5;
-		case 33, 34:
-			return 6;
-		case 35 .. 38:
-			return 7;
-		case 16 .. 18, 39, 40:
-			return 8;
-		case 41 .. 43:
-			return 9;
-		case 10 .. 15:
-			return 10;
-		case 44 .. 46:
-			return 11;
-	}
-	return -1;
-}
-
-OnPlayerChangeWeapon(playerid, newweapon)
+OnPlayerChangeWeapon(playerid, WEAPON:newweapon)
 {
-	if(pTazer{playerid} == 1) SetPlayerArmedWeapon(playerid,23);
+	if(pTazer{playerid} == 1) SetPlayerArmedWeapon(playerid,WEAPON_SILENCED);
 	if(GetPVarInt(playerid, "WeaponsHolstered") == 1)
 	{
-	    SetPlayerArmedWeapon(playerid, 0);
+	    SetPlayerArmedWeapon(playerid, WEAPON_FIST);
 	}
 	
 	/*if(Weapon_ReturnSlot(newweapon) != PlayerInfo[playerid][pHolsteredWeapon])
@@ -339,7 +309,7 @@ OnPlayerChangeWeapon(playerid, newweapon)
 	        {
 	        	if(GetPVarInt(playerid, "AOSlotPaintballFlag") != -1)
 	        	{
-					SetPlayerArmedWeapon(playerid, 0);
+					SetPlayerArmedWeapon(playerid, WEAPON_FIST);
 	        	}
 			}
 	    }
@@ -353,7 +323,7 @@ OnPlayerChangeWeapon(playerid, newweapon)
 
 		if(GetPlayerState(playerid) == PLAYER_STATE_NONE || GetPlayerState(playerid) == PLAYER_STATE_DRIVER || GetPlayerState(playerid) == PLAYER_STATE_WASTED || GetPlayerState(playerid) == PLAYER_STATE_SPAWNED || GetPlayerState(playerid) == PLAYER_STATE_SPECTATING) return 1;
 
-		if(newweapon == WEAPON_PARACHUTE) PlayerInfo[playerid][pGuns][11] = 46;
+		if(newweapon == WEAPON_PARACHUTE) PlayerInfo[playerid][pGuns][WEAPON_SLOT_GADGET] = WEAPON_PARACHUTE;
 
 		if(PlayerInfo[playerid][pGuns][GetWeaponSlot(newweapon)] != newweapon) {
 			SendClientMessageEx(playerid, COLOR_LIGHTRED, "[SYSTEM]: Client weapon detected. Admins were notified: refrain from doing it again.");
@@ -380,81 +350,81 @@ OnPlayerChangeWeapon(playerid, newweapon)
 
 	if(GetPlayerState(playerid) == PLAYER_STATE_PASSENGER)
 	{
-	   	if(!IsADriveByWeapon(GetPlayerWeapon(playerid)) && !IsADriveByWeapon(GetPVarInt(playerid, "LastWeapon"))) SetPlayerArmedWeapon(playerid,0);
+	   	if(!IsADriveByWeapon(GetPlayerWeapon(playerid)) && !IsADriveByWeapon(WEAPON:GetPVarInt(playerid, "LastWeapon"))) SetPlayerArmedWeapon(playerid,WEAPON_FIST);
 	}
 	return 1;
 }
 
-Weapon_ReturnName(iModelID) {
+Weapon_ReturnName(WEAPON:iModelID) {
 
 	new
 		szWepName[32] = "(none)";
 
 	switch(iModelID) {
-		case 0: szWepName = "punch";
-		case 1: szWepName = "Brass Knuckles";
-		case 2: szWepName = "Golf Club";
-		case 3: szWepName = "Nitestick";
-		case 4: szWepName = "Knife";
-		case 5: szWepName = "Baseball Bat";
-		case 6: szWepName = "Shovel";
-		case 7: szWepName = "Pool Cue";
-		case 8: szWepName = "Katana";
-		case 9: szWepName = "Chainsaw";
-		case 10: szWepName = "Purple Dildo";
-		case 11: szWepName = "Small White Vibrator";
-		case 12: szWepName = "Large White Vibrator";
-		case 13: szWepName = "Silver Vibrator";
-		case 14: szWepName = "Bouquet of Flowers";
-		case 15: szWepName = "Cane";
-		case 16: szWepName = "Grenade";
-		case 17: szWepName = "Tear Gas";
-		case 18: szWepName = "Molotov Cocktail";
-		case 19: szWepName = "Jetpack";
-		case 20: szWepName = "";
-		case 21: szWepName = "";
-		case 22: szWepName = "Colt .45";
-		case 23: szWepName = "Silenced Colt .45";
-		case 24: szWepName = "Desert Eagle";
-		case 25: szWepName = "Shotgun";
-		case 26: szWepName = "Sawn-off Shotgun";
-		case 27: szWepName = "SPAS-12";
-		case 28: szWepName = "Micro Uzi";
-		case 29: szWepName = "MP5";
-		case 30: szWepName = "AK-47";
-		case 31: szWepName = "M4A1";
-		case 32: szWepName = "TEC-9";
-		case 33: szWepName = "Rifle";
-		case 34: szWepName = "Sniper Rifle";
-		case 35: szWepName = "RPG";
-		case 36: szWepName = "Heat Seeker";
-		case 37: szWepName = "Flamethrower";
-		case 38: szWepName = "Minigun";
-		case 39: szWepName = "Satchel Charge";
-		case 40: szWepName = "Detonator";
-		case 41: szWepName = "Spray Can";
-		case 42: szWepName = "Fire Extinguisher";
-		case 43: szWepName = "Camera";
-		case 44: szWepName = "Nightvision Goggles";
-		case 45: szWepName = "Thermal Goggles";
-		case 46: szWepName = "Parachute";
-		case 47: szWepName = "";
-		case 48: szWepName = "";
-		case 49: szWepName = "Vehicle";
-		case 50: szWepName = "Helicopter Blades";
-		case 51: szWepName = "Explosion";
-		case 52: szWepName = "";
-		case 53: szWepName = "Drowning";
-		case 54: szWepName = "Falling";
+		case WEAPON_FIST: szWepName = "punch";
+		case WEAPON_BRASSKNUCKLE: szWepName = "Brass Knuckles";
+		case WEAPON_GOLFCLUB: szWepName = "Golf Club";
+		case WEAPON_NITESTICK: szWepName = "Nitestick";
+		case WEAPON_KNIFE: szWepName = "Knife";
+		case WEAPON_BAT: szWepName = "Baseball Bat";
+		case WEAPON_SHOVEL: szWepName = "Shovel";
+		case WEAPON_POOLSTICK: szWepName = "Pool Cue";
+		case WEAPON_KATANA: szWepName = "Katana";
+		case WEAPON_CHAINSAW: szWepName = "Chainsaw";
+		case WEAPON_DILDO: szWepName = "Purple Dildo";
+		case WEAPON_DILDO2: szWepName = "Small White Vibrator";
+		case WEAPON_VIBRATOR: szWepName = "Large White Vibrator";
+		case WEAPON_VIBRATOR2: szWepName = "Silver Vibrator";
+		case WEAPON_FLOWER: szWepName = "Bouquet of Flowers";
+		case WEAPON_CANE: szWepName = "Cane";
+		case WEAPON_GRENADE: szWepName = "Grenade";
+		case WEAPON_TEARGAS: szWepName = "Tear Gas";
+		case WEAPON_MOLTOV: szWepName = "Molotov Cocktail";
+		case (WEAPON:19): szWepName = "Jetpack";
+		case (WEAPON:20): szWepName = "";
+		case (WEAPON:21): szWepName = "";
+		case WEAPON_COLT45: szWepName = "Colt .45";
+		case WEAPON_SILENCED: szWepName = "Silenced Colt .45";
+		case WEAPON_DEAGLE: szWepName = "Desert Eagle";
+		case WEAPON_SHOTGUN: szWepName = "Shotgun";
+		case WEAPON_SAWEDOFF: szWepName = "Sawn-off Shotgun";
+		case WEAPON_SHOTGSPA: szWepName = "SPAS-12";
+		case WEAPON_UZI: szWepName = "Micro Uzi";
+		case WEAPON_MP5: szWepName = "MP5";
+		case WEAPON_AK47: szWepName = "AK-47";
+		case WEAPON_M4: szWepName = "M4A1";
+		case WEAPON_TEC9: szWepName = "TEC-9";
+		case WEAPON_RIFLE: szWepName = "Rifle";
+		case WEAPON_SNIPER: szWepName = "Sniper Rifle";
+		case WEAPON_ROCKETLAUNCHER: szWepName = "RPG";
+		case WEAPON_HEATSEEKER: szWepName = "Heat Seeker";
+		case WEAPON_FLAMETHROWER: szWepName = "Flamethrower";
+		case WEAPON_MINIGUN: szWepName = "Minigun";
+		case WEAPON_SATCHEL: szWepName = "Satchel Charge";
+		case WEAPON_BOMB: szWepName = "Detonator";
+		case WEAPON_SPRAYCAN: szWepName = "Spray Can";
+		case WEAPON_FIREEXTINGUISHER: szWepName = "Fire Extinguisher";
+		case WEAPON_CAMERA: szWepName = "Camera";
+		case WEAPON_NIGHT_VISION_GOGGLES: szWepName = "Nightvision Goggles";
+		case WEAPON_THERMAL_GOGGLES: szWepName = "Thermal Goggles";
+		case WEAPON_PARACHUTE: szWepName = "Parachute";
+		case (WEAPON:47): szWepName = "";
+		case (WEAPON:48): szWepName = "";
+		case REASON_VEHICLE: szWepName = "Vehicle";
+		case REASON_HELICOPTER_BLADES: szWepName = "Helicopter Blades";
+		case REASON_EXPLOSION: szWepName = "Explosion";
+		case (WEAPON:52): szWepName = "";
+		case REASON_DROWN: szWepName = "Drowning";
+		case REASON_COLLISION: szWepName = "Falling";
 	}
 	return szWepName;
 }
 
-IsNotAGun(weaponid)
+IsNotAGun(WEAPON:weaponid)
 {
 	switch(weaponid)
 	{
-		case 0: return true;
+		case WEAPON_FIST: return true;
 		case WEAPON_BAT: return true;
 		case WEAPON_BRASSKNUCKLE: return true;
 		case WEAPON_CAMERA: return true;
@@ -481,7 +451,7 @@ IsNotAGun(weaponid)
 		case WEAPON_CHAINSAW: return true;
 		case WEAPON_MOLTOV: return true;
 		case WEAPON_SATCHEL: return true;
-		case 44, 45: return true;
+		case WEAPON_NIGHT_VISION_GOGGLES, WEAPON_THERMAL_GOGGLES: return true;
 		default: return false;
 	}
 	return 0;
@@ -495,14 +465,14 @@ CMD:myguns(playerid, params[])
 	SendClientMessageEx(playerid, COLOR_GREEN,"_______________________________________");
 	format(string, sizeof(string), "Weapons on %s:", name);
 	SendClientMessageEx(playerid, COLOR_WHITE, string);
-	for (new i = 0; i < 13; i++)
+	for (new WEAPON_SLOT:i; i < MAX_WEAPON_SLOTS; i++)
 	{
-		GetPlayerWeaponData(playerid, i, myweapons[i][0], myweapons[i][1]);
+		GetPlayerWeaponData(playerid, i, WEAPON:myweapons[i][0], myweapons[i][1]);
 		if(myweapons[i][0] > 0)
 		{
-			if(PlayerInfo[playerid][pGuns][i] == myweapons[i][0])
+			if(_:PlayerInfo[playerid][pGuns][i] == myweapons[i][0])
 			{
-				GetWeaponName(myweapons[i][0], weaponname, sizeof(weaponname));
+				GetWeaponName(WEAPON:myweapons[i][0], weaponname, sizeof(weaponname));
 				format(string, sizeof(string), "%s (%d)", weaponname, myweapons[i][0]);
 				SendClientMessageEx(playerid, COLOR_GRAD1, string);
 				format(encryption, sizeof(encryption), "%s%d", encryption, myweapons[i][0]);
@@ -511,9 +481,9 @@ CMD:myguns(playerid, params[])
 	}
 	new year, month, day;
 	getdate(year, month, day);
-	format(encryption, sizeof(encryption), "%s%s%d%d%d%d%d6524", encryption, name, month, day, year, hour, minuite);
+	format(encryption, sizeof(encryption), "%s%s%d%d%d%d%d6524", encryption, name, month, day, year, hour_, minuite);
 	new encrypt = crc32(encryption);
-	format(string, sizeof(string), "[%d/%d/%d %d:%d:%d] - [%d]", month, day, year, hour, minuite,second, encrypt);
+	format(string, sizeof(string), "[%d/%d/%d %d:%d:%d] - [%d]", month, day, year, hour_, minuite,second_, encrypt);
 	SendClientMessageEx(playerid, COLOR_GREEN, string);
 	SendClientMessageEx(playerid, COLOR_GREEN,"_______________________________________");
 	return 1;
@@ -521,7 +491,7 @@ CMD:myguns(playerid, params[])
 
 CMD:switchgun(playerid, params[])
 {
-	new weapon[16], id, weapons[13][2];
+	new weapon[16], WEAPON:id, weapons[13][2];
 	if(sscanf(params, "s[16]", weapon))
 	{
 		SendClientMessageEx(playerid, COLOR_WHITE, "SYNTAX: /switchgun [weapon]");
@@ -533,22 +503,22 @@ CMD:switchgun(playerid, params[])
 
 		if(IsPlayerInAnyVehicle(playerid) && GetPlayerState(playerid) == PLAYER_STATE_PASSENGER)
 		{
-			if(strcmp(weapon, "Fist", true) == 0) id = 0;
-			else if(strcmp(weapon, "9mm", true) == 0) id = 22;
-			else if(strcmp(weapon, "Shotgun", true) == 0) id = 25;
-			else if(strcmp(weapon, "Sawnoff", true) == 0) id = 26;
-			else if(strcmp(weapon, "Spas12", true) == 0) id = 27;
-			else if(strcmp(weapon, "Uzi", true) == 0) id = 28;
-			else if(strcmp(weapon, "Mp5", true) == 0) id = 29;
-			else if(strcmp(weapon, "AK47", true) == 0) id = 30;
-			else if(strcmp(weapon, "M4", true) == 0) id = 31;
-			else if(strcmp(weapon, "Tec9", true) == 0) id = 32;
+			if(strcmp(weapon, "Fist", true) == 0) id = WEAPON_FIST;
+			else if(strcmp(weapon, "9mm", true) == 0) id = WEAPON_COLT45;
+			else if(strcmp(weapon, "Shotgun", true) == 0) id = WEAPON_SHOTGUN;
+			else if(strcmp(weapon, "Sawnoff", true) == 0) id = WEAPON_SAWEDOFF;
+			else if(strcmp(weapon, "Spas12", true) == 0) id = WEAPON_SHOTGSPA;
+			else if(strcmp(weapon, "Uzi", true) == 0) id = WEAPON_UZI;
+			else if(strcmp(weapon, "Mp5", true) == 0) id = WEAPON_MP5;
+			else if(strcmp(weapon, "AK47", true) == 0) id = WEAPON_AK47;
+			else if(strcmp(weapon, "M4", true) == 0) id = WEAPON_M4;
+			else if(strcmp(weapon, "Tec9", true) == 0) id = WEAPON_TEC9;
 			else return SendClientMessageEx(playerid, COLOR_GREY, "Weapons: Fist, 9mm, Shotgun, Sawnoff, Spas12, UZI, MP5, M4, AK47, Tec9");
 
-			for (new i = 0; i <= 12; i++) 
+			for (new WEAPON_SLOT:i; i <= WEAPON_SLOT_DETONATOR; i++) 
 			{
-				GetPlayerWeaponData(playerid, i, weapons[i][0], weapons[i][1]);
-				if(PlayerInfo[playerid][pGuns][i] == id && weapons[i][0] == id)
+				GetPlayerWeaponData(playerid, i, WEAPON:weapons[i][0], weapons[i][1]);
+				if(PlayerInfo[playerid][pGuns][i] == id && weapons[i][0] == _:id)
 				{
 					SetPlayerArmedWeapon(playerid, id);
 					SetPVarInt(playerid, "LastWeapon", id);
@@ -583,7 +553,7 @@ CMD:giveweapon(playerid, params[])
 		return 1;
 	}
 
-	if(GetPVarInt(playerid, "Injured") != 0||PlayerCuffed[playerid]!=0||PlayerInfo[playerid][pHospital]!=0||GetPlayerState(playerid) == 7)
+	if(GetPVarInt(playerid, "Injured") != 0||PlayerCuffed[playerid]!=0||PlayerInfo[playerid][pHospital]!=0||GetPlayerState(playerid) == PLAYER_STATE_WASTED)
 	{
 		SendClientMessageEx (playerid, COLOR_GRAD2, "You cannot do this at this time.");
 		return 1;
@@ -637,17 +607,17 @@ CMD:giveweapon(playerid, params[])
 	if(IsPlayerInAnyVehicle(giveplayerid)) return SendClientMessageEx(playerid, COLOR_GRAD2, "Please exit the vehicle, before using this command.");
 	if(strcmp(weapon, "sdpistol", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 2 ] == 23)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == 23)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ 2 ] != 23 && PlayerInfo[giveplayerid][pGuns][ 2 ] != 24)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != 23 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != 24)
 			{
 				//if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your silenced pistol.");
 				format(string, sizeof(string), "* %s has given %s their silenced pistol.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-				RemovePlayerWeapon(playerid, 23);
-				GivePlayerValidWeapon(giveplayerid, 23);
+				RemovePlayerWeapon(playerid, WEAPON_SILENCED);
+				GivePlayerValidWeapon(giveplayerid, WEAPON_SILENCED);
 				/*new ip[32], ipex[32];
 				GetPlayerIp(playerid, ip, sizeof(ip));
 				GetPlayerIp(giveplayerid, ipex, sizeof(ipex));
@@ -666,15 +636,15 @@ CMD:giveweapon(playerid, params[])
 	}
 	if(strcmp(weapon, "9mm", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 2 ] == 22)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == 23)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ 2 ] != 22 && PlayerInfo[giveplayerid][pGuns][ 2 ] != 24)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != 23 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != 24)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your 9mm pistol.");
 				format(string, sizeof(string), "* %s has given %s their 9mm pistol.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-				RemovePlayerWeapon(playerid, 22);
-				GivePlayerValidWeapon(giveplayerid, 22);
+				RemovePlayerWeapon(playerid, WEAPON_COLT45);
+				GivePlayerValidWeapon(giveplayerid, WEAPON_COLT45);
 				/*new ip[32], ipex[32];
 				GetPlayerIp(playerid, ip, sizeof(ip));
 				GetPlayerIp(giveplayerid, ipex, sizeof(ipex));
@@ -693,17 +663,17 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "shotgun", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 3 ] == 25)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] == 25)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ 3 ] != 25 && PlayerInfo[giveplayerid][pGuns][ 3 ] != 27)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_SHOTGUN ] != 25 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_SHOTGUN ] != 27)
 			{
 				//if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your shotgun.");
 				format(string, sizeof(string), "* %s has given %s their shotgun.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-				RemovePlayerWeapon(playerid, 25);
-				GivePlayerValidWeapon(giveplayerid, 25);
+				RemovePlayerWeapon(playerid, WEAPON_SHOTGUN);
+				GivePlayerValidWeapon(giveplayerid, WEAPON_SHOTGUN);
 				/*new ip[32], ipex[32];
 				GetPlayerIp(playerid, ip, sizeof(ip));
 				GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s(IP:%s) has given %s (IP:%s) their shotgun.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -722,17 +692,17 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "mp5", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 4 ] == 29)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == 29)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ 4 ] != 28 && PlayerInfo[giveplayerid][pGuns][ 4 ] != 29 && PlayerInfo[giveplayerid][pGuns][ 4 ] != 32)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 28 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 29 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 32)
 			{
 				//if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your MP5.");
 				format(string, sizeof(string), "* %s has given %s their MP5.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-				RemovePlayerWeapon(playerid, 29);
-				GivePlayerValidWeapon(giveplayerid, 29);
+				RemovePlayerWeapon(playerid, WEAPON_MP5);
+				GivePlayerValidWeapon(giveplayerid, WEAPON_MP5);
 				/*new ip[32], ipex[32];
 				GetPlayerIp(playerid, ip, sizeof(ip));
 				GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their MP5.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -751,15 +721,15 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "uzi", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 4 ] == 28)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == 28)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ 4 ] != 28 && PlayerInfo[giveplayerid][pGuns][ 4 ] != 29 && PlayerInfo[giveplayerid][pGuns][ 4 ] != 32)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 28 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 29 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 32)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your Micro SMG.");
 				format(string, sizeof(string), "* %s has given %s their Micro SMG.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-				RemovePlayerWeapon(playerid, 28);
-				GivePlayerValidWeapon(giveplayerid, 28);
+				RemovePlayerWeapon(playerid, WEAPON_UZI);
+				GivePlayerValidWeapon(giveplayerid, WEAPON_UZI);
 				/*new ip[32], ipex[32];
 				GetPlayerIp(playerid, ip, sizeof(ip));
 				GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their Micro SMG.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -778,15 +748,15 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "tec9", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 4 ] == 32)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == 32)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ 4 ] != 28 && PlayerInfo[giveplayerid][pGuns][ 4 ] != 29 && PlayerInfo[giveplayerid][pGuns][ 4 ] != 32)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 28 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 29 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 32)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your Tec-9.");
 				format(string, sizeof(string), "* %s has given %s their Tec-9.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-				RemovePlayerWeapon(playerid, 32);
-				GivePlayerValidWeapon(giveplayerid, 32);
+				RemovePlayerWeapon(playerid, WEAPON_TEC9);
+				GivePlayerValidWeapon(giveplayerid, WEAPON_TEC9);
 				/*new ip[32], ipex[32];
 				GetPlayerIp(playerid, ip, sizeof(ip));
 				GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their Tec-9.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -805,17 +775,17 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "deagle", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 2 ] == 24)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == 24)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ 2 ] != 24)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != 24)
 			{
 				//if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your Desert Eagle.");
 				format(string, sizeof(string), "* %s has given %s their Desert Eagle.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-				RemovePlayerWeapon(playerid, 24);
-				GivePlayerValidWeapon(giveplayerid, 24);
+				RemovePlayerWeapon(playerid, WEAPON_DEAGLE);
+				GivePlayerValidWeapon(giveplayerid, WEAPON_DEAGLE);
 				/*new ip[32], ipex[32];
 				GetPlayerIp(playerid, ip, sizeof(ip));
 				GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their Desert Eagle.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -834,16 +804,16 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "rifle", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 6 ] == 33)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] == 33)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ 6 ] != 33 && PlayerInfo[giveplayerid][pGuns][ 6 ] != 34)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] != 33 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] != 34)
 			{
 				//if(PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away this weapon as you're Famed+!");
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your rifle.");
 				format(string, sizeof(string), "* %s has given %s their rifle.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-				RemovePlayerWeapon(playerid, 33);
-				GivePlayerValidWeapon(giveplayerid, 33);
+				RemovePlayerWeapon(playerid, WEAPON_RIFLE);
+				GivePlayerValidWeapon(giveplayerid, WEAPON_RIFLE);
 				/*new ip[32], ipex[32];
 				GetPlayerIp(playerid, ip, sizeof(ip));
 				GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their rifle.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -862,15 +832,15 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "ak47", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 5 ] == 30)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] == 30)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ 5 ] != 30 && PlayerInfo[giveplayerid][pGuns][ 5 ] != 31)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] != 30 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] != 31)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your AK-47.");
 				format(string, sizeof(string), "* %s has given %s their AK-47.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-				RemovePlayerWeapon(playerid, 30);
-				GivePlayerValidWeapon(giveplayerid, 30);
+				RemovePlayerWeapon(playerid, WEAPON_AK47);
+				GivePlayerValidWeapon(giveplayerid, WEAPON_AK47);
 				/*new ip[32], ipex[32];
 				GetPlayerIp(playerid, ip, sizeof(ip));
 				GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their AK-47.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -889,15 +859,15 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "m4", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 5 ] == 31)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] == 31)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ 5 ] != 31)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] != 31)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your M4.");
 				format(string, sizeof(string), "* %s has given %s their M4.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-				RemovePlayerWeapon(playerid, 31);
-				GivePlayerValidWeapon(giveplayerid, 31);
+				RemovePlayerWeapon(playerid, WEAPON_M4);
+				GivePlayerValidWeapon(giveplayerid, WEAPON_M4);
 				/*new ip[32], ipex[32];
 				GetPlayerIp(playerid, ip, sizeof(ip));
 				GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their M4.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -916,15 +886,15 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "spas12", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 3 ] == 27)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] == 27)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ 3 ] != 27)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_SHOTGUN ] != 27)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your SPAS-12.");
 				format(string, sizeof(string), "* %s has given %s their SPAS-12.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-				RemovePlayerWeapon(playerid, 27);
-				GivePlayerValidWeapon(giveplayerid, 27);
+				RemovePlayerWeapon(playerid, WEAPON_SHOTGSPA);
+				GivePlayerValidWeapon(giveplayerid, WEAPON_SHOTGSPA);
 				/*new ip[32], ipex[32];
 				GetPlayerIp(playerid, ip, sizeof(ip));
 				GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their SPAS-12.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -943,15 +913,15 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "sniper", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 6 ] == 34)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] == 34)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ 6 ] != 34)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] != 34)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your sniper rifle.");
 				format(string, sizeof(string), "* %s has given %s their sniper rifle.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-				RemovePlayerWeapon(playerid, 34);
-				GivePlayerValidWeapon(giveplayerid, 34);
+				RemovePlayerWeapon(playerid, WEAPON_SNIPER);
+				GivePlayerValidWeapon(giveplayerid, WEAPON_SNIPER);
 				/*new ip[32], ipex[32];
 				GetPlayerIp(playerid, ip, sizeof(ip));
 				GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their sniper rifle.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -970,13 +940,13 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "flowers", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 10 ] == 14)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == 14)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your flowers.");
 			format(string, sizeof(string), "* %s has given %s their flowers.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 14);
-			GivePlayerValidWeapon(giveplayerid, 14);
+			RemovePlayerWeapon(playerid, WEAPON_FLOWER);
+			GivePlayerValidWeapon(giveplayerid, WEAPON_FLOWER);
 			/*new ip[32], ipex[32];
 			GetPlayerIp(playerid, ip, sizeof(ip));
 			GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their flowers.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -990,13 +960,13 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "knuckles", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 0 ] == 1)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_UNARMED ] == 1)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your brass knuckles.");
 			format(string, sizeof(string), "* %s has given %s their brass knuckles.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 1);
-			GivePlayerValidWeapon(giveplayerid, 1);
+			RemovePlayerWeapon(playerid, WEAPON_BRASSKNUCKLE);
+			GivePlayerValidWeapon(giveplayerid, WEAPON_BRASSKNUCKLE);
 			/*new ip[32], ipex[32];
 			GetPlayerIp(playerid, ip, sizeof(ip));
 			GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their brass knuckles.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -1010,13 +980,13 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "baseballbat", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 1 ] == 5)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 5)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your baseball bat.");
 			format(string, sizeof(string), "* %s has given %s their baseball bat.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 5);
-			GivePlayerValidWeapon(giveplayerid, 5);
+			RemovePlayerWeapon(playerid, WEAPON_BAT);
+			GivePlayerValidWeapon(giveplayerid, WEAPON_BAT);
 			/*new ip[32], ipex[32];
 			GetPlayerIp(playerid, ip, sizeof(ip));
 			GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their baseball bat.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -1030,13 +1000,13 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "cane", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 10 ] == 15)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == 15)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your cane.");
 			format(string, sizeof(string), "* %s has given %s their cane.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 15);
-			GivePlayerValidWeapon(giveplayerid, 15);
+			RemovePlayerWeapon(playerid, WEAPON_CANE);
+			GivePlayerValidWeapon(giveplayerid, WEAPON_CANE);
 			/*new ip[32], ipex[32];
 			GetPlayerIp(playerid, ip, sizeof(ip));
 			GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their cane.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -1050,13 +1020,13 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "shovel", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 6 ] == 6)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 6)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your shovel.");
 			format(string, sizeof(string), "* %s has given %s their shovel.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 6);
-			GivePlayerValidWeapon(giveplayerid, 6);
+			RemovePlayerWeapon(playerid, WEAPON_SHOVEL);
+			GivePlayerValidWeapon(giveplayerid, WEAPON_SHOVEL);
 			/*new ip[32], ipex[32];
 			GetPlayerIp(playerid, ip, sizeof(ip));
 			GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their shovel.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -1070,15 +1040,15 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "golfclub", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 1 ] == 2)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 2)
 		{
 			if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your golf club.");
 			format(string, sizeof(string), "* %s has given %s golf club.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 2);
-			GivePlayerValidWeapon(giveplayerid, 2);
+			RemovePlayerWeapon(playerid, WEAPON_GOLFCLUB);
+			GivePlayerValidWeapon(giveplayerid, WEAPON_GOLFCLUB);
 			/*new ip[32], ipex[32];
 			GetPlayerIp(playerid, ip, sizeof(ip));
 			GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their golf club.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -1092,15 +1062,15 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "katana") == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 1 ] == 8)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 8)
 		{
 			if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your katana.");
 			format(string, sizeof(string), "* %s has given %s their katana.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 8);
-			GivePlayerValidWeapon(giveplayerid, 8);
+			RemovePlayerWeapon(playerid, WEAPON_KATANA);
+			GivePlayerValidWeapon(giveplayerid, WEAPON_KATANA);
 			/*new ip[32], ipex[32];
 			GetPlayerIp(playerid, ip, sizeof(ip));
 			GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their katana.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -1114,15 +1084,15 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "dildo", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 10 ] == 10)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == 10)
 		{
 			if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your dildo.");
 			format(string, sizeof(string), "* %s has given %s their dildo.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 10);
-			GivePlayerValidWeapon(giveplayerid, 10);
+			RemovePlayerWeapon(playerid, WEAPON_DILDO);
+			GivePlayerValidWeapon(giveplayerid, WEAPON_DILDO);
 			/*new ip[32], ipex[32];
 			GetPlayerIp(playerid, ip, sizeof(ip));
 			GetPlayerIp(giveplayerid, ipex, sizeof(ipex));format(string, sizeof(string), "%s (IP:%s) has given %s (IP:%s) their dildo.", GetPlayerNameEx(playerid), ip, GetPlayerNameEx(giveplayerid), ipex);
@@ -1136,13 +1106,13 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "parachute", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 11 ] == 46)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GADGET ] == 46)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your parachute.");
 			format(string, sizeof(string), "* %s has given %s their parachute.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 46);
-			GivePlayerValidWeapon(giveplayerid, 46);
+			RemovePlayerWeapon(playerid, WEAPON_PARACHUTE);
+			GivePlayerValidWeapon(giveplayerid, WEAPON_PARACHUTE);
 			/*new ip[32], ipex[32];
 			GetPlayerIp(playerid, ip, sizeof(ip));
 			GetPlayerIp(giveplayerid, ipex, sizeof(ipex));
@@ -1199,13 +1169,13 @@ CMD:dropgun(playerid, params[])
 	new string[128];
 	if(strcmp(params, "sdpistol", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 2 ] == 23)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == 23)
 		{
 			if(pTazer{playerid} == 1) return SendClientMessageEx(playerid, COLOR_RED, "You cannot drop your tazer.");
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your silenced pistol.");
 			format(string, sizeof(string), "* %s has dropped their silenced pistol.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 23);
+			RemovePlayerWeapon(playerid, WEAPON_SILENCED);
 		}
 		else
 		{
@@ -1214,12 +1184,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "camera", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 9 ] == 43)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EQUIPMENT ] == 43)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your camera.");
 			format(string, sizeof(string), "* %s has dropped their camera.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 43);
+			RemovePlayerWeapon(playerid, WEAPON_CAMERA);
 		}
 		else
 		{
@@ -1228,12 +1198,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "nitestick", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][1] == 3)
+		if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == 3)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your nitestick.");
 			format(string, sizeof(string), "* %s has dropped their nitestick.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 3);
+			RemovePlayerWeapon(playerid, WEAPON_NITESTICK);
 		}
 		else
 		{
@@ -1242,12 +1212,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "mace", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][9] == 41)
+		if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_EQUIPMENT] == 41)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your mace.");
 			format(string, sizeof(string), "* %s has dropped their mace.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 41);
+			RemovePlayerWeapon(playerid, WEAPON_SPRAYCAN);
 		}
 		else
 		{
@@ -1256,12 +1226,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "knife", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 1 ] == 4)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 4)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your knife.");
 			format(string, sizeof(string), "* %s has dropped their knife.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 4);
+			RemovePlayerWeapon(playerid, WEAPON_KNIFE);
 		}
 		else
 		{
@@ -1270,12 +1240,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "9mm", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 2 ] == 22)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == 22)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your 9mm pistol.");
 			format(string, sizeof(string), "* %s has dropped their 9mm pistol.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 22);
+			RemovePlayerWeapon(playerid, WEAPON_COLT45);
 		}
 		else
 		{
@@ -1284,12 +1254,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "shotgun", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 3 ] == 25)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] == 25)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your shotgun.");
 			format(string, sizeof(string), "* %s has dropped their shotgun.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 25);
+			RemovePlayerWeapon(playerid, WEAPON_SHOTGUN);
 		}
 		else
 		{
@@ -1298,12 +1268,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "mp5", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 4 ] == 29)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == 29)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your MP5.");
 			format(string, sizeof(string), "* %s has dropped their MP5.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 29);
+			RemovePlayerWeapon(playerid, WEAPON_MP5);
 		}
 		else
 		{
@@ -1312,12 +1282,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "uzi", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 4 ] == 28)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == 28)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your Micro SMG.");
 			format(string, sizeof(string), "* %s has dropped their Micro SMG.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 28);
+			RemovePlayerWeapon(playerid, WEAPON_UZI);
 		}
 		else
 		{
@@ -1326,12 +1296,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "tec9", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 4 ] == 32)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == 32)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your Tec-9.");
 			format(string, sizeof(string), "* %s has dropped their Tec-9.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 32);
+			RemovePlayerWeapon(playerid, WEAPON_TEC9);
 		}
 		else
 		{
@@ -1340,12 +1310,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "deagle", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 2 ] == 24)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == 24)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your Desert Eagle.");
 			format(string, sizeof(string), "* %s has dropped their Desert Eagle.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 24);
+			RemovePlayerWeapon(playerid, WEAPON_DEAGLE);
 		}
 		else
 		{
@@ -1354,12 +1324,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "rifle", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 6 ] == 33)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] == 33)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your rifle.");
 			format(string, sizeof(string), "* %s has dropped their rifle.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 33);
+			RemovePlayerWeapon(playerid, WEAPON_RIFLE);
 		}
 		else
 		{
@@ -1368,12 +1338,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "ak47", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 5 ] == 30)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] == 30)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your AK-47.");
 			format(string, sizeof(string), "* %s has dropped their AK-47.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 30);
+			RemovePlayerWeapon(playerid, WEAPON_AK47);
 		}
 		else
 		{
@@ -1382,12 +1352,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "m4", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 5 ] == 31)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] == 31)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your M4.");
 			format(string, sizeof(string), "* %s has dropped their M4.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 31);
+			RemovePlayerWeapon(playerid, WEAPON_M4);
 		}
 		else
 		{
@@ -1396,12 +1366,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "spas12", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 3 ] == 27)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] == 27)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your SPAS-12.");
 			format(string, sizeof(string), "* %s has dropped their SPAS-12.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 27);
+			RemovePlayerWeapon(playerid, WEAPON_SHOTGSPA);
 		}
 		else
 		{
@@ -1410,12 +1380,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "sniper", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 6 ] == 34)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] == 34)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your sniper rifle.");
 			format(string, sizeof(string), "* %s has dropped their sniper rifle.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 34);
+			RemovePlayerWeapon(playerid, WEAPON_SNIPER);
 		}
 		else
 		{
@@ -1424,12 +1394,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "flowers", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 10 ] == 14)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == 14)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your flowers.");
 			format(string, sizeof(string), "* %s has dropped their flowers.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 14);
+			RemovePlayerWeapon(playerid, WEAPON_FLOWER);
 		}
 		else
 		{
@@ -1438,12 +1408,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "knuckles", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 0 ] == 1)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_UNARMED ] == 1)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your brass knuckles.");
 			format(string, sizeof(string), "* %s has dropped their brass knuckles.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 1);
+			RemovePlayerWeapon(playerid, WEAPON_BRASSKNUCKLE);
 		}
 		else
 		{
@@ -1452,12 +1422,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "baseballbat", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 1 ] == 5)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 5)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your baseball bat.");
 			format(string, sizeof(string), "* %s has dropped their baseball bat.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 5);
+			RemovePlayerWeapon(playerid, WEAPON_BAT);
 		}
 		else
 		{
@@ -1466,13 +1436,13 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "cane", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 10 ] == 15)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == 15)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your cane.");
 			format(string, sizeof(string), "* %s has dropped their cane.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			PlayerInfo[playerid][pGuns][ 10 ] = 0;
-			RemovePlayerWeapon(playerid, 15);
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] = WEAPON_FIST;
+			RemovePlayerWeapon(playerid, WEAPON_CANE);
 		}
 		else
 		{
@@ -1481,12 +1451,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "shovel", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 1 ] == 6)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 6)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your shovel.");
 			format(string, sizeof(string), "* %s has dropped their shovel.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 6);
+			RemovePlayerWeapon(playerid, WEAPON_SHOVEL);
 		}
 		else
 		{
@@ -1495,12 +1465,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "golfclub", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 1 ] == 2)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 2)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your golf club.");
 			format(string, sizeof(string), "* %s has dropped their golf club.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 2);
+			RemovePlayerWeapon(playerid, WEAPON_GOLFCLUB);
 		}
 		else
 		{
@@ -1509,12 +1479,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "katana") == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 1 ] == 8)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 8)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your katana.");
 			format(string, sizeof(string), "* %s has dropped their katana.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 8);
+			RemovePlayerWeapon(playerid, WEAPON_KATANA);
 		}
 		else
 		{
@@ -1523,12 +1493,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "dildo", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 10 ] == 10)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == 10)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your dildo.");
 			format(string, sizeof(string), "* %s has dropped their dildo.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 10);
+			RemovePlayerWeapon(playerid, WEAPON_DILDO);
 		}
 		else
 		{
@@ -1537,12 +1507,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "parachute", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 11 ] == 46)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GADGET ] == 46)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your parachute.");
 			format(string, sizeof(string), "* %s has dropped their parachute.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 46);
+			RemovePlayerWeapon(playerid, WEAPON_PARACHUTE);
 		}
 		else
 		{
@@ -1551,12 +1521,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "smoke", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 8 ] == 17)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EXPLOSIVES ] == 17)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your smoke grenade.");
 			format(string, sizeof(string), "* %s has dropped their smoke grenade.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 17);
+			RemovePlayerWeapon(playerid, WEAPON_TEARGAS);
 		}
 		else
 		{
@@ -1565,12 +1535,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "chainsaw", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 1 ] == 9)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 9)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your chainsaw.");
 			format(string, sizeof(string), "* %s has dropped their chainsaw.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 9);
+			RemovePlayerWeapon(playerid, WEAPON_CHAINSAW);
 		}
 		else
 		{
@@ -1579,12 +1549,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "fire", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 9 ] == 42)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EQUIPMENT ] == 42)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your fire extinguisher.");
 			format(string, sizeof(string), "* %s has dropped their fire extinguisher.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 42);
+			RemovePlayerWeapon(playerid, WEAPON_FIREEXTINGUISHER);
 		}
 		else
 		{
@@ -1593,12 +1563,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "minigun", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 7 ] == 38)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ARTILLERY ] == 38)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your minigun.");
 			format(string, sizeof(string), "* %s has dropped their minigun.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 38);
+			RemovePlayerWeapon(playerid, WEAPON_MINIGUN);
 		}
 		else
 		{
@@ -1607,12 +1577,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "poolcue", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ 1 ] == 7)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 7)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your pool cue.");
 			format(string, sizeof(string), "* %s has dropped their pool cue.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 7);
+			RemovePlayerWeapon(playerid, WEAPON_POOLSTICK);
 		}
 		else
 		{
@@ -1621,12 +1591,12 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "goggles", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][11] == 44 || PlayerInfo[playerid][pGuns][11] == 45)
+		if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_GADGET] == 44 || PlayerInfo[playerid][pGuns][WEAPON_SLOT_GADGET] == 45)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your goggles.");
 			format(string, sizeof(string), "* %s has dropped their goggles.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			RemovePlayerWeapon(playerid, 44);
+			RemovePlayerWeapon(playerid, WEAPON_NIGHT_VISION_GOGGLES);
 		}
 		else
 		{
@@ -1645,7 +1615,7 @@ CMD:holster(playerid, params[])
 	new string[128];
     if(!GetPVarType(playerid, "WeaponsHolstered"))
     {
-        SetPlayerArmedWeapon(playerid, 0);
+        SetPlayerArmedWeapon(playerid, WEAPON_FIST);
         SetPVarInt(playerid, "WeaponsHolstered", 1);
     	format(string, sizeof(string), "* %s holsters their weapon.", GetPlayerNameEx(playerid));
 		ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -1684,7 +1654,7 @@ ReturnBoneName(iBoneID)
 	return szBone;
 }
 
-IsADriveByWeapon(iWeaponID) {
+IsADriveByWeapon(WEAPON:iWeaponID) {
 	switch(iWeaponID) {
 		case WEAPON_SHOTGSPA: return 1;
 		case WEAPON_SHOTGUN: return 1;

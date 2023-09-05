@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 
 hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
@@ -103,7 +103,7 @@ hook OnPlayerConnect(playerid) {
 }
 
 /*
-stock SendClientMessageEx(playerid, color, string[])
+SendClientMessageEx(playerid, color, string[])
 {
 	if(InsideMainMenu{playerid} == 1 || InsideTut{playerid} == 1 || ActiveChatbox[playerid] == 0)
 		return 0;
@@ -114,7 +114,7 @@ stock SendClientMessageEx(playerid, color, string[])
 */
 
 // Test with SendClientMessageEx
-stock SendClientMessageEx(playerid, color, msg[], va_args<>)
+SendClientMessageEx(playerid, color, const msg[], va_args<>)
 {
         new string[128];
         if(InsideMainMenu{playerid} == 1 || InsideTut{playerid} == 1 || ActiveChatbox[playerid] == 0)
@@ -125,7 +125,7 @@ stock SendClientMessageEx(playerid, color, msg[], va_args<>)
         }
         return 1;
 }
-stock SendClientMessageToAllEx(color, string[])
+SendClientMessageToAllEx(color, const string[])
 {
 	foreach(new i: Player)
 	{
@@ -155,7 +155,7 @@ CMD:togchatbox2(playerid, params[]) {
 }
 */
 
-stock SendClientMessageWrap(playerid, color, width, string[])
+SendClientMessageWrap(playerid, color, width, const string[])
 {
 	if(strlen(string) > width)
 	{
@@ -170,7 +170,7 @@ stock SendClientMessageWrap(playerid, color, width, string[])
 	else ChatTrafficProcess(playerid, color, string, 3);
 }
 	
-stock ClearChatbox(playerid)
+ClearChatbox(playerid)
 {
 	for(new i = 0; i < 50; i++) {
 		SendClientMessage(playerid, COLOR_WHITE, "");
@@ -178,7 +178,7 @@ stock ClearChatbox(playerid)
 	return 1;
 }
 
-stock OOCOff(color,string[])
+OOCOff(color, const string[])
 {
 	foreach(new i: Player)
 	{
@@ -188,7 +188,7 @@ stock OOCOff(color,string[])
 	}	
 }
 
-stock RadioBroadCast(playerid, string[])
+RadioBroadCast(playerid, string[])
 {
 	foreach(new i: Player)
 	{
@@ -682,7 +682,7 @@ CMD:setfreq(playerid, params[])
 }
 
 
-ChatTrafficProcess(playerid, color, szString[], chattype) {
+ChatTrafficProcess(playerid, color, const szString[], chattype) {
 
 	if(PlayerInfo[playerid][pToggledChats][chattype] == 0) SendClientMessageEx(playerid, color, szString);
 	return 1;
@@ -699,7 +699,7 @@ ChatTrafficProcess(playerid, color, szString[], chattype) {
 	*/
 }
 
-ProxChatBubble(playerid, szString[]) {
+ProxChatBubble(playerid, const szString[]) {
 
 	SetPlayerChatBubble(playerid, szString, COLOR_PURPLE, 15.0, 5000);
 	//format(szString, 128, "{FF8000}> {C2A2DA}%s", szString);

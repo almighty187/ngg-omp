@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 forward Lotto(number);
 public Lotto(number)
@@ -136,7 +136,7 @@ public Lotto(number)
 forward PrepareLotto();
 public PrepareLotto()
 {
- 	SetTimerEx("StartLotto", 60000, 0, "d", 1);
+ 	SetTimerEx("StartLotto", 60000, false, "d", 1);
 	return 1;
 }
 
@@ -153,12 +153,12 @@ public StartLotto(stage)
 		OOCOff(COLOR_WHITE, string);
 		if(stage > 0)
 		{
-			SetTimerEx("StartLotto", 120000, 0, "d", stage+1);
+			SetTimerEx("StartLotto", 120000, false, "d", stage+1);
 		}
 	}
 	else if(stage == 4)
 	{
-	    SetTimerEx("EndLotto", 1000, 0, "d", 3);
+	    SetTimerEx("EndLotto", 1000, false, "d", 3);
 	}
 	return 1;
 }
@@ -171,7 +171,7 @@ public EndLotto(secondt)
 	{
 		format(string, sizeof(string), "Lottery News Countdown: %d.", secondt);
 		OOCOff(COLOR_WHITE, string);
-		SetTimerEx("EndLotto", 1000, 0, "d", secondt-1);
+		SetTimerEx("EndLotto", 1000, false, "d", secondt-1);
 	}
 	else
 	{

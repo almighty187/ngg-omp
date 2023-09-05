@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-stock IsAtFishPlace(playerid)
+IsAtFishPlace(playerid)
 {
 	if(IsPlayerConnected(playerid))
 	{
@@ -63,7 +63,7 @@ stock IsAtFishPlace(playerid)
 	return 0;
 }
 
-stock FishCost(playerid, fish)
+FishCost(playerid, fish)
 {
 	if(IsPlayerConnected(playerid)) {
 		new cost = 0;
@@ -139,7 +139,7 @@ stock FishCost(playerid, fish)
 	return 0;
 }
 
-stock ClearFishes(playerid)
+ClearFishes(playerid)
 {
 	if(IsPlayerConnected(playerid)) {
 		Fishes[playerid][pFid1] = 0; Fishes[playerid][pFid2] = 0; Fishes[playerid][pFid3] = 0;
@@ -158,7 +158,7 @@ stock ClearFishes(playerid)
 	return 1;
 }
 
-stock ClearFishID(playerid, fish)
+ClearFishID(playerid, fish)
 {
 	if(IsPlayerConnected(playerid))
 	{

@@ -34,18 +34,18 @@
 	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-stock ShowBackupActiveForPlayer(playerid)
+ShowBackupActiveForPlayer(playerid)
 {
 	PlayerTextDrawShow(playerid, BackupText[playerid]);
 }
 
-stock HideBackupActiveForPlayer(playerid)
+HideBackupActiveForPlayer(playerid)
 {
 	PlayerTextDrawHide(playerid, BackupText[playerid]);
 }
 
-forward SetPlayerFree(playerid,declare,reason[]);
-public SetPlayerFree(playerid,declare,reason[])
+forward SetPlayerFree(playerid,declare,const reason[]);
+public SetPlayerFree(playerid,declare,const reason[])
 {
 	if(IsPlayerConnected(playerid))
 	{
@@ -64,7 +64,7 @@ public SetPlayerFree(playerid,declare,reason[])
 	}
 }
 
-stock IsACopCar(carid)
+IsACopCar(carid)
 {
 	if(DynVeh[carid] != -1)
 	{
@@ -77,7 +77,7 @@ stock IsACopCar(carid)
 	return 0;
 }
 
-stock CuffTacklee(playerid, giveplayerid)
+CuffTacklee(playerid, giveplayerid)
 {
 	new string[128], Float: health, Float: armor;
     ClearTackle(giveplayerid);
@@ -88,7 +88,7 @@ stock CuffTacklee(playerid, giveplayerid)
 	format(string, sizeof(string), "* %s handcuffs %s, tightening the cuffs securely.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 	ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 	GameTextForPlayer(giveplayerid, "~r~Cuffed", 2500, 3);
-	TogglePlayerControllable(giveplayerid, 0);
+	TogglePlayerControllable(giveplayerid, false);
 	ClearAnimationsEx(giveplayerid);
 	ClearAnimationsEx(playerid);
 	GetHealth(giveplayerid, health);
@@ -96,7 +96,7 @@ stock CuffTacklee(playerid, giveplayerid)
 	SetPVarFloat(giveplayerid, "cuffhealth",health);
 	SetPVarFloat(giveplayerid, "cuffarmor",armor);
 	SetPlayerSpecialAction(giveplayerid, SPECIAL_ACTION_CUFFED);
-	ApplyAnimation(giveplayerid,"ped","cower",1,1,0,0,0,0,1);
+	ApplyAnimation(giveplayerid,"ped","cower",1,true,false,false,false,0,SYNC_ALL);
 	PlayerCuffed[giveplayerid] = 2;
 	SetPVarInt(giveplayerid, "PlayerCuffed", 2);
 	SetPVarInt(giveplayerid, "IsFrozen", 1);
@@ -106,12 +106,12 @@ stock CuffTacklee(playerid, giveplayerid)
 	return 1;
 }
 
-stock ClearTackle(playerid)
+ClearTackle(playerid)
 {
-    TogglePlayerControllable(playerid, 1);
+    TogglePlayerControllable(playerid, true);
 	//PreloadAnimLib(playerid, "SUNBATHE");
 	//PreloadAnimLib(GetPVarInt(playerid, "IsTackled"), "SUNBATHE");
-    ApplyAnimation(playerid, "SUNBATHE", "Lay_Bac_out", 4.1, 0, 1, 1, 0, 0, 1);
+    ApplyAnimation(playerid, "SUNBATHE", "Lay_Bac_out", 4.1, false, true, true, false, 0, SYNC_ALL);
 	SetPVarInt(playerid, "CantBeTackledCount", 15); // cant be tackled again for 15 seconds
 	DeletePVar(GetPVarInt(playerid, "IsTackled"), "Tackling");
 	DeletePVar(playerid, "IsTackled");
@@ -148,8 +148,8 @@ public DragPlayer(dragger, dragee)
 		SetPlayerInterior(dragee, GetPlayerInterior(dragger));
 		SetPlayerVirtualWorld(dragee, GetPlayerVirtualWorld(dragger));
 		ClearAnimationsEx(dragee);
-		ApplyAnimation(dragee, "ped","cower",1,1,0,0,0,0,1);
-        SetTimerEx("DragPlayer", 1000, 0, "ii", dragger, dragee);
+		ApplyAnimation(dragee, "ped","cower",1,true,false,false,false,0,SYNC_ALL);
+        SetTimerEx("DragPlayer", 1000, false, "ii", dragger, dragee);
 	}
 	return 1;
 }
@@ -196,9 +196,9 @@ public CuffTackled(playerid, giveplayerid)
 				{
 					format(string, sizeof(string), "* %s pushes %s aside and is able to escape.", GetPlayerNameEx(giveplayerid), GetPlayerNameEx(playerid));
     				ProxDetector(30.0, giveplayerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-    				TogglePlayerControllable(playerid, 0);
-					ApplyAnimation(playerid, "SWEET", "Sweet_injuredloop", 4.0, 1, 1, 1, 1, 0, 1);
-					SetTimerEx("CopGetUp", 3500, 0, "i", playerid);
+    				TogglePlayerControllable(playerid, false);
+					ApplyAnimation(playerid, "SWEET", "Sweet_injuredloop", 4.0, true, true, true, true, 0, SYNC_ALL);
+					SetTimerEx("CopGetUp", 3500, false, "i", playerid);
 				 	ClearTackle(giveplayerid);
 				}
 			}
@@ -219,20 +219,20 @@ public CopGetUp(playerid)
     SetPVarInt(playerid, "CopTackleCooldown", 30); // a Cooldown on when the cop can tackle again after tackling someone
 	DeletePVar(playerid, "Tackling");
     SendClientMessageEx(playerid, COLOR_GRAD2, "It will be 30 seconds before you can tackle again.");
-	TogglePlayerControllable(playerid, 1);
+	TogglePlayerControllable(playerid, true);
 	//PreloadAnimLib(playerid, "SUNBATHE");
-	ApplyAnimation(playerid, "SUNBATHE", "Lay_Bac_out", 4.0, 0, 1, 1, 0, 0, 1);
+	ApplyAnimation(playerid, "SUNBATHE", "Lay_Bac_out", 4.0, false, true, true, false, 0, SYNC_ALL);
 	return 1;
 }
 
-stock TacklePlayer(playerid, tacklee)
+TacklePlayer(playerid, tacklee)
 {
 	new string[128], Float: posx, Float: posy, Float: posz, group[GROUP_MAX_NAME_LEN], rank[GROUP_MAX_RANK_LEN], division[GROUP_MAX_DIV_LEN];
 	//PreloadAnimLib(playerid, "PED");
 	format(string, sizeof(string), "** %s leaps at %s, tackling them.", GetPlayerNameEx(playerid), GetPlayerNameEx(tacklee));
 	ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 	SetPVarInt(tacklee, "IsTackled", playerid);
-	TogglePlayerControllable(tacklee, 0);
+	TogglePlayerControllable(tacklee, false);
 	SetPVarInt(tacklee, "IsFrozen", 1);
 	SetPVarInt(tacklee, "TackleCooldown", 20); //Actually a countdown till the tackle is over
 	SetPVarInt(playerid, "Tackling", tacklee);
@@ -240,8 +240,8 @@ stock TacklePlayer(playerid, tacklee)
 	SetPlayerFacingAngle(playerid, 180.0);
 	SetPlayerFacingAngle(tacklee, 0.0);
 	GetXYBehindPlayer(tacklee, posx, posy, 0.5);
-	ApplyAnimation(playerid, "PED", "KO_shot_stom", 4.0, 0, 1, 1, 1, 20000, 1);
-	ApplyAnimation(tacklee, "DILDO", "Dildo_Hit_3", 4.1, 0, 1, 1, 1, 20000, 1);
+	ApplyAnimation(playerid, "PED", "KO_shot_stom", 4.0, false, true, true, true, 20000, SYNC_ALL);
+	ApplyAnimation(tacklee, "DILDO", "Dildo_Hit_3", 4.1, false, true, true, true, 20000, SYNC_ALL);
 	GetPlayerGroupInfo(playerid, group, rank, division);
 	GameTextForPlayer(playerid, "~n~~n~~n~~n~~n~~n~~n~~n~~w~Push ~r~'~k~~CONVERSATION_YES~' ~n~~w~to get up off the suspect.", 15000, 3);
 	format(string, sizeof(string), "%s %s %s has tackled you.  Do you wish to comply or resist?", group, rank, GetPlayerNameEx(playerid));
@@ -418,8 +418,8 @@ CMD:placekit(playerid, params[]) {
 			if( vehicleid != INVALID_VEHICLE_ID && GetDistanceToCar(playerid, vehicleid) < 10 )
 			{
 				if(!IsABike(vehicleid) && !IsAPlane(vehicleid)) {
-					new engine,lights,alarm,doors,bonnet,boot,objective;
-					GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+					new bool:boot;
+					GetVehicleParamsEx(vehicleid, .boot = boot);
 					if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET)
 					{
 						SendClientMessageEx(playerid, COLOR_GRAD1, "The vehicle's trunk must be opened in order to place it.");
@@ -520,8 +520,8 @@ CMD:usekit(playerid, params[]) {
 		    if(VehInfo[vehicleid][vCarVestKit] > 0)
 		    {
 		    	if(!IsABike(vehicleid) && !IsAPlane(vehicleid)) {
-					new engine,lights,alarm,doors,bonnet,boot,objective;
-					GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+					new bool:boot;
+					GetVehicleParamsEx(vehicleid, .boot = boot);
 					if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET)
 					{
 						SendClientMessageEx(playerid, COLOR_GRAD1, "The vehicle's trunk must be opened in order to search it.");
@@ -551,7 +551,7 @@ CMD:usekit(playerid, params[]) {
 					{
 						defer FinishMedKit(playerid);
 						SetPVarInt(playerid, "BackpackMedKit", 1);
-						ApplyAnimation(playerid, "BOMBER", "BOM_Plant", 4.0, 0, 0, 0, 0, 0, 1);
+						ApplyAnimation(playerid, "BOMBER", "BOM_Plant", 4.0, false, false, false, false, 0, SYNC_ALL);
 						format(string, sizeof(string), "{FF8000}** {C2A2DA}%s opens a backpack and takes out a Kevlar Vest & First Aid Kit inside.", GetPlayerNameEx(playerid));
 						SendClientMessageEx(playerid, COLOR_WHITE, "You are taking a Med Kit from your backpack, please wait.");
 						ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -574,8 +574,8 @@ CMD:searchcar(playerid, params[])
 	if(!IsPlayerInRangeOfVehicle(playerid, closestcar, 9.0)) return SendClientMessageEx(playerid,COLOR_GREY,"You are not near any vehicles.");
 	if(IsABike(closestcar) || IsAPlane(closestcar)) return SendClientMessageEx(playerid,COLOR_GREY,"You can't search this type of vehicle!");
 
-	new engine,lights,alarm,doors,bonnet,boot,objective;
-	GetVehicleParamsEx(closestcar,engine,lights,alarm,doors,bonnet,boot,objective);
+	new bool:boot;
+	GetVehicleParamsEx(closestcar, .boot = boot);
 	if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET) return SendClientMessageEx(playerid, COLOR_GRAD1, "The vehicle's trunk must be opened in order to search it.");
 
 	foreach(new i: Player)
@@ -586,7 +586,7 @@ CMD:searchcar(playerid, params[])
 			Smuggle_VehicleLoad(playerid, i, v);
 			for(new x = 0; x < 3; x++)
 			{
-				if(PlayerVehicleInfo[i][v][pvWeapons][x] != 0)
+				if(PlayerVehicleInfo[i][v][pvWeapons][x] != WEAPON_FIST)
 				{
 					new
 						szWep[20];
@@ -637,8 +637,8 @@ CMD:takecarweapons(playerid, params[])
         SendClientMessageEx(playerid,COLOR_GREY,"You are not near any vehicles.");
         return 1;
     }
-	new engine,lights,alarm,doors,bonnet,boot,objective;
-	GetVehicleParamsEx(closestcar,engine,lights,alarm,doors,bonnet,boot,objective);
+	new bool:boot;
+	GetVehicleParamsEx(closestcar, .boot = boot);
 	if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET)
 	{
 		SendClientMessageEx(playerid, COLOR_GRAD1, "The vehicle's trunk must be opened in order to search it.");
@@ -656,9 +656,9 @@ CMD:takecarweapons(playerid, params[])
 			}
 			else
 			{
-				PlayerVehicleInfo[i][v][pvWeapons][0] = 0;
-				PlayerVehicleInfo[i][v][pvWeapons][1] = 0;
-				PlayerVehicleInfo[i][v][pvWeapons][2] = 0;
+				PlayerVehicleInfo[i][v][pvWeapons][0] = WEAPON_FIST;
+				PlayerVehicleInfo[i][v][pvWeapons][1] = WEAPON_FIST;
+				PlayerVehicleInfo[i][v][pvWeapons][2] = WEAPON_FIST;
 				SendClientMessageEx(playerid, COLOR_WHITE,  "All weapons have been removed from this vehicle.");
 				new string[MAX_PLAYER_NAME + 44];
 				format(string, sizeof(string), "* %s has taken the weapons away from the trunk.", GetPlayerNameEx(playerid));
@@ -776,7 +776,7 @@ CMD:backup(playerid, params[])
             ShowBackupActiveForPlayer(playerid);
 			Backup[playerid] = 1;
 
-			foreach(Player, i)
+			foreach(new i: Player)
 			{
 				if(PlayerInfo[playerid][pMember] == PlayerInfo[i][pMember])
 				{
@@ -801,7 +801,7 @@ CMD:backup(playerid, params[])
             ShowBackupActiveForPlayer(playerid);
 			Backup[playerid] = 2;
 
-			foreach(Player, i)
+			foreach(new i: Player)
 			{
 				if(PlayerInfo[playerid][pMember] == PlayerInfo[i][pMember])
 				{
@@ -854,7 +854,7 @@ CMD:backupall(playerid, params[])
 			format(string, sizeof(string), "* %s is requesting backup at %s. {AA3333}Respond Code 3A [Lights and Sirens].", GetPlayerNameEx(playerid), zone);
             ShowBackupActiveForPlayer(playerid);
 			Backup[playerid] = 3;
-			foreach(Player, i)
+			foreach(new i: Player)
 			{
 				if(IsACop(i) && arrGroupData[PlayerInfo[playerid][pMember]][g_iAllegiance] == arrGroupData[PlayerInfo[i][pMember]][g_iAllegiance])
 				{
@@ -901,7 +901,7 @@ CMD:backupint(playerid, params[])
 			format(string, sizeof(string), "* %s is requesting international backup at %s. {AA3333}Respond Code 3A [Lights and Sirens].", GetPlayerNameEx(playerid), zone);
             ShowBackupActiveForPlayer(playerid);
 			Backup[playerid] = 4;
-			foreach(Player, i)
+			foreach(new i: Player)
 			{
 				if(IsACop(i))
 				{
@@ -1748,19 +1748,19 @@ CMD:tazer(playerid, params[])
 		{
 			if(TazerTimeout[playerid] > 0) return SendClientMessageEx(playerid, COLOR_WHITE, "Your tazer is reloading");
 
-			pTazerReplace{playerid} = PlayerInfo[playerid][pGuns][2];
-			if(PlayerInfo[playerid][pGuns][2] != 0) RemovePlayerWeapon(playerid, PlayerInfo[playerid][pGuns][2]);
+			pTazerReplace{playerid} = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL];
+			if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL] != 0) RemovePlayerWeapon(playerid, WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL]);
 			format(string, sizeof(string), "* %s unholsters their tazer.", GetPlayerNameEx(playerid));
 			ProxDetector(4.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			GivePlayerValidWeapon(playerid, 23);
+			GivePlayerValidWeapon(playerid, WEAPON_SILENCED);
 			pTazer{playerid} = 1;
-			SetPlayerAmmo(playerid, 23, 60000);
+			SetPlayerAmmo(playerid, WEAPON_SILENCED, 60000);
 			SetPVarInt(playerid, "TazerShots", 2);
 			SetPlayerAmmo(playerid, WEAPON_SILENCED, 3);
 		}
 		else
 		{
-			RemovePlayerWeapon(playerid, 23);
+			RemovePlayerWeapon(playerid, WEAPON_SILENCED);
 			GivePlayerValidWeapon(playerid, pTazerReplace{playerid});
 			format(string, sizeof(string), "* %s holsters their tazer.", GetPlayerNameEx(playerid));
 			ProxDetector(4.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -1852,17 +1852,17 @@ CMD:radargun(playerid, params[])
 		new SpeedRadar = GetPVarInt(playerid, "SpeedRadar");
 		if(SpeedRadar == 0)
 		{
-			SetPVarInt(playerid, "RadarReplacement", PlayerInfo[playerid][pGuns][9]);
-			if(PlayerInfo[playerid][pGuns][9] != 0) RemovePlayerWeapon(playerid, PlayerInfo[playerid][pGuns][9]);
+			SetPVarInt(playerid, "RadarReplacement", PlayerInfo[playerid][pGuns][WEAPON_SLOT_EQUIPMENT]);
+			if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_EQUIPMENT] != 0) RemovePlayerWeapon(playerid, WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_EQUIPMENT]);
 			format(string, sizeof(string), "* %s takes out a LIDAR speed gun.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-			GivePlayerValidWeapon(playerid, 43);
+			GivePlayerValidWeapon(playerid, WEAPON_CAMERA);
 			SetPVarInt(playerid, "SpeedRadar", 1);
 		}
 		else
 		{
-			RemovePlayerWeapon(playerid, 43);
-			GivePlayerValidWeapon(playerid, GetPVarInt(playerid, "RadarReplacement"));
+			RemovePlayerWeapon(playerid, WEAPON_CAMERA);
+			GivePlayerValidWeapon(playerid, WEAPON:GetPVarInt(playerid, "RadarReplacement"));
 			format(string, sizeof(string), "* %s puts away their LIDAR speed gun.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			DeletePVar(playerid, "SpeedRadar");
@@ -1910,14 +1910,14 @@ CMD:cuff(playerid, params[])
 					format(string, sizeof(string), "* %s handcuffs %s, tightening the cuffs securely.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 					ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 					GameTextForPlayer(giveplayerid, "~r~Cuffed", 2500, 3);
-					TogglePlayerControllable(giveplayerid, 0);
+					TogglePlayerControllable(giveplayerid, false);
 					ClearAnimationsEx(giveplayerid);
 					GetHealth(giveplayerid, health);
 					GetArmour(giveplayerid, armor);
 					SetPVarFloat(giveplayerid, "cuffhealth",health);
 					SetPVarFloat(giveplayerid, "cuffarmor",armor);
 					SetPlayerSpecialAction(giveplayerid, SPECIAL_ACTION_CUFFED);
-					ApplyAnimation(giveplayerid,"ped","cower",1,1,0,0,0,0,1);
+					ApplyAnimation(giveplayerid,"ped","cower",1,true,false,false,false,0,SYNC_ALL);
 					PlayerCuffed[giveplayerid] = 2;
 					SetPVarInt(giveplayerid, "PlayerCuffed", 2);
 					SetPVarInt(giveplayerid, "IsFrozen", 1);
@@ -1929,7 +1929,7 @@ CMD:cuff(playerid, params[])
 				{
 				    format(string, sizeof(string), "* %s removes a set of cuffs from his belt and attempts to cuff %s.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 					ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-					SetTimerEx("CuffTackled", 4000, 0, "ii", playerid, giveplayerid);
+					SetTimerEx("CuffTackled", 4000, false, "ii", playerid, giveplayerid);
 				}
 				else
 				{
@@ -1984,7 +1984,7 @@ CMD:uncuff(playerid, params[])
 					format(string, sizeof(string), "* %s has uncuffed %s.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 					ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 					GameTextForPlayer(giveplayerid, "~g~Uncuffed", 2500, 3);
-					TogglePlayerControllable(giveplayerid, 1);
+					TogglePlayerControllable(giveplayerid, true);
 					ClearAnimationsEx(giveplayerid);
 					SetPlayerSpecialAction(giveplayerid, SPECIAL_ACTION_NONE);
 					PlayerCuffed[giveplayerid] = 0;
@@ -2159,7 +2159,7 @@ CMD:drag(playerid, params[])
 				SendClientMessageEx(playerid, COLOR_WHITE, "You are now dragging the suspect, press the '{AA3333}FIRE{FFFFFF}' button to stop.");
 				SetPVarInt(giveplayerid, "BeingDragged", 1);
 				SetPVarInt(playerid, "DraggingPlayer", giveplayerid);
-				SetTimerEx("DragPlayer", 1000, 0, "ii", playerid, giveplayerid);
+				SetTimerEx("DragPlayer", 1000, false, "ii", playerid, giveplayerid);
 			}
 			else
 			{

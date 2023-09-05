@@ -1,17 +1,17 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 hook OnPlayerEnterDynamicArea(playerid, areaid)
 {
 	new i = MetDet_GetIDFromArea(areaid);
 	if(i == -1) return 1;
 
-	new wepid, iammo;
-	for(new idx = 0; idx <= 12; ++idx)
+	new WEAPON:wepid, iammo;
+	for(new WEAPON_SLOT:idx; idx <= WEAPON_SLOT_DETONATOR; ++idx)
 	{
 		GetPlayerWeaponData(playerid, idx, wepid, iammo);
 		switch(wepid)
 		{
-			case 24 .. 40: { MetDet_Alarm(i); break; }
+			case WEAPON_DEAGLE .. WEAPON_BOMB: { MetDet_Alarm(i); break; }
 		}
 	}
 	return 1;

@@ -35,13 +35,13 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-stock NextAvailableBackpack()
+NextAvailableBackpack()
 {
 	if(hgBackpackCount+1 == 200) return false;
 	return hgBackpackCount+1;
 }
 
-stock GetHungerBackpackName(id)
+GetHungerBackpackName(id)
 {
 	new string[24];
 	switch(HungerBackpackInfo[id][hgBackpackType])
@@ -135,10 +135,10 @@ CMD:endhunger(playerid, params[])
 								
 					ResetPlayerWeapons(i);
 					
-					for(new w = 0; w < 12; w++)
+					for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 					{
 						PlayerInfo[i][pGuns][w] = HungerPlayerInfo[i][hgLastWeapon][w];
-						if(PlayerInfo[i][pGuns][w] > 0 && PlayerInfo[i][pAGuns][w] == 0)
+						if(PlayerInfo[i][pGuns][w] > WEAPON_FIST && PlayerInfo[i][pAGuns][w] == WEAPON_FIST)
 						{
 							GivePlayerValidWeapon(i, PlayerInfo[i][pGuns][w]);
 						}
@@ -202,10 +202,10 @@ CMD:leavehunger(playerid, params[])
 			PlayerInfo[playerid][pRewardDrawChance] += 10;
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "** You have been given 10 Draw Chances for the Fall Into Fun Event.");
 			
-			for(new w = 0; w < 12; w++)
+			for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 			{
 				PlayerInfo[playerid][pGuns][w] = HungerPlayerInfo[playerid][hgLastWeapon][w];
-				if(PlayerInfo[playerid][pGuns][w] > 0 && PlayerInfo[playerid][pAGuns][w] == 0)
+				if(PlayerInfo[playerid][pGuns][w] > WEAPON_FIST && PlayerInfo[playerid][pAGuns][w] == WEAPON_FIST)
 				{
 					GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pGuns][w]);
 				}
@@ -231,10 +231,10 @@ CMD:leavehunger(playerid, params[])
 			PlayerInfo[playerid][pRewardDrawChance] += 25;
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "** You have been given 25 Draw Chances for the Fall Into Fun Event.");
 			
-			for(new w = 0; w < 12; w++)
+			for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 			{
 				PlayerInfo[playerid][pGuns][w] = HungerPlayerInfo[playerid][hgLastWeapon][w];
-				if(PlayerInfo[playerid][pGuns][w] > 0 && PlayerInfo[playerid][pAGuns][w] == 0)
+				if(PlayerInfo[playerid][pGuns][w] > WEAPON_FIST && PlayerInfo[playerid][pAGuns][w] == WEAPON_FIST)
 				{
 					GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pGuns][w]);
 				}
@@ -263,10 +263,10 @@ CMD:leavehunger(playerid, params[])
 					SendClientMessageEx(i, COLOR_LIGHTBLUE, "** You have been given 50 Draw Chances for the Fall Into Fun Event.");
 					hgActive = 0;
 					
-					for(new w = 0; w < 12; w++)
+					for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 					{
 						PlayerInfo[i][pGuns][w] = HungerPlayerInfo[i][hgLastWeapon][w];
-						if(PlayerInfo[i][pGuns][w] > 0 && PlayerInfo[i][pAGuns][w] == 0)
+						if(PlayerInfo[i][pGuns][w] > WEAPON_FIST && PlayerInfo[i][pAGuns][w] == WEAPON_FIST)
 						{
 							GivePlayerValidWeapon(i, PlayerInfo[i][pGuns][w]);
 						}
@@ -305,10 +305,10 @@ CMD:leavehunger(playerid, params[])
 					
 			HideHungerGamesTextdraw(playerid);
 			
-			for(new w = 0; w < 12; w++)
+			for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 			{
 				PlayerInfo[playerid][pGuns][w] = HungerPlayerInfo[playerid][hgLastWeapon][w];
-				if(PlayerInfo[playerid][pGuns][w] > 0 && PlayerInfo[playerid][pAGuns][w] == 0)
+				if(PlayerInfo[playerid][pGuns][w] > WEAPON_FIST && PlayerInfo[playerid][pAGuns][w] == WEAPON_FIST)
 				{
 					GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pGuns][w]);
 				}
@@ -355,7 +355,7 @@ CMD:joinhunger(playerid, params[])
 	HungerPlayerInfo[playerid][hgLastInt] = GetPlayerInterior(playerid);
 	SetPlayerInterior(playerid, 0);
 	
-	for(new w = 0; w < 12; w++)
+	for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 	{
 		HungerPlayerInfo[playerid][hgLastWeapon][w] = PlayerInfo[playerid][pGuns][w];
 	}
@@ -433,7 +433,7 @@ CMD:openbackpack(playerid, params[])
 				new rand = Random(1, 35);
 				if(rand > 0 && rand < 6)
 				{
-					GivePlayerValidWeapon(playerid, 24);
+					GivePlayerValidWeapon(playerid, WEAPON_DEAGLE);
 					SendClientMessageEx(playerid, COLOR_GRAD1, "You have picked up the backpack and received a deagle.");
 					HungerBackpackInfo[backpack][hgActiveEx] = 0;
 					DestroyDynamic3DTextLabel(HungerBackpackInfo[backpack][hgBackpack3DText]);
@@ -441,7 +441,7 @@ CMD:openbackpack(playerid, params[])
 				}
 				else if(rand > 5 && rand < 11)
 				{
-					GivePlayerValidWeapon(playerid, 25);
+					GivePlayerValidWeapon(playerid, WEAPON_SHOTGUN);
 					SendClientMessageEx(playerid, COLOR_GRAD1, "You have picked up the backpack and received a shotgun.");
 					HungerBackpackInfo[backpack][hgActiveEx] = 0;
 					DestroyDynamic3DTextLabel(HungerBackpackInfo[backpack][hgBackpack3DText]);
@@ -449,7 +449,7 @@ CMD:openbackpack(playerid, params[])
 				}
 				else if(rand > 10 && rand < 16)
 				{
-					GivePlayerValidWeapon(playerid, 29);
+					GivePlayerValidWeapon(playerid, WEAPON_MP5);
 					SendClientMessageEx(playerid, COLOR_GRAD1, "You have picked up the backpack and received a MP5.");
 					HungerBackpackInfo[backpack][hgActiveEx] = 0;
 					DestroyDynamic3DTextLabel(HungerBackpackInfo[backpack][hgBackpack3DText]);
@@ -457,7 +457,7 @@ CMD:openbackpack(playerid, params[])
 				}
 				else if(rand > 15 && rand < 26)
 				{
-					GivePlayerValidWeapon(playerid, 5);
+					GivePlayerValidWeapon(playerid, WEAPON_BAT);
 					SendClientMessageEx(playerid, COLOR_GRAD1, "You have picked up the backpack and received a baseball bat.");
 					HungerBackpackInfo[backpack][hgActiveEx] = 0;
 					DestroyDynamic3DTextLabel(HungerBackpackInfo[backpack][hgBackpack3DText]);
@@ -465,7 +465,7 @@ CMD:openbackpack(playerid, params[])
 				}
 				else if(rand > 25 && rand < 36)
 				{
-					GivePlayerValidWeapon(playerid, 22);
+					GivePlayerValidWeapon(playerid, WEAPON_COLT45);
 					SendClientMessageEx(playerid, COLOR_GRAD1, "You have picked up the backpack and received a 9mm.");
 					HungerBackpackInfo[backpack][hgActiveEx] = 0;
 					DestroyDynamic3DTextLabel(HungerBackpackInfo[backpack][hgBackpack3DText]);

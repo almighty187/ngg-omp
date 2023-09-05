@@ -37,7 +37,7 @@
  *  Created by Emmet on November 3, 2012 @ 9:19 AM
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #if defined walkstyle_included
 	#endinput
@@ -45,9 +45,7 @@
 #define walkstyle_included
 
 /*
-	native SetWalkingKey(key);
 	native AddWalkingStyle(animlib[], animname[], Float:fDelta = 4.0, loop = 1, lockx = 1, locky = 1, freeze = 1, time = 1);
-	native RemoveWalkingStyle(styleid);
 	native SetPlayerWalkingStyle(playerid, styleid);
 	native ResetPlayerWalkingStyle(playerid);
 	native IsPlayerWalking(playerid);
@@ -96,23 +94,16 @@ enum E_WALKING_ENUM
 	E_STYLE_LIB[32],
 	E_STYLE_ANIM[32],
 	Float:E_STYLE_DELTA,
-	E_STYLE_LOOP,
-	E_STYLE_LOCK_X,
-	E_STYLE_LOCK_Y,
-	E_STYLE_FREEZE,
+	bool:E_STYLE_LOOP,
+	bool:E_STYLE_LOCK_X,
+	bool:E_STYLE_LOCK_Y,
+	bool:E_STYLE_FREEZE,
 	E_STYLE_TIME
 };
 new WalkingStyles[MAX_WALKING_STYLES + 1][E_WALKING_ENUM];
-new walking_key = KEY_WALK;
+new KEY:walking_key = KEY_WALK;
 
-stock SetWalkingKey(key)
-{
-	if (walking_key == key) return 0;
-	walking_key = key;
-	return 1;
-}
-
-stock AddWalkingStyle(animlib[], animname[], Float:fDelta = 4.0, loop = 1, lockx = 1, locky = 1, freeze = 1, time = 1)
+AddWalkingStyle(const animlib[], const animname[], Float:fDelta = 4.0, bool:loop = true, bool:lockx = true, bool:locky = true, bool:freeze = true, time = 1)
 {
 	new id;
 	for (new i = 1; i < sizeof(WalkingStyles); i ++)
@@ -142,45 +133,13 @@ stock AddWalkingStyle(animlib[], animname[], Float:fDelta = 4.0, loop = 1, lockx
 	return id;
 }
 
-stock RemoveWalkingStyle(styleid)
-{
-	if (styleid < 1 || styleid > MAX_WALKING_STYLES)
-	{
-	    return 0;
-	}
-	else if (!WalkingStyles[styleid][E_STYLE_ACTIVE])
-	{
-	    return 0;
-	}
-	else
-	{
-	    for (new i = 0; i < MAX_PLAYERS; i ++)
-	    {
-	        if (IsPlayerConnected(i) && PlayerInfo[i][pWalkStyle] == styleid)
-	        {
-	            ResetPlayerWalkingStyle(i);
-	        }
-		}
-	    WalkingStyles[styleid][E_STYLE_ACTIVE] = 0;
-		strdel(WalkingStyles[styleid][E_STYLE_LIB], 0, 32);
-		strdel(WalkingStyles[styleid][E_STYLE_ANIM], 0, 32);
-		WalkingStyles[styleid][E_STYLE_DELTA] = 0.0;
-		WalkingStyles[styleid][E_STYLE_LOOP] = 0;
-		WalkingStyles[styleid][E_STYLE_LOCK_X] = 0;
-		WalkingStyles[styleid][E_STYLE_LOCK_Y] = 0;
-		WalkingStyles[styleid][E_STYLE_FREEZE] = 0;
-		WalkingStyles[styleid][E_STYLE_TIME] = 0;
-	}
-	return 1;
-}
-
-stock SetPlayerWalkingStyle(playerid, styleid)
+SetPlayerWalkingStyle(playerid, styleid)
 {
 	if(PlayerInfo[playerid][pWalkStyle] == styleid) return 0;
 	return PlayerInfo[playerid][pWalkStyle] = styleid;
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
     new animlib[32], animname[32], Float:x, Float:y, Float:z;
 	GetPlayerVelocity(playerid, x, y, z);
@@ -201,7 +160,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		        {
 					if (WalkingStyles[styleid][E_STYLE_ACTIVE] && strlen(WalkingStyles[styleid][E_STYLE_LIB]) && strlen(WalkingStyles[styleid][E_STYLE_ANIM]))
 					{
-			 	 		ApplyAnimation(playerid, WalkingStyles[styleid][E_STYLE_LIB], WalkingStyles[styleid][E_STYLE_ANIM], WalkingStyles[styleid][E_STYLE_DELTA], WalkingStyles[styleid][E_STYLE_LOOP], WalkingStyles[styleid][E_STYLE_LOCK_X], WalkingStyles[styleid][E_STYLE_LOCK_Y], WalkingStyles[styleid][E_STYLE_FREEZE], WalkingStyles[styleid][E_STYLE_TIME], 1);
+			 	 		ApplyAnimation(playerid, WalkingStyles[styleid][E_STYLE_LIB], WalkingStyles[styleid][E_STYLE_ANIM], WalkingStyles[styleid][E_STYLE_DELTA], WalkingStyles[styleid][E_STYLE_LOOP], WalkingStyles[styleid][E_STYLE_LOCK_X], WalkingStyles[styleid][E_STYLE_LOCK_Y], WalkingStyles[styleid][E_STYLE_FREEZE], WalkingStyles[styleid][E_STYLE_TIME], SYNC_ALL);
 			  			SetPVarInt(playerid, "Walking", 1);
 					}
 				}
@@ -209,7 +168,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				{
 					if (WalkingStyles[styleid][E_STYLE_ACTIVE] && strlen(WalkingStyles[styleid][E_STYLE_LIB]) && strlen(WalkingStyles[styleid][E_STYLE_ANIM]))
 					{
-			 	 		ApplyAnimation(playerid, WalkingStyles[styleid][E_STYLE_LIB], WalkingStyles[styleid][E_STYLE_ANIM], WalkingStyles[styleid][E_STYLE_DELTA], 0, WalkingStyles[styleid][E_STYLE_LOCK_X], WalkingStyles[styleid][E_STYLE_LOCK_Y], 0, WalkingStyles[styleid][E_STYLE_TIME], 1);
+			 	 		ApplyAnimation(playerid, WalkingStyles[styleid][E_STYLE_LIB], WalkingStyles[styleid][E_STYLE_ANIM], WalkingStyles[styleid][E_STYLE_DELTA], false, WalkingStyles[styleid][E_STYLE_LOCK_X], WalkingStyles[styleid][E_STYLE_LOCK_Y], false, WalkingStyles[styleid][E_STYLE_TIME], SYNC_ALL);
 					}
 				    DeletePVar(playerid, "Walking");
 				}
@@ -219,7 +178,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
     return CallLocalFunction("walk_OnPlayerKeyStateChange", "ddd", playerid, newkeys, oldkeys);
 }
 
-stock ResetPlayerWalkingStyle(playerid)
+ResetPlayerWalkingStyle(playerid)
 {
 	PlayerInfo[playerid][pWalkStyle] = 0;
 	if(GetPVarInt(playerid, "Walking"))
@@ -227,14 +186,14 @@ stock ResetPlayerWalkingStyle(playerid)
 	    new styleid = PlayerInfo[playerid][pWalkStyle];
 		if (WalkingStyles[styleid][E_STYLE_ACTIVE] && strlen(WalkingStyles[styleid][E_STYLE_LIB]) && strlen(WalkingStyles[styleid][E_STYLE_ANIM]))
 		{
-			ApplyAnimation(playerid, WalkingStyles[styleid][E_STYLE_LIB], WalkingStyles[styleid][E_STYLE_ANIM], WalkingStyles[styleid][E_STYLE_DELTA], 0, WalkingStyles[styleid][E_STYLE_LOCK_X], WalkingStyles[styleid][E_STYLE_LOCK_Y], 0, WalkingStyles[styleid][E_STYLE_TIME], 1);
+			ApplyAnimation(playerid, WalkingStyles[styleid][E_STYLE_LIB], WalkingStyles[styleid][E_STYLE_ANIM], WalkingStyles[styleid][E_STYLE_DELTA], false, WalkingStyles[styleid][E_STYLE_LOCK_X], WalkingStyles[styleid][E_STYLE_LOCK_Y], false, WalkingStyles[styleid][E_STYLE_TIME], SYNC_ALL);
 		}
   		DeletePVar(playerid, "Walking");
 	}
 	return 1;
 }
 
-stock walk_TogglePlayerControllable(playerid, toggle)
+walk_TogglePlayerControllable(playerid, bool:toggle)
 {
 	SetPVarInt(playerid, "Frozen", !toggle);
 	return TogglePlayerControllable(playerid, toggle);
@@ -248,7 +207,7 @@ stock walk_TogglePlayerControllable(playerid, toggle)
     #define _ALS_OnPlayerKeyStateChange
 #endif
 #define OnPlayerKeyStateChange walk_OnPlayerKeyStateChange
-forward walk_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
+forward walk_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys);
 
 CMD:walkstyle(playerid, params[])
 {

@@ -35,7 +35,7 @@
 	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 new 
 	CrateBeingProcessed[MAX_CRATE_FACILITY],
@@ -71,17 +71,17 @@ hook OnPlayerDisconnect(playerid, reason) {
 	return 1;
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 	if(IsKeyJustDown(KEY_FIRE, newkeys, oldkeys)) {
 		if(CarryCrate[playerid] >= 0) {
-			ApplyAnimation(playerid, "CARRY", "putdwn", 4.1, 0, 0, 0, 0, 0, 1);
+			ApplyAnimation(playerid, "CARRY", "putdwn", 4.1, false, false, false, false, 0, SYNC_ALL);
 			SetTimerEx("PlayerCarryCrate", 1000, false, "iiii", playerid, CarryCrate[playerid], -1, 1);
 		}
 	}
 	return 1;
 }
 
-hook OnPlayerStateChange(playerid, newstate, oldstate) {
+hook OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate) {
 	if(newstate == PLAYER_STATE_DRIVER || newstate == PLAYER_STATE_PASSENGER) {
 		if(CarryCrate[playerid] >= 0) {
 			SendClientMessageEx(playerid, COLOR_GREY, "You can't be in any vehicles whilst carrying a crate!");
@@ -103,7 +103,7 @@ hook OnPlayerEnterVehicle(playerid, vehicleid, ispassenger) {
 	return 1;
 }
 
-stock LoadCrateOrders() {
+LoadCrateOrders() {
 	mysql_tquery(MainPipeline, "SELECT * FROM `crate_orders`", "OnLoadCrateOrders", "");
 }
 
@@ -129,7 +129,7 @@ public OnLoadCrateOrders()
 	return 1;
 }
 
-stock SaveOrder(i) {
+SaveOrder(i) {
 	new query[2048];
 
 	format(query, 2048, "UPDATE `crate_orders` SET ");
@@ -144,7 +144,7 @@ stock SaveOrder(i) {
 	return 1;
 }
 
-stock LoadCrateBoxes()
+LoadCrateBoxes()
 {
 	printf("[Dynamic Crate Boxes] Loading Dynamic Crate Boxes from the database, please wait...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `crates`", "OnLoadCrateBoxes", "");
@@ -190,7 +190,7 @@ public OnLoadCrateBoxes()
 	return 1;
 }
 
-stock UpdateCrateBox(id)
+UpdateCrateBox(id)
 {
 	new string[256];
 	if(IsValidDynamicObject(CrateBox[id][cbObject])) DestroyDynamicObject(CrateBox[id][cbObject]), CrateBox[id][cbObject] = -1;
@@ -222,7 +222,7 @@ stock UpdateCrateBox(id)
 	return 1;
 }
 
-stock SaveCrate(i) {
+SaveCrate(i) {
 	new query[2048], wep[16];
 
 	format(query, 2048, "UPDATE `crates` SET ");
@@ -254,7 +254,7 @@ stock SaveCrate(i) {
 	return 1;
 }
 
-stock LoadCrateFacilities()
+LoadCrateFacilities()
 {
 	printf("[Dynamic Crate Facility] Loading Dynamic Crate Facilities from the database, please wait...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `crate_facility`", "OnLoadCrateFacilities", "");
@@ -298,7 +298,7 @@ public OnLoadCrateFacilities()
 	return 1;
 }
 
-stock UpdateFacility(id)
+UpdateFacility(id)
 {
 	new string[256];
 	//964 box | 11 - Map Icon
@@ -316,7 +316,7 @@ stock UpdateFacility(id)
 	return 1;
 }
 
-stock SaveFacility(i) {
+SaveFacility(i) {
 	new query[2048];
 	format(query, 2048, "UPDATE `crate_facility` SET ");
 	SaveInteger(query, "crate_facility", i+1, "Group", CrateFacility[i][cfGroup]);
@@ -480,7 +480,7 @@ public FacilityBoxUpdate(id) {
 	return 1;
 }
 
-stock FetchFacility(playerid, &facility, Float:range)
+FetchFacility(playerid, &facility, Float:range)
 {
 	facility = -1;
     for(new f = 0; f < MAX_CRATE_FACILITY; f++)
@@ -495,7 +495,7 @@ stock FetchFacility(playerid, &facility, Float:range)
  	}
 }
 
-stock GetCrateBox(playerid, &box, Float:range)
+GetCrateBox(playerid, &box, Float:range)
 {
 	box = -1;
     for(new b = 0; b < MAX_CRATES; b++)
@@ -513,7 +513,7 @@ stock GetCrateBox(playerid, &box, Float:range)
 }
 
 // Used for tracking / transferring weapons from and to the locker
-stock GetGroupCrate(playerid, &box) {
+GetGroupCrate(playerid, &box) {
 	box = -1;
     for(new b = 0; b < MAX_CRATES; b++)
     {
@@ -533,14 +533,14 @@ public LoadForklift(playerid, facility, boxid, vehicle) {
 	format(string, sizeof(string), "~n~~n~~n~~n~~n~~n~~n~~n~~n~~w~%d seconds left", GetPVarInt(playerid, "LoadForkliftTime"));
 	GameTextForPlayer(playerid, string, 1100, 3);
 
-	if(GetPVarInt(playerid, "LoadForkliftTime") > 0) SetTimerEx("LoadForklift", 1000, 0, "iiii", playerid, facility, boxid, vehicle);
+	if(GetPVarInt(playerid, "LoadForkliftTime") > 0) SetTimerEx("LoadForklift", 1000, false, "iiii", playerid, facility, boxid, vehicle);
 
 	if(GetPVarInt(playerid, "LoadForkliftTime") <= 0)
 	{
 		DeletePVar(playerid, "LoadForkliftTime");
 		CrateBeingProcessed[facility] = 0;
 		CrateBox[boxid][cbFacility] = -1;
-		TogglePlayerControllable(playerid, 1);
+		TogglePlayerControllable(playerid, true);
 		if(!ValidGroup(PlayerInfo[playerid][pMember])) {
 			SendClientMessageEx(playerid, COLOR_GRAD2, "You failed to load the crate. You're no longer apart of a group!");
 			return 1;
@@ -706,7 +706,7 @@ public PlayerCarryCrate(playerid, boxid, vehid, action) {
 	return 1;
 }
 
-stock DestroyCrate(box) {
+DestroyCrate(box) {
 	// Is the box on a fork lift?
 	if(CrateBox[box][cbOnVeh] != -1) {
 		if(IsValidDynamicObject(CrateVehicle[CrateBox[box][cbOnVeh]][cvForkObject])) DestroyDynamicObject(CrateVehicle[CrateBox[box][cbOnVeh]][cvForkObject]);
@@ -746,7 +746,7 @@ stock DestroyCrate(box) {
 	CrateBox[box][cbVw] = 0;
 	CrateBox[box][cbMats] = 0;
 	for(new w = 0; w < 16; w++) {
-		CrateBox[box][cbWep][w] = 0;
+		CrateBox[box][cbWep][w] = WEAPON_FIST;
 		CrateBox[box][cbWepAmount][w] = 0;
 	}
 	format(CrateBox[box][cbPlacedBy], MAX_PLAYER_NAME, "Unknown");
@@ -762,7 +762,7 @@ stock DestroyCrate(box) {
 	return 1;
 }
 
-stock IsValidCrate(box) {
+IsValidCrate(box) {
 	if((0 <= box < MAX_CRATES)) return 1;
 	else return 0;
 }
@@ -841,7 +841,7 @@ CMD:facility(playerid, params[]) {
 	return 1;
 }
 
-stock SyncFacility(id) {
+SyncFacility(id) {
 	new total = 0;
 	for(new c = 0; c < MAX_CRATES; c++) {
 		if(CrateBox[c][cbFacility] == id) {
@@ -873,7 +873,7 @@ CMD:crate(playerid, params[]) {
 		GetCrateBox(playerid, box, 2.0);
 		if(box == -1) return SendClientMessageEx(playerid, COLOR_GREY, "You're not near any crate boxes to pickup!");
 		if(CarryCrate[playerid] != -1) return SendClientMessageEx(playerid, COLOR_GRAD2, "you're currently carraying a crate either store or drop it before carrying another!");
-		ApplyAnimation(playerid, "CARRY", "liftup", 4.1, 0, 0, 0, 0, 0, 1);
+		ApplyAnimation(playerid, "CARRY", "liftup", 4.1, false, false, false, false, 0, SYNC_ALL);
 		SetTimerEx("PlayerCarryCrate", 1000, false, "iiii", playerid, box, -1, 0);
 		return 1;
 	}
@@ -885,7 +885,7 @@ CMD:crate(playerid, params[]) {
 		format(title, sizeof(title), "Crate Contents (ID: %d)", box);
 		format(szMiscArray, sizeof(szMiscArray), "Weapon\tQuantity\n");
 		for(new w = 0; w < 16; w++) {
-			if(CrateBox[box][cbWep][w] > 0) {
+			if(CrateBox[box][cbWep][w] > WEAPON_FIST) {
 				GetWeaponName(CrateBox[box][cbWep][w], weaponname, sizeof(weaponname));
 				format(szMiscArray, sizeof(szMiscArray), "%s%s\t%s\n", szMiscArray, weaponname, number_format(CrateBox[box][cbWepAmount][w]));
 			}
@@ -922,9 +922,9 @@ CMD:crate(playerid, params[]) {
 					CrateBeingProcessed[facility] = 1;
 					CrateBox[c][cbFacility] = facility;
 					SetPVarInt(playerid, "LoadForkliftTime", 5);
-					SetTimerEx("LoadForklift", 1000, 0, "iiii", playerid, facility, c, veh);
+					SetTimerEx("LoadForklift", 1000, false, "iiii", playerid, facility, c, veh);
 					GameTextForPlayer(playerid, "~n~~n~~n~~n~~n~~n~~n~~n~~n~~w~5 seconds left", 1100, 3);
-					TogglePlayerControllable(playerid, 0);
+					TogglePlayerControllable(playerid, false);
 					break;
 				}
 			}
@@ -944,7 +944,7 @@ CMD:crate(playerid, params[]) {
 	}
 	else if(strcmp(choice, "store", true) == 0) {
 		szMiscArray[0] = 0;
-		new Float:vPos[3], inveh = GetPlayerVehicleID(playerid), engine, lights, alarm, doors, bonnet ,boot, objective, VehFound = -1, boxid;
+		new Float:vPos[3], inveh = GetPlayerVehicleID(playerid), bool:boot, VehFound = -1, boxid;
 		
 		for(new i = 0; i < MAX_CRATE_VEHCILES; i++) {
 			if(CrateVehicle[i][cvSpawnID] != INVALID_VEHICLE_ID) {
@@ -961,7 +961,7 @@ CMD:crate(playerid, params[]) {
 		if(CrateVehicle[VehFound][cvCrateMax] < 1) return SendClientMessageEx(playerid, COLOR_GRAD3, "You can't store crates in this vehicle!");
 		if(CreateCount(VehFound) >= CrateVehicle[VehFound][cvCrateMax]) return SendClientMessageEx(playerid, COLOR_GRAD3, "You can't store anymore crates in this vehicle it's at max capacity!");
 		if(VehDelivering[VehFound]) return SendClientMessageEx(playerid, COLOR_GRAD3, "This vehicle is currently unloading crates - Please Wait!");
-		GetVehicleParamsEx(CrateVehicle[VehFound][cvSpawnID], engine, lights, alarm, doors, bonnet, boot, objective);
+		GetVehicleParamsEx(CrateVehicle[VehFound][cvSpawnID], .boot = boot);
 		if(inveh > 0 && GetVehicleModel(inveh) == 530) { // Forklift -> Vehicle
 			if(IsDynamicCrateVehicle(inveh) == -1) return SendClientMessageEx(playerid, COLOR_GRAD2, "Your not in the designated forklift vehicle!");
 			if((boxid = CrateVehicle[IsDynamicCrateVehicle(inveh)][cvCrate]) == -1) return SendClientMessageEx(playerid, COLOR_GRAD2, "There is no crate loaded on the forklift!");
@@ -984,7 +984,7 @@ CMD:crate(playerid, params[]) {
 		else if((boxid = CarryCrate[playerid]) != -1) { // Player -> Vehicle
 			if(IsAPlane(CrateVehicle[VehFound][cvSpawnID])) return SendClientMessageEx(playerid, COLOR_GRAD2, "You need a forklift to load them into the plane!");
 			if((boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET)) return SendClientMessageEx(playerid, COLOR_GRAD3, "You can't load crates into the vehicle whilst the trunk is closed! - '/car trunk' to open it.");
-			ApplyAnimation(playerid, "CARRY", "putdwn105", 4.1, 0, 0, 0, 0, 0, 1);
+			ApplyAnimation(playerid, "CARRY", "putdwn105", 4.1, false, false, false, false, 0, SYNC_ALL);
 			SetTimerEx("PlayerCarryCrate", 700, false, "iiii", playerid, boxid, VehFound, 3);
 		}
 		else SendClientMessageEx(playerid, COLOR_GRAD2, "Your not in possession of any crates that you can store!");
@@ -992,7 +992,7 @@ CMD:crate(playerid, params[]) {
 	}
 	else if(strcmp(choice, "take", true) == 0) {
 		szMiscArray[0] = 0;
-		new Float:vPos[3], inveh = GetPlayerVehicleID(playerid), engine, lights, alarm, doors, bonnet ,boot, objective, VehFound = -1;
+		new Float:vPos[3], inveh = GetPlayerVehicleID(playerid), bool:boot, VehFound = -1;
 		
 		for(new i = 0; i < MAX_CRATE_VEHCILES; i++) {
 			if(CrateVehicle[i][cvSpawnID] != INVALID_VEHICLE_ID) {
@@ -1008,7 +1008,7 @@ CMD:crate(playerid, params[]) {
 		if(VehFound == -1) return SendClientMessageEx(playerid, COLOR_GRAD2, "You're not near any designated vehicles that can transport crates!");
 		if(!CreateCount(VehFound)) return SendClientMessageEx(playerid, COLOR_GRAD3, "There are no crates in the vehicle to take!");
 		if(VehDelivering[VehFound]) return SendClientMessageEx(playerid, COLOR_GRAD3, "This vehicle is currently unloading crates - Please Wait!");
-		GetVehicleParamsEx(CrateVehicle[VehFound][cvSpawnID], engine, lights, alarm, doors, bonnet, boot, objective);
+		GetVehicleParamsEx(CrateVehicle[VehFound][cvSpawnID], .boot = boot);
 		if(inveh > 0 && GetVehicleModel(inveh) == 530) { // Vehicle -> Forklift
 			if(IsDynamicCrateVehicle(inveh) == -1) return SendClientMessageEx(playerid, COLOR_GRAD2, "You're not in the designated forklift vehicle to unload crates with!");
 			if(CrateVehicle[IsDynamicCrateVehicle(inveh)][cvCrate] != -1) return SendClientMessageEx(playerid, COLOR_GRAD2, "There is already a crate loaded on the forklift!");
@@ -1036,7 +1036,7 @@ CMD:crate(playerid, params[]) {
 			if((boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET)) return SendClientMessageEx(playerid, COLOR_GRAD3, "You can't unload crates whilst the trunk is closed! - '/car trunk' to open it.");
 			for(new b = 0; b < MAX_CRATES; b++) {
 				if(CrateBox[b][cbInVeh] == VehFound) {
-					ApplyAnimation(playerid, "CARRY", "liftup105", 4.1, 0, 0, 0, 0, 0, 1);
+					ApplyAnimation(playerid, "CARRY", "liftup105", 4.1, false, false, false, false, 0, SYNC_ALL);
 					SetTimerEx("PlayerCarryCrate", 700, false, "iiii", playerid, b, VehFound, 2);
 					break;
 				}
@@ -1159,7 +1159,7 @@ CMD:crate(playerid, params[]) {
 	return 1;
 }
 
-stock CreateCount(veh) {
+CreateCount(veh) {
 	new amount = 0;
 	for(new c = 0; c < MAX_CRATES; c++) {
 		if(CrateBox[c][cbInVeh] == veh) {
@@ -1457,7 +1457,7 @@ CMD:cfedit(playerid, params[]) {
 	return 1;
 }
 
-stock DeleteOrder(facility, reason[]) {
+DeleteOrder(facility, const reason[]) {
 	szMiscArray[0] = 0;
 	for(new g = 0; g < MAX_GROUPS; g++) {
 		if(CrateOrder[g][coFacility] == facility) {
@@ -1488,7 +1488,7 @@ stock DeleteOrder(facility, reason[]) {
 	return 1;
 }
 
-stock GetMaxProduction() {
+GetMaxProduction() {
 	new total = 0;
 	for(new f = 0; f < MAX_CRATE_FACILITY; f++) {
 		total += CrateFacility[f][cfProdMax];
@@ -1512,7 +1512,7 @@ CMD:ordercrates(playerid, params[]) {
 	return 1;
 }
 
-stock CancelOrder(playerid) {
+CancelOrder(playerid) {
 	szMiscArray[0] = 0;
 	if(!IsGroupLeader(playerid)) return 1;
 	new group = PlayerInfo[playerid][pMember];
@@ -1569,7 +1569,7 @@ Dialog:order_refund(playerid, response, listitem, inputtext[]) {
 	return 1;
 }
 
-stock PrepOrder(playerid, group) {
+PrepOrder(playerid, group) {
 	if(!IsGroupLeader(playerid)) return 1;
 	new fname[32];
 	szMiscArray[0] = 0;
@@ -1651,7 +1651,7 @@ Dialog:place_order(playerid, response, listitem, inputtext[]) {
 	return 1;
 }
 
-stock ListFacility(playerid) {
+ListFacility(playerid) {
 	if(!IsGroupLeader(playerid)) return 1;
 	szMiscArray[0] = 0;
 	format(szMiscArray, sizeof(szMiscArray), "Facility\tCost per crate\tActive\n");
@@ -1713,7 +1713,7 @@ Dialog:how_crates_work(playerid, response, listitem, inputtext[]) {
 	return PrepOrder(playerid, PlayerInfo[playerid][pMember]);
 }
 
-stock GetFacility(group, &fac) {
+GetFacility(group, &fac) {
 	fac = -1;
     for(new f = 0; f < MAX_CRATE_FACILITY; f++)
     {
@@ -1725,7 +1725,7 @@ stock GetFacility(group, &fac) {
  	}
 }
 
-stock ResetOrder(group) {
+ResetOrder(group) {
 	if(!ValidGroup(group)) return 1;
 	CrateOrder[group][coFacility] = -1;
 	CrateOrder[group][coCrates] = 0;
@@ -1737,7 +1737,7 @@ stock ResetOrder(group) {
 	return 1;
 }
 
-stock GetDeliverPoint(playerid, &point, Float:range)
+GetDeliverPoint(playerid, &point, Float:range)
 {
 	point = -1;
     for(new d = 0; d < MAX_GROUPS; d++)
@@ -1771,9 +1771,9 @@ CMD:delivercrate(playerid, params[]) {
     CrateBeingDelivered[point] = 1;
     VehDelivering[veh] = 1;
     SetPVarInt(playerid, "DeliverCrateTime", 8);
-    SetTimerEx("DeliverCrate", 1000, 0, "iiiii", playerid, fac, veh, point, crates);
+    SetTimerEx("DeliverCrate", 1000, false, "iiiii", playerid, fac, veh, point, crates);
 	GameTextForPlayer(playerid, "~n~~n~~n~~n~~n~~n~~n~~n~~n~~w~8 seconds left", 1100, 3);
-	TogglePlayerControllable(playerid, 0);
+	TogglePlayerControllable(playerid, false);
 	return 1;
 }
 
@@ -1785,11 +1785,11 @@ public DeliverCrate(playerid, fac, veh, point, crates) {
 	format(string, sizeof(string), "~n~~n~~n~~n~~n~~n~~n~~n~~n~~w~%d seconds left", GetPVarInt(playerid, "DeliverCrateTime"));
 	GameTextForPlayer(playerid, string, 1100, 3);
 
-	if(GetPVarInt(playerid, "DeliverCrateTime") > 0) SetTimerEx("DeliverCrate", 1000, 0, "iiiii", playerid, fac, veh, point, crates);
+	if(GetPVarInt(playerid, "DeliverCrateTime") > 0) SetTimerEx("DeliverCrate", 1000, false, "iiiii", playerid, fac, veh, point, crates);
 
 	if(GetPVarInt(playerid, "DeliverCrateTime") < 1) {
 		DeletePVar(playerid, "DeliverCrateTime");
-		TogglePlayerControllable(playerid, 1);
+		TogglePlayerControllable(playerid, true);
 		CrateBeingDelivered[point] = 0;
 		VehDelivering[veh] = 0;
 		if(!ValidGroup(PlayerInfo[playerid][pMember])) {
@@ -1909,7 +1909,7 @@ Dialog:cgun_take(playerid, response, listitem, inputtext[]) {
 		GetCrateBox(playerid, box, 2.0); // Did someone pick it up? or did the player move?
 		if(box == -1) return SendClientMessageEx(playerid, COLOR_GREY, "Crate box went out of reach - Please stay close to the crate box.");
 		if(box != GetPVarInt(playerid, "Cgunbox")) return SendClientMessageEx(playerid, COLOR_RED, "ERROR: Box ID differs from accessed crate, please try again.");
-		new GunID = arrGroupData[group][g_iLockerGuns][listitem];
+		new WEAPON:GunID = arrGroupData[group][g_iLockerGuns][listitem];
 		if(!GunID) return SendClientMessageEx(playerid, COLOR_WHITE, "Theres no weapon assigned to that slot!");
 		if(CrateBox[box][cbMats] < arrGroupData[group][g_iLockerCost][listitem]) return SendClientMessageEx(playerid, COLOR_GRAD2, "There isn't enough materials in the crate for that weapon!");
 		if(PlayerInfo[playerid][pGuns][GetWeaponSlot(GunID)] != GunID) {
@@ -1929,7 +1929,7 @@ Dialog:cgun_take(playerid, response, listitem, inputtext[]) {
 }
 
 // Ignore gate status incase someone is opening a gate at the time of the gate timer.
-stock TriggerGates(fac, status = 1) {
+TriggerGates(fac, status = 1) {
 	for(new g = 0; g < MAX_GATES; g++) {
 		if(GateInfo[g][gFacility] == fac) {
 			if(status) {

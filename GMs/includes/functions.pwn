@@ -63,25 +63,15 @@ Format_PlayerName(playerid) {
 }
 
 CheckPointCheck(iTargetID)  {
-	if(GetPVarType(iTargetID, "hFind") > 0 || GetPVarType(iTargetID, "TrackCar") > 0 || GetPVarType(iTargetID, "DV_TrackCar") > 0 || GetPVarType(iTargetID, "Packages") > 0 || TaxiAccepted[iTargetID] != INVALID_PLAYER_ID || EMSAccepted[iTargetID] != INVALID_PLAYER_ID || BusAccepted[iTargetID] != INVALID_PLAYER_ID || gPlayerCheckpointStatus[iTargetID] != CHECKPOINT_NONE || MedicAccepted[iTargetID] != INVALID_PLAYER_ID || MechanicCallTime[iTargetID] >= 1) {
+	if(GetPVarType(iTargetID, "hFind") > VARTYPE_NONE || GetPVarType(iTargetID, "TrackCar") > VARTYPE_NONE || GetPVarType(iTargetID, "DV_TrackCar") > VARTYPE_NONE || GetPVarType(iTargetID, "Packages") > VARTYPE_NONE || TaxiAccepted[iTargetID] != INVALID_PLAYER_ID || EMSAccepted[iTargetID] != INVALID_PLAYER_ID || BusAccepted[iTargetID] != INVALID_PLAYER_ID || gPlayerCheckpointStatus[iTargetID] != CHECKPOINT_NONE || MedicAccepted[iTargetID] != INVALID_PLAYER_ID || MechanicCallTime[iTargetID] >= 1) {
 		return 1;
 	}
-	if(GetPVarType(iTargetID, "TrackVehicleBurglary") > 0 || GetPVarType(iTargetID, "DeliveringVehicleTime") > 0 || GetPVarType(iTargetID, "pDTest") > 0 || GetPVarType(iTargetID, "pGarbageRun") > 0 || GetPVarType(iTargetID, "pSellingFish") > 0 || GetPVarType(iTargetID, "pDrugRun") || PlayerInfo[iTargetID][pTut] >= 0) 
+	if(GetPVarType(iTargetID, "TrackVehicleBurglary") > VARTYPE_NONE || GetPVarType(iTargetID, "DeliveringVehicleTime") > VARTYPE_NONE || GetPVarType(iTargetID, "pDTest") > VARTYPE_NONE || GetPVarType(iTargetID, "pGarbageRun") > VARTYPE_NONE || GetPVarType(iTargetID, "pSellingFish") > VARTYPE_NONE || GetPVarType(iTargetID, "pDrugRun") || PlayerInfo[iTargetID][pTut] >= 0) 
 		return 1;
 	return 0;
 }
 
-IsNumeric(szInput[]) {
-
-	new
-		iChar,
-		i = 0;
-
-	while ((iChar = szInput[i++])) if (!('0' <= iChar <= '9')) return 0;
-	return 1;
-}
-
-ReturnUserFromIP(szIP[]) {
+ReturnUserFromIP(const szIP[]) {
 
 	foreach(new i : Player) {
 		if(strcmp(szIP, GetPlayerIpEx(i), true) == 0) return i;
@@ -89,7 +79,7 @@ ReturnUserFromIP(szIP[]) {
 	return INVALID_PLAYER_ID;
 }
 
-ReturnUser(text[]) {
+ReturnUser(const text[]) {
 
 	new
 		strPos,
@@ -150,14 +140,6 @@ Float:GetPointDistanceToPointEx(Float:x1,Float:y1,Float:x2,Float:y2)
   y = y1-y2;
   return floatsqroot(x*x+y*y);
 } */
-
-RemovePlayerWeapon(playerid, weaponid)
-{
-	ResetPlayerWeapons(playerid);
-	PlayerInfo[playerid][pGuns][GetWeaponSlot(weaponid)] = 0;
-	SetPlayerWeaponsEx(playerid);
-	return 1;
-}
 
 IsPlayerInRangeOfVehicle(playerid, vehicleid, Float: radius) {
 
@@ -253,7 +235,7 @@ IsInRangeOfPoint(Float: fPosX, Float: fPosY, Float: fPosZ, Float: fPosX2, Float:
 	ApplyAnimation(playerid,animlib,"null",0.0,0,0,0,0,0,1);
 }*/
 
-IsValidName(szPlayerName[]) {
+IsValidName(const szPlayerName[]) {
 
 	new
 		iLength,
@@ -297,7 +279,7 @@ IsPlayerInRangeOfDynamicObject(iPlayerID, iObjectID, Float: fRadius) {
 	return IsPlayerInRangeOfPoint(iPlayerID, fRadius, fPos[0], fPos[1], fPos[2]);
 }
 
-Array_Count(arrCount[], iMax = sizeof arrCount) {
+Array_Count(const arrCount[], iMax = sizeof arrCount) {
 
 	new
 		iCount,
@@ -307,7 +289,7 @@ Array_Count(arrCount[], iMax = sizeof arrCount) {
 	return iCount;
 }
 
-String_Count(arrCount[][], iMax = sizeof arrCount) {
+String_Count(const arrCount[][], iMax = sizeof arrCount) {
 
 	new
 		iCount,
@@ -344,9 +326,7 @@ public killPlayer(playerid)
 forward DisableVehicleAlarm(vehicleid);
 public DisableVehicleAlarm(vehicleid)
 {
-	new engine,lights,alarm,doors,bonnet,boot,objective;
- 	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
-    SetVehicleParamsEx(vehicleid,engine,lights,VEHICLE_PARAMS_OFF,doors,bonnet,boot,objective);
+    SetVehicleParamsEx(vehicleid, .alarm = VEHICLE_PARAMS_OFF);
 	return 1;
 }
 
@@ -356,7 +336,7 @@ public ReleasePlayer(playerid)
 	DeletePVar(playerid, "IsFrozen");
 	if(PlayerCuffed[playerid] == 0)
 	{
-		TogglePlayerControllable(playerid,1);
+		TogglePlayerControllable(playerid,true);
 	}
 }
 
@@ -474,11 +454,11 @@ forward SetVehicleEngine(vehicleid, playerid);
 public SetVehicleEngine(vehicleid, playerid)
 {
 	new string[128];
-	new engine,lights,alarm,doors,bonnet,boot,objective;
-    GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	new bool:engine;
+    GetVehicleParamsEx(vehicleid, engine);
     if(engine == VEHICLE_PARAMS_ON)
 	{
-		SetVehicleParamsEx(vehicleid,VEHICLE_PARAMS_OFF,lights,alarm,doors,bonnet,boot,objective);
+		SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_OFF);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle engine stopped successfully.");
 		arr_Engine{vehicleid} = 0;
 	}
@@ -500,7 +480,7 @@ public SetVehicleEngine(vehicleid, playerid)
 			}*/
 			return SendClientMessageEx(playerid, COLOR_RED, "The car won't start - there's no fuel in the tank!");
 		}
-		SetVehicleParamsEx(vehicleid,VEHICLE_PARAMS_ON,lights,alarm,doors,bonnet,boot,objective);
+		SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_ON);
 		if(DynVeh[vehicleid] != -1 && DynVehicleInfo[DynVeh[vehicleid]][gv_iType] == 1 && IsAPlane(vehicleid)) { SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle engine started successfully (/announcetakeoff to turn the engine off)."); }
 		else SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle engine started successfully (press ~k~~CONVERSATION_YES~ to turn the engine off).");
 		arr_Engine{vehicleid} = 1;
@@ -602,7 +582,7 @@ public cameraexpire(playerid)
 	  	SetPlayerVirtualWorld(playerid, GetPVarInt(playerid, "cameravw2"));
 	  	SetPlayerInterior(playerid, GetPVarInt(playerid, "cameraint2"));
 	}
- 	TogglePlayerControllable(playerid,1);
+ 	TogglePlayerControllable(playerid,true);
   	DestroyDynamic3DTextLabel(Camera3D[playerid]);
    	SendClientMessageEx(playerid, COLOR_GRAD1, "Your camera ran out of batteries!");
 }
@@ -633,7 +613,7 @@ public KickNonRP(playerid)
 	if(strcmp(GetPlayerNameEx(playerid), name) == 0)
 	{
 	    SendClientMessage(playerid, COLOR_WHITE, "You have been kicked for failing to connect with a role play name (i.e. John_Smith).");
-		SetTimerEx("KickEx", 1000, 0, "i", playerid);
+		SetTimerEx("KickEx", 1000, false, "i", playerid);
 	}
 }
 
@@ -834,12 +814,12 @@ public OtherTimerEx(playerid, type)
 		}
 		case TYPE_DELIVERVEHICLE: 
 		{
-			if(GetPVarType(playerid, "tpDeliverVehTimer") > 0 && GetPVarType(playerid, "DeliveringVehicleTime") > 0)
+			if(GetPVarType(playerid, "tpDeliverVehTimer") > VARTYPE_NONE && GetPVarType(playerid, "DeliveringVehicleTime") > VARTYPE_NONE)
 			{
 				new Float: pX = GetPVarFloat(playerid, "tpDeliverVehX"), Float: pY = GetPVarFloat(playerid, "tpDeliverVehY"), Float: pZ = GetPVarFloat(playerid, "tpDeliverVehZ");
 				if(GetPlayerDistanceFromPoint(playerid, pX, pY, pZ) > 500)
 				{
-					if(GetPVarType(playerid, "tpJustEntered") == 0)
+					if(GetPVarType(playerid, "tpJustEntered") == VARTYPE_NONE)
 					{
 						new string[128];
 						format(string, sizeof(string), "{AA3333}AdmWarning{FFFF00}: %s(%d) may be TP hacking while delivering a lock picked vehicle.", GetPlayerNameEx(playerid), playerid);
@@ -931,7 +911,7 @@ public HelpTimer(playerid)
         	DeletePVar(playerid, "COMMUNITY_ADVISOR_REQUEST");
          	return 1;
         }
-		SetTimerEx("HelpTimer", 60000, 0, "d", playerid);
+		SetTimerEx("HelpTimer", 60000, false, "d", playerid);
 	}
 	return 1;
 }
@@ -1352,11 +1332,11 @@ public UpdateCarRadars()
 }
 			
 			/*  ---------------- STOCK FUNCTIONS ----------------- */
-stock Float:GetDistanceBetweenPoints(Float:x1, Float:y1, Float:z1, Float:x2, Float:y2, Float:z2) {
+Float:GetDistanceBetweenPoints(Float:x1, Float:y1, Float:z1, Float:x2, Float:y2, Float:z2) {
     return floatsqroot(floatpower(x1 - x2, 2) + floatpower(y1 - y2, 2) + floatpower(z1 - z2, 2));
 }
 
-stock BubbleSort(a[], size)
+BubbleSort(a[], size)
 {
 	new tmp=0, bool:swapped;
 
@@ -1374,7 +1354,7 @@ stock BubbleSort(a[], size)
 	} while(swapped);
 }
 
-stock ShowNoticeGUIFrame(playerid, frame)
+ShowNoticeGUIFrame(playerid, frame)
 {
 	HideNoticeGUIFrame(playerid);
 
@@ -1410,7 +1390,7 @@ stock ShowNoticeGUIFrame(playerid, frame)
 	}
 }
 
-stock HideNoticeGUIFrame(playerid)
+HideNoticeGUIFrame(playerid)
 {
 	for(new i = 0; i < 8; i++)
 	{
@@ -1418,15 +1398,7 @@ stock HideNoticeGUIFrame(playerid)
 	}
 }
 
-stock BadFloat(Float:x)
-{
-	if(x >= 10.0 || x <= -10.0)
-	    return true;
-
-	return false;
-}
-
-stock SendBugMessage(playerid, member, string[])
+SendBugMessage(playerid, member, const string[])
 {
     if(!(0 <= member < MAX_GROUPS))
         return 0;
@@ -1443,7 +1415,7 @@ stock SendBugMessage(playerid, member, string[])
 	return 1;
 }
 
-/*stock ReplacePH(oldph, newph)
+/*ReplacePH(oldph, newph)
 {
     #pragma unused oldph
     #pragma unused newph
@@ -1489,31 +1461,7 @@ stock SendBugMessage(playerid, member, string[])
 	return 1;
 }*/
 
-stock IsValidIP(ip[])
-{
-    new a;
-	for (new i = 0; i < strlen(ip); i++)
-	{
-		if (ip[i] == '.')
-		{
-		    a++;
-		}
-	}
-	if (a != 3)
-	{
-	    return 1;
-	}
-	return 0;
-}
-
-stock GetPlayersName(playerid)
-{
-	new name[MAX_PLAYER_NAME];
-	GetPlayerName(playerid, name, sizeof(name));
-	return name;
-}
-
-stock IsValidSkin(skinid)
+IsValidSkin(skinid)
 {
 	if (skinid < 0 || skinid > 299)
 	    return 0;
@@ -1560,7 +1508,7 @@ stock IsFemaleSkin(skinid)
 	return 0;
 }
 
-stock PlayerFacePlayer( playerid, targetplayerid )
+PlayerFacePlayer( playerid, targetplayerid )
 {
 	new Float: Angle;
 	GetPlayerFacingAngle( playerid, Angle );
@@ -1568,7 +1516,7 @@ stock PlayerFacePlayer( playerid, targetplayerid )
 	return true;
 }
 
-stock GivePlayerEventWeapons( playerid )
+GivePlayerEventWeapons( playerid )
 {
 	if( GetPVarInt( playerid, "EventToken" ) == 1 )
 	{
@@ -1582,7 +1530,7 @@ stock GivePlayerEventWeapons( playerid )
 	return 1;
 }
 
-stock crc32(string[])
+crc32(const string[])
 {
 	new crc_table[256] = {
 			0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA, 0x076DC419, 0x706AF48F, 0xE963A535,
@@ -1631,7 +1579,7 @@ stock crc32(string[])
   	return crc ^ -1;
 }
 
-stock GetPlayerSQLId(playerid)
+GetPlayerSQLId(playerid)
 {
 	if(gPlayerLogged{playerid})
 	{
@@ -1640,21 +1588,21 @@ stock GetPlayerSQLId(playerid)
 	return -1;
 }
 
-stock GetPlayerNameExt(playerid)
+GetPlayerNameExt(playerid)
 {
 	new name[MAX_PLAYER_NAME];
 	GetPlayerName(playerid, name, sizeof(name));
 	return name;
 }
 
-stock GetWeaponNameEx(weaponid)
+GetWeaponNameEx(WEAPON:weaponid)
 {
 	new name[MAX_PLAYER_NAME];
 	GetWeaponName(weaponid, name, sizeof(name));
 	return name;
 }
 
-stock GetPlayerNameEx(playerid) {
+GetPlayerNameEx(playerid) {
 
 	new
 		szName[MAX_PLAYER_NAME],
@@ -1665,7 +1613,7 @@ stock GetPlayerNameEx(playerid) {
 	return szName;
 }
 
-stock StripUnderscore(string[]) // Doesn't remove underscore from original string any more
+StripUnderscore(string[]) // Doesn't remove underscore from original string any more
 {
 	new iPos, newstring[128];
 	format(newstring, sizeof(newstring), "%s", string);
@@ -1674,26 +1622,14 @@ stock StripUnderscore(string[]) // Doesn't remove underscore from original strin
 }
 
 
-stock GetPlayerIpEx(playerid)
+GetPlayerIpEx(playerid)
 {
     new ip[16];
 	GetPlayerIp(playerid, ip, sizeof(ip));
 	return ip;
 }
 
-stock StripNewLine(string[])
-{
-  new len = strlen(string);
-  if (string[0]==0) return ;
-  if ((string[len - 1] == '\n') || (string[len - 1] == '\r'))
-    {
-      string[len - 1] = 0;
-      if (string[0]==0) return ;
-      if ((string[len - 2] == '\n') || (string[len - 2] == '\r')) string[len - 2] = 0;
-    }
-}
-
-stock StripColorEmbedding(string[])
+StripColorEmbedding(string[])
 {
  	new i, tmp[7];
   	while (i < strlen(string) - 7)
@@ -1701,7 +1637,7 @@ stock StripColorEmbedding(string[])
 	    if (string[i] == '{' && string[i + 7] == '}')
 		{
 		    strmid(tmp, string, i + 1, i + 7);
-			if (ishex(tmp))
+			if (IsHex(tmp))
 			{
 				strdel(string, i, i + 8);
 				i = 0;
@@ -1712,82 +1648,7 @@ stock StripColorEmbedding(string[])
   	}
 }
 
-stock strtoupper(string[])
-{
-        new retStr[128], i, j;
-        while ((j = string[i])) retStr[i++] = chrtoupper(j);
-        retStr[i] = '\0';
-        return retStr;
-}
-
-stock wordwrap(string[], width, seperator[] = "\n", dest[], size = sizeof(dest))
-{
-    if (dest[0])
-    {
-        dest[0] = '\0';
-    }
-    new
-        length,
-        multiple,
-        processed,
-        tmp[192];
-
-    strmid(tmp, string, 0, width);
-    length = strlen(string);
-
-    if (width > length || !width)
-    {
-        memcpy(dest, string, _, size * 4, size);
-        return 0;
-    }
-    for (new i = 1; i < length; i ++)
-    {
-        if (tmp[0] == ' ')
-        {
-            strdel(tmp, 0, 1);
-        }
-        multiple = !(i % width);
-        if (multiple)
-        {
-            strcat(dest, tmp, size);
-            strcat(dest, seperator, size);
-            strmid(tmp, string, i, width + i);
-            if (strlen(tmp) < width)
-            {
-                strmid(tmp, string, (width * processed) + width, length);
-                if (tmp[0] == ' ')
-                {
-                    strdel(tmp, 0, 1);
-                }
-                strcat(dest, tmp, size);
-                break;
-            }
-            processed++;
-            continue;
-        }
-        else if (i == length - 1)
-        {
-            strmid(tmp, string, (width * processed), length);
-            strcat(dest, tmp, size);
-            break;
-        }
-    }
-    return 1;
-}
-
-stock fcreate(filename[])
-{
-	if (fexist(filename)) return false;
-	new File:fhnd;
-	fhnd=fopen(filename,io_write);
-	if (fhnd) {
-		fclose(fhnd);
-		return true;
-	}
-	return false;
-}
-
-stock IsAtBar(playerid)
+IsAtBar(playerid)
 {
 	if(IsPlayerConnected(playerid))
 	{
@@ -1850,7 +1711,7 @@ stock IsAtBar(playerid)
 	return 0;
 }
 
-stock Group_NumToDialogHex(iValue)
+Group_NumToDialogHex(iValue)
 {
 	new szValue[7];
 	format(szValue, sizeof(szValue), "%x", iValue);
@@ -1861,7 +1722,7 @@ stock Group_NumToDialogHex(iValue)
 	return szValue;
 }
 
-stock FIXES_valstr(dest[], value, bool:pack = false)
+FIXES_valstr(dest[], value, bool:pack = false)
 {
     // format can't handle cellmin properly
     static const cellmin_value[] = !"-2147483648";
@@ -1872,7 +1733,7 @@ stock FIXES_valstr(dest[], value, bool:pack = false)
         format(dest, 12, "%d", value) && pack && strpack(dest, dest, 12);
 }
 
-stock GetClosestPlayer(p1)
+GetClosestPlayer(p1)
 {
 	new Float:dis,Float:dis2,player;
 	player = -1;
@@ -1892,12 +1753,12 @@ stock GetClosestPlayer(p1)
 	return player;
 }
 
-stock Float: FormatFloat(Float:number) {
+Float: FormatFloat(Float:number) {
     if(number != number) return 0.0;
     else return number;
 }
 
-stock OnPlayerStatsUpdate(playerid) {
+OnPlayerStatsUpdate(playerid) {
 	if(gPlayerLogged{playerid}) {
 		if(!GetPVarType(playerid, "TempName") && !GetPVarInt(playerid, "EventToken") && !GetPVarType(playerid, "IsInArena")) {
 		    new Float: Pos[4], Float: Health[2];
@@ -1951,24 +1812,7 @@ stock OnPlayerStatsUpdate(playerid) {
 	return 1;
 }
 
-stock splits(const strsrc[], strdest[][], delimiter)
-{
-	new i, li;
-	new aNum;
-	new len;
-	while(i <= strlen(strsrc)){
-		if(strsrc[i]==delimiter || i==strlen(strsrc)){
-			len = strmid(strdest[aNum], strsrc, li, i, 128);
-			strdest[aNum][len] = 0;
-			li = i+1;
-			aNum++;
-		}
-		i++;
-	}
-	return 1;
-}
-
-stock AddSpecialToken(playerid)
+AddSpecialToken(playerid)
 {
 
 	new
@@ -2004,7 +1848,7 @@ stock AddSpecialToken(playerid)
 	return 1;
 }
 
-stock SeeSpecialTokens(playerid, hoursneeded)
+SeeSpecialTokens(playerid, hoursneeded)
 {
 	if(PlayerInfo[playerid][pAdmin] >= 2) return 0; // Admins cant win
 	if(hoursneeded <= 0) return 1;
@@ -2027,26 +1871,14 @@ stock SeeSpecialTokens(playerid, hoursneeded)
 	return 0;
 }
 
-stock ResetPlayerCash(playerid)
+ResetPlayerCash(playerid)
 {
 	PlayerInfo[playerid][pCash] = 0;
 	ResetPlayerMoney(playerid);
 	return 1;
 }
 
-stock SendTeamBeepMessage(color, string[])
-{
-	foreach(new i: Player)
-	{
-		if(IsACop(i))
-		{
-			SendClientMessageEx(i, color, string);
-			RingTone[i] = 20;
-		}
-	}	
-}
-
-stock number_format(number)
+number_format(number)
 {
 	new i, string[15];
 	FIXES_valstr(string, number);
@@ -2061,12 +1893,12 @@ stock number_format(number)
 	return string;
 }
 
-stock abs(value)
+abs(value)
 {
     return ((value < 0 ) ? (-value) : (value));
 }
 
-stock str_replace(sSearch[], sReplace[], const sSubject[], &iCount = 0)
+str_replace(const sSearch[], const sReplace[], const sSubject[], &iCount = 0)
 {
 	new
 		iLengthTarget = strlen(sSearch),
@@ -2097,7 +1929,7 @@ stock str_replace(sSearch[], sReplace[], const sSubject[], &iCount = 0)
 	return sReturn;
 }
 
-stock SaveAllAccountsUpdate()
+SaveAllAccountsUpdate()
 {
 	foreach(new i: Player)
 	{
@@ -2110,7 +1942,7 @@ stock SaveAllAccountsUpdate()
 	}	
 }
 
-stock SetPlayerToTeamColor(playerid)
+SetPlayerToTeamColor(playerid)
 {
 	if(IsPlayerConnected(playerid))
 	{
@@ -2180,29 +2012,18 @@ stock SetPlayerToTeamColor(playerid)
 	return 1;
 }
 
-stock strfindcount(substring[], string[], bool:ignorecase = false, startpos = 0)
-{
-	new ncount, start = strfind(string, substring, ignorecase, startpos);
-	while(start >- 1)
-	{
-		start = strfind(string, substring, ignorecase, start + strlen(substring));
-		ncount++;
-	}
-	return ncount;
-}
-
-stock IsInvalidSkin(skin) {
+IsInvalidSkin(skin) {
 	if(!(0 <= skin <= 311)) return 1;
     return 0;
 }
 
-stock IsKeyJustDown(key, newkeys, oldkeys)
+IsKeyJustDown(key, newkeys, oldkeys)
 {
 	if((newkeys & key) && !(oldkeys & key)) return 1;
 	return 0;
 }
 
-stock UpdateWheelTarget()
+UpdateWheelTarget()
 {
     gCurrentTargetYAngle += 36.0; // There are 10 carts, so 360 / 10
     if(gCurrentTargetYAngle >= 360.0) {
@@ -2210,12 +2031,6 @@ stock UpdateWheelTarget()
     }
 	if(gWheelTransAlternate) gWheelTransAlternate = 0;
 	else gWheelTransAlternate = 1;
-}
-
-stock Random(min, max)
-{
-    new a = random(max - min) + min;
-    return a;
 }
 
 forward ResetVariables();
@@ -2285,7 +2100,7 @@ public DG_AutoReset()
 	}
 }
 
-stock GetFirstName(playerid)
+GetFirstName(playerid)
 {
 	new name[MAX_PLAYER_NAME], underscore;
 	GetPlayerName(playerid, name, MAX_PLAYER_NAME);
@@ -2294,7 +2109,7 @@ stock GetFirstName(playerid)
 	return name;
 }
 
-stock GetLastName(playerid)
+GetLastName(playerid)
 {
 	new name[MAX_PLAYER_NAME], underscore;
 	GetPlayerName(playerid, name, MAX_PLAYER_NAME);
@@ -2325,7 +2140,7 @@ stock GetLastName(playerid)
 	return ShowPlayerDialogEx(playerid, DIALOG_HOLSTER, DIALOG_STYLE_LIST, "Holster Menu", szString, "Select", "Cancel"); 
 }*/
 
-stock randomString(strDest[], strLen = 10)
+randomString(strDest[], strLen = 10)
 {
 	while(strLen--) strDest[strLen] = random(2) ? (random(26) + (random(2) ? 'a' : 'A')) : (random(10) + '0');
 }
@@ -2473,7 +2288,7 @@ SpawnPlayerInPrisonCell(playerid, cellid)
 	return 1;
 }
 /*
-stock WindowStatusForChat(sendid, receiveid)
+WindowStatusForChat(sendid, receiveid)
 {
 	new SendWindow[4], ReceiveWindow[4];
 	if(GetPlayerVehicleID(sendid) && GetPlayerVehicleID(receiveid))
@@ -2504,7 +2319,7 @@ stock WindowStatusForChat(sendid, receiveid)
 	return 1;
 }*/
 
-stock PlayerBusy(target) {
+PlayerBusy(target) {
 	if(GetPVarType(target, "PlayerCuffed") ||
 		GetPVarInt(target, "pBagged") >= 1 ||
 		GetPVarType(target, "Injured") ||
@@ -2516,7 +2331,7 @@ stock PlayerBusy(target) {
 	else return 0;
 }
 
-stock TakePlayerMoney(playerid, amount) {
+TakePlayerMoney(playerid, amount) {
 	if(GetPlayerCash(playerid) > amount) {
 		GivePlayerCash(playerid, -amount);
 		return 1;

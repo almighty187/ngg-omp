@@ -6,7 +6,7 @@
 	Integrated the Texture Studio by Pottus.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define 		MAX_CATALOG 					1000
 #define 		MAX_TILES 						16
@@ -66,6 +66,11 @@ new PlayerTextureMenuInfo[MAX_PLAYERS][TextMenuInfo];
 new PlayerTextureThemeIndex[MAX_PLAYERS][100]; // Max of 100 textures in a theme.
 new ListItemTextureTrackId[MAX_PLAYERS][MAX_SEARCH_TEXTURES];
 
+timer FurnitureControl[1000](playerid, Float:X, Float:Y, Float:Z) {
+	TogglePlayerControllable(playerid, true);
+	SetPlayerPos(playerid, X, Y, Z);
+}
+
 hook OnGameModeInit() {
 
 	FurnitureTDInit();
@@ -91,15 +96,15 @@ hook OnPlayerClickTextDraw(playerid, Text:clickedid) {
 	if(clickedid == Furniture_TD[18] || clickedid == Furniture_TD[18]) FurnitureMenu(playerid, 2); // Build Mode.
 	if(clickedid == Furniture_TD[8]) FurnitureMenu(playerid, 3); // Sell Mode.
 	if(clickedid == Furniture_TD[9]) FurnitureMenu(playerid, 1); // Buy Mode.
-	if(clickedid == Furniture_TD[13]) cmd_furniture(playerid, "");	
-	if(clickedid == Furniture_TD[14]) cmd_furniturehelp(playerid, "");
-	if(clickedid == Furniture_TD[16]) cmd_furnitureresetpos(playerid, "");
+	if(clickedid == Furniture_TD[13]) cmd_furniture(playerid);	
+	if(clickedid == Furniture_TD[14]) cmd_furniturehelp(playerid);
+	if(clickedid == Furniture_TD[16]) cmd_furnitureresetpos(playerid);
 	if(clickedid == Furniture_TD[10]) FurniturePermit(playerid);
 	return 1;
 }
 
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 
 	if(OnPlayerKeyStateChange3DMenu(playerid,newkeys,oldkeys)) return 1;
 
@@ -194,7 +199,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
 				new iModelID = GetPVarInt(playerid, PVAR_FURNITURE_BUYMODEL),
 					iHouseID = GetHouseID(playerid),
-					iSlotID = -1;
+					iSlotID;
 
 				iSlotID = GetNextFurnitureSlotID(playerid, iHouseID);
 				if(iSlotID > GetMaxFurnitureSlots(playerid) || iSlotID == -1) return SendClientMessageEx(playerid, COLOR_GRAD1, "You do not have any furniture slots left.");
@@ -427,14 +432,14 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				SetPVarInt(playerid, "textslot", listitem);
 				switch(GetPVarType(playerid, "color")) {
 
-					case 0: {
+					case VARTYPE_NONE: {
 
 						//for(new i; i < sizeof(szFurnitureTextures); ++i) format(szMiscArray, sizeof(szMiscArray), "%s%s\n", szMiscArray, szFurnitureTextures[i][0]);
 						//return ShowPlayerDialogEx(playerid, DIALOG_FURNITURE_PAINT2, DIALOG_STYLE_LIST, "Furniture Menu | Texture Lab", szMiscArray, "Select", "Cancel");
 						SetPVarInt(playerid, "studorfind", 1);
 						return ShowPlayerDialogEx(playerid, DIALOG_FURNITURE_PAINT2, DIALOG_STYLE_LIST, "Furniture Menu | Texturing", "Texture Studio\nSearch Texture", "Select", "Cancel");
 					}
-					case 1: return ShowPlayerDialogEx(playerid, DIALOG_FURNITURE_PAINT2, DIALOG_STYLE_INPUT, "Furniture Menu | Color Lab", "Please enter a HEX color code.", "Select", "Cancel");
+					case VARTYPE_INT: return ShowPlayerDialogEx(playerid, DIALOG_FURNITURE_PAINT2, DIALOG_STYLE_INPUT, "Furniture Menu | Color Lab", "Please enter a HEX color code.", "Select", "Cancel");
 				}
 			}
 			else {
@@ -446,8 +451,8 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
 				switch(GetPVarType(playerid, "color")) {
 
-					case 0: ProcessFurnitureTexture(iHouseID, iSlotID, iObjectID, iTextSlot, ListItemTextureTrackId[playerid][listitem], 0, 1);
-					case 1: ProcessFurnitureTexture(iHouseID, iSlotID, iObjectID, iTextSlot, 0, GetFurnitureColorCode(listitem), 1);
+					case VARTYPE_NONE: ProcessFurnitureTexture(iHouseID, iSlotID, iObjectID, iTextSlot, ListItemTextureTrackId[playerid][listitem], 0, 1);
+					case VARTYPE_INT: ProcessFurnitureTexture(iHouseID, iSlotID, iObjectID, iTextSlot, 0, GetFurnitureColorCode(listitem), 1);
 				}
 
 				DeletePVar(playerid, PVAR_FURNITURE_EDITING);
@@ -542,7 +547,7 @@ public OnPlayerSelectDynamicObject(playerid, objectid, modelid, Float:x, Float:y
 	}
 	if(GetPVarType(playerid, PVAR_FURNITURE)) {
 
-		CancelEdit(playerid);
+		EndObjectEditing(playerid);
 
 		new iHouseID = GetHouseID(playerid),
 			i,
@@ -624,12 +629,6 @@ public OnPlayerSelectDynamicObject(playerid, objectid, modelid, Float:x, Float:y
 }
 
 
-timer FurnitureControl[1000](playerid, Float:X, Float:Y, Float:Z) {
-	TogglePlayerControllable(playerid, true);
-	SetPlayerPos(playerid, X, Y, Z);
-}
-
-
 timer FurnitureEditObject[5000](playerid) {
 	
 	new Float:fPos[6];
@@ -648,7 +647,7 @@ timer FurnitureEditObject[5000](playerid) {
 	fPos[5] = GetPVarFloat(playerid, "PZ");
 	if(!IsPlayerInRangeOfPoint(playerid, 15.0, fPos[3], fPos[4], fPos[5])) {
 
-		CancelEdit(playerid);
+		EndObjectEditing(playerid);
 		DeletePVar(playerid, "furnfirst");
 		new iHouseID = GetPVarInt(playerid, PVAR_INHOUSE);
 		Player_StreamPrep(playerid, HouseInfo[iHouseID][hInteriorX], HouseInfo[iHouseID][hInteriorY], HouseInfo[iHouseID][hInteriorZ], FREEZE_TIME);
@@ -657,7 +656,7 @@ timer FurnitureEditObject[5000](playerid) {
 	}
 	if(fPos[5] > (fPos[2] + 2.0)) {
 
-		CancelEdit(playerid);
+		EndObjectEditing(playerid);
 		DeletePVar(playerid, "furnfirst");
 		new iHouseID = GetPVarInt(playerid, PVAR_INHOUSE);
 		Player_StreamPrep(playerid, HouseInfo[iHouseID][hInteriorX], HouseInfo[iHouseID][hInteriorY], HouseInfo[iHouseID][hInteriorZ], FREEZE_TIME);
@@ -673,7 +672,7 @@ timer Furniture_HousePosition[5000](playerid, iHouseID) {
 }
 
 
-timer RehashHouseFurniture[10000](iHouseID) {
+stock timer RehashHouseFurniture[10000](iHouseID) {
 
 	mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "SELECT * FROM `furniture` WHERE `houseid` = '%d'", iHouseID);
 	mysql_tquery(MainPipeline, szMiscArray, "OnRehashHouseFurniture", "i", iHouseID);
@@ -734,11 +733,21 @@ EditFurniture(playerid, objectid, modelid) {
 	EditDynamicObject(playerid, objectid);
 }
 
+timer AnimateFurniturePreview[1000](playerid, rotation) {
+
+	if(GetPVarType(playerid, "FurnPreview")) {
+		PlayerTextDrawSetPreviewRot(playerid, Furniture_PTD[playerid][1], -16.000000, 0.000000, rotation, 1.000000);
+		PlayerTextDrawHide(playerid, Furniture_PTD[playerid][1]);
+		PlayerTextDrawShow(playerid, Furniture_PTD[playerid][1]);
+		defer AnimateFurniturePreview(playerid, rotation+45);
+	}
+}
+
 PreviewFurniture(playerid, iModelID, bool:show) {
 
 	switch(show) {
 
-		case 0: {
+		case false: {
 			DeletePVar(playerid, "FurnPreview");
 			TextDrawHideForPlayer(playerid, Furniture_TD[25]);
 			TextDrawHideForPlayer(playerid, Furniture_TD[26]);
@@ -765,16 +774,6 @@ PreviewFurniture(playerid, iModelID, bool:show) {
 			SetPVarInt(playerid, "FurnPreview", 1);
 			defer AnimateFurniturePreview(playerid, 0);
 		}
-	}
-}
-
-timer AnimateFurniturePreview[1000](playerid, rotation) {
-
-	if(GetPVarType(playerid, "FurnPreview")) {
-		PlayerTextDrawSetPreviewRot(playerid, Furniture_PTD[playerid][1], -16.000000, 0.000000, rotation, 1.000000);
-		PlayerTextDrawHide(playerid, Furniture_PTD[playerid][1]);
-		PlayerTextDrawShow(playerid, Furniture_PTD[playerid][1]);
-		defer AnimateFurniturePreview(playerid, rotation+45);
 	}
 }
 
@@ -855,11 +854,11 @@ FurnitureMenu(playerid, menu = 0) {
 	new iHouseID = GetHouseID(playerid);
 	if(iHouseID == INVALID_HOUSE_ID) {
 
-		cmd_furniture(playerid, "");
+		cmd_furniture(playerid);
 		return SendClientMessageEx(playerid, COLOR_GRAD1, "You are not in a house anymore.");
 	}
 	if(!HousePermissionCheck(playerid, iHouseID)) {
-		cmd_furniture(playerid, "");
+		cmd_furniture(playerid);
 		return SendClientMessageEx(playerid, COLOR_GRAD1, "You are not allowed to modify this house's furniture.");
 	}
 	switch(menu) {
@@ -930,7 +929,7 @@ FurnitureMenu(playerid, menu = 0) {
 		case 3: { // Sell furniture.
 
 			SetPVarInt(playerid, "SellFurniture", 1);
-			SelectObject(playerid);
+			BeginObjectSelecting(playerid);
 			return 1;
 			
 			/*
@@ -945,13 +944,13 @@ FurnitureMenu(playerid, menu = 0) {
 		}
 		case 4: { // New Build Mode.
 
-			SelectObject(playerid);
+			BeginObjectSelecting(playerid);
 			return 1;
 		}
 		case 5: { // Paint
 
 			SetPVarInt(playerid, "paint", 1);
-			SelectObject(playerid);
+			BeginObjectSelecting(playerid);
 			return 1;
 		}
 	}
@@ -1278,55 +1277,34 @@ DestroyFurniture(iHouseID, iSlotID) {
 FurniturePlayerTDInit(playerid) {
 
 	Furniture_PTD[playerid][0] = CreatePlayerTextDraw(playerid, 551.000000, 354.000000, "Skin");
-	PlayerTextDrawBackgroundColor(playerid, Furniture_PTD[playerid][0], 0);
-	PlayerTextDrawFont(playerid, Furniture_PTD[playerid][0], 5);
-	PlayerTextDrawLetterSize(playerid, Furniture_PTD[playerid][0], 0.169999, 1.200000);
-	PlayerTextDrawColor(playerid, Furniture_PTD[playerid][0], -1);
-	PlayerTextDrawSetOutline(playerid, Furniture_PTD[playerid][0], 0);
-	PlayerTextDrawSetProportional(playerid, Furniture_PTD[playerid][0], 1);
-	PlayerTextDrawSetShadow(playerid, Furniture_PTD[playerid][0], 2);
-	PlayerTextDrawUseBox(playerid, Furniture_PTD[playerid][0], 1);
-	PlayerTextDrawBoxColor(playerid, Furniture_PTD[playerid][0], 0x00000000);
+	PlayerTextDrawBackgroundColour(playerid, Furniture_PTD[playerid][0], 0);
+	PlayerTextDrawFont(playerid, Furniture_PTD[playerid][0], TEXT_DRAW_FONT_MODEL_PREVIEW);
+	PlayerTextDrawColour(playerid, Furniture_PTD[playerid][0], -1);
 	PlayerTextDrawTextSize(playerid, Furniture_PTD[playerid][0], 80.000000, 74.000000);
 	PlayerTextDrawSetPreviewModel(playerid, Furniture_PTD[playerid][0], 93);
-	PlayerTextDrawSetPreviewRot(playerid, Furniture_PTD[playerid][0], 345.000000, 0.000000, 320.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, Furniture_PTD[playerid][0], 0);
+	PlayerTextDrawSetPreviewRot(playerid, Furniture_PTD[playerid][0], 345.000000, 0.000000, 320.000000);
 
 	Furniture_PTD[playerid][1] = CreatePlayerTextDraw(playerid,495.000000, 173.000000, "Model");
-	PlayerTextDrawBackgroundColor(playerid, Furniture_PTD[playerid][1], 0);
-	PlayerTextDrawFont(playerid, Furniture_PTD[playerid][1], 5);
- 	PlayerTextDrawColor(playerid, Furniture_PTD[playerid][1], -1);
-	PlayerTextDrawSetOutline(playerid, Furniture_PTD[playerid][1], 0);
-	PlayerTextDrawSetProportional(playerid, Furniture_PTD[playerid][1], 1);
-	PlayerTextDrawSetShadow(playerid, Furniture_PTD[playerid][1], 0);
-	PlayerTextDrawUseBox(playerid, Furniture_PTD[playerid][1], 1);
-	PlayerTextDrawBoxColor(playerid, Furniture_PTD[playerid][1], 0x00000000);
+	PlayerTextDrawBackgroundColour(playerid, Furniture_PTD[playerid][1], 0);
+	PlayerTextDrawFont(playerid, Furniture_PTD[playerid][1], TEXT_DRAW_FONT_MODEL_PREVIEW);
+ 	PlayerTextDrawColour(playerid, Furniture_PTD[playerid][1], -1);
 	PlayerTextDrawTextSize(playerid, Furniture_PTD[playerid][1], 109.000000, 97.000000);
 	PlayerTextDrawSetPreviewModel(playerid, Furniture_PTD[playerid][1], 0);
-	PlayerTextDrawSetPreviewRot(playerid,  Furniture_PTD[playerid][1], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, Furniture_PTD[playerid][1], 0);
+	PlayerTextDrawSetPreviewRot(playerid,  Furniture_PTD[playerid][1], -16.000000, 0.000000, -55.000000);
 
 	Furniture_PTD[playerid][2] = CreatePlayerTextDraw(playerid,627.000000, 287.000000, "Slot: 1");
-	PlayerTextDrawAlignment(playerid, Furniture_PTD[playerid][2], 3);
-	PlayerTextDrawBackgroundColor(playerid, Furniture_PTD[playerid][2], 255);
-	PlayerTextDrawFont(playerid, Furniture_PTD[playerid][2], 2);
+	PlayerTextDrawAlignment(playerid, Furniture_PTD[playerid][2], TEXT_DRAW_ALIGN_RIGHT);
+	PlayerTextDrawFont(playerid, Furniture_PTD[playerid][2], TEXT_DRAW_FONT_2);
 	PlayerTextDrawLetterSize(playerid, Furniture_PTD[playerid][2], 0.230000, 1.000000);
-	PlayerTextDrawColor(playerid, Furniture_PTD[playerid][2], -1);
-	PlayerTextDrawSetOutline(playerid, Furniture_PTD[playerid][2], 0);
-	PlayerTextDrawSetProportional(playerid, Furniture_PTD[playerid][2], 1);
+	PlayerTextDrawColour(playerid, Furniture_PTD[playerid][2], -1);
 	PlayerTextDrawSetShadow(playerid, Furniture_PTD[playerid][2], 1);
-	PlayerTextDrawSetSelectable(playerid, Furniture_PTD[playerid][2], 0);
 
 	Furniture_PTD[playerid][3] = CreatePlayerTextDraw(playerid, 628.000000, 299.000000, "Name:");
-	PlayerTextDrawAlignment(playerid, Furniture_PTD[playerid][3], 3);
-	PlayerTextDrawBackgroundColor(playerid, Furniture_PTD[playerid][3], 255);
-	PlayerTextDrawFont(playerid, Furniture_PTD[playerid][3], 2);
+	PlayerTextDrawAlignment(playerid, Furniture_PTD[playerid][3], TEXT_DRAW_ALIGN_RIGHT);
+	PlayerTextDrawFont(playerid, Furniture_PTD[playerid][3], TEXT_DRAW_FONT_2);
 	PlayerTextDrawLetterSize(playerid, Furniture_PTD[playerid][3], 0.230000, 1.000000);
-	PlayerTextDrawColor(playerid, Furniture_PTD[playerid][3], -1);
-	PlayerTextDrawSetOutline(playerid, Furniture_PTD[playerid][3], 0);
-	PlayerTextDrawSetProportional(playerid, Furniture_PTD[playerid][3], 1);
+	PlayerTextDrawColour(playerid, Furniture_PTD[playerid][3], -1);
 	PlayerTextDrawSetShadow(playerid, Furniture_PTD[playerid][3], 1);
-	PlayerTextDrawSetSelectable(playerid, Furniture_PTD[playerid][3], 0);
 
 }
 
@@ -1334,396 +1312,201 @@ FurnitureTDInit() {
 
 	// Create the textdraws:
 	Furniture_TD[0] = TextDrawCreate(555.000000, 356.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[0], 255);
-	TextDrawFont(Furniture_TD[0], 4);
-	TextDrawLetterSize(Furniture_TD[0], 0.209999, 1.200000);
-	TextDrawColor(Furniture_TD[0], 9961471);
-	TextDrawSetOutline(Furniture_TD[0], 0);
-	TextDrawSetProportional(Furniture_TD[0], 1);
-	TextDrawSetShadow(Furniture_TD[0], 1);
-	TextDrawUseBox(Furniture_TD[0], 1);
-	TextDrawBoxColor(Furniture_TD[0], 255);
+	TextDrawFont(Furniture_TD[0], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[0], 9961471);
 	TextDrawTextSize(Furniture_TD[0], 74.000000, 73.000000);
-	TextDrawSetSelectable(Furniture_TD[0], 0);
 
 	Furniture_TD[1] = TextDrawCreate(572.000000, 322.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[1], 0);
-	TextDrawFont(Furniture_TD[1], 4);
-	TextDrawLetterSize(Furniture_TD[1], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[1], -926365636);
-	TextDrawSetOutline(Furniture_TD[1], 0);
-	TextDrawSetProportional(Furniture_TD[1], 1);
-	TextDrawSetShadow(Furniture_TD[1], 2);
-	TextDrawUseBox(Furniture_TD[1], 1);
-	TextDrawBoxColor(Furniture_TD[1], 336860200);
+	TextDrawFont(Furniture_TD[1], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[1], -926365636);
 	TextDrawTextSize(Furniture_TD[1], 32.000000, 36.000000);
-	TextDrawSetSelectable(Furniture_TD[1], 0);
 
 	Furniture_TD[2] = TextDrawCreate(559.000000, 359.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[2], 255);
-	TextDrawFont(Furniture_TD[2], 4);
-	TextDrawLetterSize(Furniture_TD[2], 0.209999, 1.200000);
-	TextDrawColor(Furniture_TD[2], -1);
-	TextDrawSetOutline(Furniture_TD[2], 0);
-	TextDrawSetProportional(Furniture_TD[2], 1);
-	TextDrawSetShadow(Furniture_TD[2], 1);
-	TextDrawUseBox(Furniture_TD[2], 1);
-	TextDrawBoxColor(Furniture_TD[2], 255);
+	TextDrawFont(Furniture_TD[2], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[2], -1);
 	TextDrawTextSize(Furniture_TD[2], 67.000000, 66.000000);
-	TextDrawSetSelectable(Furniture_TD[2], 0);
 
 	Furniture_TD[3] = TextDrawCreate(571.000000, 421.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[3], 255);
-	TextDrawFont(Furniture_TD[3], 4);
-	TextDrawLetterSize(Furniture_TD[3], 0.209999, 1.200000);
-	TextDrawColor(Furniture_TD[3], 1010580500);
-	TextDrawSetOutline(Furniture_TD[3], 0);
-	TextDrawSetProportional(Furniture_TD[3], 1);
-	TextDrawSetShadow(Furniture_TD[3], 1);
-	TextDrawUseBox(Furniture_TD[3], 1);
-	TextDrawBoxColor(Furniture_TD[3], 255);
+	TextDrawFont(Furniture_TD[3], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[3], 1010580500);
 	TextDrawTextSize(Furniture_TD[3], 44.000000, -13.000000);
-	TextDrawSetSelectable(Furniture_TD[3], 1);
+	TextDrawSetSelectable(Furniture_TD[3], true);
 
 	Furniture_TD[4] = TextDrawCreate(525.000000, 368.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[4], 0);
-	TextDrawFont(Furniture_TD[4], 4);
-	TextDrawLetterSize(Furniture_TD[4], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[4], -926365636);
-	TextDrawSetOutline(Furniture_TD[4], 0);
-	TextDrawSetProportional(Furniture_TD[4], 1);
-	TextDrawSetShadow(Furniture_TD[4], 2);
-	TextDrawUseBox(Furniture_TD[4], 1);
-	TextDrawBoxColor(Furniture_TD[4], 336860200);
+	TextDrawFont(Furniture_TD[4], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[4], -926365636);
 	TextDrawTextSize(Furniture_TD[4], 32.000000, 36.000000);
-	TextDrawSetSelectable(Furniture_TD[4], 1);
+	TextDrawSetSelectable(Furniture_TD[4], true);
 
 	Furniture_TD[5] = TextDrawCreate(603.000000, 329.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[5], 0);
-	TextDrawFont(Furniture_TD[5], 4);
-	TextDrawLetterSize(Furniture_TD[5], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[5], -926365636);
-	TextDrawSetOutline(Furniture_TD[5], 0);
-	TextDrawSetProportional(Furniture_TD[5], 1);
-	TextDrawSetShadow(Furniture_TD[5], 2);
-	TextDrawUseBox(Furniture_TD[5], 1);
-	TextDrawBoxColor(Furniture_TD[5], 336860200);
+	TextDrawFont(Furniture_TD[5], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[5], -926365636);
 	TextDrawTextSize(Furniture_TD[5], 32.000000, 36.000000);
-	TextDrawSetSelectable(Furniture_TD[5], 1);
+	TextDrawSetSelectable(Furniture_TD[5], true);
 
 	Furniture_TD[6] = TextDrawCreate(542.000000, 335.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[6], 0);
-	TextDrawFont(Furniture_TD[6], 4);
-	TextDrawLetterSize(Furniture_TD[6], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[6], -926365636);
-	TextDrawSetOutline(Furniture_TD[6], 0);
-	TextDrawSetProportional(Furniture_TD[6], 1);
-	TextDrawSetShadow(Furniture_TD[6], 2);
-	TextDrawUseBox(Furniture_TD[6], 1);
-	TextDrawBoxColor(Furniture_TD[6], 336860200);
+	TextDrawFont(Furniture_TD[6], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[6], -926365636);
 	TextDrawTextSize(Furniture_TD[6], 32.000000, 36.000000);
-	TextDrawSetSelectable(Furniture_TD[6], 1);
+	TextDrawSetSelectable(Furniture_TD[6], true);
 
 	Furniture_TD[7] = TextDrawCreate(528.000000, 339.000000, "Building mode");
-	TextDrawBackgroundColor(Furniture_TD[7], 0);
-	TextDrawFont(Furniture_TD[7], 5);
+	TextDrawBackgroundColour(Furniture_TD[7], 0);
+	TextDrawFont(Furniture_TD[7], TEXT_DRAW_FONT_MODEL_PREVIEW);
 	TextDrawLetterSize(Furniture_TD[7], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[7], -1);
-	TextDrawSetOutline(Furniture_TD[7], 0);
-	TextDrawSetProportional(Furniture_TD[7], 1);
-	TextDrawSetShadow(Furniture_TD[7], 2);
-	TextDrawUseBox(Furniture_TD[7], 1);
-	TextDrawBoxColor(Furniture_TD[7], 0);
+	TextDrawColour(Furniture_TD[7], -1);
 	TextDrawTextSize(Furniture_TD[7], 66.000000, 31.000000);
 	TextDrawSetPreviewModel(Furniture_TD[7], 18635);
-	TextDrawSetPreviewRot(Furniture_TD[7], -16.000000, 0.000000, 0.000000, 1.000000);
-	TextDrawSetSelectable(Furniture_TD[7], 1);
+	TextDrawSetPreviewRot(Furniture_TD[7], -16.000000, 0.000000, 0.000000);
+	TextDrawSetSelectable(Furniture_TD[7], true);
 
 	
 	Furniture_TD[8] = TextDrawCreate(515.000000, 372.000000, "Sell Mode");
-	TextDrawBackgroundColor(Furniture_TD[8], 0);
-	TextDrawFont(Furniture_TD[8], 5);
-	TextDrawLetterSize(Furniture_TD[8], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[8], -1);
-	TextDrawSetOutline(Furniture_TD[8], 0);
-	TextDrawSetProportional(Furniture_TD[8], 1);
-	TextDrawSetShadow(Furniture_TD[8], 2);
-	TextDrawUseBox(Furniture_TD[8], 1);
-	TextDrawBoxColor(Furniture_TD[8], 0);
+	TextDrawBackgroundColour(Furniture_TD[8], 0);
+	TextDrawFont(Furniture_TD[8], TEXT_DRAW_FONT_MODEL_PREVIEW);
+	TextDrawColour(Furniture_TD[8], -1);
 	TextDrawTextSize(Furniture_TD[8], 53.000000, 27.000000);
 	TextDrawSetPreviewModel(Furniture_TD[8], 1274);
-	TextDrawSetPreviewRot(Furniture_TD[8], 0.000000, 0.000000, 180.000000, 1.000000);
-	TextDrawSetSelectable(Furniture_TD[8], 1);
+	TextDrawSetPreviewRot(Furniture_TD[8], 0.000000, 0.000000, 180.000000);
+	TextDrawSetSelectable(Furniture_TD[8], true);
 
 	Furniture_TD[9] = TextDrawCreate(570.000000, 324.000000, "Buy Mode");
-	TextDrawBackgroundColor(Furniture_TD[9], 0);
-	TextDrawFont(Furniture_TD[9], 5);
-	TextDrawLetterSize(Furniture_TD[9], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[9], -1);
-	TextDrawSetOutline(Furniture_TD[9], 0);
-	TextDrawSetProportional(Furniture_TD[9], 1);
-	TextDrawSetShadow(Furniture_TD[9], 2);
-	TextDrawUseBox(Furniture_TD[9], 1);
-	TextDrawBoxColor(Furniture_TD[9], 0);
+	TextDrawBackgroundColour(Furniture_TD[9], 0);
+	TextDrawFont(Furniture_TD[9], TEXT_DRAW_FONT_MODEL_PREVIEW);
+	TextDrawColour(Furniture_TD[9], -1);
 	TextDrawTextSize(Furniture_TD[9], 37.000000, 33.000000);
 	TextDrawSetPreviewModel(Furniture_TD[9], 1272);
-	TextDrawSetPreviewRot(Furniture_TD[9], 0.000000, 0.000000, 180.000000, 1.000000);
-	TextDrawSetSelectable(Furniture_TD[9], 1);
+	TextDrawSetPreviewRot(Furniture_TD[9], 0.000000, 0.000000, 180.000000);
+	TextDrawSetSelectable(Furniture_TD[9], true);
 
 	Furniture_TD[10] = TextDrawCreate(602.000000, 332.000000, "Permit Builder");
-	TextDrawBackgroundColor(Furniture_TD[10], 0);
-	TextDrawFont(Furniture_TD[10], 5);
-	TextDrawLetterSize(Furniture_TD[10], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[10], -1);
-	TextDrawSetOutline(Furniture_TD[10], 0);
-	TextDrawSetProportional(Furniture_TD[10], 1);
-	TextDrawSetShadow(Furniture_TD[10], 2);
-	TextDrawUseBox(Furniture_TD[10], 1);
-	TextDrawBoxColor(Furniture_TD[10], 0);
+	TextDrawBackgroundColour(Furniture_TD[10], 0);
+	TextDrawFont(Furniture_TD[10], TEXT_DRAW_FONT_MODEL_PREVIEW);
+	TextDrawColour(Furniture_TD[10], -1);
 	TextDrawTextSize(Furniture_TD[10], 32.000000, 30.000000);
 	TextDrawSetPreviewModel(Furniture_TD[10], 1314);
-	TextDrawSetPreviewRot(Furniture_TD[10], 0.000000, 0.000000, 180.000000, 1.000000);
-	TextDrawSetSelectable(Furniture_TD[10], 1);
+	TextDrawSetPreviewRot(Furniture_TD[10], 0.000000, 0.000000, 180.000000);
+	TextDrawSetSelectable(Furniture_TD[10], true);
 
 	Furniture_TD[11] = TextDrawCreate(603.000000, 424.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[11], 0);
-	TextDrawFont(Furniture_TD[11], 4);
-	TextDrawLetterSize(Furniture_TD[11], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[11], -926365636);
-	TextDrawSetOutline(Furniture_TD[11], 0);
-	TextDrawSetProportional(Furniture_TD[11], 1);
-	TextDrawSetShadow(Furniture_TD[11], 2);
-	TextDrawUseBox(Furniture_TD[11], 1);
-	TextDrawBoxColor(Furniture_TD[11], 336860200);
+	TextDrawFont(Furniture_TD[11], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[11], -926365636);
 	TextDrawTextSize(Furniture_TD[11], 13.000000, 14.000000);
-	TextDrawSetSelectable(Furniture_TD[11], 1);
+	TextDrawSetSelectable(Furniture_TD[11], true);
 
 	Furniture_TD[12] = TextDrawCreate(617.000000, 413.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[12], 0);
-	TextDrawFont(Furniture_TD[12], 4);
-	TextDrawLetterSize(Furniture_TD[12], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[12], -926365636);
-	TextDrawSetOutline(Furniture_TD[12], 0);
-	TextDrawSetProportional(Furniture_TD[12], 1);
-	TextDrawSetShadow(Furniture_TD[12], 2);
-	TextDrawUseBox(Furniture_TD[12], 1);
-	TextDrawBoxColor(Furniture_TD[12], 336860200);
+	TextDrawFont(Furniture_TD[12], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[12], -926365636);
 	TextDrawTextSize(Furniture_TD[12], 13.000000, 14.000000);
-	TextDrawSetSelectable(Furniture_TD[12], 1);
+	TextDrawSetSelectable(Furniture_TD[12], true);
 
 	Furniture_TD[13] = TextDrawCreate(618.000000, 414.000000, "LD_CHAT:thumbdn");
-	TextDrawBackgroundColor(Furniture_TD[13], 0);
-	TextDrawFont(Furniture_TD[13], 4);
-	TextDrawLetterSize(Furniture_TD[13], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[13], -926365636);
-	TextDrawSetOutline(Furniture_TD[13], 0);
-	TextDrawSetProportional(Furniture_TD[13], 1);
-	TextDrawSetShadow(Furniture_TD[13], 2);
-	TextDrawUseBox(Furniture_TD[13], 1);
-	TextDrawBoxColor(Furniture_TD[13], 336860200);
+	TextDrawFont(Furniture_TD[13], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[13], -926365636);
 	TextDrawTextSize(Furniture_TD[13], 12.000000, 12.000000);
-	TextDrawSetSelectable(Furniture_TD[13], 1);
+	TextDrawSetSelectable(Furniture_TD[13], true);
 
 	Furniture_TD[14] = TextDrawCreate(604.000000, 425.000000, "Info");
-	TextDrawBackgroundColor(Furniture_TD[14], 0);
-	TextDrawFont(Furniture_TD[14], 5);
-	TextDrawLetterSize(Furniture_TD[14], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[14], -926365636);
-	TextDrawSetOutline(Furniture_TD[14], 0);
-	TextDrawSetProportional(Furniture_TD[14], 1);
-	TextDrawSetShadow(Furniture_TD[14], 0);
-	TextDrawUseBox(Furniture_TD[14], 1);
-	TextDrawBoxColor(Furniture_TD[14], 336860200);
+	TextDrawBackgroundColour(Furniture_TD[14], 0);
+	TextDrawFont(Furniture_TD[14], TEXT_DRAW_FONT_MODEL_PREVIEW);
+	TextDrawColour(Furniture_TD[14], -926365636);
 	TextDrawTextSize(Furniture_TD[14], 12.000000, 12.000000);
 	TextDrawSetPreviewModel(Furniture_TD[14], 1239);
 	TextDrawSetPreviewRot(Furniture_TD[14], -16.000000, 0.000000, 0.000000, 1.000000);
-	TextDrawSetSelectable(Furniture_TD[14], 1);
+	TextDrawSetSelectable(Furniture_TD[14], true);
 
 	Furniture_TD[15] = TextDrawCreate(624.000000, 367.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[15], 0);
-	TextDrawFont(Furniture_TD[15], 4);
-	TextDrawLetterSize(Furniture_TD[15], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[15], -926365636);
-	TextDrawSetOutline(Furniture_TD[15], 0);
-	TextDrawSetProportional(Furniture_TD[15], 1);
-	TextDrawSetShadow(Furniture_TD[15], 2);
-	TextDrawUseBox(Furniture_TD[15], 1);
-	TextDrawBoxColor(Furniture_TD[15], 336860200);
+	TextDrawFont(Furniture_TD[15], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[15], -926365636);
 	TextDrawTextSize(Furniture_TD[15], 13.000000, 14.000000);
-	TextDrawSetSelectable(Furniture_TD[15], 1);
+	TextDrawSetSelectable(Furniture_TD[15], true);
 
 	Furniture_TD[16] = TextDrawCreate(625.000000, 367.000000, "LD_CHAT:badchat");
-	TextDrawBackgroundColor(Furniture_TD[16], 0);
-	TextDrawFont(Furniture_TD[16], 4);
-	TextDrawLetterSize(Furniture_TD[16], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[16], -926365636);
-	TextDrawSetOutline(Furniture_TD[16], 0);
-	TextDrawSetProportional(Furniture_TD[16], 1);
-	TextDrawSetShadow(Furniture_TD[16], 2);
-	TextDrawUseBox(Furniture_TD[16], 1);
-	TextDrawBoxColor(Furniture_TD[16], 336860200);
+	TextDrawFont(Furniture_TD[16], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[16], -926365636);
 	TextDrawTextSize(Furniture_TD[16], 12.000000, 12.000000);
-	TextDrawSetSelectable(Furniture_TD[16], 1);
+	TextDrawSetSelectable(Furniture_TD[16], true);
 
 	Furniture_TD[17] = TextDrawCreate(543.000000, 404.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[17], 0);
-	TextDrawFont(Furniture_TD[17], 4);
-	TextDrawLetterSize(Furniture_TD[17], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[17], -926365636);
-	TextDrawSetOutline(Furniture_TD[17], 0);
-	TextDrawSetProportional(Furniture_TD[17], 1);
-	TextDrawSetShadow(Furniture_TD[17], 2);
-	TextDrawUseBox(Furniture_TD[17], 1);
-	TextDrawBoxColor(Furniture_TD[17], 336860200);
+	TextDrawFont(Furniture_TD[17], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[17], -926365636);
 	TextDrawTextSize(Furniture_TD[17], 20.000000, 21.000000);
-	TextDrawSetPreviewModel(Furniture_TD[17], 18635);
-	TextDrawSetPreviewRot(Furniture_TD[17], -16.000000, 0.000000, 0.000000, 1.000000);
-	TextDrawSetSelectable(Furniture_TD[17], 1);
+	TextDrawSetSelectable(Furniture_TD[17], true);
 
 	Furniture_TD[18] = TextDrawCreate(542.000000, 404.000000, "House Icon 2");
-	TextDrawBackgroundColor(Furniture_TD[18], 0);
-	TextDrawFont(Furniture_TD[18], 5);
-	TextDrawLetterSize(Furniture_TD[18], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[18], -1);
-	TextDrawSetOutline(Furniture_TD[18], 1);
-	TextDrawSetProportional(Furniture_TD[18], 1);
-	TextDrawUseBox(Furniture_TD[18], 1);
-	TextDrawBoxColor(Furniture_TD[18], 0);
+	TextDrawBackgroundColour(Furniture_TD[18], 0);
+	TextDrawFont(Furniture_TD[18], TEXT_DRAW_FONT_MODEL_PREVIEW);
+	TextDrawColour(Furniture_TD[18], -1);
 	TextDrawTextSize(Furniture_TD[18], 22.000000, 21.000000);
 	TextDrawSetPreviewModel(Furniture_TD[18], 1273);
-	TextDrawSetPreviewRot(Furniture_TD[18], 0.000000, 0.000000, 180.000000, 1.000000);
-	TextDrawSetSelectable(Furniture_TD[18], 1);
+	TextDrawSetPreviewRot(Furniture_TD[18], 0.000000, 0.000000, 180.000000);
+	TextDrawSetSelectable(Furniture_TD[18], true);
 
 
 	Furniture_TD[19] = TextDrawCreate(542.000000, 310.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[19], 0);
-	TextDrawFont(Furniture_TD[19], 4);
-	TextDrawLetterSize(Furniture_TD[19], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[19], -926365636);
-	TextDrawSetOutline(Furniture_TD[19], 0);
-	TextDrawSetProportional(Furniture_TD[19], 1);
-	TextDrawSetShadow(Furniture_TD[19], 2);
-	TextDrawUseBox(Furniture_TD[19], 1);
-	TextDrawBoxColor(Furniture_TD[19], 336860200);
+	TextDrawFont(Furniture_TD[19], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[19], -926365636);
 	TextDrawTextSize(Furniture_TD[19], 25.000000, 27.000000);
-	TextDrawSetPreviewModel(Furniture_TD[19], 18635);
-	TextDrawSetPreviewRot(Furniture_TD[19], -16.000000, 0.000000, 0.000000, 1.000000);
-	TextDrawSetSelectable(Furniture_TD[19], 1);
+	TextDrawSetSelectable(Furniture_TD[19], true);
 
 	Furniture_TD[20] = TextDrawCreate(519.000000, 333.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[20], 0);
-	TextDrawFont(Furniture_TD[20], 4);
-	TextDrawLetterSize(Furniture_TD[20], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[20], -926365636);
-	TextDrawSetOutline(Furniture_TD[20], 0);
-	TextDrawSetProportional(Furniture_TD[20], 1);
-	TextDrawSetShadow(Furniture_TD[20], 2);
-	TextDrawUseBox(Furniture_TD[20], 1);
-	TextDrawBoxColor(Furniture_TD[20], 336860200);
+	TextDrawFont(Furniture_TD[20], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[20], -926365636);
 	TextDrawTextSize(Furniture_TD[20], 25.000000, 27.000000);
-	TextDrawSetPreviewModel(Furniture_TD[20], 18635);
-	TextDrawSetPreviewRot(Furniture_TD[20], -16.000000, 0.000000, 0.000000, 1.000000);
-	TextDrawSetSelectable(Furniture_TD[20], 1);
+	TextDrawSetSelectable(Furniture_TD[20], true);
 
 	Furniture_TD[21] = TextDrawCreate(540.000000, 310.000000, "Paint");
-	TextDrawBackgroundColor(Furniture_TD[21], -256);
-	TextDrawFont(Furniture_TD[21], 5);
-	TextDrawLetterSize(Furniture_TD[21], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[21], -922753281);
-	TextDrawSetOutline(Furniture_TD[21], 0);
-	TextDrawSetProportional(Furniture_TD[21], 1);
-	TextDrawSetShadow(Furniture_TD[21], 0);
-	TextDrawUseBox(Furniture_TD[21], 1);
-	TextDrawBoxColor(Furniture_TD[21], 0);
+	TextDrawBackgroundColour(Furniture_TD[21], -256);
+	TextDrawFont(Furniture_TD[21], TEXT_DRAW_FONT_MODEL_PREVIEW);
+	TextDrawColour(Furniture_TD[21], -922753281);
 	TextDrawTextSize(Furniture_TD[21], 29.000000, 27.000000);
 	TextDrawSetPreviewModel(Furniture_TD[21], 19468);
-	TextDrawSetPreviewRot(Furniture_TD[21], 0.000000, 0.000000, 180.000000, 1.000000);
-	TextDrawSetSelectable(Furniture_TD[21], 1);
+	TextDrawSetPreviewRot(Furniture_TD[21], 0.000000, 0.000000, 180.000000);
+	TextDrawSetSelectable(Furniture_TD[21], true);
 
 	Furniture_TD[22] = TextDrawCreate(517.000000, 333.000000, "Build");
-	TextDrawBackgroundColor(Furniture_TD[22], -256);
-	TextDrawFont(Furniture_TD[22], 5);
-	TextDrawLetterSize(Furniture_TD[22], 0.169999, 1.200000);
-	TextDrawColor(Furniture_TD[22], -1);
-	TextDrawSetOutline(Furniture_TD[22], 0);
-	TextDrawSetProportional(Furniture_TD[22], 1);
-	TextDrawSetShadow(Furniture_TD[22], 0);
-	TextDrawUseBox(Furniture_TD[22], 1);
-	TextDrawBoxColor(Furniture_TD[22], 0);
+	TextDrawBackgroundColour(Furniture_TD[22], -256);
+	TextDrawFont(Furniture_TD[22], TEXT_DRAW_FONT_MODEL_PREVIEW);
+	TextDrawColour(Furniture_TD[22], -1);
 	TextDrawTextSize(Furniture_TD[22], 29.000000, 27.000000);
 	TextDrawSetPreviewModel(Furniture_TD[22], 3096);
-	TextDrawSetPreviewRot(Furniture_TD[22], 0.000000, 45.000000, 0.000000, 1.000000);
-	TextDrawSetSelectable(Furniture_TD[22], 1);
+	TextDrawSetPreviewRot(Furniture_TD[22], 0.000000, 45.000000, 0.000000);
+	TextDrawSetSelectable(Furniture_TD[22], true);
 
 	Furniture_TD[23] = TextDrawCreate(523.000000, 426.000000, "Building Mode");
-	TextDrawAlignment(Furniture_TD[23], 2);
-	TextDrawBackgroundColor(Furniture_TD[23], 255);
-	TextDrawFont(Furniture_TD[23], 2);
+	TextDrawAlignment(Furniture_TD[23], TEXT_DRAW_ALIGN_CENTRE);
+	TextDrawFont(Furniture_TD[23], TEXT_DRAW_FONT_2);
 	TextDrawLetterSize(Furniture_TD[23], 0.250000, 1.000000);
-	TextDrawColor(Furniture_TD[23], -1);
-	TextDrawSetOutline(Furniture_TD[23], 0);
-	TextDrawSetProportional(Furniture_TD[23], 1);
+	TextDrawColour(Furniture_TD[23], -1);
 	TextDrawSetShadow(Furniture_TD[23], 1);
-	TextDrawSetSelectable(Furniture_TD[23], 1);
+	TextDrawSetSelectable(Furniture_TD[23], true);
 
 	Furniture_TD[24] = TextDrawCreate(448.000000, 437.000000, "Use the CROUCH & SPRINT key to move the object to you.");
-	TextDrawAlignment(Furniture_TD[24], 2);
-	TextDrawBackgroundColor(Furniture_TD[24], 255);
-	TextDrawFont(Furniture_TD[24], 2);
+	TextDrawAlignment(Furniture_TD[24], TEXT_DRAW_ALIGN_CENTRE);
+	TextDrawFont(Furniture_TD[24], TEXT_DRAW_FONT_2);
 	TextDrawLetterSize(Furniture_TD[24], 0.150000, 1.000000);
-	TextDrawColor(Furniture_TD[24], -926355201);
-	TextDrawSetOutline(Furniture_TD[24], 0);
-	TextDrawSetProportional(Furniture_TD[24], 1);
+	TextDrawColour(Furniture_TD[24], -926355201);
 	TextDrawSetShadow(Furniture_TD[24], 0);
-	TextDrawSetSelectable(Furniture_TD[24], 0);
 
 	Furniture_TD[25] = TextDrawCreate(490.000000, 168.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[25], 255);
-	TextDrawFont(Furniture_TD[25], 4);
-	TextDrawLetterSize(Furniture_TD[25], 0.500000, 1.000000);
-	TextDrawColor(Furniture_TD[25], 9961471);
-	TextDrawSetOutline(Furniture_TD[25], 0);
-	TextDrawSetProportional(Furniture_TD[25], 1);
-	TextDrawSetShadow(Furniture_TD[25], 1);
-	TextDrawUseBox(Furniture_TD[25], 1);
-	TextDrawBoxColor(Furniture_TD[25], 255);
+	TextDrawFont(Furniture_TD[25], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[25], 9961471);
 	TextDrawTextSize(Furniture_TD[25], 122.000000, 111.000000);
-	TextDrawSetSelectable(Furniture_TD[25], 0);
 
 	Furniture_TD[26] = TextDrawCreate(495.000000, 173.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[26], 255);
-	TextDrawFont(Furniture_TD[26], 4);
-	TextDrawLetterSize(Furniture_TD[26], 0.500000, 1.000000);
- 	TextDrawSetOutline(Furniture_TD[26], 0);
-	TextDrawSetProportional(Furniture_TD[26], 1);
-	TextDrawSetShadow(Furniture_TD[26], 1);
-	TextDrawUseBox(Furniture_TD[26], 1);
-	TextDrawBoxColor(Furniture_TD[26], 255);
+	TextDrawFont(Furniture_TD[26], TEXT_DRAW_FONT_SPRITE_DRAW);
 	TextDrawTextSize(Furniture_TD[26], 112.000000, 101.000000);
-	TextDrawSetSelectable(Furniture_TD[26], 0);
 
 	Furniture_TD[27] = TextDrawCreate(517.000000, 240.000000, "ld_pool:ball");
-	TextDrawBackgroundColor(Furniture_TD[27], 255);
-	TextDrawFont(Furniture_TD[27], 4);
-	TextDrawLetterSize(Furniture_TD[27], 0.500000, 1.000000);
-	TextDrawColor(Furniture_TD[27], 20);
-	TextDrawSetOutline(Furniture_TD[27], 0);
-	TextDrawSetProportional(Furniture_TD[27], 1);
-	TextDrawSetShadow(Furniture_TD[27], 1);
-	TextDrawUseBox(Furniture_TD[27], 1);
-	TextDrawBoxColor(Furniture_TD[27], 255);
+	TextDrawFont(Furniture_TD[27], TEXT_DRAW_FONT_SPRITE_DRAW);
+	TextDrawColour(Furniture_TD[27], 20);
 	TextDrawTextSize(Furniture_TD[27], 66.000000, 32.000000);
-	TextDrawSetSelectable(Furniture_TD[27], 0);
 
 	Furniture_TD[28] = TextDrawCreate(544.000000, 439.000000, "Furniture System - by Jingles");
-	TextDrawBackgroundColor(Furniture_TD[28], 255);
-	TextDrawFont(Furniture_TD[28], 2);
+	TextDrawFont(Furniture_TD[28], TEXT_DRAW_FONT_2);
 	TextDrawLetterSize(Furniture_TD[28], 0.139999, 0.899999);
-	TextDrawColor(Furniture_TD[28], -156);
-	TextDrawSetOutline(Furniture_TD[28], 0);
-	TextDrawSetProportional(Furniture_TD[28], 1);
+	TextDrawColour(Furniture_TD[28], -156);
 	TextDrawSetShadow(Furniture_TD[28], 0);
-	TextDrawSetSelectable(Furniture_TD[28], 0);
 }
 
 MakeColorMenu() {
@@ -2038,7 +1821,7 @@ GetFurnitureColorCode(id) {
 	return iColorCode;
 }
 
-CMD:furniturehelp(playerid, params[]) {
+CMD:furniturehelp(playerid) {
 
 	SendClientMessageEx(playerid, COLOR_YELLOW, "[Furniture] {CCCCCC}/furniture | /myslots | /furnitureresetpos | /permitbuilder | /revokebuilders | /destroyallfurniture | {FF2222}Press ~k~~PED_LOOKBEHIND~ (twice) to toggle the mouse cursor.");
 	SendClientMessageEx(playerid, COLOR_YELLOW, "[Furniture] {CCCCCC}/unfurnishhouse (remove default GTA:SA furniture) | /furnishhouse (add default GTA:SA furniture)");
@@ -2072,7 +1855,7 @@ CMD:myslots(playerid, params[]) {
 	return 1;
 }
 
-CMD:furniture(playerid, params[]) {
+CMD:furniture(playerid) {
 
 	if(!FurnitureSystem) return 1;
 
@@ -2320,7 +2103,7 @@ public OnEditFurniture() {
 	return 1;
 }
 
-CMD:furnitureresetpos(playerid, params[]) {
+CMD:furnitureresetpos(playerid) {
 
 	if(!FurnitureSystem) return 1;
 
@@ -2329,7 +2112,7 @@ CMD:furnitureresetpos(playerid, params[]) {
 		new i = GetHouseID(playerid);
 		if(i == INVALID_HOUSE_ID) {
 
-			cmd_furniture(playerid, "");
+			cmd_furniture(playerid);
 			return SendClientMessageEx(playerid, COLOR_GRAD1, "You must be in a house.");
 		}
 
@@ -2363,7 +2146,7 @@ CMD:copdestroy(playerid, params[]) {
 	if(!IsACop(playerid)) return SendClientMessageEx(playerid, COLOR_GRAD1, "You are not a cop.");
 	if(iHouseID == INVALID_HOUSE_ID) return SendClientMessageEx(playerid, COLOR_GRAD1, "You are not in a house");
 	SetPVarInt(playerid, "copdestroyfur", 1);
-	SelectObject(playerid);
+	BeginObjectSelecting(playerid);
 	return 1;
 }
 
@@ -2494,7 +2277,7 @@ Create3DTextureMenu(playerid, Float:X, Float:Y, Float:Z, Float:R, tiles) {
 	return -1;
 }
 
-Set3DTextureMenuTile(i, tile, index, model, txd[], texture[], selectcolor, unselectcolor) {
+Set3DTextureMenuTile(i, tile, index, model, const txd[], const texture[], selectcolor, unselectcolor) {
 
 	if(!TextureMenuInfo[i][textm_bExists]) return 0;
 	if(!(0 < tile <= TextureMenuInfo[i][textm_iTiles])) return 0;
@@ -2601,7 +2384,7 @@ Unload3DTextureMenu(playerid) {
 	if(textm_Selected3DTextureMenu[playerid] != -1) CancelSelect3DTextureMenu(playerid);
 }
 
-OnPlayerKeyStateChange3DMenu(playerid, newkeys, oldkeys) {
+OnPlayerKeyStateChange3DMenu(playerid, KEY:newkeys, KEY:oldkeys) {
 
 	#pragma unused oldkeys
 	if(textm_Selected3DTextureMenu[playerid] != -1 || PlayerTextureMenuInfo[playerid][ptextm_TPreviewState] == PREVIEW_STATE_SELECT) {
@@ -2812,11 +2595,11 @@ static UpdateThemeTextures(playerid) {
 	}
 }
 
-OnPlayerKeyStateChangeMenu(playerid,newkeys,oldkeys) {
+OnPlayerKeyStateChangeMenu(playerid,KEY:newkeys,KEY:oldkeys) {
 
 	#pragma unused oldkeys
 	
-	if(newkeys & 16 || oldkeys & 16) return 0;
+	if(newkeys & KEY_SECONDARY_ATTACK || oldkeys & KEY_SECONDARY_ATTACK) return 0;
 	//if(EditingMode[playerid] && GetEditMode(playerid) != EDIT_MODE_TEXTURING) return 0;
 
 	// Scroll right

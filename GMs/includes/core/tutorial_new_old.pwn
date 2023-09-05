@@ -1,6 +1,6 @@
 /* Tutorial by Jingles */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 
 #define 		TUTORIAL_STEPS_TIME				30 // in seconds
@@ -1084,7 +1084,7 @@ Register_Prison(playerid)
 	SetPlayerVirtualWorld(playerid, 0);
 	SetHealth(playerid, 100);
 
-	TogglePlayerControllable(playerid, 0);
+	TogglePlayerControllable(playerid, false);
 	SetCameraBehindPlayer(playerid);
 
 	new randcell = random(29);
@@ -1135,7 +1135,7 @@ public Register_Plane(playerid)
 		}
 		case 3: {
 			PlayAudioStreamForPlayer(playerid, "http://sampweb.ng-gaming.net/dom/plane_part2.mp3");
-		    TogglePlayerControllable(playerid, 1);
+		    TogglePlayerControllable(playerid, true);
 			SetCameraBehindPlayer(playerid);
 			SetPlayerFacingAngle(playerid, 0.0);
 			SetPlayerVirtualWorld(playerid, 100);

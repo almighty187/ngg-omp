@@ -61,7 +61,7 @@ new Float:FloorZOffsets[21] =
     112.12735	// 8.5479 + (5.45155 * 19.0)
 };
 
-stock LoadElevatorStuff() {
+LoadElevatorStuff() {
 
 	if(!fexist("elevator.ini")) return 1;
 
@@ -79,7 +79,7 @@ stock LoadElevatorStuff() {
 	return fclose(iFileHandle);
 }
 
-stock SaveElevatorStuff() {
+SaveElevatorStuff() {
 
 	new
 		File: iFileHandle = fopen("elevator.ini", io_write);
@@ -94,12 +94,12 @@ stock SaveElevatorStuff() {
 }
 
 
-stock Float:GetElevatorZCoordForFloor(floorid)
+Float:GetElevatorZCoordForFloor(floorid)
 {
     return (GROUND_Z_COORD + FloorZOffsets[floorid] + ELEVATOR_OFFSET); // A small offset for the elevator object itself.
 }
 
-stock Float:GetDoorsZCoordForFloor(floorid)
+Float:GetDoorsZCoordForFloor(floorid)
 {
 	return (GROUND_Z_COORD + FloorZOffsets[floorid]);
 }
@@ -121,7 +121,7 @@ public Elevator_TurnToIdle()
 	ReadNextFloorInQueue();
 }
 
-stock Elevator_Initialize()
+Elevator_Initialize()
 {
 	// Initializes the elevator.
 
@@ -156,7 +156,7 @@ stock Elevator_Initialize()
 	Elevator_OpenDoors();
 }
 
-stock Elevator_OpenDoors()
+Elevator_OpenDoors()
 {
 	// Opens the elevator's doors.
 
@@ -167,7 +167,7 @@ stock Elevator_OpenDoors()
 	MoveDynamicObject(Obj_ElevatorDoors[1], X_DOOR_R_OPENED, y, z, DOORS_SPEED);
 }
 
-stock Elevator_CloseDoors()
+Elevator_CloseDoors()
 {
     // Closes the elevator's doors.
 
@@ -182,14 +182,14 @@ stock Elevator_CloseDoors()
 	return 1;
 }
 
-stock Floor_OpenDoors(floorid)
+Floor_OpenDoors(floorid)
 {
     // Opens the doors at the specified floor.
     MoveDynamicObject(Obj_FloorDoors[floorid][0], X_DOOR_L_OPENED, -1303.171142, GetDoorsZCoordForFloor(floorid), DOORS_SPEED);
 	MoveDynamicObject(Obj_FloorDoors[floorid][1], X_DOOR_R_OPENED, -1303.171142, GetDoorsZCoordForFloor(floorid), DOORS_SPEED);
 }
 
-stock Floor_CloseDoors(floorid)
+Floor_CloseDoors(floorid)
 {
     // Closes the doors at the specified floor.
 
@@ -197,7 +197,7 @@ stock Floor_CloseDoors(floorid)
 	MoveDynamicObject(Obj_FloorDoors[floorid][1], X_DOOR_CLOSED, -1303.171142, GetDoorsZCoordForFloor(floorid), DOORS_SPEED);
 }
 
-stock Elevator_MoveToFloor(floorid)
+Elevator_MoveToFloor(floorid)
 {
 	// Moves the elevator to specified floor (doors are meant to be already closed).
 
@@ -210,10 +210,10 @@ stock Elevator_MoveToFloor(floorid)
     MoveDynamicObject(Obj_ElevatorDoors[1], X_DOOR_CLOSED, -1303.459472, GetDoorsZCoordForFloor(floorid), 0.25);
     DestroyDynamic3DTextLabel(Label_Elevator);
 
-	ElevatorBoostTimer = SetTimerEx("Elevator_Boost", 2000, 0, "i", floorid);
+	ElevatorBoostTimer = SetTimerEx("Elevator_Boost", 2000, false, "i", floorid);
 }
 			
-stock RemoveFirstQueueFloor()
+RemoveFirstQueueFloor()
 {
 	// Removes the data in ElevatorQueue[0], and reorders the queue accordingly.
 
@@ -223,7 +223,7 @@ stock RemoveFirstQueueFloor()
 	ElevatorQueue[sizeof(ElevatorQueue) - 1] = INVALID_FLOOR;
 }
 
-stock AddFloorToQueue(floorid)
+AddFloorToQueue(floorid)
 {
  	// Adds 'floorid' at the end of the queue.
 
@@ -251,7 +251,7 @@ stock AddFloorToQueue(floorid)
 	return 0;
 }
 
-stock ResetElevatorQueue()
+ResetElevatorQueue()
 {
 	// Resets the queue.
 
@@ -262,7 +262,7 @@ stock ResetElevatorQueue()
 	}
 }
 
-stock IsFloorInQueue(floorid)
+IsFloorInQueue(floorid)
 {
 	// Checks if the specified floor is currently part of the queue.
 
@@ -273,7 +273,7 @@ stock IsFloorInQueue(floorid)
 	return 0;
 }
 
-stock ReadNextFloorInQueue()
+ReadNextFloorInQueue()
 {
 	// Reads the next floor in the queue, closes doors, and goes to it.
 
@@ -285,7 +285,7 @@ stock ReadNextFloorInQueue()
 	return 1;
 }
 
-stock DidPlayerRequestElevator(playerid)
+DidPlayerRequestElevator(playerid)
 {
 	for(new i; i < sizeof(FloorRequestedBy); i ++)
 	    if(FloorRequestedBy[i] == playerid)
@@ -294,7 +294,7 @@ stock DidPlayerRequestElevator(playerid)
 	return 0;
 }
 
-stock ShowElevatorDialog(playerid, elev)
+ShowElevatorDialog(playerid, elev)
 {
 	new string[512], maxfloors;
 	switch(elev)
@@ -310,7 +310,7 @@ stock ShowElevatorDialog(playerid, elev)
 	ShowPlayerDialogEx(playerid, LAELEVATOR, DIALOG_STYLE_LIST, "Elevator", string, "Select", "Cancel");
 }
 
-stock CallElevator(playerid, floorid)
+CallElevator(playerid, floorid)
 {
 	// Calls the elevator (also used with the elevator dialog).
 
@@ -322,7 +322,7 @@ stock CallElevator(playerid, floorid)
 	return 1;
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
 	if(!IsPlayerInAnyVehicle(playerid) && newkeys & KEY_CTRL_BACK)
 	{
@@ -331,7 +331,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		if(pos[1] < -1301.4 && pos[1] > -1303.2417 && pos[0] < 1786.2131 && pos[0] > 1784.1555)
 		{    // He is using the elevator button
 			PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
-			ApplyAnimation(playerid, "HEIST9", "Use_SwipeCard", 10.0, 0, 0, 0, 0, 0);
+			ApplyAnimation(playerid, "HEIST9", "Use_SwipeCard", 10.0, false, false, false, false, 0);
 			ShowElevatorDialog(playerid, 1);
 		}
 		else    // Is he in a floor button?
@@ -349,7 +349,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				if(i <= 19)
 				{
 					PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
-					ApplyAnimation(playerid, "HEIST9", "Use_SwipeCard", 10.0, 0, 0, 0, 0, 0);
+					ApplyAnimation(playerid, "HEIST9", "Use_SwipeCard", 10.0, false, false, false, false, 0);
 					CallElevator(playerid, i + 1);
 					GameTextForPlayer(playerid, "~r~Elevator called", 3500, 4);
 				}

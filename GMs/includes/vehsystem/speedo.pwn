@@ -35,11 +35,11 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-stock UpdateVehicleHUDForPlayer(p, fuel, speed)
+UpdateVehicleHUDForPlayer(p, fuel, speed)
 {
 	new str[128], vehicleid = GetPlayerVehicleID(p), szColor[4];
-	new engine,lights,alarm,doors,bonnet,boot,objective;
-	GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+	new bool:lights;
+	GetVehicleParamsEx(vehicleid, .lights = lights);
 	switch(speed)
 	{
 	    case 0..40: szColor = "~w~";
@@ -80,7 +80,7 @@ stock UpdateVehicleHUDForPlayer(p, fuel, speed)
 	}
 }
 
-stock ShowVehicleHUDForPlayer(playerid)
+ShowVehicleHUDForPlayer(playerid)
 {
 	PlayerTextDrawShow(playerid, _vhudTextFuel[playerid]);
 	PlayerTextDrawShow(playerid, _vhudTextSpeed[playerid]);
@@ -90,7 +90,7 @@ stock ShowVehicleHUDForPlayer(playerid)
 }
 
 
-stock HideVehicleHUDForPlayer(playerid)
+HideVehicleHUDForPlayer(playerid)
 {
 	PlayerTextDrawHide(playerid, _vhudTextFuel[playerid]);
 	PlayerTextDrawHide(playerid, _vhudTextSpeed[playerid]);
@@ -181,39 +181,27 @@ CMD:speedopos(playerid, params[])
 		
 		PlayerTextDrawDestroy(playerid, _vhudTextFuel[playerid]);
 		_vhudTextFuel[playerid] = CreatePlayerTextDraw(playerid, TPosX[0], TPosY[0], "~b~Fuel: N/A");
-		PlayerTextDrawBackgroundColor(playerid, _vhudTextFuel[playerid], 255);
-		PlayerTextDrawFont(playerid, _vhudTextFuel[playerid], 1);
 		PlayerTextDrawLetterSize(playerid, _vhudTextFuel[playerid], 0.270000, 2.000000);
-		PlayerTextDrawColor(playerid, _vhudTextFuel[playerid], -1);
+		PlayerTextDrawColour(playerid, _vhudTextFuel[playerid], -1);
 		PlayerTextDrawSetOutline(playerid, _vhudTextFuel[playerid], 1);
-		PlayerTextDrawSetProportional(playerid, _vhudTextFuel[playerid], 1);
 
 		PlayerTextDrawDestroy(playerid, _vhudTextSpeed[playerid]);
 		_vhudTextSpeed[playerid] = CreatePlayerTextDraw(playerid, TPosX[1], TPosY[0], "~b~MPH: N/A");
-		PlayerTextDrawBackgroundColor(playerid, _vhudTextSpeed[playerid], 255);
-		PlayerTextDrawFont(playerid, _vhudTextSpeed[playerid], 1);
 		PlayerTextDrawLetterSize(playerid, _vhudTextSpeed[playerid], 0.270000, 2.000000);
-		PlayerTextDrawColor(playerid, _vhudTextSpeed[playerid], -1);
+		PlayerTextDrawColour(playerid, _vhudTextSpeed[playerid], -1);
 		PlayerTextDrawSetOutline(playerid, _vhudTextSpeed[playerid], 1);
-		PlayerTextDrawSetProportional(playerid, _vhudTextSpeed[playerid], 1);
 
 		PlayerTextDrawDestroy(playerid, _vhudSeatBelt[playerid]);
 		_vhudSeatBelt[playerid] = CreatePlayerTextDraw(playerid, TPosX[1], TPosY[1], "~b~SB: ~r~OFF");
-		PlayerTextDrawBackgroundColor(playerid, _vhudSeatBelt[playerid], 255);
-		PlayerTextDrawFont(playerid, _vhudSeatBelt[playerid], 1);
 		PlayerTextDrawLetterSize(playerid, _vhudSeatBelt[playerid], 0.270000, 2.000000);
-		PlayerTextDrawColor(playerid, _vhudSeatBelt[playerid], -1);
+		PlayerTextDrawColour(playerid, _vhudSeatBelt[playerid], -1);
 		PlayerTextDrawSetOutline(playerid, _vhudSeatBelt[playerid], 1);
-		PlayerTextDrawSetProportional(playerid, _vhudSeatBelt[playerid], 1);
 
 		PlayerTextDrawDestroy(playerid, _vhudLights[playerid]);
 		_vhudLights[playerid] = CreatePlayerTextDraw(playerid, TPosX[0], TPosY[1], "~b~Lights: ~r~OFF");
-		PlayerTextDrawBackgroundColor(playerid, _vhudLights[playerid], 255);
-		PlayerTextDrawFont(playerid, _vhudLights[playerid], 1);
 		PlayerTextDrawLetterSize(playerid, _vhudLights[playerid], 0.270000, 2.000000);
-		PlayerTextDrawColor(playerid, _vhudLights[playerid], -1);
+		PlayerTextDrawColour(playerid, _vhudLights[playerid], -1);
 		PlayerTextDrawSetOutline(playerid, _vhudLights[playerid], 1);
-		PlayerTextDrawSetProportional(playerid, _vhudLights[playerid], 1);
 		
 		ShowVehicleHUDForPlayer(playerid);
 		SendClientMessageEx(playerid, COLOR_WHITE, "You have moved the position of your speedometer.");

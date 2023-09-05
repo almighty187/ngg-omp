@@ -38,9 +38,9 @@
 /** Austin's DP system **/
 
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
-SendDedicatedMessage(color, string[])
+SendDedicatedMessage(color, const string[])
 {
 	foreach(new i: Player) 
 	{
@@ -240,17 +240,17 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 		{
 			case 0: //Deagle
 			{
-				GivePlayerValidWeapon(playerid, 24);
+				GivePlayerValidWeapon(playerid, WEAPON_DEAGLE);
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Dedicated Locker] You have taken a Desert Eagle from the locker.");
 			}
 			case 1: //MP5
 			{
-				GivePlayerValidWeapon(playerid, 29);
+				GivePlayerValidWeapon(playerid, WEAPON_MP5);
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Dedicated Locker] You have taken a Semi-Automatic MP5 from the locker.");
 			}
 			case 2: //Shotgun
 			{
-				GivePlayerValidWeapon(playerid, 25);
+				GivePlayerValidWeapon(playerid, WEAPON_SHOTGUN);
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Dedicated Locker] You have taken a Pump Shotgun from the locker.");
 			}
 		}

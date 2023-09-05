@@ -83,7 +83,7 @@ public FuelCan(playerid, vehicleid, amount)
 	ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 	SendClientMessageEx(playerid, COLOR_WHITE, "You have used a fuel can to refill your vehicle.");
 	PlayerPlaySound(playerid,1133,0.0,0.0,0.0);
-	ApplyAnimation(playerid, "CARRY", "crry_prtial", 4.0, 0, 0, 0, 0, 0, 1);
+	ApplyAnimation(playerid, "CARRY", "crry_prtial", 4.0, false, false, false, false, 0, SYNC_ALL);
 	DeletePVar(playerid, "fuelcan");
 	return 1;
 }
@@ -99,15 +99,13 @@ public JumpStart(playerid, vehicleid)
 		RepairVehicle(GetVehicleTrailer(vehicleid));
 		Vehicle_Armor(GetVehicleTrailer(vehicleid));
 	}
-	new engine,lights,alarm,doors,bonnet,boot,objective;
-	GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
-	SetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,VEHICLE_PARAMS_ON,boot,objective);
+	SetVehicleParamsEx(vehicleid, .bonnet = VEHICLE_PARAMS_ON);
 	new string[128];
 	format(string, sizeof(string), "%s has jump started their vehicle.", GetPlayerNameEx(playerid));
 	ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 	SendClientMessage(playerid, COLOR_WHITE, "Your vehicle has been Jump Started!");
 	PlayerPlaySound(playerid,1133,0.0,0.0,0.0);
-	ApplyAnimation(playerid, "CARRY", "crry_prtial", 4.0, 0, 0, 0, 0, 0, 1);
+	ApplyAnimation(playerid, "CARRY", "crry_prtial", 4.0, false, false, false, false, 0, SYNC_ALL);
 	format(string, sizeof(string), "[JUMPSTART] %s(%d) used a jump start. Left: %d", GetPlayerNameEx(playerid), GetPlayerSQLId(playerid), PlayerInfo[playerid][mInventory][8]);
 	Log("logs/micro.log", string);
 	DeletePVar(playerid, "jumpstarting");
@@ -119,7 +117,7 @@ public EatBar(playerid)
 {
 	PlayerInfo[playerid][mInventory][4]--;
 	PlayerInfo[playerid][mCooldown][4] = 60;
-	ApplyAnimation(playerid, "CARRY", "crry_prtial", 4.0, 0, 0, 0, 0, 0, 1);
+	ApplyAnimation(playerid, "CARRY", "crry_prtial", 4.0, false, false, false, false, 0, SYNC_ALL);
 	SendClientMessageEx(playerid, -1, "You have consumed a energy bar, effects will last for 1 hour.");
 	SendClientMessageEx(playerid, -1, "Your health will decrease slower when in a injured state.");
 	new string[128];
@@ -129,45 +127,13 @@ public EatBar(playerid)
 	return 1;
 }
 
-stock HireCost(carid)
-{
-	switch (carid)
-	{
-		case 69:
-		{
-			return 90000; //bullit
-		}
-		case 70:
-		{
-			return 130000; //infurnus
-		}
-		case 71:
-		{
-			return 100000; //turismo
-		}
-		case 72:
-		{
-			return 80000;
-		}
-		case 73:
-		{
-			return 70000;
-		}
-		case 74:
-		{
-			return 60000;
-		}
-	}
-	return 0;
-}
-
 forward TeleportToShop(playerid);
 public TeleportToShop(playerid)
 {
 	if(GetPVarType(playerid, "PlayerCuffed") || GetPVarInt(playerid, "pBagged") >= 1 || GetPVarType(playerid, "Injured") || GetPVarType(playerid, "IsFrozen") || PlayerInfo[playerid][pHospital] || PlayerInfo[playerid][pJailTime] > 0 || GetPVarInt(playerid, "EventToken") == 1 || GetPVarInt(playerid, "IsInArena") || !GetPVarInt(playerid, "ShopTP"))
 		return DeletePVar(playerid, "ShopTP"), SendClientMessage(playerid, COLOR_GRAD2, "SERVER: Shop Teleportation has been cancelled.");
 	if(gettime() - LastShot[playerid] < 30) {
-		TogglePlayerControllable(playerid, 1);
+		TogglePlayerControllable(playerid, true);
 		DeletePVar(playerid, "ShopTP");
 		return SendClientMessageEx(playerid, COLOR_GRAD2, "You have been injured within the last 30 seconds, you will not be teleported to the shop.");
 	}
@@ -176,7 +142,7 @@ public TeleportToShop(playerid)
 		SetPlayerPos(playerid, 2957.9670, -1459.4045, 10.8092);
 		SetPlayerInterior(playerid, 0);
 		SetPlayerVirtualWorld(playerid, 1);
-		TogglePlayerControllable(playerid, 1);
+		TogglePlayerControllable(playerid, true);
 		SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "If you wish to leave the shop, type /leaveshop to return to your previous location.");
 		SendClientMessageEx(playerid, COLOR_ORANGE, "Note{ffffff}: You will {ff0000}not{ffffff} be able to return to your previous location upon purchasing a vehicle.");
 	}
@@ -909,7 +875,7 @@ CMD:nggshop(playerid, params[]) {
 	
 	SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have requested a Teleport to the NGG Shop, please wait 30 seconds..");
 	SetTimerEx("TeleportToShop", 30000, false, "i", playerid);
-	TogglePlayerControllable(playerid, 0);
+	TogglePlayerControllable(playerid, false);
 	SetPVarInt(playerid, "ShopTP", 1);
 	
 	new Float:tmp[3];
@@ -1193,7 +1159,6 @@ CMD:sellcredits(playerid, params[])
 					TransactionFee = (5+CreditsTaxed);
 				}
 				case 4 .. 5: {
-					CreditsTaxed = 0;
 					Credits = Credits-5;
 					TransactionFee = 5;
 				}
@@ -1540,10 +1505,10 @@ CMD:setpumpkinstock(playerid, params[])
 	if(PlayerInfo[playerid][pAdmin] > 1337 || PlayerInfo[playerid][pPR] == 2 || PlayerInfo[playerid][pShopTech] == 3)
 	{
 		new string[128], pumpkins;
-		if(sscanf(params, "d", pumpkins)) return SendClientMessageEx(playerid, COLOR_GREY, "USAGE: /setpumpkinstock [stock]");
-		format(string, sizeof(string), "You have set the pumpkin stock to %d.", pumpkins);
+		if(sscanf(params, "d", pumpkins)) return SendClientMessageEx(playerid, COLOR_GREY, "USAGE: /setpumpkin[stock]");
+		format(string, sizeof(string), "You have set the pumpkin to %d.", pumpkins);
 		SendClientMessageEx(playerid, COLOR_GRAD1, string);
-		format(string, sizeof(string), "Admin %s(%i) has set the pumpkin stock to %d from %d.", GetPlayerNameEx(playerid), GetPlayerSQLId(playerid), pumpkins, PumpkinStock );
+		format(string, sizeof(string), "Admin %s(%i) has set the pumpkin to %d from %d.", GetPlayerNameEx(playerid), GetPlayerSQLId(playerid), pumpkins, PumpkinStock );
 		Log("logs/zombiecure.log", string);
 		PumpkinStock = pumpkins;
 		g_mysql_SaveMOTD();
@@ -1551,7 +1516,7 @@ CMD:setpumpkinstock(playerid, params[])
 	return 1;
 }
 
-CMD:microshop(playerid, params[])
+CMD:microshop(playerid)
 {
 	DeletePVar(playerid, "m_listitem");
 	DeletePVar(playerid, "m_Item");
@@ -1672,7 +1637,7 @@ CMD:fuelcan(playerid, params[])
 	new string[72];
 	format(string, sizeof(string), "%s begins refilling their vehicle with a fuel can.", GetPlayerNameEx(playerid));
 	ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-	ApplyAnimation(playerid, "SCRATCHING", "scdldlp", 4.0, 1, 0, 0, 0, 0, 1);
+	ApplyAnimation(playerid, "SCRATCHING", "scdldlp", 4.0, true, false, false, false, 0, SYNC_ALL);
 	SetTimerEx("FuelCan", 10000, false, "iii", playerid, closestcar, 100);
 	SetPVarInt(playerid, "fuelcan", 1);
 	GameTextForPlayer(playerid, "~w~Refueling...", 10000, 3);
@@ -1690,14 +1655,14 @@ CMD:jumpstart(playerid, params[])
 	if(!IsPlayerInRangeOfVehicle(playerid, closestcar, 10.0)) return SendClientMessageEx(playerid, COLOR_GRAD1, "You are not close enough to any vehicle.");
 	if(!IsABike(closestcar) && !IsAPlane(closestcar))
 	{
-		new engine,lights,alarm,doors,bonnet,boot,objective;
-		GetVehicleParamsEx(closestcar,engine,lights,alarm,doors,bonnet,boot,objective);
+		new bool:bonnet;
+		GetVehicleParamsEx(closestcar, .bonnet = bonnet);
 		if(bonnet == VEHICLE_PARAMS_OFF || bonnet == VEHICLE_PARAMS_UNSET) return SendClientMessageEx(playerid, COLOR_GRAD1, "The vehicle hood must be opened in order to jump start it.");
 	}
 	new string[61];
 	format(string, sizeof(string), "%s begins to jump start their vehicle.", GetPlayerNameEx(playerid));
 	ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-	ApplyAnimation(playerid, "MISC", "Plunger_01", 4.1, 1, 1, 1, 1, 1, 1);
+	ApplyAnimation(playerid, "MISC", "Plunger_01", 4.1, true, true, true, true, 1, SYNC_ALL);
 	SetTimerEx("JumpStart", 10000, false, "ii", playerid, closestcar);
 	SetPVarInt(playerid, "jumpstarting", 1);
 	GameTextForPlayer(playerid, "~w~Jump Starting...", 10000, 3);
@@ -1717,7 +1682,7 @@ CMD:rcarcolor(playerid, params[])
 		if(IsPlayerInVehicle(playerid, PlayerVehicleInfo[playerid][i][pvId]))
 		{
 			PlayerVehicleInfo[playerid][i][pvColor1] = iColors[0], PlayerVehicleInfo[playerid][i][pvColor2] = iColors[1];
-			ChangeVehicleColor(PlayerVehicleInfo[playerid][i][pvId], PlayerVehicleInfo[playerid][i][pvColor1], PlayerVehicleInfo[playerid][i][pvColor2]);
+			ChangeVehicleColours(PlayerVehicleInfo[playerid][i][pvId], PlayerVehicleInfo[playerid][i][pvColor1], PlayerVehicleInfo[playerid][i][pvColor2]);
 			PlayerInfo[playerid][mInventory][9]--;
 			g_mysql_SaveVehicle(playerid, i);
 			format(szMessage, sizeof(szMessage), "[RCARCOLOR] %s(%d) used a restricted car color. Left: %d", GetPlayerNameEx(playerid), GetPlayerSQLId(playerid), PlayerInfo[playerid][mInventory][9]);
@@ -1740,7 +1705,7 @@ CMD:eatbar(playerid, params[])
 		format(string, sizeof(string), "You currently have a active Energy Bar, please wait for it to expire in %d minute(s) to consume again.", PlayerInfo[playerid][mCooldown][4]);
 		return SendClientMessageEx(playerid, COLOR_GRAD2, string);
 	}
-	ApplyAnimation(playerid, "FOOD", "EAT_Burger", 3.0, 1, 0, 0, 0, 0, 1);
+	ApplyAnimation(playerid, "FOOD", "EAT_Burger", 3.0, true, false, false, false, 0, SYNC_ALL);
 	format(string, sizeof(string), "%s chews on a energy bar", GetPlayerNameEx(playerid));
 	ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 	SetPVarInt(playerid, "eatingbar", 1);

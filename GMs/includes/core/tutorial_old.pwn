@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-stock ShowTutGUIFrame(playerid, frame)
+ShowTutGUIFrame(playerid, frame)
 {
 	switch(frame)
 	{
@@ -166,7 +166,7 @@ stock ShowTutGUIFrame(playerid, frame)
 	}
 }
 
-stock HideTutGUIFrame(playerid, frame)
+HideTutGUIFrame(playerid, frame)
 {
 	switch(frame)
 	{
@@ -297,7 +297,7 @@ stock HideTutGUIFrame(playerid, frame)
 	}
 }
 
-stock ShowTutGUIBox(playerid)
+ShowTutGUIBox(playerid)
 {
 	InsideTut{playerid} = true;
 
@@ -319,7 +319,7 @@ stock ShowTutGUIBox(playerid)
 
 }
 
-stock HideTutGUIBox(playerid)
+HideTutGUIBox(playerid)
 {
 	InsideTut{playerid} = false;
 
@@ -340,7 +340,7 @@ stock HideTutGUIBox(playerid)
 	TextDrawHideForPlayer(playerid, TutTxtdraw[114]);
 }
 
-stock TutorialStep(playerid)
+TutorialStep(playerid)
 {
 	if(gettime() - GetPVarInt(playerid, "pTutTime") < 5)
 	{
@@ -666,7 +666,7 @@ stock TutorialStep(playerid)
 			RegistrationStep[playerid] = 0;
 			PlayerInfo[playerid][pTut] = 1;
 			gOoc[playerid] = 0; gNews[playerid] = 0;
-			TogglePlayerControllable(playerid, 0);
+			TogglePlayerControllable(playerid, false);
 			SetCamBack(playerid);
 			DeletePVar(playerid, "MedicBill");
 			SetPlayerColor(playerid,TEAM_HIT_COLOR);
@@ -728,4 +728,4 @@ CMD:next(playerid, params[])
 }
 
 forward DelaySetCameraBehindPlayer(playerid);
-public DelaySetCameraBehindPlayer(playerid) SetCameraBehindPlayer(playerid), TogglePlayerControllable(playerid, 1);
+public DelaySetCameraBehindPlayer(playerid) SetCameraBehindPlayer(playerid), TogglePlayerControllable(playerid, true);

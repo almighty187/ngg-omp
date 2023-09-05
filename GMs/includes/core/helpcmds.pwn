@@ -149,7 +149,7 @@
 		10) Voucher
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
@@ -304,13 +304,13 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	return 0;
 }
 
-stock LoadHelp()
+LoadHelp()
 {
 	printf("[LoadHelp] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `help` ORDER BY `Type` ASC, `Subtype` ASC, `Name` ASC", "OnLoadHelp", "");
 }
 
-stock RehashHelp()
+RehashHelp()
 {
 	printf("[RehashHelp] Clearing in-game help data...");
 	for(new i = 0; i < sizeof(Help); i++)
@@ -349,7 +349,7 @@ public OnLoadHelp()
 	else printf("[LoadHelp] Failed to load any help entries.");
 }
 
-stock Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0, inputtext[] = 0)
+Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0, inputtext[] = 0)
 {
 	new string[256];
 	switch(dialogid)
@@ -953,7 +953,6 @@ stock Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listit
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 21);
-				j++;
 				format(szMiscArray, sizeof(szMiscArray), "%sPizza Boy\n", szMiscArray);
 			}
 			Help_GenerateCMDList(playerid, 3, -1, 9, 0);
@@ -1051,7 +1050,6 @@ stock Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listit
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 4);
-				j++;
 				format(szMiscArray, sizeof(szMiscArray), "%sPlatinum VIP\n", szMiscArray);
 			}
 			Help_GenerateCMDList(playerid, 3, -1, 13, 0);
@@ -1146,7 +1144,6 @@ stock Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listit
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 10);
-				j++;
 				format(szMiscArray, sizeof(szMiscArray), "%sVoucher\n", szMiscArray);
 			}
 			Help_GenerateCMDList(playerid, 3, -1, 14, 0);
@@ -1175,7 +1172,7 @@ stock Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listit
 	return 1;
 }
 
-stock Help_GenerateCMDList(playerid, listtype, listitem = -1, type = 0, subtype = 0, param[] = 0)
+Help_GenerateCMDList(playerid, listtype, listitem = -1, type = 0, subtype = 0, const param[] = 0)
 {
 	new string[256], j = 0;
 	for(new i = 0; i < sizeof(Help); i++)
@@ -1259,7 +1256,7 @@ stock Help_GenerateCMDList(playerid, listtype, listitem = -1, type = 0, subtype 
 	return 1;
 }
 
-stock Help_ShowCMD(playerid, cmd, dialog)
+Help_ShowCMD(playerid, cmd, dialog)
 {
 	new string[256];
 	SetPVarInt(playerid, "TmpCMD", cmd);
@@ -1268,7 +1265,7 @@ stock Help_ShowCMD(playerid, cmd, dialog)
 	return ShowPlayerDialogEx(playerid, dialog, DIALOG_STYLE_MSGBOX, string, szMiscArray, "Copy", "Exit");
 }
 
-stock Help_SendToChat(playerid, response, cmd)
+Help_SendToChat(playerid, response, cmd)
 {
 	if(response)
 	{
@@ -1278,7 +1275,7 @@ stock Help_SendToChat(playerid, response, cmd)
 }
 
 // Function to determine if player has permission to view/use command
-stock Help_Perm(playerid, type, subtype, level)
+Help_Perm(playerid, type, subtype, level)
 {
 	// Administrator
 	if(type == 1 && PlayerInfo[playerid][pAdmin] >= 1)
@@ -1440,7 +1437,7 @@ stock Help_Perm(playerid, type, subtype, level)
 }
 
 // Function to clear search list
-stock ClearHelpSearch(playerid, Clear1 = 1, Clear2 = 1)
+ClearHelpSearch(playerid, Clear1 = 1, Clear2 = 1)
 {
 	new string[16];
 	for(new i = 0; i < sizeof(Help); i++)
@@ -1511,7 +1508,7 @@ CMD:ohelp(playerid, params[])
 		case 1: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /trace");
 		case 2: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /lawyerduty /free /defend /wanted /offerappeal /finishappeal");
 		case 3: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /sex");
-		case 4: cmd_odrughelp(playerid, "");
+		case 4: cmd_odrughelp(playerid);
 		case 5: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /dropcar");
 		case 7: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /fix /nos /hyd /repair /refill /mechduty");
 		case 8: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /guard /frisk");
@@ -1532,7 +1529,7 @@ CMD:ohelp(playerid, params[])
 		case 1: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /trace");
 		case 2: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /lawyerduty /free /defend /wanted");
 		case 3: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /sex");
-		case 4: cmd_odrughelp(playerid, "");
+		case 4: cmd_odrughelp(playerid);
 		case 5: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /dropcar");
 		case 7: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /fix /nos /hyd /repair /refill /mechduty");
 		case 8: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /guard /frisk");
@@ -1553,7 +1550,7 @@ CMD:ohelp(playerid, params[])
 		case 1: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /trace");
 		case 2: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /lawyerduty /free /defend /wanted");
 		case 3: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /sex");
-		case 4: cmd_odrughelp(playerid, "");
+		case 4: cmd_odrughelp(playerid);
 		case 5: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /dropcar");
 		case 7: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /fix /nos /hyd /repair /refill /mechduty");
 		case 8: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /guard /frisk");

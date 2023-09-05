@@ -1,4 +1,4 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define 	ITEM_DRUG			(0)
 #define 	ITEM_MATS			(1)
@@ -94,8 +94,8 @@ Player_InteractMenu(playerid, giveplayerid, menu = 0) {
 		}
 		case 3: {
 
-			for(new g = 0; g < 12; g++)	{
-				if(PlayerInfo[playerid][pGuns][g] != 0 && PlayerInfo[playerid][pAGuns][g] == 0) {
+			for(new WEAPON_SLOT:g; g < WEAPON_SLOT_DETONATOR; g++)	{
+				if(PlayerInfo[playerid][pGuns][g] != WEAPON_FIST && PlayerInfo[playerid][pAGuns][g] == WEAPON_FIST) {
 					format(szMiscArray, sizeof(szMiscArray), "%s\n%s(%i)", szMiscArray, Weapon_ReturnName(PlayerInfo[playerid][pGuns][g]), PlayerInfo[playerid][pGuns][g]);
 				}
 			}
@@ -106,7 +106,7 @@ Player_InteractMenu(playerid, giveplayerid, menu = 0) {
 			new amount = GetPVarInt(playerid, "Interact_SellAmt");
 
 			if(GetPVarType(playerid, "Interact_SellGun")) {
-				new weaponid = GetPVarInt(playerid, "Interact_SellGun");
+				new WEAPON:weaponid = WEAPON:GetPVarInt(playerid, "Interact_SellGun");
 
 				format(szMiscArray, sizeof(szMiscArray), "How much do you want to sell %s to %s for?", ReturnWeaponName(weaponid), GetPlayerNameEx(giveplayerid));
 			}
@@ -129,7 +129,7 @@ Player_InteractMenu(playerid, giveplayerid, menu = 0) {
 
 			if(GetPVarType(playerid, "Interact_SellGun")) {
 
-				new weaponid = GetPVarInt(playerid, "Interact_SellGun");
+				new WEAPON:weaponid = WEAPON:GetPVarInt(playerid, "Interact_SellGun");
 
 				format(szMiscArray, sizeof(szMiscArray), "[Interact]: You have offered %s to buy a %s for $%s", GetPlayerNameEx(giveplayerid), Item_Getname(itemid), number_format(offerprice));
 				SendClientMessage(playerid, COLOR_LIGHTBLUE, szMiscArray);
@@ -516,9 +516,9 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
 			new stpos = strfind(inputtext, "(");
 		    new fpos = strfind(inputtext, ")");
-		    new idstr[4], id;
+		    new idstr[4], WEAPON:id;
 		    strmid(idstr, inputtext, stpos+1, fpos);
-		    id = strval(idstr);
+		    id = WEAPON:strval(idstr);
 
 		    if(GetPVarType(playerid, "Interact_Sell")) {
 				SetPVarInt(playerid, "Interact_SellGun", id);
@@ -577,7 +577,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			
 			if(GetPVarType(buyingfrom, "Interact_SellGun")) {
 
-				new weaponid = GetPVarInt(buyingfrom, "Interact_SellGun");
+				new WEAPON:weaponid = WEAPON:GetPVarInt(buyingfrom, "Interact_SellGun");
 
 				format(szMiscArray, sizeof(szMiscArray), "%s has offered you to buy a %s for $%s\n\nPlease confirm again if you really are sure you want to complete this transaction!", GetPlayerNameEx(buyingfrom), ReturnWeaponName(weaponid), number_format(offerprice));
 			}
@@ -615,7 +615,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
 				if(GetPVarType(buyingfrom, "Interact_SellGun")) {
 
-					new weaponid = GetPVarInt(buyingfrom, "Interact_SellGun");
+					new WEAPON:weaponid = WEAPON:GetPVarInt(buyingfrom, "Interact_SellGun");
 					if(PlayerInfo[buyingfrom][pGuns][GetWeaponSlot(weaponid)] == weaponid)
 					{
 						Interact_GivePlayerValidWeapon(buyingfrom, playerid, weaponid, price);
@@ -654,9 +654,9 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 	return 0;
 }
 
-Interact_GivePlayerValidWeapon(playerid, giveplayerid, weaponid, saleprice = 0) {
+Interact_GivePlayerValidWeapon(playerid, giveplayerid, WEAPON:weaponid, saleprice = 0) {
 
-	if(PlayerInfo[giveplayerid][pGuns][GetWeaponSlot(weaponid)] != 0) return SendClientMessageEx(playerid, COLOR_GREY, "That player already has a weapon in that slot");
+	if(PlayerInfo[giveplayerid][pGuns][GetWeaponSlot(weaponid)] != WEAPON_FIST) return SendClientMessageEx(playerid, COLOR_GREY, "That player already has a weapon in that slot");
 	if(PlayerInfo[playerid][pGuns][GetWeaponSlot(weaponid)] != weaponid) return SendClientMessageEx(playerid, COLOR_GREY, "You don't have a weapon in your possession.");
 	if(weaponid == WEAPON_KNIFE) return SendClientMessageEx(playerid, COLOR_GREY, "You cannot give knives!");
 	if(GetPVarType(giveplayerid, "IsInArena") || GetPVarInt(giveplayerid, "EventToken") != 0) return SendClientMessageEx(playerid, COLOR_GREY, "You cannot do this right now!");
@@ -664,7 +664,7 @@ Interact_GivePlayerValidWeapon(playerid, giveplayerid, weaponid, saleprice = 0) 
 
 
 	if(saleprice != 0 && (GetPlayerCash(giveplayerid) < saleprice || saleprice < 0)) return SendClientMessage(giveplayerid, COLOR_GRAD2, "You do not have enough money");
-	PlayerInfo[playerid][pGuns][GetWeaponSlot(weaponid)] = 0;
+	PlayerInfo[playerid][pGuns][GetWeaponSlot(weaponid)] = WEAPON_FIST;
 	SetPlayerWeaponsEx(playerid);
 
 	GivePlayerValidWeapon(giveplayerid, weaponid);
@@ -823,14 +823,14 @@ Interact_CuffPlayer(playerid, giveplayerid) {
 	format(szMiscArray, sizeof(szMiscArray), "* %s handcuffs %s, tightening the cuffs securely.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 	ProxDetector(30.0, playerid, szMiscArray, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 	GameTextForPlayer(giveplayerid, "~r~Cuffed", 2500, 3);
-	TogglePlayerControllable(giveplayerid, 0);
+	TogglePlayerControllable(giveplayerid, false);
 	ClearAnimationsEx(giveplayerid);
 	GetHealth(giveplayerid, health);
 	GetArmour(giveplayerid, armor);
 	SetPVarFloat(giveplayerid, "cuffhealth",health);
 	SetPVarFloat(giveplayerid, "cuffarmor",armor);
 	SetPlayerSpecialAction(giveplayerid, SPECIAL_ACTION_CUFFED);
-	ApplyAnimation(giveplayerid,"ped","cower",1,1,0,0,0,0,1);
+	ApplyAnimation(giveplayerid,"ped","cower",1,true,false,false,false,0,SYNC_ALL);
 	PlayerCuffed[giveplayerid] = 2;
 	SetPVarInt(giveplayerid, "PlayerCuffed", 2);
 	SetPVarInt(giveplayerid, "IsFrozen", 1);
@@ -840,7 +840,7 @@ Interact_CuffPlayer(playerid, giveplayerid) {
 	if(GetPVarType(giveplayerid, "IsTackled")) {
 	    format(szMiscArray, sizeof(szMiscArray), "* %s removes a set of cuffs from his belt and attempts to cuff %s.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 		ProxDetector(30.0, playerid, szMiscArray, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-		SetTimerEx("CuffTackled", 4000, 0, "ii", playerid, giveplayerid);
+		SetTimerEx("CuffTackled", 4000, false, "ii", playerid, giveplayerid);
 	}
 	return 1;
 }
@@ -858,7 +858,7 @@ Interact_UncuffPlayer(playerid, giveplayerid) {
 		format(szMiscArray, sizeof(szMiscArray), "* %s has uncuffed %s.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 		ProxDetector(30.0, playerid, szMiscArray, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 		GameTextForPlayer(giveplayerid, "~g~Uncuffed", 2500, 3);
-		TogglePlayerControllable(giveplayerid, 1);
+		TogglePlayerControllable(giveplayerid, true);
 		ClearAnimationsEx(giveplayerid);
 		SetPlayerSpecialAction(giveplayerid, SPECIAL_ACTION_NONE);
 		PlayerCuffed[giveplayerid] = 0;
@@ -1010,9 +1010,9 @@ Interact_FriskPlayer(playerid, giveplayerid) {
 	if(PlayerInfo[giveplayerid][pCDPlayer] > 0) SendClientMessageEx(playerid, COLOR_GREY, "Music player.");
 	new weaponname[50];
 	SendClientMessageEx(playerid, COLOR_WHITE, "** Weapons **");
-	for (new i = 0; i < 12; i++)
+	for (new WEAPON_SLOT:i; i < WEAPON_SLOT_DETONATOR; i++)
 	{
-		if(PlayerInfo[giveplayerid][pGuns][i] > 0)
+		if(PlayerInfo[giveplayerid][pGuns][i] > WEAPON_FIST)
 		{
 			GetWeaponName(PlayerInfo[giveplayerid][pGuns][i], weaponname, sizeof(weaponname));
 			format(szMiscArray, sizeof(szMiscArray), "Weapon: %s.", weaponname);
@@ -1053,7 +1053,7 @@ Interact_DragPlayer(playerid, giveplayerid) {
 
 	SetPVarInt(giveplayerid, "BeingDragged", 1);
 	SetPVarInt(playerid, "DraggingPlayer", giveplayerid);
-	SetTimerEx("DragPlayer", 1000, 0, "ii", playerid, giveplayerid);
+	SetTimerEx("DragPlayer", 1000, false, "ii", playerid, giveplayerid);
 
 	return 1;
 }
@@ -1097,7 +1097,7 @@ Interact_DetainPlayer(playerid, giveplayerid, seatid = -1) {
 	return 1;
 }
 
-Interact_GiveTicket(playerid, giveplayerid, reason[], amount = -1) {
+Interact_GiveTicket(playerid, giveplayerid, const reason[], amount = -1) {
 	if(amount == -1) {
 		format(szMiscArray, sizeof(szMiscArray), "Please enter an amount to fine %s", GetPlayerNameEx(giveplayerid));
 		return ShowPlayerDialogEx(playerid, GIVE_TICKET, DIALOG_STYLE_INPUT, "Ticket Player", szMiscArray, "Next", "");
@@ -1242,7 +1242,7 @@ Interact_Prescribe(playerid, stage = 0) {
 
 		case 0: {
 
-			ShowPlayerDialogEx(playerid, DIALOG_STYLE_LIST, INTERACT_PRESCRIBE, "Type | Drug Prescription", "Demerol\n\
+			ShowPlayerDialogEx(playerid, INTERACT_PRESCRIBE, DIALOG_STYLE_LIST, "Type | Drug Prescription", "Demerol\n\
 				Morphine\n\
 				Haloperidol\n\
 				Aspirin",
@@ -1250,7 +1250,7 @@ Interact_Prescribe(playerid, stage = 0) {
 		}
 		case 1: {
 
-			ShowPlayerDialogEx(playerid, DIALOG_STYLE_INPUT, INTERACT_PRESCRIBE1, "Grams | Drug Prescription", "How many pieces would you like to prescribe?", "Prescribe", "Cancel");
+			ShowPlayerDialogEx(playerid, INTERACT_PRESCRIBE1, DIALOG_STYLE_INPUT, "Grams | Drug Prescription", "How many pieces would you like to prescribe?", "Prescribe", "Cancel");
 		}
 	}
 	return 1;

@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define MAX_CRIMES				150
 
@@ -78,15 +78,7 @@ public OnCrimesLoad()
 	print("[LoadCrimes] Crime Data Loaded.");
 }
 
-stock SaveCrimes()
-{
-	for(new i = 0; i < MAX_CRIMES; i++)
-	{
-		SaveCrime(i);
-	}
-}
-
-stock SaveCrime(id)
+SaveCrime(id)
 {
 	szMiscArray[0] = 0;
 	mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "UPDATE `crimesdata` SET  \
@@ -107,7 +99,7 @@ stock SaveCrime(id)
 	mysql_tquery(MainPipeline, szMiscArray, "OnQueryFinish", "i", SENDDATA_THREAD);
 }
 
-stock ShowCrimesDialog(iPlayerID, iSuspectID = INVALID_PLAYER_ID, iDialogID = DIALOG_SHOW_CRIMES)
+ShowCrimesDialog(iPlayerID, iSuspectID = INVALID_PLAYER_ID, iDialogID = DIALOG_SHOW_CRIMES)
 {
 	szMiscArray[0] = 0;
 	switch(iDialogID)
@@ -141,7 +133,7 @@ stock ShowCrimesDialog(iPlayerID, iSuspectID = INVALID_PLAYER_ID, iDialogID = DI
 	return 1;
 }
 
-stock ShowOfflineCrimesDialog(playerid)
+ShowOfflineCrimesDialog(playerid)
 {
 	szMiscArray[0] = 0;
 	format(szMiscArray, sizeof(szMiscArray), "----Misdemeanors----\n");

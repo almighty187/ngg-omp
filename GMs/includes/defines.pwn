@@ -43,8 +43,6 @@
 #pragma dynamic 4500000
 			/*  ---------------- NATIVES ----------------- */
 native WP_Hash(buffer[], len, const str[]);
-native gpci(playerid, serial[], maxlen);
-native IsValidVehicle(vehicleid);
 #define PRESSED(%0) \
     (((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
 #define RELEASED(%0) \
@@ -88,7 +86,7 @@ native IsValidVehicle(vehicleid);
 #define 		BLUE_FLAG_OBJ 				1579
 #define 		HILL_OBJ 					1578
 #define 		VEHICLE_RESPAWN 			7200
-#define 		SPEEDGUN 					43
+#define 		SPEEDGUN 					WEAPON_CAMERA
 #define 		MAX_NOP_WARNINGS 			4
 #define 		NEW_VULNERABLE 				(24)
 #define 		TIME_TO_CLAIM 				(1)
@@ -115,7 +113,7 @@ native IsValidVehicle(vehicleid);
 #define         NATION_SAN_ANDREAS		 	0
 #define         NATION_TIERRA_ROBADA	 	1
 #define			MAX_ZONE_NAME				28
-#define 		MAX_MODS 					15
+#define 		MAX_MODS 					(CARMODTYPE:15)
 #define 		FREEZE_TIME					2000
 #define 		CREDITS_AMOUNT_REFERRAL     100
 #define 		MAX_PLAYERVEHICLES 			500

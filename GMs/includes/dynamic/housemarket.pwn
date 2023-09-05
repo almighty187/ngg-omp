@@ -1,4 +1,4 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define MAX_LISTINGS_PER_PAGE (35)
 
@@ -45,39 +45,39 @@ ShowListingInformation(playerid, houseid, dialogid)
 {
 	new count[3];
 	szMiscArray[0] = 0;
-	format(szMiscArray, sizeof(szMiscArray), "General Information:\n\n  » House ID: %d\n  » Price: $%s\n  » Seller: %s", houseid, number_format(HouseInfo[houseid][ListingPrice]), StripUnderscore(HouseInfo[houseid][hOwnerName]));
-	if(strcmp("N/A", HouseInfo[houseid][ListingDescription], true) != 0) format(szMiscArray, sizeof(szMiscArray), "%s\n  » Description: %s", szMiscArray, HouseInfo[houseid][ListingDescription]);
-	format(szMiscArray, sizeof(szMiscArray), "%s\n  » Expiry: %s", szMiscArray, date(HouseInfo[houseid][ListedTimeStamp], 4));
+	format(szMiscArray, sizeof(szMiscArray), "General Information:\n\n  ï¿½ House ID: %d\n  ï¿½ Price: $%s\n  ï¿½ Seller: %s", houseid, number_format(HouseInfo[houseid][ListingPrice]), StripUnderscore(HouseInfo[houseid][hOwnerName]));
+	if(strcmp("N/A", HouseInfo[houseid][ListingDescription], true) != 0) format(szMiscArray, sizeof(szMiscArray), "%s\n  ï¿½ Description: %s", szMiscArray, HouseInfo[houseid][ListingDescription]);
+	format(szMiscArray, sizeof(szMiscArray), "%s\n  ï¿½ Expiry: %s", szMiscArray, date(HouseInfo[houseid][ListedTimeStamp], 4));
 	strcat(szMiscArray, "\n\nLinked Dynamic Doors:\n");
 	for(new i = 0; i < 5; i ++)
 	{
 		if(HouseInfo[houseid][LinkedDoor][i] != 0 && DDoorsInfo[HouseInfo[houseid][LinkedDoor][i]][ddOwner] == HouseInfo[houseid][hOwnerID]) 
 		{
-			format(szMiscArray, sizeof(szMiscArray), "%s\n  » Door ID: %d (%s)", szMiscArray, HouseInfo[houseid][LinkedDoor][i], DDoorsInfo[HouseInfo[houseid][LinkedDoor][i]][ddDescription]);
+			format(szMiscArray, sizeof(szMiscArray), "%s\n  ï¿½ Door ID: %d (%s)", szMiscArray, HouseInfo[houseid][LinkedDoor][i], DDoorsInfo[HouseInfo[houseid][LinkedDoor][i]][ddDescription]);
 			count[0] ++;
 		}
 	}
-	if(count[0] == 0) strcat(szMiscArray, "\n  » None");
+	if(count[0] == 0) strcat(szMiscArray, "\n  ï¿½ None");
 	strcat(szMiscArray, "\n\nLinked Dynamic Gates:\n");
 	for(new i = 0; i < sizeof(GateInfo); i ++)
 	{
 		if(GateInfo[i][gHID] == houseid) 
 		{
-			format(szMiscArray, sizeof(szMiscArray), "%s\n  » Gate ID: %d", szMiscArray, i);
+			format(szMiscArray, sizeof(szMiscArray), "%s\n  ï¿½ Gate ID: %d", szMiscArray, i);
 			count[1] ++;
 		}
 	}
-	if(count[1] == 0) strcat(szMiscArray, "\n  » None");
+	if(count[1] == 0) strcat(szMiscArray, "\n  ï¿½ None");
 	strcat(szMiscArray, "\n\nLinked Garages:\n");
 	for(new i = 0; i < 2; i ++)
 	{
 		if(HouseInfo[houseid][LinkedGarage][i] != 0 && GarageInfo[HouseInfo[houseid][LinkedGarage][i]][gar_Owner] == HouseInfo[houseid][hOwnerID]) 
 		{
-			format(szMiscArray, sizeof(szMiscArray), "%s\n  » Garage ID: %d", szMiscArray, HouseInfo[houseid][LinkedGarage][i]);
+			format(szMiscArray, sizeof(szMiscArray), "%s\n  ï¿½ Garage ID: %d", szMiscArray, HouseInfo[houseid][LinkedGarage][i]);
 			count[2] ++;
 		}
 	}
-	if(count[2] == 0) strcat(szMiscArray, "\n  » None");
+	if(count[2] == 0) strcat(szMiscArray, "\n  ï¿½ None");
 	ShowPlayerDialogEx(playerid, dialogid, DIALOG_STYLE_MSGBOX, "House Listing Information", szMiscArray, "Okay", "Cancel");
 	return 1;
 }
@@ -153,18 +153,18 @@ CMD:dli(playerid, params[]) return cmd_denylisting(playerid, params);
 CMD:houselistinghelp(playerid, params[])
 {
 	SendClientMessageEx(playerid, COLOR_WHITE, "** HOUSE LISTING COMMANDS **");
-	SendClientMessageEx(playerid, COLOR_GREY, "» /listhouse - Allows you to place a house listing ($500,000).");
-	SendClientMessageEx(playerid, COLOR_GREY, "» /renewlisting - Allows you to renew an active house listing ($100,000).");
-	SendClientMessageEx(playerid, COLOR_GREY, "» /listingdate - Allows you to view the date your house listing will expire on.");
-	SendClientMessageEx(playerid, COLOR_GREY, "» /deletelisting - Allows you to delete a house listing you placed previously.");
-	SendClientMessageEx(playerid, COLOR_GREY, "» /houselistings - Allows you to view a list of active house listings.");
+	SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ /listhouse - Allows you to place a house listing ($500,000).");
+	SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ /renewlisting - Allows you to renew an active house listing ($100,000).");
+	SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ /listingdate - Allows you to view the date your house listing will expire on.");
+	SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ /deletelisting - Allows you to delete a house listing you placed previously.");
+	SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ /houselistings - Allows you to view a list of active house listings.");
 	if(PlayerInfo[playerid][pAdmin] >= 4 || PlayerInfo[playerid][pASM] >= 1)
 	{
-		SendClientMessageEx(playerid, COLOR_GREY, "» {EE9A4D}SENIOR ADMIN{D8D8D8} /pendinglistings - Allows you to view a list of active house listings pending administrative approval.");
-		SendClientMessageEx(playerid, COLOR_GREY, "» {EE9A4D}SENIOR ADMIN{D8D8D8} /listingdetails [House ID] - Allows you view the details of a specified and pending house listing.");
-		SendClientMessageEx(playerid, COLOR_GREY, "» {EE9A4D}SENIOR ADMIN{D8D8D8} /(a)pprove(l)isting [House ID] - Allows you to approve the specified pending house listing.");
-		SendClientMessageEx(playerid, COLOR_GREY, "» {EE9A4D}SENIOR ADMIN{D8D8D8} /(d)eny(li)sting [House ID] - Allows you to deny the specified pending house listing.");
-		SendClientMessageEx(playerid, COLOR_GREY, "» {EE9A4D}SENIOR ADMIN{D8D8D8} /adeletelisting [House ID] - Allows you to delete the specified pending house listing.");
+		SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ {EE9A4D}SENIOR ADMIN{D8D8D8} /pendinglistings - Allows you to view a list of active house listings pending administrative approval.");
+		SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ {EE9A4D}SENIOR ADMIN{D8D8D8} /listingdetails [House ID] - Allows you view the details of a specified and pending house listing.");
+		SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ {EE9A4D}SENIOR ADMIN{D8D8D8} /(a)pprove(l)isting [House ID] - Allows you to approve the specified pending house listing.");
+		SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ {EE9A4D}SENIOR ADMIN{D8D8D8} /(d)eny(li)sting [House ID] - Allows you to deny the specified pending house listing.");
+		SendClientMessageEx(playerid, COLOR_GREY, "ï¿½ {EE9A4D}SENIOR ADMIN{D8D8D8} /adeletelisting [House ID] - Allows you to delete the specified pending house listing.");
 		SendClientMessageEx(playerid, COLOR_GREY, "* NOTICE: Using the (/admute) command will deny players the ability to post housing listings. *");
 	}
 	return 1;
@@ -417,7 +417,7 @@ CMD:deletelisting(playerid, params[])
     return 1;
 }
 
-CMD:houselistings(playerid, params[])
+CMD:houselistings(playerid)
 {
 	if(gPlayerLogged{playerid} == 0) return SendClientMessageEx(playerid, COLOR_GREY, "You're not logged in.");
 	if(GetPVarType(playerid, "Injured")) return SendClientMessageEx(playerid, COLOR_GREY, "You can't use house listings while injured.");
@@ -599,7 +599,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						if(inputtext[i] == '{' && inputtext[i + 7] == '}')
 						{
 							strmid(string, inputtext, i + 1, i + 7);
-							if(ishex(string))
+							if(IsHex(string))
 							{
 								strdel(inputtext, i, i + 8);
 								continue;
@@ -815,7 +815,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				if(HouseInfo[houseid][hOwned] == 0 || HouseInfo[houseid][Listed] == 0 || HouseInfo[houseid][PendingApproval] == 1)
 				{
 					SendClientMessageEx(playerid, COLOR_GREY, "The specified house is not currently for sale.");
-					cmd_houselistings(playerid, "");
+					cmd_houselistings(playerid);
 					return 1;
 				}
 				HouseMarketTracking[playerid] = houseid;
@@ -832,13 +832,13 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			if(PlayerInfo[playerid][pLevel] < 3) return SendClientMessageEx(playerid, COLOR_GREY, "You must be at least level 3 to access house listings.");
 			switch(response)
 			{
-				case false: return cmd_houselistings(playerid, "");
+				case false: return cmd_houselistings(playerid);
 				case true: 
 				{
 					if(HouseInfo[HouseMarketTracking[playerid]][hOwned] == 0 || HouseInfo[HouseMarketTracking[playerid]][Listed] == 0 || HouseInfo[HouseMarketTracking[playerid]][PendingApproval] == 1)
 					{
 						SendClientMessageEx(playerid, COLOR_GREY, "The specified house is not currently for sale.");
-						cmd_houselistings(playerid, "");
+						cmd_houselistings(playerid);
 						return 1;
 					}
 					ShowPlayerDialogEx(playerid, DIALOG_LISTINGOPTIONS, DIALOG_STYLE_LIST, "House Listings", "Visit House\nPurchase House", "Okay", "Cancel");
@@ -857,7 +857,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			if(HouseInfo[HouseMarketTracking[playerid]][hOwned] == 0 || HouseInfo[HouseMarketTracking[playerid]][Listed] == 0 || HouseInfo[HouseMarketTracking[playerid]][PendingApproval] == 1)
 			{
 				SendClientMessageEx(playerid, COLOR_GREY, "The specified house is not currently for sale.");
-				cmd_houselistings(playerid, "");
+				cmd_houselistings(playerid);
 				return 1;
 			}
 			switch(response)

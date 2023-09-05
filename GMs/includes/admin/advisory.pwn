@@ -34,7 +34,7 @@
 	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-stock CBroadCast(color,string[],level)
+CBroadCast(color, const string[], level)
 {
 	foreach(new i: Player)
 	{
@@ -47,7 +47,7 @@ stock CBroadCast(color,string[],level)
 	return 1;
 }
 
-stock ShowNMuteFine(playerid)
+ShowNMuteFine(playerid)
 {
 	new playername[MAX_PLAYER_NAME];
 	GetPlayerName(playerid, playername, sizeof(playername));
@@ -69,7 +69,7 @@ stock ShowNMuteFine(playerid)
 	else if(PlayerInfo[playerid][pNMuteTotal] == 6) ShowPlayerDialogEx(playerid,NMUTE,DIALOG_STYLE_LIST,"Newbie Chat Unmute - Select your Punishment:","Prison for 1 Hour and 30 Minutes","Select","Cancel");
 }
 
-stock SendAdvisorMessage(color, string[])
+SendAdvisorMessage(color, const string[])
 {
 	foreach(new i: Player)
 	{
@@ -80,7 +80,7 @@ stock SendAdvisorMessage(color, string[])
 	}
 }
 
-stock SendDutyAdvisorMessage(color, string[])
+SendDutyAdvisorMessage(color, const string[])
 {
 	foreach(new i: Player)
 	{
@@ -102,7 +102,7 @@ CMD:advisors(playerid, params[])
 			new tdate[11], thour[9], i_timestamp[3];
 			getdate(i_timestamp[0], i_timestamp[1], i_timestamp[2]);
 			format(tdate, sizeof(tdate), "%d-%02d-%02d", i_timestamp[0], i_timestamp[1], i_timestamp[2]);
-			format(thour, sizeof(thour), "%02d:00:00", hour);
+			format(thour, sizeof(thour), "%02d:00:00", hour_);
 
 			if(PlayerInfo[i][pHelper] != 0 && PlayerInfo[i][pHelper] <= PlayerInfo[playerid][pHelper])
 			{
@@ -130,7 +130,7 @@ CMD:advisors(playerid, params[])
 				new tdate[11], thour[9], i_timestamp[3];
 				getdate(i_timestamp[0], i_timestamp[1], i_timestamp[2]);
 				format(tdate, sizeof(tdate), "%d-%02d-%02d", i_timestamp[0], i_timestamp[1], i_timestamp[2]);
-				format(thour, sizeof(thour), "%02d:00:00", hour);
+				format(thour, sizeof(thour), "%02d:00:00", hour_);
 
 				if(PlayerInfo[i][pHelper] == 1&&PlayerInfo[i][pAdmin]<2) {
 					format(string, sizeof(string), "** Helper: %s	(Requests This Hour: %d | Requests Today: %d)", GetPlayerNameEx(i), ReportHourCount[i], ReportCount[i]);
@@ -688,7 +688,7 @@ CMD:requesthelp(playerid, params[])
 	SetPVarInt( playerid, "COMMUNITY_ADVISOR_REQUEST", 1 );
 	SetPVarInt( playerid, "HelpTime", 5);
 	SetPVarString( playerid, "HelpReason", params);
-	SetTimerEx( "HelpTimer", 60000, 0, "d", playerid);
+	SetTimerEx( "HelpTimer", 60000, false, "d", playerid);
 	return 1;
 }
 

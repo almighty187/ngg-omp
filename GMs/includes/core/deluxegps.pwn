@@ -37,7 +37,7 @@
 	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define		DIALOG_GPS_ONE				9800
 #define		DIALOG_GPS_TWO				9801
@@ -235,7 +235,7 @@ CMD:map(playerid, params[]) {
 	return 1;
 }
 
-CMD:mygps(playerid, params[]) {
+CMD:mygps(playerid) {
 	if(CheckPointCheck(playerid)) return SendClientMessageEx(playerid, COLOR_WHITE, "Please ensure that your current checkpoint is destroyed first (you either have material packages, or another existing checkpoint).");
 	ShowPlayerDialogEx(playerid, DIALOG_GPS_ONE, DIALOG_STYLE_LIST, "Doodle Maps | Main Menu", "Businesses\n\
 		Jobs\n\

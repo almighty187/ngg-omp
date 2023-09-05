@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 new g_aMaleSkins[185] = {
 	1, 2, 3, 4, 5, 6, 7, 8, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
@@ -79,7 +79,7 @@ ListDetainees(playerid)
 		iCount = 0,
 		temp[4];
 
-	foreach(Player, i)
+	foreach(new i: Player)
 	{
 		if(GetPVarInt(i, "ArrestPoint") == GetArrestPointID(playerid) + 1)
 		{
@@ -94,7 +94,7 @@ ListDetainees(playerid)
 		}
 	}
 	if(iCount == 0) return SendClientMessageEx(playerid, COLOR_GRAD2, "No prisoners at this arrest point.");
-	return ShowPlayerDialogEx(playerid, DIALOG_LOAD_DETAINEES, DIALOG_LOAD_DETAINEES, "Detainees List", szPrisoners, "Load", "Cancel");
+	return ShowPlayerDialogEx(playerid, DIALOG_LOAD_DETAINEES, DIALOG_STYLE_LIST, "Detainees List", szPrisoners, "Load", "Cancel");
 }
 
 LoadPrisoner(iLoadingID, iPrisonerID, iVehicleID, iVehicleSeat, iNewVW, iNewIW)
@@ -104,7 +104,7 @@ LoadPrisoner(iLoadingID, iPrisonerID, iVehicleID, iVehicleSeat, iNewVW, iNewIW)
 	SetPlayerInterior(iPrisonerID, iNewIW);
 	PlayerInfo[iPrisonerID][pInt] = iNewIW;
 	PutPlayerInVehicle(iPrisonerID, iVehicleID, iVehicleSeat);
-	TogglePlayerControllable(iPrisonerID, 0);
+	TogglePlayerControllable(iPrisonerID, false);
 	DeletePVar(iPrisonerID, "ArrestPoint");
 
 	SendClientMessageEx(iPrisonerID, COLOR_LIGHTBLUE, "You have been loaded into a prisoner transport bus by and will be transported to DOC");
@@ -599,7 +599,7 @@ SetPlayerIntoJailBoxing(iTargetID)
 
 		if(arrJailBoxingData[index][iParticipants] == 2)
 		{
-			foreach(Player, i)
+			foreach(new i: Player)
 			{
 				if(GetPVarInt(i, "_InJailBoxing") == index + 1 && i != iTargetID)
 				{
@@ -631,7 +631,7 @@ public StartJailBoxing(iArenaID)
 	new string[60 + MAX_PLAYER_NAME];
 	new iRangePoint;
 
-	foreach(Player, i)
+	foreach(new i: Player)
 	{
 		if(GetPVarType(i, "_InJailBoxing") && GetPVarInt(i, "_InJailBoxing") - 1 == iArenaID)
 		iRangePoint = i;
@@ -1132,7 +1132,7 @@ CMD:listprisoners(playerid, params[])
 		szString[20],
 		id;
 	if(sscanf(params, "d", id)) return SendClientMessageEx(playerid, COLOR_GREY, "USAGE: /listprisoners [arrestpoint id]");
-	foreach(Player, i)
+	foreach(new i: Player)
 	{
 		if((GetPVarInt(i, "ArrestPoint") == id + 1) && PlayerInfo[i][pJailTime] > 0)
 		{
@@ -1157,7 +1157,7 @@ ListInmates(playerid)
 {
 	new szInmates[2000], IsoString[24], BailString[50], TimeString[50];
 
-	foreach(Player, i)
+	foreach(new i: Player)
 	{
 		if(PlayerInfo[i][pJailTime] > 0 && strfind(PlayerInfo[i][pPrisonReason], "[IC]", true) != -1)
 		{
@@ -1207,7 +1207,7 @@ CMD:deliverinmates(playerid, params[])
 {
 	if(!IsADocGuard(playerid)) return SendClientMessageEx(playerid, COLOR_GREY, "You must be a DOC Guard to use this command.");
 	if(!IsPlayerInRangeOfPoint(playerid, 4, -2053.6279,-198.0207,15.0703)) return SendClientMessageEx(playerid, COLOR_GREY, "You must be at the doc delivery point");
-	foreach(Player, i)
+	foreach(new i: Player)
 	{
 		if(IsPlayerInVehicle(i, GetPlayerVehicleID(playerid)) && GetPlayerVehicleSeat(i) != 0)
 		{
@@ -1215,7 +1215,7 @@ CMD:deliverinmates(playerid, params[])
 			SetPlayerFacingAngle(i, 0);
 			SetPlayerPos(i, DocPrison[rand][0], DocPrison[rand][1], DocPrison[rand][2]);
 			DeletePVar(i, "IsFrozen");
-			TogglePlayerControllable(i, 1);
+			TogglePlayerControllable(i, true);
 			SetPlayerInterior(i, 10);
 			SetPlayerVirtualWorld(i, 0);
 			PlayerInfo[i][pVW] = 0;
@@ -1329,7 +1329,7 @@ CMD:acceptjailfood(playerid, params[])
 		ProxChatBubble(playerid, string);
 		ProxDetector(4.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 		//PlayAnimEx(playerid, "FOOD", "EAT_Burger", 4.1, 0, 1, 0, 4000, 1);
-		PlayAnimEx(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 1, 0, 0);
+		PlayAnimEx(playerid, "FOOD", "EAT_Burger", 4.0, false, false, false, true, 0, SYNC_NONE);
 		SetTimerEx("ClearAnims", 3000, false, "d", playerid);
 	}
 	else SendClientMessageEx(playerid, COLOR_WHITE, "You are not in range of the person offering you food.");
@@ -1375,7 +1375,7 @@ CMD:eatfood(playerid, params[])
 		ProxDetector(4.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 		DeletePVar(playerid, "carryingfood");
 		SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
-		PlayAnimEx(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 1, 0, 0);
+		PlayAnimEx(playerid, "FOOD", "EAT_Burger", 4.0, false, false, false, true, 0, SYNC_NONE);
 		SetTimerEx("ClearAnims", 3000, false, "d", playerid);
 		RemovePlayerAttachedObject(playerid, 9);
 
@@ -1681,9 +1681,9 @@ CMD:jailcuff(playerid, params[])
 					ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 					GameTextForPlayer(giveplayerid, "~r~Cuffed", 2500, 3);
 					ClearAnimationsEx(giveplayerid);
-					TogglePlayerControllable(giveplayerid, 0);
+					TogglePlayerControllable(giveplayerid, false);
 					SetPlayerSpecialAction(giveplayerid, SPECIAL_ACTION_CUFFED);
-					TogglePlayerControllable(giveplayerid, 1);
+					TogglePlayerControllable(giveplayerid, true);
 					DeletePVar(playerid, "pBagged");
 					SetPVarInt(giveplayerid, "jailcuffs", 1);
 				}
@@ -1691,7 +1691,7 @@ CMD:jailcuff(playerid, params[])
 				{
 				    format(string, sizeof(string), "* %s removes a set of cuffs from his belt and attempts to cuff %s.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
 					ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-					SetTimerEx("CuffTackled", 4000, 0, "ii", playerid, giveplayerid);
+					SetTimerEx("CuffTackled", 4000, false, "ii", playerid, giveplayerid);
 				}
 				else
 				{
@@ -1744,7 +1744,7 @@ CMD:beanbag(playerid, params[])
 {
     if(!IsADocGuard(playerid)) return SendClientMessageEx(playerid, COLOR_GREY, "You must be a DOC Guard to use this command.");
 
-    if(GetPlayerWeapon(playerid) == 25)
+    if(GetPlayerWeapon(playerid) == WEAPON_SHOTGUN)
     {
         new string[128];
     	if(GetPVarInt(playerid, "pBeanBag") >= 1)
@@ -2130,7 +2130,7 @@ CMD:drinkpruno(playerid, params[])
 			SendClientMessage(playerid, COLOR_PURPLE, string);
 
 			SetPVarInt(playerid, "pWineConsumed", 1);
-			ApplyAnimation(playerid, "PED", "WALK_DRUNK", 4.1, 1, 1, 1, 1, 1, 1);
+			ApplyAnimation(playerid, "PED", "WALK_DRUNK", 4.1, true, true, true, true, 1, SYNC_ALL);
 			SetPlayerDrunkLevel(playerid, 10000);
 			SetTimerEx("_DrinkWineTimer", 30000, false, "d", playerid);
 
@@ -2476,7 +2476,7 @@ public _ShowerTimer(playerid)
 		}
 		default: 
 		{
-			ApplyAnimation(playerid, "MISC", "Scratchballs_01", 4.0, 0, 0, 0, 0, 0, 1);
+			ApplyAnimation(playerid, "MISC", "Scratchballs_01", 4.0, false, false, false, false, 0, SYNC_ALL);
 			SetPVarInt(playerid, "pPrisonShowerStage", 1);
 
 			SetTimerEx("_ShowerTimer", 8000, false, "d", playerid);
@@ -2600,7 +2600,7 @@ ReleasePlayerFromPrison(playerid)
 	ClearCrimes(playerid);
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
     if ((newkeys & KEY_YES) && !(oldkeys & KEY_YES))
     {
@@ -2631,7 +2631,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 
     		TogglePlayerControllable(playerid, FALSE);
 
-    		PlayAnimEx(playerid, "BD_FIRE", "wash_up", 4.0, 1, 0, 0, 0, 0, 1);
+    		PlayAnimEx(playerid, "BD_FIRE", "wash_up", 4.0, true, false, false, false, 0, SYNC_ALL);
         }
 	    else if(IsPlayerInAShower(playerid))
 	    {
@@ -2652,7 +2652,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 
 				SetTimerEx("_ShowerTimer", 10000, false, "d", playerid);
 
-				PlayAnimEx(playerid, "BD_FIRE", "wash_up", 4.0, 1, 0, 0, 0, 0, 1);
+				PlayAnimEx(playerid, "BD_FIRE", "wash_up", 4.0, true, false, false, false, 0, SYNC_ALL);
 			}
 			else return SendClientMessageEx(playerid, COLOR_WHITE, "You do not have any soap.");
 	    }
@@ -2667,7 +2667,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			SetPVarInt(playerid, "pPrisonCellChisel", 1);
 			SetPVarInt(playerid, "pPrisonChisel", 0);
 
-			PlayAnimEx(playerid,"BOMBER","BOM_Plant",4.0,0,0,0,0,0,0);
+			PlayAnimEx(playerid,"BOMBER","BOM_Plant",4.0,false,false,false,false,0,SYNC_NONE);
 
 			SendClientMessage(playerid, COLOR_WHITE, "You have chiseled a hole in your cell, type /celldeposit to deposit contraband.");
 	    }

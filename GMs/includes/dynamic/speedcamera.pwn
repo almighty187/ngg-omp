@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
 	if(arrAntiCheat[playerid][ac_iFlags][AC_DIALOGSPOOFING] > 0) return 1;
@@ -389,7 +389,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 	return 0;
 }
 
-stock CreateSpeedCamera(Float:x, Float:y, Float:z, Float:rotation, Float:range, Float:limit)
+CreateSpeedCamera(Float:x, Float:y, Float:z, Float:rotation, Float:range, Float:limit)
 {
 	new loadedCams = 0;
 	new index;
@@ -425,7 +425,7 @@ stock CreateSpeedCamera(Float:x, Float:y, Float:z, Float:rotation, Float:range, 
 	return index;
 }
 
-stock SpawnSpeedCamera(i)
+SpawnSpeedCamera(i)
 {
 	if (SpeedCameras[i][_scActive] && SpeedCameras[i][_scObjectId] == -1)
 	{
@@ -436,7 +436,7 @@ stock SpawnSpeedCamera(i)
 	}
 }
 
-stock DespawnSpeedCamera(i)
+DespawnSpeedCamera(i)
 {
 	if (SpeedCameras[i][_scActive])
 	{
@@ -446,7 +446,7 @@ stock DespawnSpeedCamera(i)
 	}
 }
 
-stock SaveSpeedCameras()
+SaveSpeedCameras()
 {
 	for (new c = 0; c < MAX_SPEEDCAMERAS; c++)
 	{
@@ -481,7 +481,7 @@ CMD:gotospeedcam(playerid, params[]) {
 		if(i < 0 || i > MAX_SPEEDCAMERAS) return SendClientMessageEx(playerid, COLOR_GREY, "USAGE: /gotospeedcam [Speedcam id]");
     	if (SpeedCameras[i][_scActive] == true)
     	{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, SpeedCameras[i][_scPosX], SpeedCameras[i][_scPosY], SpeedCameras[i][_scPosZ]);
@@ -509,7 +509,7 @@ CMD:gotospeedcam(playerid, params[]) {
 	return 1;
 }
 
-stock SaveSpeedCamera(i)
+SaveSpeedCamera(i)
 {
 	if (SpeedCameras[i][_scActive] != true)
 		return;
@@ -522,7 +522,7 @@ stock SaveSpeedCamera(i)
 	mysql_tquery(MainPipeline, query, "OnQueryFinish", "i", SENDDATA_THREAD);
 }
 
-stock LoadSpeedCameras()
+LoadSpeedCameras()
 {
 	printf("[SpeedCameras] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT * FROM speed_cameras", "OnLoadSpeedCameras", "");
@@ -562,7 +562,7 @@ public OnLoadSpeedCameras()
 	return 1;
 }
 
-stock StoreNewSpeedCameraInMySQL(index)
+StoreNewSpeedCameraInMySQL(index)
 {
 	new string[512];
 	mysql_format(MainPipeline, string, sizeof(string), "INSERT INTO speed_cameras (pos_x, pos_y, pos_z, rotation, `range`, speed_limit) VALUES (%f, %f, %f, %f, %f, %f)",
@@ -579,7 +579,7 @@ public OnNewSpeedCamera(index)
 	SpeedCameras[index][_scDatabase] = db;
 }
 
-stock UpdateSpeedCamerasForPlayer(p)
+UpdateSpeedCamerasForPlayer(p)
 {
 	if (!IsPlayerConnected(p) || !IsPlayerInAnyVehicle(p) || GetPlayerState(p) != PLAYER_STATE_DRIVER) return;
 
@@ -610,7 +610,7 @@ stock UpdateSpeedCamerasForPlayer(p)
 							SendClientMessageEx(p, COLOR_WHITE, string);
 							PlayerPlaySound(p, 1132, 0.0, 0.0, 0.0);
 							PlayerTextDrawShow(p, _vhudFlash[p]);
-							SetTimerEx("TurnOffFlash", 500, 0, "i", p);
+							SetTimerEx("TurnOffFlash", 500, false, "i", p);
 						}
 					    foreach(new i: Player)
 						{
@@ -624,7 +624,7 @@ stock UpdateSpeedCamerasForPlayer(p)
 								SendClientMessageEx(p, COLOR_WHITE, string);
 								PlayerPlaySound(p, 1132, 0.0, 0.0, 0.0);
 								PlayerTextDrawShow(p, _vhudFlash[p]);
-								SetTimerEx("TurnOffFlash", 500, 0, "i", p);
+								SetTimerEx("TurnOffFlash", 500, false, "i", p);
 								g_mysql_SaveVehicle(i, v);
 							}
 						}	

@@ -1,4 +1,4 @@
-stock ConvertToTwelveHour(tHour)
+ConvertToTwelveHour(tHour)
 {
 	new string[56], suffix[3], cHour;
 	if(tHour > 12 && tHour < 24)
@@ -37,9 +37,8 @@ public FixServerTime()
 	new tmpsecond;
 	gettime(tmphour, tmpminute, tmpsecond);
 	FixHour(tmphour);
-	tmphour = shifthour;
 	
-	new iTempHour = CalculateWorldGameTime(hour, minuite);
+	new iTempHour = CalculateWorldGameTime(hour_, minuite);
 	SetWorldTime(iTempHour);
 	print("Adjusted the server time...");
 	return 1;
@@ -90,7 +89,7 @@ GetWeekday(display = 0, day = 0, month = 0, year = 0)
 	return weekday_str;
 }
 
-stock ConvertTimeS(seconds, TYPE = 0)
+ConvertTimeS(seconds, TYPE = 0)
 {
 	new string[64], minutes;
 	if(TYPE == 0) {
@@ -139,7 +138,7 @@ stock ConvertTimeS(seconds, TYPE = 0)
 	return string;
 }
 
-stock ConvertTime(cts, &ctm=-1,&cth=-1,&ctd=-1,&ctw=-1,&ctmo=-1,&cty=-1)
+ConvertTime(cts, &ctm=-1,&cth=-1,&ctd=-1,&ctw=-1,&ctmo=-1,&cty=-1)
 {
     //Defines to drastically reduce the code..
 
@@ -245,8 +244,8 @@ public SyncPlayerTime(playerid)
 	if(zombieevent == 0)
 	{
 		new
-		iTempHour = CalculateWorldGameTime(hour, minuite),
-		iTempMinute = CalculateGameMinute(minuite, second);
+		iTempHour = CalculateWorldGameTime(hour_, minuite),
+		iTempMinute = CalculateGameMinute(minuite, second_);
 
 		SetPlayerTime(playerid, iTempHour, iTempMinute);
 	}
@@ -267,8 +266,8 @@ public SyncMinTime(i)
 		if(zombieevent == 0) 
 		{
 			new
-			iTempHour = CalculateWorldGameTime(hour, minuite),
-			iTempMinute = CalculateGameMinute(minuite, second);
+			iTempHour = CalculateWorldGameTime(hour_, minuite),
+			iTempMinute = CalculateGameMinute(minuite, second_);
 
 			SetPlayerTime(i, iTempHour, iTempMinute);
 		}
@@ -308,7 +307,7 @@ public SyncMinTime(i)
 }
 #endif
 
-stock date( timestamp, _form=0 )
+date( timestamp, _form=0 )
 {
     /*
         date( 1247182451 )  will print >> 09.07.2009-23:34:11

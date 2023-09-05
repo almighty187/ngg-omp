@@ -81,7 +81,7 @@ public MoveEMS(playerid)
 	SetPlayerVirtualWorld(iTargetPlayerID, GetPlayerVirtualWorld(playerid));
 
 	ClearAnimationsEx(iTargetPlayerID);
-	if(!IsPlayerInAnyVehicle(iTargetPlayerID)) ApplyAnimation(iTargetPlayerID, "SWAT", "gnstwall_injurd", 4.0, 0, 1, 1, 1, 0, 1);
+	if(!IsPlayerInAnyVehicle(iTargetPlayerID)) ApplyAnimation(iTargetPlayerID, "SWAT", "gnstwall_injurd", 4.0, false, true, true, true, 0, SYNC_ALL);
 
 	DeletePVar(iTargetPlayerID, "OnStretcher");
 	DeletePVar(playerid, "MovingStretcher");
@@ -150,7 +150,7 @@ public SendEMSQueue(playerid,type)
 		{
 		    SetPVarInt(playerid,"EMSAttempt", 2);
 			ClearAnimationsEx(playerid);
-		 	if(!IsPlayerInAnyVehicle(playerid)) ApplyAnimation(playerid, "SWAT", "gnstwall_injurd", 4.0, 0, 1, 1, 1, 0, 1);
+		 	if(!IsPlayerInAnyVehicle(playerid)) ApplyAnimation(playerid, "SWAT", "gnstwall_injurd", 4.0, false, true, true, true, 0, SYNC_ALL);
 			SetHealth(playerid, 50); // Set to 50.
 			RemoveArmor(playerid);
 		}
@@ -162,16 +162,16 @@ PlayDeathAnimation(playerid) {
 
 	new i = random(5);
 	switch(i) {
-		case 0: ApplyAnimation(playerid, "KNIFE", "KILL_Knife_Ped_Die", 4.0, 0, 1, 1, 1, 0, 1);
-		case 1: ApplyAnimation(playerid, "PED", "KO_shot_stom", 4.0, 0, 1, 1, 1, 0, 1);
-		case 2: ApplyAnimation(playerid, "PED", "KO_shot_stom", 4.0, 0, 1, 1, 1, 0, 1);
-		case 3: ApplyAnimation(playerid, "PED", "BIKE_fall_off", 4.1, 0, 1, 1, 1, 0, 1);
-		case 4: ApplyAnimation(playerid, "BASEBALL", "Bat_Hit_3", 4.1, 0, 1, 1, 1, 0, 1);
-		default: ApplyAnimation(playerid, "FIGHT_E", "Hit_fightkick_B", 4.1, 0, 1, 1, 1, 0, 1);
+		case 0: ApplyAnimation(playerid, "KNIFE", "KILL_Knife_Ped_Die", 4.0, false, true, true, true, 0, SYNC_ALL);
+		case 1: ApplyAnimation(playerid, "PED", "KO_shot_stom", 4.0, false, true, true, true, 0, SYNC_ALL);
+		case 2: ApplyAnimation(playerid, "PED", "KO_shot_stom", 4.0, false, true, true, true, 0, SYNC_ALL);
+		case 3: ApplyAnimation(playerid, "PED", "BIKE_fall_off", 4.1, false, true, true, true, 0, SYNC_ALL);
+		case 4: ApplyAnimation(playerid, "BASEBALL", "Bat_Hit_3", 4.1, false, true, true, true, 0, SYNC_ALL);
+		default: ApplyAnimation(playerid, "FIGHT_E", "Hit_fightkick_B", 4.1, false, true, true, true, 0, SYNC_ALL);
 	}
 }
 
-Medic_GetPatient(playerid, params[]) {
+Medic_GetPatient(playerid, const params[]) {
 
 	if(IsAMedic(playerid) || IsFirstAid(playerid))
 	{
@@ -211,7 +211,7 @@ Medic_GetPatient(playerid, params[]) {
 	return 1;
 }
 
-stock IsAnAmbulance(carid)
+IsAnAmbulance(carid)
 {
 	if(DynVeh[carid] != -1)
 	{

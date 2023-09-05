@@ -34,7 +34,7 @@
 	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 /*
 static Float:WeaponRange[] = {
 
@@ -87,14 +87,14 @@ hook OnPlayerConnect(playerid) {
 	return 1;
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 	if((newkeys & KEY_SPRINT) || (newkeys & KEY_SECONDARY_ATTACK)) {
 		if(IsDoingAnim[playerid]) ClearAnimationsEx(playerid);
 	}
 	return 1;
 }
 
-public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ) {
+public OnPlayerWeaponShot(playerid, WEAPON:weaponid, BULLET_HIT_TYPE:hittype, hitid, Float:fX, Float:fY, Float:fZ) {
 	new string[128];
 	//SendClientMessageEx(playerid, COLOR_WHITE, "Weapon %i fired. hittype: %i   hitid: %i   pos: %f, %f, %f", weaponid, hittype, hitid, fX, fY, fZ);
 	if(GhostHacker[playerid][5] < gettime()) {
@@ -103,7 +103,7 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 	}
     if(playerid != INVALID_PLAYER_ID) {
     	if(GetPVarInt(playerid, "EventToken") == 0 && !GetPVarType(playerid, "IsInArena")) {
-		    if(weaponid > 0 && GetPlayerWeapon(playerid) == weaponid) {
+		    if(weaponid > WEAPON_FIST && GetPlayerWeapon(playerid) == weaponid) {
 				if(PlayerInfo[playerid][pGuns][GetWeaponSlot(weaponid)] != weaponid) {
 					ExecuteHackerAction(playerid, weaponid);
 					RemovePlayerWeapon(playerid, weaponid);
@@ -113,12 +113,12 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 		}
 		if(hittype == BULLET_HIT_TYPE_PLAYER) {
 			if(hitid != INVALID_PLAYER_ID) {
-				if(weaponid != 9 || weaponid != 37 || weaponid != 38 || weaponid != 41 || weaponid != 42) {
+				if(weaponid != WEAPON_CHAINSAW || weaponid != WEAPON_FLAMETHROWER || weaponid != WEAPON_MINIGUN || weaponid != WEAPON_SPRAYCAN || weaponid != WEAPON_FIREEXTINGUISHER) {
 					//if(GetPVarInt(playerid, "EventToken") == 0 && !GetPVarType(playerid, "IsInArena")) {
 						GhostHacker[playerid][2]++;
 						if(!GhostHacker[playerid][4]) {
 							GhostHacker[playerid][4] = 1;
-							SetTimerEx("CheckBulletAmount", 1000, 0, "ii", playerid);
+							SetTimerEx("CheckBulletAmount", 1000, false, "ii", playerid);
 						}
 					//}
 				}
@@ -135,7 +135,7 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 				SetTimerEx("TazerTimer",1000,false,"d",playerid);
 				SendClientMessageEx(playerid, COLOR_WHITE, "Your tazer is recharging!");
 				
-				RemovePlayerWeapon(playerid, 23);
+				RemovePlayerWeapon(playerid, WEAPON_SILENCED);
 				GivePlayerValidWeapon(playerid, pTazerReplace{playerid});
 				format(szMiscArray, sizeof(szMiscArray), "* %s holsters their tazer.", GetPlayerNameEx(playerid));
 				ProxDetector(4.0, playerid, szMiscArray, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -179,17 +179,17 @@ public CheckBulletAmount(playerid) {
 }
 
 // Required as aiming with a single weapon wont update the anim index so we need to force clear.
-stock IsAimingColt(playerid) {
+IsAimingColt(playerid) {
 
-	if(GetPlayerCameraMode(playerid) == 53) {
-		if(GetPlayerWeapon(playerid) == 22 || GetPlayerWeapon(playerid) == 26 || GetPlayerWeapon(playerid) == 28 || GetPlayerWeapon(playerid) == 32) {
+	if(GetPlayerCameraMode(playerid) == CAM_MODE_AIMWEAPON) {
+		if(GetPlayerWeapon(playerid) == WEAPON_COLT45 || GetPlayerWeapon(playerid) == WEAPON_SAWEDOFF || GetPlayerWeapon(playerid) == WEAPON_UZI || GetPlayerWeapon(playerid) == WEAPON_TEC9) {
 			return 1;
 		}
 	}
 	return 0;
 }
 
-stock IsInvalidGunAnim(playerid)
+IsInvalidGunAnim(playerid)
 {
 	switch(GetPlayerAnimationIndex(playerid))
 	{
@@ -234,19 +234,19 @@ stock IsInvalidGunAnim(playerid)
 }
 
 
-public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
+public OnPlayerGiveDamage(playerid, damagedid, Float:amount, WEAPON:weaponid, bodypart)
 {
 	szMiscArray[0] = 0;
 	if(gPlayerLogged{playerid} == 0) {
 		format(szMiscArray, sizeof(szMiscArray), "%s(%d) [%s] has moved from the login screen position.", GetPlayerNameEx(playerid), GetPlayerSQLId(playerid), GetPlayerIpEx(playerid));
 		Log("logs/security.log", szMiscArray);
 		SendClientMessage(playerid, COLOR_WHITE, "SERVER: You attempted to deal damage to someone when not logged in.");
-		SetTimerEx("KickEx", 1000, 0, "i", playerid);
+		SetTimerEx("KickEx", 1000, false, "i", playerid);
 		return 1;
 	}
 	if((0 <= bodypart < 2)) return 1;
 	if(IsAimingColt(playerid) && IsInvalidGunAnim(playerid)) {
-		ClearAnimations(playerid, 1);
+		ClearAnimations(playerid, SYNC_ALL);
 		return 1;
 	}
 	/*
@@ -269,7 +269,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 					Log("logs/hack.log", szMiscArray);
 				}
 			}
-			foreach(Player, i)
+			foreach(new i: Player)
 			{
 				if(IsPlayerConnected(i))
 				{
@@ -286,22 +286,22 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 	    // First define our base damage.
 		switch(weaponid)
 		{
-			case 0 .. 3, 5 .. 8, 10 .. 15, 28, 32: if(amount > 20.0) amount = 20.0;
-			case 4: if(amount > 150.0) amount = 150.0;
-			case 9: if(amount > 30.0) amount = 30.0;
-			case 23: if(amount > 14.0) amount = 14.0;
-			case 24, 38: if(amount > 47.0) amount = 47.0;
-			case 25, 26: if(amount > 50.0) amount = 50.0;
-			case 27: if(amount > 40.0) amount = 40.0;
-			case 22, 29: if(amount > 9.0) amount = 9.0;
-			case 30, 31: if(amount > 10.0) amount = 10.0;
-			case 33: if(amount > 25.0) amount = 25.0;
-			case 34: if(amount > 42.0) amount = 42.0;
-			case 37, 42: if(amount > 3.0) amount = 3.0;
-			case 41: amount = 0.0;
+			case WEAPON_FIST .. WEAPON_NITESTICK, WEAPON_BAT .. WEAPON_KATANA, WEAPON_DILDO .. WEAPON_CANE, WEAPON_UZI, WEAPON_TEC9: if(amount > 20.0) amount = 20.0;
+			case WEAPON_KNIFE: if(amount > 150.0) amount = 150.0;
+			case WEAPON_CHAINSAW: if(amount > 30.0) amount = 30.0;
+			case WEAPON_SILENCED: if(amount > 14.0) amount = 14.0;
+			case WEAPON_DEAGLE, WEAPON_MINIGUN: if(amount > 47.0) amount = 47.0;
+			case WEAPON_SHOTGUN, WEAPON_SAWEDOFF: if(amount > 50.0) amount = 50.0;
+			case WEAPON_SHOTGSPA: if(amount > 40.0) amount = 40.0;
+			case WEAPON_COLT45, WEAPON_MP5: if(amount > 9.0) amount = 9.0;
+			case WEAPON_AK47, WEAPON_M4: if(amount > 10.0) amount = 10.0;
+			case WEAPON_RIFLE: if(amount > 25.0) amount = 25.0;
+			case WEAPON_SNIPER: if(amount > 42.0) amount = 42.0;
+			case WEAPON_FLAMETHROWER, WEAPON_FIREEXTINGUISHER: if(amount > 3.0) amount = 3.0;
+			case WEAPON_SPRAYCAN: amount = 0.0;
 			default: if(amount > 20.0) amount = 20.0; // If there is no gun defined fall onto this (Should stop hacks going out of the 32-bit range)
 		}
-		if(GetPlayerCameraMode(playerid) == 55 && amount > 9.0) amount = 9.0;
+		if(GetPlayerCameraMode(playerid) == CAM_MODE_AIMWEAPON_FROMCAR && amount > 9.0) amount = 9.0;
 
 		if(weaponid == WEAPON_COLT45 || weaponid == WEAPON_SILENCED || weaponid == WEAPON_AK47)
 		{
@@ -353,7 +353,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 		if ((!iVehCheck && fHitDist > 20.0) || fHitDist > 50.0) return 1;*/
 
 		new vehmodel = GetVehicleModel(GetPlayerVehicleID(playerid));
-		if(GetPVarInt(playerid, "EventToken") == 0 && !GetPVarType(playerid, "IsInArena") && (vehmodel != 425 && vehmodel != 432 && vehmodel != 447 && vehmodel != 464 && vehmodel != 476 && vehmodel != 520) && GetWeaponSlot(weaponid) != -1)
+		if(GetPVarInt(playerid, "EventToken") == 0 && !GetPVarType(playerid, "IsInArena") && (vehmodel != 425 && vehmodel != 432 && vehmodel != 447 && vehmodel != 464 && vehmodel != 476 && vehmodel != 520) && GetWeaponSlot(weaponid) != UNKNOWN_WEAPON_SLOT)
 		{
 			if(PlayerInfo[playerid][pGuns][GetWeaponSlot(weaponid)] != weaponid)
 			{
@@ -367,7 +367,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 				}
 				return 1;
 			}
-			if((PlayerInfo[playerid][pWRestricted] > 0 || PlayerInfo[playerid][pConnectHours] < 2) && (weaponid != 0 && weaponid != 46))
+			if((PlayerInfo[playerid][pWRestricted] > 0 || PlayerInfo[playerid][pConnectHours] < 2) && (weaponid != WEAPON_FIST && weaponid != WEAPON_PARACHUTE))
 			{
 				if(gettime() > GetPVarInt(playerid, "WepResWarn"))
 				{
@@ -413,8 +413,8 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 		}
 		if(pTazer{playerid} == 1)
 		{
-			if(weaponid !=  23) {
-				RemovePlayerWeapon(playerid, 23);
+			if(weaponid !=  WEAPON_SILENCED) {
+				RemovePlayerWeapon(playerid, WEAPON_SILENCED);
 				GivePlayerValidWeapon(playerid, pTazerReplace{playerid});
 				format(szMiscArray, sizeof(szMiscArray), "* %s holsters their tazer.", GetPlayerNameEx(playerid));
 				ProxDetector(30.0, playerid, szMiscArray, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -432,9 +432,9 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 				if((PlayerInfo[damagedid][pAdmin] >= 2 || PlayerInfo[damagedid][pWatchdog] >= 2) && PlayerInfo[damagedid][pTogReports] != 1) return SendClientMessageEx(playerid, COLOR_GRAD2, "Admins can not be tazed!");
 				if(HelpingNewbie[damagedid] != INVALID_PLAYER_ID) return SendClientMessageEx(playerid, COLOR_GRAD2, "You cannot taze an advisor while they are helping someone.");
 				if(PlayerInfo[damagedid][pHospital] == 1) return SendClientMessageEx(playerid, COLOR_GRAD2, "Players in hospital cannot be tazed!");
-				new newkeys, dir1, dir2;
+				new KEY:newkeys, dir1, dir2;
 				GetPlayerKeys(damagedid, newkeys, dir1, dir2);
-				if(GetPlayerCameraMode(damagedid) == 53 || GetPlayerCameraMode(damagedid) == 7 || GetPlayerCameraMode(damagedid) == 8 || GetPlayerCameraMode(damagedid) == 51) return SendClientMessageEx(playerid, COLOR_WHITE, "You cannot taze players that are actively aiming.");
+				if(GetPlayerCameraMode(damagedid) == CAM_MODE_AIMWEAPON || GetPlayerCameraMode(damagedid) == CAM_MODE_SNIPER || GetPlayerCameraMode(damagedid) == CAM_MODE_ROCKETLAUNCHER || GetPlayerCameraMode(damagedid) == CAM_MODE_ROCKETLAUNCHER_HS) return SendClientMessageEx(playerid, COLOR_WHITE, "You cannot taze players that are actively aiming.");
 				//if(ActiveKey(KEY_HANDBRAKE) && (!IsNotAGun(GetPlayerWeapon(damagedid)))) return SendClientMessageEx(playerid, COLOR_WHITE, "You cannot taze players that are actively aiming.");
 				//if(ActiveKey(KEY_FIRE) && (!IsNotAGun(GetPlayerWeapon(damagedid)))) return SendClientMessageEx(playerid, COLOR_WHITE, "You cannot taze players that are actively shooting.");
 				#if defined zombiemode
@@ -446,8 +446,8 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 				ProxDetector(30.0, playerid, szMiscArray, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				//GameTextForPlayer(damagedid, "~r~Tazed", 3500, 3);
 				ClearAnimationsEx(damagedid);
-				TogglePlayerControllable(damagedid, 0);
-				ApplyAnimation(damagedid,"CRACK","crckdeth2",4.1,0,1,1,1,1,1);
+				TogglePlayerControllable(damagedid, false);
+				ApplyAnimation(damagedid,"CRACK","crckdeth2",4.1,false,true,true,true,1,SYNC_ALL);
 				PlayerPlaySound(damagedid, 1085, X, Y, Z);
 				PlayerPlaySound(playerid, 1085, X, Y, Z);
 				PlayerCuffed[damagedid] = 1;
@@ -457,18 +457,18 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 				TazerTimeout[playerid] = 12;
 				SetTimerEx("TazerTimer",1000,false,"d",playerid);
 				PlayerTextDrawShow(damagedid, _vhudFlash[damagedid]);
-				SetTimerEx("TurnOffFlash", 800, 0, "i", damagedid);
+				SetTimerEx("TurnOffFlash", 800, false, "i", damagedid);
 				if(GetPVarType(damagedid, "FixVehicleTimer")) KillTimer(GetPVarInt(damagedid, "FixVehicleTimer")), DeletePVar(damagedid, "FixVehicleTimer");
 				GameTextForPlayer(playerid, "~n~~n~~n~~n~~n~~n~~n~~n~~r~Tazer reloading... ~w~12", 1500,3);
 				return 1;
 			}
 		}
-		if(GetPlayerWeapon(playerid) == 25 && GetPVarType(playerid, "pBeanBag")) 
+		if(GetPlayerWeapon(playerid) == WEAPON_SHOTGUN && GetPVarType(playerid, "pBeanBag")) 
 		{
 			if(GetPVarInt(damagedid, "pBagged") >= 1) return 0;
 	    	else if(GetPlayerState(damagedid) == PLAYER_STATE_ONFOOT)
 			{
-				if(GetPlayerCameraMode(damagedid) == 53 || GetPlayerCameraMode(damagedid) == 7 || GetPlayerCameraMode(damagedid) == 8 || GetPlayerCameraMode(damagedid) == 51) return SendClientMessageEx(playerid, COLOR_WHITE, "You cannot bag players that are actively aiming.");
+				if(GetPlayerCameraMode(damagedid) == CAM_MODE_AIMWEAPON || GetPlayerCameraMode(damagedid) == CAM_MODE_SNIPER || GetPlayerCameraMode(damagedid) == CAM_MODE_ROCKETLAUNCHER || GetPlayerCameraMode(damagedid) == CAM_MODE_ROCKETLAUNCHER_HS) return SendClientMessageEx(playerid, COLOR_WHITE, "You cannot bag players that are actively aiming.");
 				if((PlayerInfo[damagedid][pAdmin] >= 2 || PlayerInfo[damagedid][pWatchdog] >= 2) && PlayerInfo[damagedid][pTogReports] != 1) return SendClientMessageEx(playerid, COLOR_GRAD2, "Admins can not be bagged!");
 				if(HelpingNewbie[damagedid] != INVALID_PLAYER_ID) return SendClientMessageEx(playerid, COLOR_GRAD2, "You cannot bag an advisor while they are helping someone.");
 				if(PlayerInfo[damagedid][pHospital] == 1) return SendClientMessageEx(playerid, COLOR_GRAD2, "Players in hospital cannot be bagged!");
@@ -480,12 +480,12 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 				SetArmour(damagedid, fArmour);
 				ClearAnimationsEx(damagedid);
 	    		TogglePlayerControllable(damagedid, FALSE);
-     			ApplyAnimation(damagedid,"PED","KO_shot_stom",4.1,0,1,1,1,1,1);
+     			ApplyAnimation(damagedid,"PED","KO_shot_stom",4.1,false,true,true,true,1,SYNC_ALL);
 	    		SetTimerEx("_UnbeanbagTimer", 20000, false, "d", damagedid);
 	    		SetPlayerDrunkLevel(damagedid, 10000);
 	    		PlayerTextDrawShow(damagedid, _vhudFlash[damagedid]);
 	    		SetPVarInt(damagedid, "IsFrozen", 1);
-     			SetTimerEx("TurnOffFlash", 5000, 0, "i", damagedid);
+     			SetTimerEx("TurnOffFlash", 5000, false, "i", damagedid);
 
      			SetPVarInt(damagedid, "pBagged", 1);
 
@@ -498,7 +498,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 		}
 		if(pTazer{damagedid} == 1 && (!IsNotAGun(weaponid)))
 		{
-			RemovePlayerWeapon(damagedid, 23);
+			RemovePlayerWeapon(damagedid, WEAPON_SILENCED);
 			GivePlayerValidWeapon(damagedid, pTazerReplace{damagedid});
 			format(szMiscArray, sizeof(szMiscArray), "* %s holsters their tazer.", GetPlayerNameEx(damagedid));
 			ProxDetector(4.0, damagedid, szMiscArray, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -532,7 +532,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 			else SetArmour(damagedid, difference);
 		}
 
-		foreach(Player, i)
+		foreach(new i: Player)
 		{
 			if(IsPlayerConnected(i))
 			{
@@ -563,7 +563,7 @@ timer DeathScreen[4000](playerid) {
 	return 1;
 }
 
-public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
+public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bodypart)
 {
 	szMiscArray[0] = 0;
 	if((0 <= bodypart < 2)) return 1;
@@ -577,8 +577,8 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 		switch(weaponid)
 		{
 			// Take into account drug effects (needs to be 150 for fall damage etc..)
-			case 50: { ClearAnimationsEx(playerid); if(amount > 150.0) amount = 150.0; }
-			case 41: amount = 0.0;
+			case REASON_HELICOPTER_BLADES: { ClearAnimationsEx(playerid); if(amount > 150.0) amount = 150.0; }
+			case WEAPON_SPRAYCAN: amount = 0.0;
 			default: if(amount > 150.0) amount = 150.0;
 		}
 
@@ -626,7 +626,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 						Log("logs/hack.log", szMiscArray);
 					}
 				}
-				foreach(Player, i)
+				foreach(new i: Player)
 				{
 					if(IsPlayerConnected(i))
 					{
@@ -664,13 +664,13 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 				SendClientMessageEx(playerid, COLOR_RED, "(( You failed to pick lock this vehicle because you took damage. ))");
 				SendClientMessageEx(playerid, COLOR_RED, szMiscArray);
 				SendClientMessageEx(playerid, COLOR_RED, "(( If this was DM, visit ng-gaming.net and make a Player Complaint. ))");
-				ClearAnimationsEx(playerid, 1);
+				ClearAnimationsEx(playerid, SYNC_ALL);
 			}
 			if(GetPVarType(playerid, "AttemptingCrackTrunk")) {
 				DeletePVar(playerid, "AttemptingCrackTrunk");
 				DeletePVar(playerid, "CrackTrunkCountdown");
 				DestroyVLPTextDraws(playerid);
-				ClearAnimationsEx(playerid, 1);
+				ClearAnimationsEx(playerid, SYNC_ALL);
 				format(szMiscArray, sizeof(szMiscArray), "(( You took damage from %s(%d) using %s.))", GetPlayerNameEx(issuerid), issuerid, GetWeaponNameEx(weaponid));
 				SendClientMessageEx(playerid, COLOR_RED, "(( You failed to crack this vehicle's trunk because you took damage. ))");
 				SendClientMessageEx(playerid, COLOR_RED, szMiscArray);
@@ -684,7 +684,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 				if(GetPVarInt(playerid, "BackpackOpen") == 1)
 				{
 					SendClientMessageEx(playerid, COLOR_RED, "You have taken damage during the backpack menu, your backpack is disabled for 3 minutes.");
-					ShowPlayerDialogEx(playerid, -1, 0, "", "", "", "");
+					HidePlayerDialogEx(playerid);
 					SetPVarInt(playerid, "BackpackDisabled", 180);
 					DeletePVar(playerid, "BackpackOpen");
 				}
@@ -711,7 +711,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 			}
 			else SetHealth(playerid, difference);
 		}
-		if(issuerid != 65535 && (weaponid == 51 || weaponid == 38 || weaponid == 47 || weaponid == 37 || weaponid == 49 || GetVehicleModel(GetPlayerVehicleID(issuerid)) == 447 && weaponid == 31)) {
+		if(issuerid != 65535 && (weaponid == REASON_EXPLOSION || weaponid == WEAPON_MINIGUN|| _:weaponid == 47 || weaponid == WEAPON_FLAMETHROWER || weaponid == REASON_VEHICLE || GetVehicleModel(GetPlayerVehicleID(issuerid)) == 447 && weaponid == WEAPON_M4)) {
 			if(armour < 0.1)
 			{
 				difference = health - amount;
@@ -738,7 +738,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 				else SetArmour(playerid, difference);
 			}
 		}
-		foreach(Player, i)
+		foreach(new i: Player)
 		{
 			if(IsPlayerConnected(i))
 			{
@@ -752,13 +752,13 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 	return 1;
 }
 /*
-public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ)
+public OnPlayerWeaponShot(playerid, WEAPON:weaponid, BULLET_HIT_TYPE:hittype, hitid, Float:fX, Float:fY, Float:fZ)
 {
 	return 1;
 }
 */
 
-public OnPlayerDeath(playerid, killerid, reason)
+public OnPlayerDeath(playerid, killerid, WEAPON:reason)
 {
 	if(IsPlayerNPC(playerid)) return 1;
 	// if(GetPVarType(playerid, "pTut")) return 1;
@@ -828,7 +828,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 
 		RemoveArmor(playerid);
 
-		PlayerInfo[playerid][pHolsteredWeapon] = 0;
+		PlayerInfo[playerid][pHolsteredWeapon] = WEAPON_SLOT_UNARMED;
 
 		if (GetPVarInt(playerid, "_SwimmingActivity") >= 1)
 		{
@@ -1028,7 +1028,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 				}
 			}
 		}
-		if(reason >= 0 && reason <= 46)
+		if(reason >= WEAPON_FIST && reason <= WEAPON_PARACHUTE)
 		{
 			new weapon[24];
 			++PlayerInfo[killerid][pKills];
@@ -1074,7 +1074,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 				SendPaintballArenaMessage(iKiller, COLOR_YELLOW, szMessage);
 				////SendAudioToPlayer(killerid, 19, 100);
 			}
-			if(reason == 0) format(szMessage,sizeof(szMessage),"[Paintball Arena] %s has killed %s with their bare hands!",GetPlayerNameEx(killerid),GetPlayerNameEx(playerid));
+			if(reason == WEAPON_FIST) format(szMessage,sizeof(szMessage),"[Paintball Arena] %s has killed %s with their bare hands!",GetPlayerNameEx(killerid),GetPlayerNameEx(playerid));
 			else format(szMessage,sizeof(szMessage),"[Paintball Arena] %s has killed %s with a %s.",GetPlayerNameEx(killerid),GetPlayerNameEx(playerid),weapon);
 		}
 		else
@@ -1102,18 +1102,18 @@ public OnPlayerDeath(playerid, killerid, reason)
 	{
 		switch(reason)
 		{
-			case 49: {
+			case REASON_VEHICLE: {
 				new szMessage[128];
 				format(szMessage, sizeof(szMessage), "{AA3333}AdmWarning{FFFF00}: %s (ID %d) has possibly just car-rammed %s (ID %d) to death.", GetPlayerNameEx(killerid), killerid, GetPlayerNameEx(playerid), playerid);
 				ABroadCast(COLOR_YELLOW, szMessage, 2);
 			}
-			case 50: if(IsAHelicopter(GetPlayerVehicleID(killerid))) {
+			case REASON_HELICOPTER_BLADES: if(IsAHelicopter(GetPlayerVehicleID(killerid))) {
 				new szMessage[128];
 				format(szMessage, sizeof(szMessage), "{AA3333}AdmWarning{FFFF00}: %s (ID %d) has possibly just blade-killed %s (ID %d).", GetPlayerNameEx(killerid), killerid, GetPlayerNameEx(playerid), playerid);
 				ABroadCast(COLOR_YELLOW, szMessage, 2);
 			}
 			default: switch(GetPlayerWeapon(killerid)) {
-				case 32, 28, 29: {
+				case WEAPON_TEC9, WEAPON_UZI, WEAPON_MP5: {
 					new szMessage[128];
 					format(szMessage, sizeof(szMessage), "{AA3333}AdmWarning{FFFF00}: %s (ID %d) has possibly just driver-shot %s (ID %d) to death.", GetPlayerNameEx(killerid), killerid, GetPlayerNameEx(playerid), playerid);
 					ABroadCast(COLOR_YELLOW, szMessage, 2);
@@ -1193,7 +1193,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 	}
 	if(PlayerTied[playerid]) {
 		DeletePVar(playerid, "IsFrozen");
-		TogglePlayerControllable(playerid, 1);
+		TogglePlayerControllable(playerid, true);
 		PlayerTied[playerid] = 0;
 	}
 	// SetPVarInt(playerid, "MedicAid", 1);

@@ -44,7 +44,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 2208.67, -1733.71, 27.48);
 		SetPlayerCameraLookAt(playerid, 2225.25, -1723.1, 13.56);
 	}
@@ -56,7 +56,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 1500.21, -1691.75, 38.38);
 		SetPlayerCameraLookAt(playerid, 1541.46, -1676.17, 13.55);
 	}
@@ -68,7 +68,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 1207.39, -1294.71, 24.61);
 		SetPlayerCameraLookAt(playerid, 1181.72, -1322.65, 13.58);
 	}
@@ -80,7 +80,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 1981.79, -1461.55, 31.93);
 		SetPlayerCameraLookAt(playerid, 2021.23, -1427.48, 13.97);
 	}
@@ -92,7 +92,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 2459.82, -1652.68, 26.45);
 		SetPlayerCameraLookAt(playerid, 2489.09, -1669.88, 13.34);
 	}
@@ -104,7 +104,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 2336.31, -1664.76, 24.98);
 		SetPlayerCameraLookAt(playerid, 2319.09, -1650.90, 14.16);
 	}
@@ -116,7 +116,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 1502.28, -1044.47, 31.19);
 		SetPlayerCameraLookAt(playerid, 1466.24, -1023.05, 23.83);
 	}
@@ -128,7 +128,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 2203.05, -1152.81, 37.03);
 		SetPlayerCameraLookAt(playerid, 2215.73, -1163.39, 25.73);
 	}
@@ -140,7 +140,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 1447.461669, -1717.788085, 44.047473);
 		SetPlayerCameraLookAt(playerid, 1478.936035, -1746.446655, 14.347633);
 	}
@@ -152,7 +152,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 1092.614868, -1499.197998, 42.018226);
 		SetPlayerCameraLookAt(playerid, 1127.245483, -1451.613891, 15.796875);
 	}
@@ -167,7 +167,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 1861.195190, -1533.169677, 33.800296);
 		SetPlayerCameraLookAt(playerid, 1809.888427, -1570.615844, 13.465585);
 	}
@@ -179,7 +179,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, -2410.812011, 488.762603, 40.148445);
 		SetPlayerCameraLookAt(playerid, -2437.302490, 508.727020, 29.933441);
 	}
@@ -191,7 +191,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 1;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 2572.895996, 1424.583007, 7705.613769);
 		SetPlayerCameraLookAt(playerid, 2555.148681, 1407.475708, 7699.584472);
 	}
@@ -203,7 +203,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 1;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 2488.598388, 1419.864868, 7703.525390);
 		SetPlayerCameraLookAt(playerid, 2519.420410, 1418.585693, 7697.718261);
 	}
@@ -215,7 +215,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 1;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid,2787.102050, 2392.162841, 1243.898681);
 		SetPlayerCameraLookAt(playerid,2801.281982, 2404.575683, 1240.531127);
 	}
@@ -227,7 +227,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, -4437.200683, 870.038269, 989.548767);
 		SetPlayerCameraLookAt(playerid, -4412.440429, 867.361694, 986.708435);
 	}
@@ -242,7 +242,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 1411.689941, -1352.002929, 24.477527);
 		SetPlayerCameraLookAt(playerid, 1423.773437, -1320.386962, 13.554687);
 	}
@@ -254,7 +254,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 1;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 2222.844482, 1590.667968, 1002.612915);
 		SetPlayerCameraLookAt(playerid, 2206.402587, 1582.398681, 999.976562);
 	}
@@ -266,7 +266,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 2206.363769, -2262.568359, 24.240808);
 		SetPlayerCameraLookAt(playerid, 2172.315185, -2263.781250, 13.335824);
 	}
@@ -278,7 +278,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 5;
 		SetPlayerVirtualWorld(playerid, 371);
 		PlayerInfo[playerid][pVW] = 371;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 316.387817, 1123.946289, 1085.046020);
 		SetPlayerCameraLookAt(playerid, 323.577026, 1118.344116, 1083.882812);
 	}
@@ -290,7 +290,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 2410.285644, -2013.919433, 21.716161);
 		SetPlayerCameraLookAt(playerid, 2390.212402, -2008.328491, 13.553703);
 	}
@@ -302,7 +302,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 5;
 		SetPlayerVirtualWorld(playerid, 371);
 		PlayerInfo[playerid][pVW] = 371;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 2342.012207, -1180.969848, 1029.412353);
 		SetPlayerCameraLookAt(playerid, 2346.013916, -1185.367065, 1027.976562);
 	}
@@ -314,7 +314,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, 2306.088623, -1133.968627, 52.929584);
 		SetPlayerCameraLookAt(playerid, 2282.298828, -1110.143798, 37.976562);
 	}
@@ -326,7 +326,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, -1569.082153, 96.206344, 34.091339);
 		SetPlayerCameraLookAt(playerid, -1576.488159, 50.301193, 17.328125);
 	}
@@ -338,7 +338,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = 0;
 		SetPlayerVirtualWorld(playerid, 0);
 		PlayerInfo[playerid][pVW] = 0;
-		TogglePlayerControllable(playerid,0);
+		TogglePlayerControllable(playerid,false);
 		SetPlayerCameraPos(playerid, -2170.527832, -246.948257, 40.965312);
 		SetPlayerCameraLookAt(playerid, -2139.215087, -248.235076, 36.515625);
 	}
@@ -355,7 +355,7 @@ CMD:watch(playerid, params[])
 		PlayerInfo[playerid][pInt] = GetPVarInt(playerid, "WatchLastInt");
 		SetPlayerFacingAngle(playerid, 270.0);
 		SetCameraBehindPlayer(playerid);
-		TogglePlayerControllable(playerid,1);
+		TogglePlayerControllable(playerid,true);
 		DeletePVar(playerid,"WatchLastx");
 		DeletePVar(playerid,"WatchLasty");
 		DeletePVar(playerid,"WatchLastz");

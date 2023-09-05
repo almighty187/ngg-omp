@@ -95,9 +95,8 @@
 
 
 /*----------------------------------------------------------------------------*/
-#include <a_samp>
-#undef  MAX_PLAYERS
-#define MAX_PLAYERS (700)
+#define MAX_PLAYERS (500)
+#include <open.mp>
 #include <streamer>
 
 #define INVALID_BUTTON_ID   -1
@@ -139,7 +138,7 @@ new ButtonInfo[MAX_BUTTONS+1][BUTTON_INFOS];
 
 
 /*----------------------------------------------------------------------------*/
-Float:Distance3D(Float:PointA[], Float:PointB[], bool:sqrt = true)
+Float:Distance3D(const Float:PointA[], const Float:PointB[], bool:sqrt = true)
 {
 	new Float:Dist[4];
 	
@@ -157,7 +156,7 @@ Float:Distance3D(Float:PointA[], Float:PointB[], bool:sqrt = true)
 
 
 /*----------------------------------------------------------------------------*/
-Float:Angle2D(Float:PointA[], Float:PointB[])
+Float:Angle2D(const Float:PointA[], const Float:PointB[])
 {
 	new bool:A_LS_B[2], Float:Dist[2], Float:Angle;
 
@@ -177,7 +176,7 @@ Float:Angle2D(Float:PointA[], Float:PointB[])
 
 
 /*----------------------------------------------------------------------------*/
-GetClosestButton(Float:Point[], &Float:Distance = 0.0)
+GetClosestButton(const Float:Point[], &Float:Distance = 0.0)
 {
 	new Closest = INVALID_BUTTON_ID, Float:Distance2 = 100000.0;
 
@@ -233,6 +232,11 @@ public FS_CreateButton(Float:X, Float:Y, Float:Z, Float:Angle, VW)
 
 	return buttonid;
 }
+/*----------------------------------------------------------------------------*/
+
+
+/*----------------------------------------------------------------------------*/
+forward bool:FS_IsValidButton(buttonid);
 /*----------------------------------------------------------------------------*/
 
 
@@ -319,7 +323,6 @@ public FS_StopButton(buttonid)
 
 
 /*----------------------------------------------------------------------------*/
-forward bool:FS_IsValidButton(buttonid);
 public bool:FS_IsValidButton(buttonid)
 {
 	return (buttonid <= MAX_BUTTONS && ButtonInfo[buttonid][Created]);
@@ -499,11 +502,11 @@ public OnPlayerPressButton_Delay(playerid, buttonid)
 
 
 /*----------------------------------------------------------------------------*/
-public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
 	if (GetPlayerState(playerid) == PLAYER_STATE_ONFOOT)
 	{
-		if (newkeys & 16)
+		if (newkeys & KEY_SECONDARY_ATTACK)
 		{
 			new Float:Distance, Float:Angle, Float:PlayerPos[3], buttonid;
 
@@ -525,7 +528,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 					ButtonInfo[buttonid][Pos][2] - 0.63
 				);
 
-				ApplyAnimation(playerid, "HEIST9", "Use_SwipeCard", 10.0, 0, 0, 0, 0, 0);
+				ApplyAnimation(playerid, "HEIST9", "Use_SwipeCard", 10.0, false, false, false, false, 0);
 				SetTimerEx("OnPlayerPressButton_Delay", 500, false, "ii", playerid, buttonid);
 			}
 		}
@@ -604,7 +607,7 @@ public OnPlayerConnect(playerid)
 		}
 	#endif
 	
-    ApplyAnimation(playerid, "HEIST9", "Use_SwipeCard", 10.0, 0, 0, 0, 0, 0);
+    ApplyAnimation(playerid, "HEIST9", "Use_SwipeCard", 10.0, false, false, false, false, 0);
     return 1;
 }
 /*----------------------------------------------------------------------------*/

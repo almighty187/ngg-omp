@@ -61,22 +61,22 @@ stock GetPlayerLocation(playerid, Country[],State[], City[],isotype=0){
    	}
 
    	ipf = (16777216*a) + (65536*b) + (256*c) + d;
-   	IPDB=db_open("IPList.db");
+   	IPDB=DB_Open("IPList.db");
 	format(Q,sizeof(Q),"SELECT * FROM 'IPTable' WHERE start<=%d AND end>=%d",ipf,ipf);
 
 	if(isotype==1) format(Q,sizeof(Q),"SELECT IPTable.start,IPTable.end,isoshort.alpha_three,IPTable.state,IPTable.city FROM 'IPTable','isoshort' WHERE IPTable.start<=%d AND IPTable.end>=%d AND IPTable.country==isoshort.alpha_two",ipf,ipf);
 	else if(isotype==2) format(Q,sizeof(Q),"SELECT IPTable.start,IPTable.end,isofull.fullname,IPTable.state,IPTable.city FROM 'IPTable','isofull' WHERE IPTable.start<=%d AND IPTable.end>=%d AND IPTable.country==isofull.alpha_two",ipf,ipf);
 
-	Result=db_query(IPDB, Q);
-	if(db_num_rows(Result) == 1)
+	Result=DB_ExecuteQuery(IPDB, Q);
+	if(DB_GetRowCount(Result) == 1)
     {
-  	  db_get_field(Result,2,Country,256);
-      db_get_field(Result,3,State,256);
-      db_get_field(Result,4,City,256);
+  	  DB_GetFieldString(Result,2,Country,256);
+      DB_GetFieldString(Result,3,State,256);
+      DB_GetFieldString(Result,4,City,256);
     }
 
-	db_free_result(Result);
-	db_close(IPDB);
+	DB_FreeResultSet(Result);
+	DB_Close(IPDB);
 	return 1;
 }
 

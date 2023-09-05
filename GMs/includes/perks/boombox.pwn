@@ -110,7 +110,7 @@ CMD:placeboombox(playerid, params[])
 	    new Float:x, Float:y, Float:z, Float:a;
 	    GetPlayerPos(playerid, x, y, z);
 	    GetPlayerFacingAngle(playerid, a);
-	    ApplyAnimation(playerid,"BOMBER","BOM_Plant_Crouch_In", 4.0, 0, 0, 0, 0, 0, 1);
+	    ApplyAnimation(playerid,"BOMBER","BOM_Plant_Crouch_In", 4.0, false, false, false, false, 0, SYNC_ALL);
 	    x += (2 * floatsin(-a, degrees));
     	y += (2 * floatcos(-a, degrees));
     	z -= 1.0;

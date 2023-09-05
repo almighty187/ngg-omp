@@ -34,7 +34,7 @@
 	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-stock JudgeOnlineCheck()
+JudgeOnlineCheck()
 {
 	foreach(new i: Player)
 	{
@@ -64,7 +64,7 @@ stock JudgeOnlineCheck()
 
 // Created by Bohemoth
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 forward OfflineWarranting(index);
 public OfflineWarranting(index)
@@ -442,7 +442,7 @@ CMD:commute(playerid, params[])
 	return 1;
 }
 
-CMD:pardon(playerid, params[])
+CMD:pardon(playerid, const params[])
 {
     if(IsAGovernment(playerid) && PlayerInfo[playerid][pRank] >= Group_GetMaxRank(PlayerInfo[playerid][pMember]))
     {
@@ -558,7 +558,7 @@ CMD:jarrest(playerid, params[])
 				SetPlayerToTeamColor(suspect);
 				SetPlayerWantedLevel(suspect, 0);
 				WantLawyer[suspect] = 1;
-				TogglePlayerControllable(suspect, 1);
+				TogglePlayerControllable(suspect, true);
 				ClearAnimationsEx(suspect);
 				if(PlayerCuffed[suspect] == 2)
 				{
@@ -787,7 +787,7 @@ CMD:adjourn(playerid, params[])
 	    if(PlayerInfo[giveplayerid][pBeingSentenced])
 	    {
 	    	PlayerInfo[giveplayerid][pBeingSentenced] = 0;
-	    	TogglePlayerControllable(giveplayerid, 1);
+	    	TogglePlayerControllable(giveplayerid, true);
 	    	DeletePVar(giveplayerid, "IsFrozen");
 			PhoneOnline[giveplayerid] = 0;
 			format(PlayerInfo[giveplayerid][pWarrant], 128, "");
@@ -820,7 +820,7 @@ CMD:sentence(playerid, params[]) {
 		}
  		else if(PlayerInfo[giveplayerid][pBeingSentenced]) {
 			PlayerInfo[giveplayerid][pBeingSentenced] = 0;
-	    	TogglePlayerControllable(giveplayerid, 0);
+	    	TogglePlayerControllable(giveplayerid, false);
 	    	SetPVarInt(giveplayerid, "IsFrozen", 1);
 			PhoneOnline[giveplayerid] = 1;
 			PlayerInfo[giveplayerid][pWarrant][0] = 0;

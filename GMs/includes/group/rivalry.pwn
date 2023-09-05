@@ -36,7 +36,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 
 hook OnPlayerDisconnect(playerid) {
@@ -386,7 +386,7 @@ Rivalry_GetRivalList(playerid, iGroupID) {
 	ShowPlayerDialogEx(playerid, DIALOG_GROUP_RIVALS, DIALOG_STYLE_LIST, szTitle, szMiscArray, "Select", "Cancel");
 }
 
-hook OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart) {
+hook OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bodypart) {
 
 	if(GetPVarType(playerid, "RepFam")) {
 
@@ -399,10 +399,8 @@ hook OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart) {
 hook OnPlayerConnect(playerid)
 {
     TD_RepFam = TextDrawCreate(581.5, 414, "/repfam");
-    TextDrawFont(TD_RepFam, 2);
+    TextDrawFont(TD_RepFam, TEXT_DRAW_FONT_2);
     TextDrawLetterSize(TD_RepFam, 0.25, 2.8000000000000003);
-    TextDrawColor(TD_RepFam, 0xffffffFF);
-    TextDrawSetOutline(TD_RepFam, true);
-    TextDrawSetProportional(TD_RepFam, true);
-    TextDrawSetShadow(TD_RepFam, 1);
+    TextDrawColour(TD_RepFam, 0xffffffFF);
+    TextDrawSetOutline(TD_RepFam, 1);
 }

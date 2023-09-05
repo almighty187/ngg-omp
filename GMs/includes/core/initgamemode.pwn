@@ -1,6 +1,6 @@
 InitiateGamemode()
 {
-	AddPlayerClass(0, 1715.1201, -1903.1711, 13.5665, 360, 0, 0, 0, 0, 0, 0);
+	AddPlayerClass(0, 1715.1201, -1903.1711, 13.5665, 360.0);
 	
 	SetGameModeText(SERVER_GM_TEXT);
     
@@ -56,7 +56,7 @@ InitiateGamemode()
 	ResetElevatorQueue();
 	Elevator_Initialize();
 	AntiDeAMX();
-	EnableStuntBonusForAll(0);
+	EnableStuntBonusForAll(false);
 	//ShowNameTags(0);
 	ShowPlayerMarkers(PLAYER_MARKERS_MODE_STREAMED);
 	DisableInteriorEnterExits();
@@ -64,7 +64,7 @@ InitiateGamemode()
 	//NationSel_InitTextDraws();
 	CountCitizens();
 	SetNameTagDrawDistance(40.0);
-	AllowInteriorWeapons(1);
+	AllowInteriorWeapons(true);
 	UsePlayerPedAnims();
 	ManualVehicleEngineAndLights();
 	GiftAllowed = 1;

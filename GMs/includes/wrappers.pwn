@@ -41,7 +41,7 @@ Internal_SetPlayerPos(playerid, Float:X, Float:Y, Float:Z) {
 }
 
 
-Internal_TogglePlayerSpectating(playerid, toggle) {
+Internal_TogglePlayerSpectating(playerid, bool:toggle) {
 
 	Bit_On(arrPAntiCheat[playerid], ac_bitValidSpectating);
 	return TogglePlayerSpectating(playerid, toggle);
@@ -68,13 +68,13 @@ Internal_SetPlayerArmour(playerid, Float:armour) {
 }
 */
 
-ClearAnimationsEx(playerid, forcesync = 0) {
+ClearAnimationsEx(playerid, FORCE_SYNC:forcesync = SYNC_NONE) {
 	IsDoingAnim[playerid] = 0;
 	SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
 	return ClearAnimations(playerid, forcesync);
 }
 
-ShowPlayerDialogEx(playerid, dialogid, style, caption[], info[], button1[], button2[]) {
+ShowPlayerDialogEx(playerid, dialogid, DIALOG_STYLE:style, const caption[], const info[], const button1[], const button2[]) {
 
 	iLastDialogID[playerid] = dialogid;
 	return ShowPlayerDialog(playerid, dialogid, style, caption, info, button1, button2);
@@ -98,7 +98,7 @@ Internal_SetPlayerTime(playerid, iHour, iMinute) {
 	return SetPlayerTime(playerid, iHour, iMinute);
 }
 
-Internal_CreateVehicle(vehicletype, Float:x, Float:y, Float:z, Float:rotation, color1, color2, respawn_delay, addsiren=0) {
+Internal_CreateVehicle(vehicletype, Float:x, Float:y, Float:z, Float:rotation, color1, color2, respawn_delay, bool:addsiren=false) {
 
 	new i = CreateVehicle(vehicletype, Float:x, Float:y, Float:z, Float:rotation, color1, color2, respawn_delay, addsiren);
 	Iter_Add(Vehicles, i);
@@ -137,7 +137,7 @@ Internal_SetPlayerColor(playerid, color) {
 
 
 // From fixer.inc
-stock FIX_GetTickCount() {
+FIX_GetTickCount() {
 
 	new ret = GetTickCount();
 
@@ -175,17 +175,19 @@ Int_DestDyn3DTxtLabel(Text3D:id) {
 		case 10: szString = "Businesses[iBusiness][GasPumpInfoTextID][iPump]";
 		default: szString = "Unknown";
 	}
-	format(szString, sizeof(szString), "Removed TextLabel: %d | Tracker: %s", _:id, szString);
-	SendDiscordMessage(3, szString);
-
-	format(szString, sizeof(szString), "TL (%d) data: %0.2f, %0.2f, %0.2f, VW: %d, INT: %d", _:id, fPos[0], fPos[1], fPos[2], iData[0], iData[1]);
-	SendDiscordMessage(3, szString);
-
-	if(!IsValidDynamic3DTextLabel(id)) {
-
-		format(szString, sizeof(szString), "Text Label %d (Tracker %s) deleted a non-created text label.", _:id, szString);
+	#if defined DISCORD_ENABLED
+		format(szString, sizeof(szString), "Removed TextLabel: %d | Tracker: %s", _:id, szString);
 		SendDiscordMessage(3, szString);
-	}
+
+		format(szString, sizeof(szString), "TL (%d) data: %0.2f, %0.2f, %0.2f, VW: %d, INT: %d", _:id, fPos[0], fPos[1], fPos[2], iData[0], iData[1]);
+		SendDiscordMessage(3, szString);
+
+		if(!IsValidDynamic3DTextLabel(id)) {
+
+			format(szString, sizeof(szString), "Text Label %d (Tracker %s) deleted a non-created text label.", _:id, szString);
+			SendDiscordMessage(3, szString);
+		}
+	#endif
 	return DestroyDynamic3DTextLabel(id);
 }
 #endif
@@ -216,12 +218,57 @@ Internal_StreamerSetIntData(type, id, data, value) {
 }
 #endif
 
+Internal_RemovePlayerWeapon(playerid, WEAPON:weaponid)
+{
+	RemovePlayerWeapon(playerid, weaponid);
+	PlayerInfo[playerid][pGuns][GetWeaponSlot(weaponid)] = WEAPON_FIST;
+	return 1;
+}
+
+Internal_IsVehicleOccupied(iVehicleID, iSeatID = 0)
+{
+	foreach (new i : VehicleOccupant[iVehicleID])
+	{
+		if (GetPlayerVehicleSeat(i) == iSeatID)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+WEAPON_SLOT:Internal_GetWeaponSlot(WEAPON:iWeaponID) {
+	if (iWeaponID == WEAPON_BOMB)
+	{
+		return WEAPON_SLOT_EXPLOSIVES;
+	}
+	return GetWeaponSlot(iWeaponID);
+}
+
+HidePlayerDialogEx(playerid) {
+
+	iLastDialogID[playerid] = -1;
+	return HidePlayerDialog(playerid);
+}
+
 #define PutPlayerInVehicle(%0) Internal_PutPlayerInVehicle(%0)
 #define SetPlayerWeather(%0) Internal_SetPlayerWeather(%0)
 #define SetPlayerTime(%0) Internal_SetPlayerTime(%0)
 //#define SetPlayerHealth(%0) Internal_SetPlayerHealth(%0)
 //#define SetPlayerArmour(%0) Internal_SetPlayerArmour(%0)
+
+#if defined _ALS_CreateVehicle
+	#undef CreateVehicle
+#else
+	#define _ALS_CreateVehicle
+#endif
 #define CreateVehicle(%0) Internal_CreateVehicle(%0)
+
+#if defined _ALS_DestroyVehicle
+	#undef DestroyVehicle
+#else
+	#define _ALS_DestroyVehicle
+#endif
 #define DestroyVehicle(%0) Internal_DestroyVehicle(%0)
 #define SetPlayerPos(%0) Internal_SetPlayerPos(%0)
 #define TogglePlayerSpectating(%0) Internal_TogglePlayerSpectating(%0)
@@ -246,3 +293,24 @@ Internal_StreamerSetIntData(type, id, data, value) {
 #define DestroyDynamicArea(%0) Internal_DestroyDynamicArea(%0)
 #define Streamer_SetIntData(%0) Internal_StreamerSetIntData(%0)
 #endif
+
+#if defined _ALS_RemovePlayerWeapon
+	#undef RemovePlayerWeapon
+#else
+	#define _ALS_RemovePlayerWeapon
+#endif
+#define RemovePlayerWeapon(%0) Internal_RemovePlayerWeapon(%0)
+
+#if defined _ALS_IsVehicleOccupied
+	#undef IsVehicleOccupied
+#else
+	#define _ALS_IsVehicleOccupied
+#endif
+#define IsVehicleOccupied(%0) Internal_IsVehicleOccupied(%0)
+
+#if defined _ALS_GetWeaponSlot
+	#undef GetWeaponSlot
+#else
+	#define _ALS_GetWeaponSlot
+#endif
+#define GetWeaponSlot(%0) Internal_GetWeaponSlot(%0)

@@ -35,20 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
-
-stock CountRFLTeams()
-{
-	new var;
-	for(new i = 0; i < MAX_RFLTEAMS; i++)
-	{
-		if(RFLInfo[i][RFLused] != 0)
-		{
-			var++;
-		}
-	}
-	return var;
-}
+#include <YSI_Coding\y_hooks>
 
 forward RFLCheckpointu(playerid);
 public RFLCheckpointu(playerid)

@@ -35,14 +35,14 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-stock LoadArrestPoint(id)
+LoadArrestPoint(id)
 {
 	new string[128];
 	mysql_format(MainPipeline, string, sizeof(string), "SELECT * FROM `arrestpoints` WHERE `id`=%d", id);
 	mysql_tquery(MainPipeline, string, "OnLoadArrestPoint", "i", id);
 }
 
-stock LoadArrestPoints()
+LoadArrestPoints()
 {
 	printf("[LoadArrestPoints] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `arrestpoints`", "OnLoadArrestPoints", "");
@@ -157,7 +157,7 @@ public OnLoadArrestPoints()
 	}
 }
 
-stock SaveArrestPoint(id)
+SaveArrestPoint(id)
 {
 	new string[1024];
 	mysql_format(MainPipeline, string, sizeof(string), "UPDATE `arrestpoints` SET \
@@ -195,39 +195,6 @@ stock SaveArrestPoint(id)
 	mysql_tquery(MainPipeline, string, "OnQueryFinish", "i", SENDDATA_THREAD);
 }
 
-stock SaveArrestPoints()
-{
-	for(new i = 0; i < MAX_ARRESTPOINTS; i++)
-	{
-		SaveArrestPoint(i);
-	}
-	return 1;
-}
-
-stock RehashArrestPoint(id)
-{
-	DestroyDynamic3DTextLabel(ArrestPoints[id][arrestTextID]);
-	DestroyDynamicPickup(ArrestPoints[id][arrestPickupID]);
-	ArrestPoints[id][arrestSQLId] = -1;
-	ArrestPoints[id][arrestPosX] = 0.0;
-	ArrestPoints[id][arrestPosY] = 0.0;
-	ArrestPoints[id][arrestPosZ] = 0.0;
-	ArrestPoints[id][arrestVW] = 0;
-	ArrestPoints[id][arrestInt] = 0;
-	ArrestPoints[id][arrestType] = 0;
-	LoadArrestPoint(id);
-}
-
-stock RehashArrestPoints()
-{
-	printf("[RehashArrestPoints] Deleting Arrest Points from server...");
-	for(new i = 0; i < MAX_ARRESTPOINTS; i++)
-	{
-		RehashArrestPoint(i);
-	}
-	LoadArrestPoints();
-}
-
 GetArrestPointID(playerid) {
 	new a = -1;
 	for(new x = 0; x < MAX_ARRESTPOINTS; x++) 
@@ -241,7 +208,7 @@ GetArrestPointID(playerid) {
 	return a;
 }
 
-stock IsAtArrestPoint(playerid, type)
+IsAtArrestPoint(playerid, type)
 {
 	if(IsPlayerConnected(playerid))
 	{

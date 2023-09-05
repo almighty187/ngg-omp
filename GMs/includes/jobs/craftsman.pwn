@@ -58,7 +58,7 @@ CMD:pc(playerid, params[])
 		SetPVarFloat(playerid, "cameraZ", Z);
 		SetPVarInt(playerid, "cameravw", GetPlayerVirtualWorld(playerid));
 		SetPVarInt(playerid, "cameraint", GetPlayerInterior(playerid));
-		SetPVarInt(playerid, "cameraexpire", SetTimerEx("cameraexpire", 120000, 0, "d", playerid));
+		SetPVarInt(playerid, "cameraexpire", SetTimerEx("cameraexpire", 120000, false, "d", playerid));
 		format(string, sizeof(string), "* %s places something on the ground.", GetPlayerNameEx(playerid));
 		ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 	}
@@ -80,7 +80,7 @@ CMD:sc(playerid, params[])
 			SetPlayerPos(playerid, GetPVarFloat(playerid, "cameraX2"), GetPVarFloat(playerid, "cameraY2"), GetPVarFloat(playerid, "cameraZ2"));
 			SetPlayerVirtualWorld(playerid, GetPVarInt(playerid, "cameravw2"));
 			SetPlayerInterior(playerid, GetPVarInt(playerid, "cameraint2"));
-			TogglePlayerControllable(playerid,1);
+			TogglePlayerControllable(playerid,true);
 			DeletePVar(playerid, "camerasc");
 			KillTimer(GetPVarInt(playerid, "cameraexpire"));
 		}
@@ -98,7 +98,7 @@ CMD:sc(playerid, params[])
 			SetPVarInt(playerid, "cameravw2", GetPlayerVirtualWorld(playerid));
 			SetPVarInt(playerid, "cameraint2", GetPlayerInterior(playerid));
 
-			TogglePlayerControllable(playerid,0);
+			TogglePlayerControllable(playerid,false);
 			SetPlayerPos(playerid, GetPVarFloat(playerid, "cameraX"), GetPVarFloat(playerid, "cameraY"), GetPVarFloat(playerid, "cameraZ") - 30.0);
 			SetPlayerCameraPos(playerid, GetPVarFloat(playerid, "cameraX"), GetPVarFloat(playerid, "cameraY"), GetPVarFloat(playerid, "cameraZ") + 20.0); //viewcam on
 			SetPlayerCameraLookAt(playerid, GetPVarFloat(playerid, "cameraX"), GetPVarFloat(playerid, "cameraY"), GetPVarFloat(playerid, "cameraZ"));
@@ -129,7 +129,7 @@ CMD:dc(playerid, params[])
 			SetPlayerPos(playerid, GetPVarFloat(playerid, "cameraX2"), GetPVarFloat(playerid, "cameraY2"), GetPVarFloat(playerid, "cameraZ2"));
 			SetPlayerVirtualWorld(playerid, GetPVarInt(playerid, "cameravw2"));
 			SetPlayerInterior(playerid, GetPVarInt(playerid, "cameraint2"));
-			TogglePlayerControllable(playerid,1);
+			TogglePlayerControllable(playerid,true);
 		}
 
 		DestroyDynamic3DTextLabel(Camera3D[playerid]);
@@ -174,7 +174,7 @@ CMD:rccam(playerid, params[])
 			SetPVarInt(playerid, "rcveh", AddStaticVehicle(594, X, Y, Z, 0, 0, 0));
 			IsPlayerEntering{playerid} = true;
 			PutPlayerInVehicle(playerid, GetPVarInt(playerid, "rcveh"), 0);
-			SetPVarInt(playerid, "rccamtimer", SetTimerEx("rccam", 60000, 0, "d", playerid));
+			SetPVarInt(playerid, "rccamtimer", SetTimerEx("rccam", 60000, false, "d", playerid));
 			format(string, sizeof(string), "* %s places something on the ground.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 		}
@@ -220,8 +220,8 @@ CMD:firstaid(playerid, params[])
 		{
 			new string[128];
 			PlayerInfo[playerid][pFirstaid]--;
-			SetPVarInt(playerid, "firstaid5", SetTimerEx("firstaid5", 5000, 1, "d", playerid));
-			SetPVarInt(playerid, "firstaidexpire", SetTimerEx("firstaidexpire",10*60000, 0, "d", playerid));
+			SetPVarInt(playerid, "firstaid5", SetTimerEx("firstaid5", 5000, true, "d", playerid));
+			SetPVarInt(playerid, "firstaidexpire", SetTimerEx("firstaidexpire",10*60000, false, "d", playerid));
 			SetPVarInt(playerid, "usingfirstaid", 1);
 			format(string, sizeof(string), "* %s uses a first aid kit.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -856,7 +856,7 @@ CMD:craft(playerid, params[])
 					}
 				case 8:
 					{
-						GivePlayerValidWeapon(playerid, 43);
+						GivePlayerValidWeapon(playerid, WEAPON_CAMERA);
 					}
 				case 9:
 					{
@@ -882,7 +882,7 @@ CMD:craft(playerid, params[])
 					}
 				case 13:
 					{
-						GivePlayerValidWeapon(playerid, 46);
+						GivePlayerValidWeapon(playerid, WEAPON_PARACHUTE);
 					}
 				case 14:
 					{

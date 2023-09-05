@@ -37,7 +37,7 @@
 
 // WINTERFIELD: VERSION .278 GARBAGE JOB
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 hook OnGameModeInit() {
 

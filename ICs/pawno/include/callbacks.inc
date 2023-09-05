@@ -164,15 +164,15 @@ enum e_PLAYER_DATA {
   	e_iAnimIndex,
   	e_iHoverColor,
   	e_iShotsFired[12],
-  	e_iLastGun,
+  	WEAPON:e_iLastGun,
   	e_iLastAmmo,
    	e_iVehicleID
 };
 
 enum e_VEHICLE_DATA {
-	e_iPanels,
-	e_iDoors,
-	e_iLights,
+	VEHICLE_PANEL_STATUS:e_iPanels,
+	VEHICLE_DOOR_STATUS:e_iDoors,
+	VEHICLE_LIGHT_STATUS:e_iLights,
 	Float:e_fHealth,
 	Float:e_fSpeed
 };
@@ -369,7 +369,7 @@ stock static Callback_GetDriver(vehicleid)
 {
 	// Returns the driver of a vehicle (obvious).
 
-	for(new i = 0, l = GetPlayerPoolSize(); i <= l; i ++)
+	for(new i = 0; i < MAX_PLAYERS; i ++)
 	{
 		if(IsPlayerInVehicle(i, vehicleid) && GetPlayerState(i) == PLAYER_STATE_DRIVER)
 		{
@@ -465,14 +465,14 @@ stock IsPlayerSwimming(playerid)
 
 stock IsPlayerSkydiving(playerid)
 {
-	return (GetPlayerWeapon(playerid) == 46 && GetPlayerAnimationIndex(playerid) == 1134);
+	return (GetPlayerWeapon(playerid) == WEAPON_PARACHUTE && GetPlayerAnimationIndex(playerid) == 1134);
 }
 
 stock IsPlayerJumping(playerid)
 {
 	new
 	    index = GetPlayerAnimationIndex(playerid),
-	    keys,
+	    KEY:keys,
 	    ud,
 	    lr
 	;
@@ -577,7 +577,7 @@ stock CB_AddStaticVehicle(modelid, Float:x, Float:y, Float:z, Float:rotation, co
 	return vehicleid;
 }
 
-stock CB_AddStaticVehicleEx(modelid, Float:x, Float:y, Float:z, Float:rotation, color1, color2, respawn_delay, addsiren = 0)
+stock CB_AddStaticVehicleEx(modelid, Float:x, Float:y, Float:z, Float:rotation, color1, color2, respawn_delay, bool:addsiren = false)
 {
 	new
 	    vehicleid = AddStaticVehicleEx(modelid, x, y, z, rotation, color1, color2, respawn_delay, addsiren);
@@ -590,7 +590,7 @@ stock CB_AddStaticVehicleEx(modelid, Float:x, Float:y, Float:z, Float:rotation, 
 	return vehicleid;
 }
 
-stock CB_ApplyAnimation(playerid, animlib[], animname[], Float:fDelta, loop, lockx, locky, freeze, time, forcesync = 0)
+stock CB_ApplyAnimation(playerid, const animlib[], const animname[], Float:fDelta, bool:loop, bool:lockx, bool:locky, bool:freeze, time, FORCE_SYNC:forcesync = SYNC_NONE)
 {
 	new
 		ret = ApplyAnimation(playerid, animlib, animname, fDelta, loop, lockx, locky, freeze, time, forcesync);
@@ -650,7 +650,7 @@ public OnPlayerDisconnect(playerid, reason)
 	}
 
 	s_aPlayerInfo[playerid][e_iAction] = PLAYER_ACTION_NONE;
-	s_aPlayerInfo[playerid][e_iLastGun] = 0;
+	s_aPlayerInfo[playerid][e_iLastGun] = WEAPON_FIST;
 	s_aPlayerInfo[playerid][e_iLastAmmo] = 0;
   	s_aPlayerInfo[playerid][e_iFrames] = 0;
   	s_aPlayerInfo[playerid][e_iDrunk] = 0;
@@ -696,7 +696,7 @@ public OnGameModeInit()
 	#endif
 }
 
-public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ)
+public OnPlayerWeaponShot(playerid, WEAPON:weaponid, BULLET_HIT_TYPE:hittype, hitid, Float:fX, Float:fY, Float:fZ)
 {
 	new
 	    capacity = Callback_GetMaxClip(weaponid),
@@ -743,7 +743,7 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 public OnPlayerUpdate(playerid)
 {
 	new
-		weaponid = GetPlayerWeapon(playerid),
+		WEAPON:weaponid = GetPlayerWeapon(playerid),
 		level = GetPlayerDrunkLevel(playerid),
 		Float:health,
 		animlib[32],
@@ -831,7 +831,7 @@ public OnPlayerUpdate(playerid)
 
 			if(s_aPlayerInfo[playerid][e_iMoney] != money)
 			{
-	    	    if(GetPlayerCameraMode(playerid) == 15)
+	    	    if(GetPlayerCameraMode(playerid) == CAM_MODE_FIXED)
 	        	{
 	        	    switch(s_aPlayerInfo[playerid][e_iMoney] - money)
 	            	{
@@ -856,10 +856,10 @@ public OnPlayerUpdate(playerid)
 
 	 		new
 	   			vehicleid = GetPlayerVehicleID(playerid),
-			   	panels,
-			   	doors,
-			   	lights,
-			   	tires
+			   	VEHICLE_PANEL_STATUS:panels,
+			   	VEHICLE_DOOR_STATUS:doors,
+			   	VEHICLE_LIGHT_STATUS:lights,
+			   	VEHICLE_TYRE_STATUS:tires
 	   		;
 
 			GetVehicleHealth(vehicleid, health);
@@ -933,7 +933,7 @@ public OnPlayerUpdate(playerid)
         }
         else if(GetPlayerWeapon(playerid) == WEAPON_SPRAYCAN && s_aPlayerInfo[playerid][e_iLastAmmo] > ammo)
         {
-			for(new i = 1, l = GetVehiclePoolSize(); i <= l; i ++)
+			for(new i = 1; i < MAX_VEHICLES; i ++)
 			{
 			    if(IsPlayerSprayingVehicle(playerid, i))
             	{
@@ -948,7 +948,7 @@ public OnPlayerUpdate(playerid)
 	if(s_aPlayerInfo[playerid][e_iLastGun] != weaponid)
 	{
 	    new
-			lastweapon = s_aPlayerInfo[playerid][e_iLastGun];
+			WEAPON:lastweapon = s_aPlayerInfo[playerid][e_iLastGun];
 
 		if((WEAPON_COLT45 <= lastweapon <= WEAPON_TEC9) && lastweapon != WEAPON_SHOTGUN)
 		{
@@ -978,7 +978,7 @@ public OnPlayerUpdate(playerid)
 	#endif
 }
 
-public OnPlayerStateChange(playerid, newstate, oldstate)
+public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate)
 {
 	new
 		vehicleid = GetPlayerVehicleID(playerid);
@@ -1018,10 +1018,10 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 	#endif
 }
 
-public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
 	new
-		weaponid = GetPlayerWeapon(playerid);
+		WEAPON:weaponid = GetPlayerWeapon(playerid);
 
 	if(GetPlayerState(playerid) != PLAYER_STATE_SPECTATING && GetPlayerState(playerid) != PLAYER_STATE_SPAWNED && GetPlayerState(playerid) != PLAYER_STATE_WASTED)
 	{
@@ -1073,7 +1073,7 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid)
 	#endif
 }
 
-public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
+public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bodypart)
 {
 	if(weaponid == WEAPON_COLLISION && issuerid == INVALID_PLAYER_ID && amount >= 4.95)
 	{
@@ -1114,11 +1114,11 @@ public Callback_CheckAnimation(playerid)
 	Callback_SetFlag(playerid, e_bAnimSet, true);
 }
 
-forward Callback_HoldTimer(playerid, key);
-public Callback_HoldTimer(playerid, key)
+forward Callback_HoldTimer(playerid, KEY:key);
+public Callback_HoldTimer(playerid, KEY:key)
 {
     new
-		keys,
+		KEY:keys,
 		ud,
 		lr;
 
@@ -1146,7 +1146,7 @@ public Callback_HoldTimer(playerid, key)
 forward Callback_TabCheck();
 public Callback_TabCheck()
 {
-	for(new i = 0, l = GetPlayerPoolSize(); i <= l; i ++)
+	for(new i; i < MAX_PLAYERS; i ++)
 	{
 	    switch(GetPlayerState(i))
 	    {
@@ -1302,15 +1302,15 @@ public Callback_TabCheck()
 #endif
 
 #if defined CB_OnPlayerStateChange
-	forward CB_OnPlayerStateChange(playerid, newstate, oldstate);
+	forward CB_OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate);
 #endif
 
 #if defined CB_OnPlayerKeyStateChange
-	forward CB_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
+	forward CB_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys);
 #endif
 
 #if defined CB_OnPlayerWeaponShot
-	forward CB_OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ);
+	forward CB_OnPlayerWeaponShot(playerid, WEAPON:weaponid, BULLET_HIT_TYPE:hittype, hitid, Float:fX, Float:fY, Float:fZ);
 #endif
 
 #if defined CB_OnPlayerClickTextDraw
@@ -1318,5 +1318,5 @@ public Callback_TabCheck()
 #endif
 
 #if defined CB_OnPlayerTakeDamage
-	forward CB_OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart);
+	forward CB_OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bodypart);
 #endif

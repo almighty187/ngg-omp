@@ -1,4 +1,4 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define 	PVAR_JOB_OBTAINING 	"JOB_OB"
 
@@ -23,7 +23,7 @@ hook OnGameModeInit() {
 	//Jobvehs
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 
     if((newkeys & KEY_YES) && IsPlayerInAnyDynamicArea(playerid)) {
 
@@ -39,7 +39,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
     }
 }
 
-stock LoadJobNames()
+LoadJobNames()
 {
 	printf("[Dynamic Jobs Names] Loading Dynamic Job names from the database, please wait...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `jobs_types`", "OnLoadJobNames", "");
@@ -64,7 +64,7 @@ public OnLoadJobNames()
 	return 1;
 }
 
-stock LoadJobPoints()
+LoadJobPoints()
 {
 	LoadJobNames();
 	printf("[Dynamic Jobs] Loading Dynamic Jobs from the database, please wait...");
@@ -103,7 +103,7 @@ public OnLoadJobPoints()
 	return 1;
 }
 
-stock SaveJobPoint(i) {
+SaveJobPoint(i) {
 	new query[2048];
 
 	format(query, 2048, "UPDATE `jobs` SET ");
@@ -173,24 +173,6 @@ public OnLoadJobVehicles()
 	printf("[Job Vehicles] Loaded %d job vehicles.", idx);
 }*/
 
-stock Job_GetPlayerJob(playerID) 
-{
-	if(PlayerInfo[playerID][pJob] <= 0)
-	    return 0;
-
-	for(new i; i < MAX_JOBPOINTS; ++i) if(PlayerInfo[playerID][pJob] == JobData[i][jType]) return JobData[i][jType];
-	return 0;
-}
-
-stock Job_GetPlayerJob2(playerID) 
-{
-	if(PlayerInfo[playerID][pJob2] == 0)
-	    return 0;
-
-	for(new i; i < MAX_JOBPOINTS; ++i) if(PlayerInfo[playerID][pJob2] == JobData[i][jType]) return JobData[i][jType];
-	return 0;
-}
-
 Job_GetJob(playerid, i)
 {
 	if(PlayerInfo[playerid][pLevel] < JobData[i][jLevel]) 
@@ -212,7 +194,7 @@ Job_GetJob(playerid, i)
 	return 1;
 }
 
-stock GetJobName(i)
+GetJobName(i)
 {
 	return JobName[i];
 }
@@ -338,7 +320,7 @@ Dialog:job_name_confirm(playerid, response, listitem, inputtext[]) {
 	return 1;
 }
 
-stock ListJobPoints(playerid) {
+ListJobPoints(playerid) {
 	szMiscArray[0] = 0;
 	new i = 0;
 	while(i < MAX_JOBPOINTS) {
@@ -366,7 +348,7 @@ Dialog:jobpoints(playerid, response, listitem, inputtext[]) {
 
 }
 
-stock JobEditID(playerid, jobid) {
+JobEditID(playerid, jobid) {
 	szMiscArray[0] = 0;
 	new szTitle[52];
 	format(szTitle, sizeof(szTitle), "Editing Job: %s | Job ID: %d", JobName[JobData[jobid][jType]], jobid);

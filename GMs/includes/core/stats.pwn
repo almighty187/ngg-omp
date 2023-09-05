@@ -1,4 +1,9 @@
-stock ShowStats(playerid,targetid)
+#if defined _INC_stats
+	#endinput
+#endif
+#define _INC_stats
+
+ShowStats(playerid,targetid)
 {
 	if(IsPlayerConnected(targetid))
 	{

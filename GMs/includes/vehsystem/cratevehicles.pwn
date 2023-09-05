@@ -40,7 +40,7 @@
 	If the vehicle has been impounded the payments can be made from the storage. (Nation will be taken into account for which GOV gets the payment).
 	Price will be determined down to the playing hours of said player and not level.
 */
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 new CrateVehTotal = 0;
 
@@ -75,7 +75,7 @@ hook OnGameModeInit() {
 	return 1;
 }
 
-hook OnPlayerStateChange(playerid, newstate, oldstate) {
+hook OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate) {
 	new carid;
 	if(newstate == PLAYER_STATE_DRIVER) {
 		if((carid = IsDynamicCrateVehicle(GetPlayerVehicleID(playerid))) != -1) {
@@ -152,8 +152,8 @@ hook OnVehicleSpawn(vehicleid) {
 	return 1;
 }
 
-forward AnnounceRespawn(group, type[], veh, amount);
-public AnnounceRespawn(group, type[], veh, amount) {
+forward AnnounceRespawn(group, const type[], veh, amount);
+public AnnounceRespawn(group, const type[], veh, amount) {
 	if(ValidGroup(group)) {
 		new string[128];
 		format(string, sizeof(string), "** Vehicle %s was %s %d crate(s) were destroyed. **", VehicleName[CrateVehicle[veh][cvModel] - 400], type, amount);
@@ -224,7 +224,7 @@ public OnLoadDynamicCrateVehciles() {
 	return 1;
 }
 
-stock SaveCrateVehicle(id) {
+SaveCrateVehicle(id) {
 	new query[2048];
 
 	if(CrateVehicle[id][cvSpawnID] != INVALID_VEHICLE_ID) {
@@ -270,7 +270,7 @@ public SpawnCrateVeh(vehid) {
 	}
 	CrateVehCheck(vehid);
 	if(!CrateVehicle[vehid][cvSpawned] || CrateVehicle[vehid][cvDisabled] || CrateVehicle[vehid][cvImpound]) return 1;
-	CrateVehicle[vehid][cvSpawnID] = CreateVehicle(CrateVehicle[vehid][cvModel], CrateVehicle[vehid][cvPos][0], CrateVehicle[vehid][cvPos][1], CrateVehicle[vehid][cvPos][2], CrateVehicle[vehid][cvPos][3], CrateVehicle[vehid][cvColor][0], CrateVehicle[vehid][cvColor][1], -1, 0);
+	CrateVehicle[vehid][cvSpawnID] = CreateVehicle(CrateVehicle[vehid][cvModel], CrateVehicle[vehid][cvPos][0], CrateVehicle[vehid][cvPos][1], CrateVehicle[vehid][cvPos][2], CrateVehicle[vehid][cvPos][3], CrateVehicle[vehid][cvColor][0], CrateVehicle[vehid][cvColor][1], -1);
 	if(CrateVehicle[vehid][cvHealth] > CrateVehicle[vehid][cvMaxHealth]) CrateVehicle[vehid][cvHealth] = CrateVehicle[vehid][cvMaxHealth];
 	if(CrateVehicle[vehid][cvHealth] < 350) CrateVehicle[vehid][cvHealth] = 350;
 	SetVehicleHealth(CrateVehicle[vehid][cvSpawnID], CrateVehicle[vehid][cvHealth]);
@@ -419,7 +419,7 @@ CMD:cvstorage(playerid, params[])
 	return 1;
 }
 
-stock ListVehicles(playerid, group) {
+ListVehicles(playerid, group) {
 	szMiscArray[0] = 0;
 	new title[64];
 	SetPVarInt(playerid, "CarGroup", group);
@@ -470,7 +470,7 @@ Dialog:cvstorage(playerid, response, listitem, inputtext[]) {
 	return 1;
 }
 
-stock CarOptions(playerid) {
+CarOptions(playerid) {
 	szMiscArray[0] = 0;
 	new title[64];
 	if(!GetPVarType(playerid, "CvStorageID") && !GetPVarType(playerid, "CarGroup")) return 1;
@@ -736,7 +736,7 @@ Dialog:confirm_delete_veh(playerid, response, listitem, inputtext[]) {
 	return 1;
 }
 
-stock DeleteCrateVehicle(playerid, veh) {
+DeleteCrateVehicle(playerid, veh) {
 	szMiscArray[0] = 0;
 	if(CrateVehicle[veh][cvSpawnID] != INVALID_VEHICLE_ID) {
 		if(CreateCount(veh) > 0) AnnounceRespawn(CrateVehicle[veh][cvGroupID], "deleted by an admin", veh, CreateCount(veh));
@@ -911,7 +911,7 @@ CMD:cvpark(playerid, params[]) {
 		SpawnCrateVeh(veh);
 		IsPlayerEntering{playerid} = true;
 		PutPlayerInVehicle(playerid, GetPlayerVehicleID(playerid), 0);
-		SetPlayerArmedWeapon(playerid, 0);
+		SetPlayerArmedWeapon(playerid, WEAPON_FIST);
 		format(string, sizeof(string), "* %s has parked the %s.", GetPlayerNameEx(playerid), VehicleName[CrateVehicle[veh][cvModel] - 400]);
 		ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 	}

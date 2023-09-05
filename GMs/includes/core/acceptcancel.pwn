@@ -109,7 +109,7 @@ CMD:accept(playerid, params[])
 			if(!IsPlayerInRangeOfPoint(target, 5.0, pos[0], pos[1], pos[2])) return SendClientMessageEx(playerid, COLOR_GRAD2, "You are not near the person who offered you assistance.");
 			if(GetPVarInt(target, "MedVestKit") != 1)
 				return SendClientMessageEx(target, COLOR_GRAD2, "You aren't carrying a kit."), SendClientMessageEx(playerid, COLOR_GRAD2, "The player was unable to assist you as they no longer have a med kit.");
-			ApplyAnimation(target, "BOMBER", "BOM_Plant", 4.0, 0, 0, 0, 0, 0, 1);
+			ApplyAnimation(target, "BOMBER", "BOM_Plant", 4.0, false, false, false, false, 0, SYNC_ALL);
 			SetHealth(playerid, 100);
 			format(string, sizeof(string), "{FF8000}** {C2A2DA}%s renders aid to %s.", GetPlayerNameEx(target), GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -129,10 +129,10 @@ CMD:accept(playerid, params[])
 			}
 
 			new weapon[16];
-			GetWeaponName(GetPVarInt(playerid, "pSellGun"), weapon, sizeof(weapon));
+			GetWeaponName(WEAPON:GetPVarInt(playerid, "pSellGun"), weapon, sizeof(weapon));
 
 			PlayerInfo[id][pMats] -= GetPVarInt(playerid, "pSellGunMats");
-			GivePlayerValidWeapon(playerid, GetPVarInt(playerid, "pSellGun"));
+			GivePlayerValidWeapon(playerid, WEAPON:GetPVarInt(playerid, "pSellGun"));
 
   			if(PlayerInfo[id][pDoubleEXP] > 0)
 			{
@@ -200,33 +200,33 @@ CMD:accept(playerid, params[])
 			switch(GetPVarInt(targetid,"kissvalstyle")) {
 				case 1:
 				{
-					ApplyAnimation( playerid, "KISSING", "Playa_Kiss_01", 4.1, 0, 0, 0, 0, 0, 1);
-					ApplyAnimation( targetid, "KISSING", "Playa_Kiss_01", 4.1, 0, 0, 0, 0, 0, 1);
+					ApplyAnimation( playerid, "KISSING", "Playa_Kiss_01", 4.1, false, false, false, false, 0, SYNC_ALL);
+					ApplyAnimation( targetid, "KISSING", "Playa_Kiss_01", 4.1, false, false, false, false, 0, SYNC_ALL);
 				}
 				case 2:
 				{
-					ApplyAnimation( playerid, "KISSING", "Playa_Kiss_02", 4.1, 0, 0, 0, 0, 0, 1);
-					ApplyAnimation( targetid, "KISSING", "Playa_Kiss_02", 4.1, 0, 0, 0, 0, 0, 1);
+					ApplyAnimation( playerid, "KISSING", "Playa_Kiss_02", 4.1, false, false, false, false, 0, SYNC_ALL);
+					ApplyAnimation( targetid, "KISSING", "Playa_Kiss_02", 4.1, false, false, false, false, 0, SYNC_ALL);
 				}
 				case 3:
 				{
-					ApplyAnimation( playerid, "KISSING", "Playa_Kiss_03", 4.1, 0, 0, 0, 0, 0, 1);
-					ApplyAnimation( targetid, "KISSING", "Playa_Kiss_03", 4.1, 0, 0, 0, 0, 0, 1);
+					ApplyAnimation( playerid, "KISSING", "Playa_Kiss_03", 4.1, false, false, false, false, 0, SYNC_ALL);
+					ApplyAnimation( targetid, "KISSING", "Playa_Kiss_03", 4.1, false, false, false, false, 0, SYNC_ALL);
 				}
 				case 4:
 				{
-					ApplyAnimation( playerid, "KISSING", "Grlfrd_Kiss_01", 4.1, 0, 0, 0, 0, 0, 1);
-					ApplyAnimation( targetid, "KISSING", "Grlfrd_Kiss_01", 4.1, 0, 0, 0, 0, 0, 1);
+					ApplyAnimation( playerid, "KISSING", "Grlfrd_Kiss_01", 4.1, false, false, false, false, 0, SYNC_ALL);
+					ApplyAnimation( targetid, "KISSING", "Grlfrd_Kiss_01", 4.1, false, false, false, false, 0, SYNC_ALL);
 				}
 				case 5:
 				{
-					ApplyAnimation( playerid, "KISSING", "Grlfrd_Kiss_02", 4.1, 0, 0, 0, 0, 0, 1);
-					ApplyAnimation( targetid, "KISSING", "Grlfrd_Kiss_02", 4.1, 0, 0, 0, 0, 0, 1);
+					ApplyAnimation( playerid, "KISSING", "Grlfrd_Kiss_02", 4.1, false, false, false, false, 0, SYNC_ALL);
+					ApplyAnimation( targetid, "KISSING", "Grlfrd_Kiss_02", 4.1, false, false, false, false, 0, SYNC_ALL);
 				}
 				case 6:
 				{
-					ApplyAnimation( playerid, "KISSING", "Grlfrd_Kiss_03", 4.1, 0, 0, 0, 0, 0, 1);
-					ApplyAnimation( targetid, "KISSING", "Grlfrd_Kiss_03", 4.1, 0, 0, 0, 0, 0, 1);
+					ApplyAnimation( playerid, "KISSING", "Grlfrd_Kiss_03", 4.1, false, false, false, false, 0, SYNC_ALL);
+					ApplyAnimation( targetid, "KISSING", "Grlfrd_Kiss_03", 4.1, false, false, false, false, 0, SYNC_ALL);
 				}
 			}
 			format(string, sizeof(string), "* %s has given %s a kiss.", GetPlayerNameEx(playerid), GetPlayerNameEx(targetid));
@@ -280,7 +280,7 @@ CMD:accept(playerid, params[])
 			    SendClientMessageEx(playerid, COLOR_GREY, "You can't afford the weapon");
 			    return 1;
 		    }
-		    if (Businesses[business][bInventory] < GetWeaponParam(GetPVarInt(playerid, "Business_WeapType"), WeaponMats)) {
+		    if (Businesses[business][bInventory] < GetWeaponParam(WEAPON:GetPVarInt(playerid, "Business_WeapType"), WeaponMats)) {
 				SendClientMessage(playerid, COLOR_GRAD2, "Shop doesnt have mats anymore");
 				return 1;
 		    }
@@ -293,20 +293,20 @@ CMD:accept(playerid, params[])
 		    Businesses[business][bLevelProgress]++;
 		    Businesses[business][bSafeBalance] += TaxSale(GetPVarInt(playerid, "Business_WeapPrice"));
   			GivePlayerCash(playerid, -GetPVarInt(playerid, "Business_WeapPrice"));
-		    Businesses[business][bInventory] -= GetWeaponParam(GetPVarInt(playerid, "Business_WeapType"), WeaponMats);
+		    Businesses[business][bInventory] -= GetWeaponParam(WEAPON:GetPVarInt(playerid, "Business_WeapType"), WeaponMats);
 		    SaveBusiness(business);
 
-            format(string, sizeof(string), "   You have sold %s a %s.", GetPlayerNameEx(playerid),Weapon_ReturnName(GetPVarInt(playerid, "Business_WeapType")));
+            format(string, sizeof(string), "   You have sold %s a %s.", GetPlayerNameEx(playerid),Weapon_ReturnName(WEAPON:GetPVarInt(playerid, "Business_WeapType")));
             SendClientMessageEx(offerer, COLOR_GRAD1, string);
-            format(string, sizeof(string), "   You have recieved a %s from %s.", Weapon_ReturnName(GetPVarInt(playerid, "Business_WeapType")), GetPlayerNameEx(offerer));
+            format(string, sizeof(string), "   You have recieved a %s from %s.", Weapon_ReturnName(WEAPON:GetPVarInt(playerid, "Business_WeapType")), GetPlayerNameEx(offerer));
             SendClientMessageEx(playerid, COLOR_GRAD1, string);
             PlayerPlaySound(playerid, 1052, 0.0, 0.0, 0.0);
             PlayerPlaySound(offerer, 1052, 0.0, 0.0, 0.0);
             format(string, sizeof(string), "* %s creates a gun from materials and sells it to %s.", GetPlayerNameEx(offerer), GetPlayerNameEx(playerid));
             ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-            GivePlayerValidWeapon(playerid,GetPVarInt(playerid, "Business_WeapType"));
+            GivePlayerValidWeapon(playerid,WEAPON:GetPVarInt(playerid, "Business_WeapType"));
 
-			format(string, sizeof(string), "%s %s(%d) (IP: %s) has sold a %s to %s(%d) (IP: %s) for $%d in %s (%d)", GetBusinessRankName(PlayerInfo[offerer][pBusinessRank]), GetPlayerNameEx(offerer), GetPlayerSQLId(offerer), GetPlayerIpEx(offerer), Weapon_ReturnName(GetPVarInt(playerid, "Business_WeapType")), GetPlayerNameEx(playerid), GetPlayerSQLId(playerid), GetPlayerIpEx(playerid), GetPVarInt(playerid, "Business_WeapPrice"), Businesses[business][bName], business);
+			format(string, sizeof(string), "%s %s(%d) (IP: %s) has sold a %s to %s(%d) (IP: %s) for $%d in %s (%d)", GetBusinessRankName(PlayerInfo[offerer][pBusinessRank]), GetPlayerNameEx(offerer), GetPlayerSQLId(offerer), GetPlayerIpEx(offerer), Weapon_ReturnName(WEAPON:GetPVarInt(playerid, "Business_WeapType")), GetPlayerNameEx(playerid), GetPlayerSQLId(playerid), GetPlayerIpEx(playerid), GetPVarInt(playerid, "Business_WeapPrice"), Businesses[business][bName], business);
 			Log("logs/business.log", string);
 
   		    DeletePVar(playerid, "Business_WeapPrice");
@@ -364,7 +364,7 @@ CMD:accept(playerid, params[])
 		        	SetPVarInt(playerid, "playersold", item);
 			        GivePlayerStoreItem(playerid, 1, business, item+1, price);
 				}
-				else return SendClientMessageEx(playerid, COLOR_GRAD2, "The store does not have enough stock for that item!");
+				else return SendClientMessageEx(playerid, COLOR_GRAD2, "The store does not have enough for that item!");
     		}
   			else GivePlayerStoreItem(playerid, 1, business, item+1, price);
 		}
@@ -517,9 +517,9 @@ CMD:accept(playerid, params[])
                             PlayerVehicleInfo[playerid][playervehicleid][pvInt] = PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvInt];
 							PlayerVehicleInfo[playerid][playervehicleid][pvAlarm] = PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvAlarm];
 							PlayerVehicleInfo[playerid][playervehicleid][pvLocksLeft] = PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvLocksLeft];
-							PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][0] = 0;
-							PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][1] = 0;
-							PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][2] = 0;
+							PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][0] = WEAPON_FIST;
+							PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][1] = WEAPON_FIST;
+							PlayerVehicleInfo[playerid][playervehicleid][pvWeapons][2] = WEAPON_FIST;
 							PlayerVehicleInfo[playerid][playervehicleid][pvPlate] = 0;
 							PlayerVehicleInfo[playerid][playervehicleid][pvTicket] = 0;
                             PlayerVehicleInfo[playerid][playervehicleid][pvSpawned] = 1;
@@ -527,7 +527,7 @@ CMD:accept(playerid, params[])
 							PlayerVehicleInfo[playerid][playervehicleid][pvBeingPickLocked] = 0;
 							PlayerVehicleInfo[playerid][playervehicleid][pvLastLockPickedBy] = 0;
                             VehicleSpawned[playerid]++;
-                            for(new m = 0; m < MAX_MODS; m++) {
+                            for(new CARMODTYPE:m; m < MAX_MODS; m++) {
                                 PlayerVehicleInfo[playerid][playervehicleid][pvMods][m] = PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvMods][m];
                             }
 
@@ -556,9 +556,9 @@ CMD:accept(playerid, params[])
                             PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvSpawned] = 0;
                             PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvVW] = 0;
                             PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvInt] = 0;
-							PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvWeapons][0] = 0;
-							PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvWeapons][1] = 0;
-							PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvWeapons][2] = 0;
+							PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvWeapons][0] = WEAPON_FIST;
+							PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvWeapons][1] = WEAPON_FIST;
+							PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvWeapons][2] = WEAPON_FIST;
 							PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvPlate] = 0;
 							PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvTicket] = 0;
 							PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvAlarm] = 0;
@@ -566,7 +566,7 @@ CMD:accept(playerid, params[])
 							PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvBeingPickLocked] = 0;
 							PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvLastLockPickedBy] = 0;
                             VehicleSpawned[VehicleOffer[playerid]]--;
-                            for(new m = 0; m < MAX_MODS; m++) {
+                            for(new CARMODTYPE:m; m < MAX_MODS; m++) {
                                 PlayerVehicleInfo[VehicleOffer[playerid]][VehicleId[playerid]][pvMods][m] = 0;
                             }
 
@@ -694,8 +694,8 @@ CMD:accept(playerid, params[])
 							{
 								Count++;
 								PlayerFacePlayer( playerid, i );
-								ApplyAnimation( playerid, "GANGS", "hndshkaa", 4.0, 1, 1, 1, 0, 1000 );
-								ApplyAnimation( i, "GANGS", "hndshkaa", 4.0, 1, 1, 1, 0, 1000 );
+								ApplyAnimation( playerid, "GANGS", "hndshkaa", 4.0, true, true, true, false, 1000 );
+								ApplyAnimation( i, "GANGS", "hndshkaa", 4.0, true, true, true, false, 1000 );
 								DeletePVar(i, "shrequest");
 								format(szMessage, sizeof(szMessage), "* %s has shook hands with %s.", GetPlayerNameEx(i), GetPlayerNameEx(playerid));
 								ProxDetector(30.0, playerid, szMessage, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -705,8 +705,8 @@ CMD:accept(playerid, params[])
 							{
 								Count++;
 								PlayerFacePlayer( playerid, i );
-								ApplyAnimation( playerid, "GANGS", "hndshkba", 4.0, 1, 1, 1, 0, 1000 );
-								ApplyAnimation( i, "GANGS", "hndshkba", 4.0, 1, 1, 1, 0, 1000 );
+								ApplyAnimation( playerid, "GANGS", "hndshkba", 4.0, true, true, true, false, 1000 );
+								ApplyAnimation( i, "GANGS", "hndshkba", 4.0, true, true, true, false, 1000 );
 								DeletePVar(i, "shrequest");
 								format(szMessage, sizeof(szMessage), "* %s has shook hands with %s.", GetPlayerNameEx(i), GetPlayerNameEx(playerid));
 								ProxDetector(30.0, playerid, szMessage, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -716,8 +716,8 @@ CMD:accept(playerid, params[])
 							{
 								Count++;
 								PlayerFacePlayer( playerid, i );
-								ApplyAnimation( playerid, "GANGS", "hndshkca", 4.0, 1, 1, 1, 0, 1000 );
-								ApplyAnimation( i, "GANGS", "hndshkca", 4.0, 1, 1, 1, 0, 1000 );
+								ApplyAnimation( playerid, "GANGS", "hndshkca", 4.0, true, true, true, false, 1000 );
+								ApplyAnimation( i, "GANGS", "hndshkca", 4.0, true, true, true, false, 1000 );
 								DeletePVar(i, "shrequest");
 								format(szMessage, sizeof(szMessage), "* %s has shook hands with %s.", GetPlayerNameEx(i), GetPlayerNameEx(playerid));
 								ProxDetector(30.0, playerid, szMessage, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -727,8 +727,8 @@ CMD:accept(playerid, params[])
 							{
 								Count++;
 								PlayerFacePlayer( playerid, i );
-								ApplyAnimation( playerid, "GANGS", "hndshkcb", 4.0, 1, 1, 1, 0, 1000 );
-								ApplyAnimation( i, "GANGS", "hndshkca", 4.0, 1, 1, 1, 0, 1000 );
+								ApplyAnimation( playerid, "GANGS", "hndshkcb", 4.0, true, true, true, false, 1000 );
+								ApplyAnimation( i, "GANGS", "hndshkca", 4.0, true, true, true, false, 1000 );
 								DeletePVar(i, "shrequest");
 								format(szMessage, sizeof(szMessage), "* %s has shook hands with %s.", GetPlayerNameEx(i), GetPlayerNameEx(playerid));
 								ProxDetector(30.0, playerid, szMessage, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -738,8 +738,8 @@ CMD:accept(playerid, params[])
 							{
 								Count++;
 								PlayerFacePlayer( playerid, i );
-								ApplyAnimation( playerid, "GANGS", "hndshkda", 4.0, 1, 1, 1, 0, 1000 );
-								ApplyAnimation( i, "GANGS", "hndshkca", 4.0, 1, 1, 1, 0, 1000 );
+								ApplyAnimation( playerid, "GANGS", "hndshkda", 4.0, true, true, true, false, 1000 );
+								ApplyAnimation( i, "GANGS", "hndshkca", 4.0, true, true, true, false, 1000 );
 								DeletePVar(i, "shrequest");
 								format(szMessage, sizeof(szMessage), "* %s has shook hands with %s.", GetPlayerNameEx(i), GetPlayerNameEx(playerid));
 								ProxDetector(30.0, playerid, szMessage, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -749,8 +749,8 @@ CMD:accept(playerid, params[])
 							{
 								Count++;
 								PlayerFacePlayer( playerid, i );
-								ApplyAnimation( playerid, "GANGS","hndshkfa_swt", 4.0, 1, 1, 1, 0, 2600 );
-								ApplyAnimation( i, "GANGS","hndshkfa_swt", 4.0, 1, 1, 1, 0, 2600 );
+								ApplyAnimation( playerid, "GANGS","hndshkfa_swt", 4.0, true, true, true, false, 2600 );
+								ApplyAnimation( i, "GANGS","hndshkfa_swt", 4.0, true, true, true, false, 2600 );
 								DeletePVar(i, "shrequest");
 								format(szMessage, sizeof(szMessage), "* %s has shook hands with %s.", GetPlayerNameEx(i), GetPlayerNameEx(playerid));
 								ProxDetector(30.0, playerid, szMessage, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -760,8 +760,8 @@ CMD:accept(playerid, params[])
 							{
 								Count++;
 								PlayerFacePlayer( playerid, i );
-								ApplyAnimation( playerid, "GANGS", "prtial_hndshk_01", 4.0, 1, 1, 1, 0, 1250 );
-								ApplyAnimation( i, "GANGS", "prtial_hndshk_01", 4.0, 1, 1, 1, 0, 1250 );
+								ApplyAnimation( playerid, "GANGS", "prtial_hndshk_01", 4.0, true, true, true, false, 1250 );
+								ApplyAnimation( i, "GANGS", "prtial_hndshk_01", 4.0, true, true, true, false, 1250 );
 								DeletePVar(i, "shrequest");
 								format(szMessage, sizeof(szMessage), "* %s has shook hands with %s.", GetPlayerNameEx(i), GetPlayerNameEx(playerid));
 								ProxDetector(30.0, playerid, szMessage, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -771,8 +771,8 @@ CMD:accept(playerid, params[])
 							{
 								Count++;
 								PlayerFacePlayer( playerid, i );
-								ApplyAnimation( playerid, "GANGS", "prtial_hndshk_biz_01", 3.7, 1, 1, 1, 0, 2200 );
-								ApplyAnimation( i, "GANGS", "prtial_hndshk_biz_01", 3.5, 1, 1, 1, 0, 2200 );
+								ApplyAnimation( playerid, "GANGS", "prtial_hndshk_biz_01", 3.7, true, true, true, false, 2200 );
+								ApplyAnimation( i, "GANGS", "prtial_hndshk_biz_01", 3.5, true, true, true, false, 2200 );
 								DeletePVar(i, "shrequest");
 								format(szMessage, sizeof(szMessage), "* %s has shook hands with %s.", GetPlayerNameEx(i), GetPlayerNameEx(playerid));
 								ProxDetector(30.0, playerid, szMessage, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -1068,7 +1068,7 @@ CMD:accept(playerid, params[])
                         SetPlayerInterior(playerid, 7); SetPlayerInterior(BoxOffer[playerid], 7);
                         SetPlayerPos(playerid, 768.94, -70.87, 1001.56); SetPlayerFacingAngle(playerid, 131.8632);
                         SetPlayerPos(BoxOffer[playerid], 764.35, -66.48, 1001.56); SetPlayerFacingAngle(BoxOffer[playerid], 313.1165);
-                        TogglePlayerControllable(playerid, 0); TogglePlayerControllable(BoxOffer[playerid], 0);
+                        TogglePlayerControllable(playerid, false); TogglePlayerControllable(BoxOffer[playerid], false);
                         GameTextForPlayer(playerid, "~r~Waiting", 3000, 1); GameTextForPlayer(BoxOffer[playerid], "~r~Waiting", 3000, 1);
                         new name[MAX_PLAYER_NAME];
                         new dszMessage[MAX_PLAYER_NAME];
@@ -1108,7 +1108,7 @@ CMD:accept(playerid, params[])
                     SetPlayerInterior(playerid, 5); SetPlayerInterior(BoxOffer[playerid], 5);
                     SetPlayerPos(playerid, 762.9852,2.4439,1001.5942); SetPlayerFacingAngle(playerid, 131.8632);
                     SetPlayerPos(BoxOffer[playerid], 758.7064,-1.8038,1001.5942); SetPlayerFacingAngle(BoxOffer[playerid], 313.1165);
-                    TogglePlayerControllable(playerid, 0); TogglePlayerControllable(BoxOffer[playerid], 0);
+                    TogglePlayerControllable(playerid, false); TogglePlayerControllable(BoxOffer[playerid], false);
                     GameTextForPlayer(playerid, "~r~Waiting", 3000, 1); GameTextForPlayer(BoxOffer[playerid], "~r~Waiting", 3000, 1);
                     new name[MAX_PLAYER_NAME];
                     new dszMessage[MAX_PLAYER_NAME];
@@ -1311,8 +1311,8 @@ CMD:accept(playerid, params[])
                     if (ProxDetectorS(5.0, playerid, LiveOffer[playerid])) {
                         SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "* You are frozen till the Live Conversation ends.");
                         SendClientMessageEx(LiveOffer[playerid], COLOR_LIGHTBLUE, "* You are frozen till the Live Conversation ends (use /live again).");
-                        TogglePlayerControllable(playerid, 0);
-                        TogglePlayerControllable(LiveOffer[playerid], 0);
+                        TogglePlayerControllable(playerid, false);
+                        TogglePlayerControllable(LiveOffer[playerid], false);
 						SetPVarInt(playerid, "IsLive", 1);
 						SetPVarInt(LiveOffer[playerid], "IsLive", 1);
                         TalkingLive[playerid] = LiveOffer[playerid];
@@ -1791,7 +1791,7 @@ CMD:accept(playerid, params[])
                             }
                             case 8:
                             {
-                                GivePlayerValidWeapon(playerid, 43);
+                                GivePlayerValidWeapon(playerid, WEAPON_CAMERA);
                             }
                             case 9:
                             {
@@ -1817,7 +1817,7 @@ CMD:accept(playerid, params[])
                             }
                             case 13:
                             {
-                                GivePlayerValidWeapon(playerid, 46);
+                                GivePlayerValidWeapon(playerid, WEAPON_PARACHUTE);
                             }
 							case 14:
 							{
@@ -2696,8 +2696,8 @@ CMD:repair(playerid, params[])
 						if(giveplayerid == playerid) { SendClientMessageEx(playerid, COLOR_GREY, "   Can't do that!"); return 1; }
 	                    if(!IsABike(closestcar) && !IsAPlane(closestcar))
 						{
-							new engine,lights,alarm,doors,bonnet,boot,objective;
-							GetVehicleParamsEx(closestcar,engine,lights,alarm,doors,bonnet,boot,objective);
+							new bool:bonnet;
+							GetVehicleParamsEx(closestcar, .bonnet = bonnet);
 							if(bonnet == VEHICLE_PARAMS_OFF || bonnet == VEHICLE_PARAMS_UNSET)
 							{
 								SendClientMessageEx(playerid, COLOR_GRAD1, "The vehicle hood must be opened in order to repair it.");

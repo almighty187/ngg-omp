@@ -1,4 +1,4 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define ATM					10000
 #define ATM_AMOUNT 			10001
@@ -60,7 +60,7 @@ LoadATMPoints() {
 	return 1;
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 
 	if((newkeys & KEY_YES) && IsPlayerInAnyDynamicArea(playerid))
 	{
@@ -89,11 +89,11 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 		case ATM: {
 			
 			if(!response) {
-				TogglePlayerControllable(playerid, 1);
+				TogglePlayerControllable(playerid, true);
 				return 1;
 			}
 
-			TogglePlayerControllable(playerid, 0);
+			TogglePlayerControllable(playerid, false);
 
 			switch(listitem) {		
 				case 0: ShowATMMenu(playerid, 1);

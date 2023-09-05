@@ -35,10 +35,10 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #if defined zombiemode
-stock SpawnZombie(playerid)
+SpawnZombie(playerid)
 {
 	new Float:maxdis, Float:dis, tpto;
 	maxdis=9999.9;
@@ -61,7 +61,7 @@ stock SpawnZombie(playerid)
 	return 1;
 }
 
-stock MakeZombie(playerid)
+MakeZombie(playerid)
 {
     new Float:X, Float:Y, Float:Z, string[128];
     GetPlayerPos(playerid, X, Y, Z);
@@ -90,7 +90,7 @@ stock MakeZombie(playerid)
 	return 1;
 }
 
-stock UnZombie(playerid)
+UnZombie(playerid)
 {
 	DeletePVar(playerid, "pIsZombie");
   	DeletePVar(playerid, "pZombieBit");
@@ -133,7 +133,7 @@ public ScrapMetal(playerid, vehicleid)
 	ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 	SendClientMessage(playerid, COLOR_WHITE, "Your have applied scrap metal to your vehicle giving it +500HP!");
 	PlayerPlaySound(playerid,1133,0.0,0.0,0.0);
-	ApplyAnimation(playerid, "CARRY", "crry_prtial", 4.0, 0, 0, 0, 0, 0, 1);
+	ApplyAnimation(playerid, "CARRY", "crry_prtial", 4.0, false, false, false, false, 0, SYNC_ALL);
 	format(string, sizeof(string), "[ZSCRAPMETAL] %s(%d) used a Scrap Metal. Left: %d", GetPlayerNameEx(playerid), GetPlayerSQLId(playerid), PlayerInfo[playerid][mInventory][16]);
 	Log("logs/micro.log", string);
 	DeletePVar(playerid, "zscrapmetal");
@@ -242,7 +242,7 @@ CMD:zombieevent(playerid, params[])
 	        foreach(new i: Player) SyncMinTime(i);
 			SetWeather(5);
 			mysql_tquery(MainPipeline, "DELETE FROM zombie", "OnQueryFinish", "ii", SENDDATA_THREAD, playerid);
-			foreach(Player, i)
+			foreach(new i: Player)
 			{
 			    UnZombie(i);
 			}
@@ -340,7 +340,7 @@ CMD:bite(playerid, params[])
 		{
 		    new Float:X, Float:Y, Float:Z;
 		    GetPlayerPos(playerid, X, Y, Z);
-			foreach(Player, i)
+			foreach(new i: Player)
 			{
 			    if(!GetPVarType(i, "pIsZombie") && !IsPlayerInAnyVehicle(i) && IsPlayerInRangeOfPoint(i, 2, X, Y, Z))
 			    {
@@ -395,7 +395,7 @@ CMD:bite(playerid, params[])
 		{
 		    new Float:X, Float:Y, Float:Z;
 		    GetPlayerPos(playerid, X, Y, Z);
-			foreach(Player, i)
+			foreach(new i: Player)
 			{
 			    if((GetPVarInt(i, "EventToken") == 1) && !GetPVarType(i, "pEventZombie"))
 			    {
@@ -550,7 +550,7 @@ CMD:zfuelcan(playerid, params[])
 	new string[72];
 	format(string, sizeof(string), "%s begins refilling their vehicle with a fuel can.", GetPlayerNameEx(playerid));
 	ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-	ApplyAnimation(playerid, "SCRATCHING", "scdldlp", 4.0, 1, 0, 0, 0, 0, 1);
+	ApplyAnimation(playerid, "SCRATCHING", "scdldlp", 4.0, true, false, false, false, 0, SYNC_ALL);
 	SetTimerEx("FuelCan", 10000, false, "iii", playerid, closestcar, PlayerInfo[playerid][zFuelCan]);
 	SetPVarInt(playerid, "fuelcan", 2);
 	GameTextForPlayer(playerid, "~w~Refueling...", 10000, 3);
@@ -575,7 +575,7 @@ CMD:zscrapmetal(playerid, params[])
 	new string[71];
 	format(string, sizeof(string), "%s begins to apply scrap metal to their vehicle.", GetPlayerNameEx(playerid));
 	ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
-	ApplyAnimation(playerid, "COP_AMBIENT", "Copbrowse_loop", 4.1, 1, 0, 0, 0, 0, 1);
+	ApplyAnimation(playerid, "COP_AMBIENT", "Copbrowse_loop", 4.1, true, false, false, false, 0, SYNC_ALL);
 	SetTimerEx("ScrapMetal", 6000, false, "ii", playerid, closestcar);
 	SetPVarInt(playerid, "zscrapmetal", 1);
 	GameTextForPlayer(playerid, "~w~Applying...", 6000, 3);
@@ -586,7 +586,7 @@ CMD:z50cal(playerid, params[])
 {
 	if(!zombieevent) return SendClientMessageEx(playerid, COLOR_GREY, "There is currently no active Zombie Event!");
 	if(!PlayerInfo[playerid][mInventory][17]) return SendClientMessageEx(playerid, COLOR_GREY, "You do not have any .50 Caliber Ammo in your inventory, visit /microshop to purchase.");
-	if((GetPlayerWeapon(playerid) != 33 || PlayerInfo[playerid][pGuns][6] != 33) && (GetPlayerWeapon(playerid) != 34 || PlayerInfo[playerid][pGuns][6] != 34)) return SendClientMessageEx(playerid, COLOR_GREY, "You can only load a rifle or sniper rifle with .50 cal ammo.");
+	if((GetPlayerWeapon(playerid) != WEAPON_RIFLE || PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE] != 33) && (GetPlayerWeapon(playerid) != WEAPON_SNIPER || PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE] != 34)) return SendClientMessageEx(playerid, COLOR_GREY, "You can only load a rifle or sniper rifle with .50 cal ammo.");
 	if(!GetPVarType(playerid, "z50Cal"))
 	{
 		SendClientMessageEx(playerid, -1, "You have loaded a .50 Caliber bullet into your weapon.");
@@ -597,7 +597,7 @@ CMD:z50cal(playerid, params[])
 		SendClientMessageEx(playerid, -1, "You have unloaded a .50 Caliber bullet from your weapon.");
 		DeletePVar(playerid, "z50Cal");
 	}
-	ApplyAnimation(playerid, "RIFLE", "RIFLE_load", 4.0, 0, 0, 0, 0, 0, 1);
+	ApplyAnimation(playerid, "RIFLE", "RIFLE_load", 4.0, false, false, false, false, 0, SYNC_ALL);
 	return 1;
 }
 

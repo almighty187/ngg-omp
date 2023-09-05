@@ -426,7 +426,7 @@ new briefcaselimit[] = { 500000, 100, 100, 50000 };
 new servernumber, betaserver;
 new textdrawscount;
 
-new hour, minuite, second;
+new hour_, minuite, second_;
 
 new InsidePlane[MAX_PLAYERS];
 new InsideMainMenu[MAX_PLAYERS char];
@@ -591,9 +591,9 @@ new gBug[MAX_PLAYERS char];
 new gRadio[MAX_PLAYERS char];
 new NOPTrigger[MAX_PLAYERS];
 new pTazer[MAX_PLAYERS char];
-new pTazerReplace[MAX_PLAYERS char];
+new WEAPON:pTazerReplace[MAX_PLAYERS char];
 new TazerTimeout[MAX_PLAYERS];
-new pCurrentWeapon[MAX_PLAYERS char];
+new WEAPON:pCurrentWeapon[MAX_PLAYERS char];
 new ReleasingMenu[MAX_PLAYERS];
 new ListItemReleaseId[MAX_PLAYERS][MAX_PLAYERVEHICLES];
 new ListItemRCPId[MAX_PLAYERS][20];
@@ -877,7 +877,7 @@ new HackingMods[MAX_PLAYERS];
 new rBigEarT[MAX_PLAYERS];
 new aLastShot[MAX_PLAYERS];
 new aLastShotBone[MAX_PLAYERS];
-new aLastShotWeapon[MAX_PLAYERS];
+new WEAPON:aLastShotWeapon[MAX_PLAYERS];
 new IsSpawned[MAX_PLAYERS];
 new SpawnKick[MAX_PLAYERS];
 
@@ -2479,7 +2479,7 @@ new const gMainZones[][MAIN_ZONES] = {  // Majority of names and area coordinate
 	{"San Andreas",                 {-10000.00,-10000.00,-242.90,10000.00,10000.00,900.00}}
 };
 
-stock GetPlayer2DZone(playerid, zone[], len) //Credits to Cueball, Betamaster, Mabako, and Simon (for finetuning).
+GetPlayer2DZone(playerid, zone[], len) //Credits to Cueball, Betamaster, Mabako, and Simon (for finetuning).
 {
 	new Float:x, Float:y, Float:z;
 	GetPlayerPos(playerid, x, y, z);
@@ -2507,7 +2507,7 @@ stock GetPlayer2DTurf(playerid) //Jingles
 	return 369;
 }
 
-stock GetPlayer3DZone(playerid, zone[], len) //Credits to Cueball, Betamaster, Mabako, and Simon (for finetuning).
+GetPlayer3DZone(playerid, zone[], len) //Credits to Cueball, Betamaster, Mabako, and Simon (for finetuning).
 {
 	new Float:x, Float:y, Float:z;
 	GetPlayerPos(playerid, x, y, z);
@@ -2521,7 +2521,7 @@ stock GetPlayer3DZone(playerid, zone[], len) //Credits to Cueball, Betamaster, M
 	return 0;
 }
 
-stock Get3DZone(Float:x, Float:y, Float:z, zone[], len) //Credits to Cueball, Betamaster, Mabako, and Simon (for finetuning).
+Get3DZone(Float:x, Float:y, Float:z, zone[], len) //Credits to Cueball, Betamaster, Mabako, and Simon (for finetuning).
 {
  	for(new i = 0; i != sizeof(gSAZones); i++ )
  	{
@@ -2533,19 +2533,7 @@ stock Get3DZone(Float:x, Float:y, Float:z, zone[], len) //Credits to Cueball, Be
 	return 0;
 }
 
-stock IsPlayerInZone(playerid, zone[]) //Credits to Cueball, Betamaster, Mabako, and Simon (for finetuning).
-{
-	new TmpZone[MAX_ZONE_NAME];
-	GetPlayer3DZone(playerid, TmpZone, sizeof(TmpZone));
-	for(new i = 0; i != sizeof(gSAZones); i++)
-	{
-		if(strfind(TmpZone, zone, true) != -1)
-			return 1;
-	}
-	return 0;
-}
-
-stock GetPlayerMainZone(playerid, zone[], len)
+GetPlayerMainZone(playerid, zone[], len)
 {
 	new Float:x, Float:y, Float:z;
 	GetPlayerPos(playerid, x, y, z);
@@ -2559,7 +2547,7 @@ stock GetPlayerMainZone(playerid, zone[], len)
 	return 0;
 }
 
-stock Get2DMainZone(Float:x, Float:y, zone[], len)
+Get2DMainZone(Float:x, Float:y, zone[], len)
 {
  	for(new i = 0; i != sizeof(gMainZones); i++ )
  	{
@@ -2773,7 +2761,9 @@ new ROB_MAX_PERCENTAGE = 30,
 
 //new Text3D:PlayerLabel[MAX_PLAYERS];
 
-new DCC_Channel:g_AdminChannelId, DCC_Channel:g_AdminWarningsChannelId, DCC_Channel:g_HeadAdminChannelId, DCC_Channel:g_ServerErrorsChannelId;
+#if defined DISCORD_ENABLED
+	new DCC_Channel:g_AdminChannelId, DCC_Channel:g_AdminWarningsChannelId, DCC_Channel:g_HeadAdminChannelId, DCC_Channel:g_ServerErrorsChannelId;
+#endif
 
 // Crate System.
 new 

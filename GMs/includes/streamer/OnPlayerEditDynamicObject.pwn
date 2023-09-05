@@ -9,7 +9,7 @@ public OnPlayerEditGate(playerid, objectid, response, Float:x, Float:y, Float:z,
     CallLocalFunction("OnPlayerEditDynamicObject", "iddffffff", playerid, objectid, response, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz);
 }
 
-public OnPlayerEditObject(playerid, playerobject, objectid, response, Float:fX, Float:fY, Float:fZ, Float:fRotX, Float:fRotY, Float:fRotZ) {
+public OnPlayerEditObject(playerid, playerobject, objectid, EDIT_RESPONSE:response, Float:fX, Float:fY, Float:fZ, Float:rotationX, Float:rotationY, Float:rotationZ) {
 	return 0;
 }
 
@@ -56,7 +56,7 @@ public OnPlayerEditDynamicObject(playerid, objectid, response, Float:x, Float:y,
 	if(GetPVarType(playerid, "DeployingTapeID"))
 	{
 	    new tid = GetPVarInt(playerid, "DeployingTapeID"), valid = 0;
-	    if(response == EDIT_RESPONSE_FINAL || response == EDIT_RESPONSE_CANCEL)
+	    if(response == _:EDIT_RESPONSE_FINAL || response == _:EDIT_RESPONSE_CANCEL)
 	    {
 	    	DeletePVar(playerid, "DeployingTapeID");
 	        new Float:offsetX, Float:offsetY, Float:offsetZ;
@@ -204,7 +204,7 @@ public OnPlayerEditDynamicObject(playerid, objectid, response, Float:x, Float:y,
 	}
 	
 	// Gates
-	if(response == EDIT_RESPONSE_FINAL)
+	if(response == _:EDIT_RESPONSE_FINAL)
 	{
 		szMiscArray[0] = 0;
 		if(GetPVarInt(playerid, "gEdit") == 1)
@@ -242,9 +242,9 @@ public OnPlayerEditDynamicObject(playerid, objectid, response, Float:x, Float:y,
 			DeletePVar(playerid, "EditingGateID");
 		}
 	}
-	if(response == EDIT_RESPONSE_CANCEL)
+	if(response == _:EDIT_RESPONSE_CANCEL)
 	{
-		if(GetPVarType(playerid, "gEdit") == 1)
+		if(GetPVarType(playerid, "gEdit") == VARTYPE_INT)
 		{
 			CreateGate(GetPVarInt(playerid, "EditingGateID"));
 			DeletePVar(playerid, "gEdit");
@@ -347,7 +347,7 @@ public OnPlayerEditDynamicObject(playerid, objectid, response, Float:x, Float:y,
 		}
 	}
 	if(GetPVarType(playerid, "editingsign")) {
-		if(response == EDIT_RESPONSE_FINAL)
+		if(response == _:EDIT_RESPONSE_FINAL)
 		{
 			new string[128];
 			/*if(GetPVarInt(playerid, "Edit") == 2)
@@ -403,7 +403,7 @@ public OnPlayerEditDynamicObject(playerid, objectid, response, Float:x, Float:y,
 			DeletePVar(playerid, "editingsign");
 			ClearCheckpoint(playerid);
 		}
-		if(response == EDIT_RESPONSE_CANCEL)
+		if(response == _:EDIT_RESPONSE_CANCEL)
 		{
 			/*if(GetPVarInt(playerid, "gt_Edit") == 2)
 			{

@@ -34,13 +34,13 @@
 	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 new CASINOPoint[17]; 
 
 // --- Automated Dice System by Thomas ---
 // Stock Functions
-stock IsPlayerInRangeOfPlayer(playerid, targetid, Float:range)
+IsPlayerInRangeOfPlayer(playerid, targetid, Float:range)
 {
 	if(!IsPlayerConnected(targetid) || !IsPlayerConnected(playerid)) return false;
 	new Float:Position[3];
@@ -48,7 +48,7 @@ stock IsPlayerInRangeOfPlayer(playerid, targetid, Float:range)
 	if(IsPlayerInRangeOfPoint(playerid, range, Position[0], Position[1], Position[2])) return true;
 	else return false;
 }
-stock DestroyOfferDiceData(playerid)
+DestroyOfferDiceData(playerid)
 {
 	if((GetPVarInt(playerid, "OfferDiceID") == 0) && (GetPVarInt(playerid, "OfferingDiceID") == 0))
 	{
@@ -170,7 +170,7 @@ CMD:canceldice(playerid, params[])
 
 // --- End of Automated Dice System ---
 
-stock randomEx(min, max)
+randomEx(min, max)
 {
     new rand = random(max-min)+min;
     return rand;
@@ -564,154 +564,77 @@ LoadCASINOPoints()
 CasinoPullLoad(playerid)
 {
 	PullDraw[playerid][0] = CreatePlayerTextDraw(playerid,247.000000, 244.000000, "LD_SPAC:white");
-	PlayerTextDrawAlignment(playerid,PullDraw[playerid][0], 2);
-	PlayerTextDrawBackgroundColor(playerid,PullDraw[playerid][0], -65281);
-	PlayerTextDrawFont(playerid,PullDraw[playerid][0], 4);
-	PlayerTextDrawLetterSize(playerid,PullDraw[playerid][0], 0.500000, 1.000000);
-	PlayerTextDrawColor(playerid,PullDraw[playerid][0], 255);
-	PlayerTextDrawSetOutline(playerid,PullDraw[playerid][0], 1);
-	PlayerTextDrawSetProportional(playerid,PullDraw[playerid][0], 1);
-	PlayerTextDrawUseBox(playerid,PullDraw[playerid][0], 1);
-	PlayerTextDrawBoxColor(playerid,PullDraw[playerid][0], 255);
+	PlayerTextDrawFont(playerid,PullDraw[playerid][0], TEXT_DRAW_FONT_SPRITE_DRAW);
+	PlayerTextDrawColour(playerid,PullDraw[playerid][0], 255);
 	PlayerTextDrawTextSize(playerid,PullDraw[playerid][0], 140.000000, 29.000000);
-	PlayerTextDrawSetSelectable(playerid,PullDraw[playerid][0], 0);
 
 	PullDraw[playerid][1] = CreatePlayerTextDraw(playerid,211.000000, 272.000000, "LD_SPAC:white");
-	PlayerTextDrawAlignment(playerid,PullDraw[playerid][1], 2);
-	PlayerTextDrawBackgroundColor(playerid,PullDraw[playerid][1], 255);
-	PlayerTextDrawFont(playerid,PullDraw[playerid][1], 4);
-	PlayerTextDrawLetterSize(playerid,PullDraw[playerid][1], 0.500000, 1.000000);
-	PlayerTextDrawColor(playerid,PullDraw[playerid][1], -65281);
-	PlayerTextDrawSetOutline(playerid,PullDraw[playerid][1], 0);
-	PlayerTextDrawSetProportional(playerid,PullDraw[playerid][1], 1);
-	PlayerTextDrawSetShadow(playerid,PullDraw[playerid][1], 1);
-	PlayerTextDrawUseBox(playerid,PullDraw[playerid][1], 1);
-	PlayerTextDrawBoxColor(playerid,PullDraw[playerid][1], 255);
+	PlayerTextDrawFont(playerid,PullDraw[playerid][1], TEXT_DRAW_FONT_SPRITE_DRAW);
+	PlayerTextDrawColour(playerid,PullDraw[playerid][1], -65281);
 	PlayerTextDrawTextSize(playerid,PullDraw[playerid][1], 208.000000, 76.000000);
-	PlayerTextDrawSetSelectable(playerid,PullDraw[playerid][1], 0);
 
 	PullDraw[playerid][2] = CreatePlayerTextDraw(playerid,212.000000, 273.000000, "LD_SPAC:white");
-	PlayerTextDrawAlignment(playerid,PullDraw[playerid][2], 2);
-	PlayerTextDrawBackgroundColor(playerid,PullDraw[playerid][2], 255);
-	PlayerTextDrawFont(playerid,PullDraw[playerid][2], 4);
-	PlayerTextDrawLetterSize(playerid,PullDraw[playerid][2], 0.500000, 1.000000);
-	PlayerTextDrawColor(playerid,PullDraw[playerid][2], -16776961);
-	PlayerTextDrawSetOutline(playerid,PullDraw[playerid][2], 0);
-	PlayerTextDrawSetProportional(playerid,PullDraw[playerid][2], 1);
-	PlayerTextDrawSetShadow(playerid,PullDraw[playerid][2], 1);
-	PlayerTextDrawUseBox(playerid,PullDraw[playerid][2], 1);
-	PlayerTextDrawBoxColor(playerid,PullDraw[playerid][2], 255);
+	PlayerTextDrawFont(playerid,PullDraw[playerid][2], TEXT_DRAW_FONT_SPRITE_DRAW);
+	PlayerTextDrawColour(playerid,PullDraw[playerid][2], -16776961);
 	PlayerTextDrawTextSize(playerid,PullDraw[playerid][2], 206.000000, 74.000000);
-	PlayerTextDrawSetSelectable(playerid,PullDraw[playerid][2], 0);
 
 	PullDraw[playerid][3] = CreatePlayerTextDraw(playerid,213.000000, 274.000000, "LD_SPAC:white");
-	PlayerTextDrawAlignment(playerid,PullDraw[playerid][3], 2);
-	PlayerTextDrawBackgroundColor(playerid,PullDraw[playerid][3], 255);
-	PlayerTextDrawFont(playerid,PullDraw[playerid][3], 4);
-	PlayerTextDrawLetterSize(playerid,PullDraw[playerid][3], 0.500000, 1.000000);
-	PlayerTextDrawColor(playerid,PullDraw[playerid][3], 65535);
-	PlayerTextDrawSetOutline(playerid,PullDraw[playerid][3], 0);
-	PlayerTextDrawSetProportional(playerid,PullDraw[playerid][3], 1);
-	PlayerTextDrawSetShadow(playerid,PullDraw[playerid][3], 1);
-	PlayerTextDrawUseBox(playerid,PullDraw[playerid][3], 1);
-	PlayerTextDrawBoxColor(playerid,PullDraw[playerid][3], 255);
+	PlayerTextDrawFont(playerid,PullDraw[playerid][3], TEXT_DRAW_FONT_SPRITE_DRAW);
+	PlayerTextDrawColour(playerid,PullDraw[playerid][3], 65535);
 	PlayerTextDrawTextSize(playerid,PullDraw[playerid][3], 204.000000, 72.000000);
-	PlayerTextDrawSetSelectable(playerid,PullDraw[playerid][3], 0);
 
 	PullDraw[playerid][4] = CreatePlayerTextDraw(playerid,214.000000, 275.000000, "LD_SPAC:white");
-	PlayerTextDrawAlignment(playerid,PullDraw[playerid][4], 2);
-	PlayerTextDrawBackgroundColor(playerid,PullDraw[playerid][4], 255);
-	PlayerTextDrawFont(playerid,PullDraw[playerid][4], 4);
-	PlayerTextDrawLetterSize(playerid,PullDraw[playerid][4], 0.500000, 1.000000);
-	PlayerTextDrawColor(playerid,PullDraw[playerid][4], 255);
-	PlayerTextDrawSetOutline(playerid,PullDraw[playerid][4], 0);
-	PlayerTextDrawSetProportional(playerid,PullDraw[playerid][4], 1);
-	PlayerTextDrawSetShadow(playerid,PullDraw[playerid][4], 1);
-	PlayerTextDrawUseBox(playerid,PullDraw[playerid][4], 1);
-	PlayerTextDrawBoxColor(playerid,PullDraw[playerid][4], 255);
+	PlayerTextDrawFont(playerid,PullDraw[playerid][4], TEXT_DRAW_FONT_SPRITE_DRAW);
+	PlayerTextDrawColour(playerid,PullDraw[playerid][4], 255);
 	PlayerTextDrawTextSize(playerid,PullDraw[playerid][4], 202.000000, 70.000000);
-	PlayerTextDrawSetSelectable(playerid,PullDraw[playerid][4], 0);
 
 	PullDraw[playerid][5] = CreatePlayerTextDraw(playerid,280.000000, 275.000000, "LD_SPAC:white");
-	PlayerTextDrawAlignment(playerid,PullDraw[playerid][5], 2);
-	PlayerTextDrawBackgroundColor(playerid,PullDraw[playerid][5], 255);
-	PlayerTextDrawFont(playerid,PullDraw[playerid][5], 4);
-	PlayerTextDrawLetterSize(playerid,PullDraw[playerid][5], 0.500000, 1.000000);
-	PlayerTextDrawColor(playerid,PullDraw[playerid][5], -65281);
-	PlayerTextDrawSetOutline(playerid,PullDraw[playerid][5], 0);
-	PlayerTextDrawSetProportional(playerid,PullDraw[playerid][5], 1);
-	PlayerTextDrawSetShadow(playerid,PullDraw[playerid][5], 1);
-	PlayerTextDrawUseBox(playerid,PullDraw[playerid][5], 1);
-	PlayerTextDrawBoxColor(playerid,PullDraw[playerid][5], 255);
+	PlayerTextDrawFont(playerid,PullDraw[playerid][5], TEXT_DRAW_FONT_SPRITE_DRAW);
+	PlayerTextDrawColour(playerid,PullDraw[playerid][5], -65281);
 	PlayerTextDrawTextSize(playerid,PullDraw[playerid][5], 2.000000, 70.000000);
-	PlayerTextDrawSetSelectable(playerid,PullDraw[playerid][5], 0);
 
 	PullDraw[playerid][6] = CreatePlayerTextDraw(playerid,354.000000, 275.000000, "LD_SPAC:white");
-	PlayerTextDrawAlignment(playerid,PullDraw[playerid][6], 2);
-	PlayerTextDrawBackgroundColor(playerid,PullDraw[playerid][6], 255);
-	PlayerTextDrawFont(playerid,PullDraw[playerid][6], 4);
-	PlayerTextDrawLetterSize(playerid,PullDraw[playerid][6], 0.500000, 1.000000);
-	PlayerTextDrawColor(playerid,PullDraw[playerid][6], -65281);
-	PlayerTextDrawSetOutline(playerid,PullDraw[playerid][6], 0);
-	PlayerTextDrawSetProportional(playerid,PullDraw[playerid][6], 1);
-	PlayerTextDrawSetShadow(playerid,PullDraw[playerid][6], 1);
-	PlayerTextDrawUseBox(playerid,PullDraw[playerid][6], 1);
-	PlayerTextDrawBoxColor(playerid,PullDraw[playerid][6], 255);
+	PlayerTextDrawFont(playerid,PullDraw[playerid][6], TEXT_DRAW_FONT_SPRITE_DRAW);
+	PlayerTextDrawColour(playerid,PullDraw[playerid][6], -65281);
 	PlayerTextDrawTextSize(playerid,PullDraw[playerid][6], 2.000000, 70.000000);
-	PlayerTextDrawSetSelectable(playerid,PullDraw[playerid][6], 0);
 
 	PullDraw[playerid][7] = CreatePlayerTextDraw(playerid,247.000000, 281.000000, "7");
-	PlayerTextDrawAlignment(playerid,PullDraw[playerid][7], 2);
-	PlayerTextDrawBackgroundColor(playerid,PullDraw[playerid][7], 65535);
-	PlayerTextDrawFont(playerid,PullDraw[playerid][7], 3);
+	PlayerTextDrawAlignment(playerid,PullDraw[playerid][7], TEXT_DRAW_ALIGN_CENTRE);
+	PlayerTextDrawBackgroundColour(playerid,PullDraw[playerid][7], 65535);
+	PlayerTextDrawFont(playerid,PullDraw[playerid][7], TEXT_DRAW_FONT_3);
 	PlayerTextDrawLetterSize(playerid,PullDraw[playerid][7], 1.190000, 6.000000);
-	PlayerTextDrawColor(playerid,PullDraw[playerid][7], -1);
+	PlayerTextDrawColour(playerid,PullDraw[playerid][7], -1);
 	PlayerTextDrawSetOutline(playerid,PullDraw[playerid][7], 1);
-	PlayerTextDrawSetProportional(playerid,PullDraw[playerid][7], 1);
-	PlayerTextDrawSetSelectable(playerid,PullDraw[playerid][7], 0);
 
 	PullDraw[playerid][8] = CreatePlayerTextDraw(playerid,319.000000, 281.000000, "7");
-	PlayerTextDrawAlignment(playerid,PullDraw[playerid][8], 2);
-	PlayerTextDrawBackgroundColor(playerid,PullDraw[playerid][8], 65535);
-	PlayerTextDrawFont(playerid,PullDraw[playerid][8], 3);
+	PlayerTextDrawAlignment(playerid,PullDraw[playerid][8], TEXT_DRAW_ALIGN_CENTRE);
+	PlayerTextDrawBackgroundColour(playerid,PullDraw[playerid][8], 65535);
+	PlayerTextDrawFont(playerid,PullDraw[playerid][8], TEXT_DRAW_FONT_3);
 	PlayerTextDrawLetterSize(playerid,PullDraw[playerid][8], 1.190000, 6.000000);
-	PlayerTextDrawColor(playerid,PullDraw[playerid][8], -1);
+	PlayerTextDrawColour(playerid,PullDraw[playerid][8], -1);
 	PlayerTextDrawSetOutline(playerid,PullDraw[playerid][8], 1);
-	PlayerTextDrawSetProportional(playerid,PullDraw[playerid][8], 1);
-	PlayerTextDrawSetSelectable(playerid,PullDraw[playerid][8], 0);
 
 	PullDraw[playerid][9] = CreatePlayerTextDraw(playerid,389.000000, 281.000000, "7");
-	PlayerTextDrawAlignment(playerid,PullDraw[playerid][9], 2);
-	PlayerTextDrawBackgroundColor(playerid,PullDraw[playerid][9], 65535);
-	PlayerTextDrawFont(playerid,PullDraw[playerid][9], 3);
+	PlayerTextDrawAlignment(playerid,PullDraw[playerid][9], TEXT_DRAW_ALIGN_CENTRE);
+	PlayerTextDrawBackgroundColour(playerid,PullDraw[playerid][9], 65535);
+	PlayerTextDrawFont(playerid,PullDraw[playerid][9], TEXT_DRAW_FONT_3);
 	PlayerTextDrawLetterSize(playerid,PullDraw[playerid][9], 1.190000, 6.000000);
-	PlayerTextDrawColor(playerid,PullDraw[playerid][9], -1);
+	PlayerTextDrawColour(playerid,PullDraw[playerid][9], -1);
 	PlayerTextDrawSetOutline(playerid,PullDraw[playerid][9], 1);
-	PlayerTextDrawSetProportional(playerid,PullDraw[playerid][9], 1);
-	PlayerTextDrawSetSelectable(playerid,PullDraw[playerid][9], 0);
 
 	PullDraw[playerid][10] = CreatePlayerTextDraw(playerid,319.000000, 249.000000, "ROTHSCHILD INC");
-	PlayerTextDrawAlignment(playerid,PullDraw[playerid][10], 2);
-	PlayerTextDrawBackgroundColor(playerid,PullDraw[playerid][10], -1);
-	PlayerTextDrawFont(playerid,PullDraw[playerid][10], 2);
+	PlayerTextDrawAlignment(playerid,PullDraw[playerid][10], TEXT_DRAW_ALIGN_CENTRE);
+	PlayerTextDrawFont(playerid,PullDraw[playerid][10], TEXT_DRAW_FONT_2);
 	PlayerTextDrawLetterSize(playerid,PullDraw[playerid][10], 0.410000, 2.099999);
-	PlayerTextDrawColor(playerid,PullDraw[playerid][10], 65535);
-	PlayerTextDrawSetOutline(playerid,PullDraw[playerid][10], 0);
-	PlayerTextDrawSetProportional(playerid,PullDraw[playerid][10], 1);
+	PlayerTextDrawColour(playerid,PullDraw[playerid][10], 65535);
 	PlayerTextDrawSetShadow(playerid,PullDraw[playerid][10], 0);
-	PlayerTextDrawSetSelectable(playerid,PullDraw[playerid][10], 0);
 
 	PullDraw[playerid][11] = CreatePlayerTextDraw(playerid,318.000000, 247.000000, "ROTHSCHILD INC");
-	PlayerTextDrawAlignment(playerid,PullDraw[playerid][11], 2);
-	PlayerTextDrawBackgroundColor(playerid,PullDraw[playerid][11], -1);
-	PlayerTextDrawFont(playerid,PullDraw[playerid][11], 2);
+	PlayerTextDrawAlignment(playerid,PullDraw[playerid][11], TEXT_DRAW_ALIGN_CENTRE);
+	PlayerTextDrawFont(playerid,PullDraw[playerid][11], TEXT_DRAW_FONT_2);
 	PlayerTextDrawLetterSize(playerid,PullDraw[playerid][11], 0.410000, 2.099999);
-	PlayerTextDrawColor(playerid,PullDraw[playerid][11], -1);
-	PlayerTextDrawSetOutline(playerid,PullDraw[playerid][11], 0);
-	PlayerTextDrawSetProportional(playerid,PullDraw[playerid][11], 1);
+	PlayerTextDrawColour(playerid,PullDraw[playerid][11], -1);
 	PlayerTextDrawSetShadow(playerid,PullDraw[playerid][11], 0);
-	PlayerTextDrawSetSelectable(playerid,PullDraw[playerid][11], 0);
-
 }
 
 hook OnPlayerConnect(playerid)

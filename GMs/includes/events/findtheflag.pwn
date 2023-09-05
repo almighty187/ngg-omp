@@ -36,7 +36,7 @@
 */
 
 // Load the result live, this way i can display them on the CP live :)
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 CMD:flaghelp(playerid, params[])
 {
@@ -52,7 +52,7 @@ CMD:flagshop(playerid, params[]) {
 	return 1;
 }
 
-stock ShowFlagShop(playerid) {
+ShowFlagShop(playerid) {
 	new title[54];
 	szMiscArray[0] = 0;
 	format(title, sizeof(title), "Flag Shop - Flag Credits: %s", number_format(PlayerInfo[playerid][pFlagCredits]));

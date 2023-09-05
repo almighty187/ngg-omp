@@ -35,27 +35,9 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
-stock ShowStorageEquipDialog(playerid)
-{
-	if(gPlayerLogged{playerid} != 1) return SendClientMessageEx(playerid, COLOR_WHITE, "You are not logged in!");
-
-	new dialogstring[256];
-	new epstring[][] = { "Unequipped", "Equipped", "Not Owned" };
-
-	for(new i = 0; i < 3; i++)
-	{
-		format(dialogstring, sizeof(dialogstring), "%s%s", dialogstring, storagetype[i+1]);
-		if(StorageInfo[playerid][i][sStorage] != 1) format(dialogstring, sizeof(dialogstring), "%s (%s)\n", dialogstring, epstring[2]);
-		else format(dialogstring, sizeof(dialogstring), "%s (%s)\n", dialogstring, epstring[StorageInfo[playerid][i][sAttached]]);
-	}
-
-	ShowPlayerDialogEx(playerid, STORAGEEQUIP, DIALOG_STYLE_LIST, "Storage - Equip/Unequip", dialogstring, "Select", "Exit");
-	return 1;
-}
-
-/*stock ShowStorageDialog(playerid, fromplayerid, fromstorageid, itemid, amount, price, special)
+/*ShowStorageDialog(playerid, fromplayerid, fromstorageid, itemid, amount, price, special)
 {
 	new titlestring[128], dialogstring[512];
 
@@ -164,7 +146,7 @@ stock ShowStorageEquipDialog(playerid)
 	ShowPlayerDialogEx(playerid, STORAGESTORE, DIALOG_STYLE_LIST, titlestring, dialogstring, "Choose", "Cancel");
 }
 
-stock DeathDrop(playerid)
+DeathDrop(playerid)
 {
 	new storageid;
 	new bool:itemEquipped = false;
@@ -268,14 +250,13 @@ stock DeathDrop(playerid)
 // 3 - Briefcase
 */
 
-stock TransferStorage(playerid, storageid, fromplayerid, fromstorageid, itemid, amount, price, special)
+TransferStorage(playerid, storageid, fromplayerid, fromstorageid, itemid, amount, price, special)
 {
 	if(playerid == fromplayerid)
 	{
 		return SendClientMessageEx(playerid, COLOR_WHITE, "ERROR! You cannot transfer from yourself to yourself");
 	}
 
-	storageid=0; fromstorageid=0; //temp
 	//printf("TransferStorage(playerid=%d, storageid=%d, fromplayerid=%d, fromstorageid=%d, itemid=%d, amount=%d, price=%d, special=%d)", playerid, storageid, fromplayerid, fromstorageid, itemid, amount, price, special);
 
 	if(GetPVarInt(playerid, "Storage_transaction") == 1)
@@ -1555,7 +1536,7 @@ stock TransferStorage(playerid, storageid, fromplayerid, fromstorageid, itemid, 
 	return 0;
 }
 
-stock ShowInventory(playerid,targetid)
+ShowInventory(playerid,targetid)
 {
 	if(IsPlayerConnected(targetid))
 	{
@@ -1610,7 +1591,7 @@ stock ShowInventory(playerid,targetid)
 	return 1;
 }
 
-stock FindGunInVehicleForPlayer(ownerid, slot, playerid)
+FindGunInVehicleForPlayer(ownerid, slot, playerid)
 {
 	new
 		i = 0;
@@ -1765,8 +1746,8 @@ CMD:trunkput(playerid, params[])
 		}
 	}
 	if(pvid == -1) return SendClientMessageEx(playerid,COLOR_GREY,"You are not near any vehicle that you own.");
-	new engine,lights,alarm,doors,bonnet,boot,objective;
-	GetVehicleParamsEx(PlayerVehicleInfo[playerid][pvid][pvId],engine,lights,alarm,doors,bonnet,boot,objective);
+	new bool:boot;
+	GetVehicleParamsEx(PlayerVehicleInfo[playerid][pvid][pvId], .boot = boot);
 	if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET) return SendClientMessageEx(playerid, COLOR_GRAD3, "You can't take/put stuff inside the trunk if it's closed!(/car trunk to open it)");
 	if(GetVehicleModel(PlayerVehicleInfo[playerid][pvid][pvId]) == 481 || GetVehicleModel(PlayerVehicleInfo[playerid][pvid][pvId]) == 510)  return SendClientMessageEx(playerid,COLOR_GREY,"That vehicle doesn't have a trunk.");
 
@@ -1787,20 +1768,20 @@ CMD:trunkput(playerid, params[])
 		return 1;
 	}
 
-	if( PlayerVehicleInfo[playerid][pvid][pvWeapons][slot-1] != 0)
+	if( PlayerVehicleInfo[playerid][pvid][pvWeapons][slot-1] != WEAPON_FIST)
 	{
 		SendClientMessageEx(playerid, COLOR_GREY, "You have a weapon stored in that slot already.");
 		return 1;
 	}
 
-	new weapon;
+	new WEAPON:weapon;
 	if(strcmp(weaponchoice, "sdpistol", true, strlen(weaponchoice)) == 0)
 	{
 		if(pTazer{playerid} == 1) return SendClientMessageEx(playerid, COLOR_GRAD1, "You cannot store a tazer!");
-		if( PlayerInfo[playerid][pGuns][2] == 23 && PlayerInfo[playerid][pAGuns][2] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL] == 23 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_PISTOL] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a silenced pistol into your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][2];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL];
 			format(string,sizeof(string), "* %s deposited their silenced pistol in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1808,10 +1789,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "9mm", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][2] == 22 && PlayerInfo[playerid][pAGuns][2] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL] == 22 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_PISTOL] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a 9mm in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][2];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL];
 			format(string,sizeof(string), "* %s deposited their 9mm in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1819,10 +1800,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "deagle", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][2] == 24 && PlayerInfo[playerid][pAGuns][2] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL] == 24 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_PISTOL] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a Desert Eagle in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][2];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL];
 			format(string,sizeof(string), "* %s deposited their Desert Eagle in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1830,10 +1811,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "shotgun", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][3] == 25 && PlayerInfo[playerid][pAGuns][3] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_SHOTGUN] == 25 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_SHOTGUN] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a shotgun in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][3];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_SHOTGUN];
 			format(string,sizeof(string), "* %s deposited their Shotgun in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1841,10 +1822,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "spas12", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][3] == 27 && PlayerInfo[playerid][pAGuns][3] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_SHOTGUN] == 27 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_SHOTGUN] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a combat shotgun in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][3];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_SHOTGUN];
 			format(string,sizeof(string), "* %s deposited their Combat Shotgun in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1852,10 +1833,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "mp5", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][4] == 29 && PlayerInfo[playerid][pAGuns][4] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_MACHINE_GUN] == 29 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MACHINE_GUN] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited an MP5 in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][4];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_MACHINE_GUN];
 			format(string,sizeof(string), "* %s deposited their MP5 in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1864,10 +1845,10 @@ CMD:trunkput(playerid, params[])
 
 	else if(strcmp(weaponchoice, "tec9", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][4] == 32 && PlayerInfo[playerid][pAGuns][4] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_MACHINE_GUN] == 32 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MACHINE_GUN] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a TEC9 in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][4];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_MACHINE_GUN];
 			format(string,sizeof(string), "* %s deposited their TEC9 in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1876,10 +1857,10 @@ CMD:trunkput(playerid, params[])
 
 	else if(strcmp(weaponchoice, "ak47", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][5] == 30 && PlayerInfo[playerid][pAGuns][5] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_ASSAULT_RIFLE] == 30 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_ASSAULT_RIFLE] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited an AK-47 in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][5];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_ASSAULT_RIFLE];
 			format(string,sizeof(string), "* %s deposited their AK-47 in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1887,10 +1868,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "m4", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][5] == 31 && PlayerInfo[playerid][pAGuns][5] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_ASSAULT_RIFLE] == 31 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_ASSAULT_RIFLE] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited an M4 in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][5];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_ASSAULT_RIFLE];
 			format(string,sizeof(string), "* %s deposited their M4 in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1898,10 +1879,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "rifle", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][6] == 33 && PlayerInfo[playerid][pAGuns][6] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE] == 33 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_LONG_RIFLE] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a rifle in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][6];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE];
 			format(string,sizeof(string), "* %s deposited their rifle in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1909,10 +1890,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "sniper", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][6] == 34 && PlayerInfo[playerid][pAGuns][6] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE] == 34 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_LONG_RIFLE] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a sniper rifle in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][6];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE];
 			format(string,sizeof(string), "* %s deposited their sniper rifle in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1920,10 +1901,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "golfclub", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][1] == 2 && PlayerInfo[playerid][pAGuns][1] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == 2 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MELEE] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a golf club in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][1];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE];
 			format(string,sizeof(string), "* %s deposited their golf club in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1931,10 +1912,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "baseballbat", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][1] == 5 && PlayerInfo[playerid][pAGuns][1] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == 5 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MELEE] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a baseball bat in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][1];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE];
 			format(string,sizeof(string), "* %s deposited their baseball bat in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1942,10 +1923,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "shovel", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][1] == 6 && PlayerInfo[playerid][pAGuns][1] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == 6 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MELEE] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a shovel in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][1];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE];
 			format(string,sizeof(string), "* %s deposited their shovel in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1953,10 +1934,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "poolcue", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][1] == 7 && PlayerInfo[playerid][pAGuns][1] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == 7 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MELEE] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a pool cue in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][1];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE];
 			format(string,sizeof(string), "* %s deposited their pool cue in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1964,10 +1945,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "katana", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][1] == 8 && PlayerInfo[playerid][pAGuns][1] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == 8 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MELEE] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a katana in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][1];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE];
 			format(string,sizeof(string), "* %s deposited their katana in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1975,10 +1956,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "cane", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][10] == 15 && PlayerInfo[playerid][pAGuns][1] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_GIFT] == 15 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MELEE] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a cane in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][10];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_GIFT];
 			format(string,sizeof(string), "* %s deposited their cane in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1986,10 +1967,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "flowers", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][10] == 14 && PlayerInfo[playerid][pAGuns][1] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_GIFT] == 14 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MELEE] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited flowers in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][10];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_GIFT];
 			format(string,sizeof(string), "* %s deposited their flowers in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -1997,10 +1978,10 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "parachute", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][11] == 46 && PlayerInfo[playerid][pAGuns][1] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_GADGET] == 46 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MELEE] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a parachute in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][11];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_GADGET];
 			format(string,sizeof(string), "* %s deposited their parachute in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -2008,17 +1989,17 @@ CMD:trunkput(playerid, params[])
 	}
 	else if(strcmp(weaponchoice, "dildo", true, strlen(weaponchoice)) == 0)
 	{
-		if( PlayerInfo[playerid][pGuns][10] == 10 && PlayerInfo[playerid][pAGuns][1] == 0 )
+		if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_GIFT] == 10 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MELEE] == 0 )
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a dildo in your car gun locker.");
-			weapon = PlayerInfo[playerid][pGuns][10];
+			weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_GIFT];
 			format(string,sizeof(string), "* %s deposited their dildo in their car safe.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
 		}
 	}	
 	else { SendClientMessageEx(playerid,COLOR_GREY,"   Invalid weapon name!"); return 1; }
-	if(PlayerVehicleInfo[playerid][pvid][pvWeapons][slot-1] == 0)
+	if(PlayerVehicleInfo[playerid][pvid][pvWeapons][slot-1] == WEAPON_FIST)
 	{
 		PlayerVehicleInfo[playerid][pvid][pvWeapons][slot-1] = weapon;
 		RemovePlayerWeapon(playerid, weapon);
@@ -2055,7 +2036,7 @@ CMD:trunktake(playerid, params[]) {
 
 					format(szMessage, sizeof(szMessage), "*** %s's %s Safe ***", GetPlayerNameEx(playerid), GetVehicleName(PlayerVehicleInfo[playerid][d][pvId]));
 					SendClientMessageEx(playerid, COLOR_WHITE, szMessage);
-					for(new s = 0; s < 3; s++) if(PlayerVehicleInfo[playerid][d][pvWeapons][s] != 0) {
+					for(new s = 0; s < 3; s++) if(PlayerVehicleInfo[playerid][d][pvWeapons][s] != WEAPON_FIST) {
 
 						new
 							szWeapon[16];
@@ -2071,9 +2052,9 @@ CMD:trunktake(playerid, params[]) {
 				}
 
 				new
-					engine, lights, alarm, doors, bonnet, boot, objective;
+					bool:boot;
 
-				GetVehicleParamsEx(PlayerVehicleInfo[playerid][d][pvId], engine, lights, alarm, doors, bonnet, boot, objective);
+				GetVehicleParamsEx(PlayerVehicleInfo[playerid][d][pvId], .boot = boot);
 
 				if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET) {
 					return SendClientMessageEx(playerid, COLOR_GRAD3, "You can't take weapons from the trunk if it's closed! /car trunk to open it.");
@@ -2084,7 +2065,7 @@ CMD:trunktake(playerid, params[]) {
 					return SendClientMessageEx(playerid, COLOR_GREY, "Invalid slot specified.");
 				}
 
-				else if(PlayerVehicleInfo[playerid][d][pvWeapons][iWeaponSlot - 1] != 0) {
+				else if(PlayerVehicleInfo[playerid][d][pvWeapons][iWeaponSlot - 1] != WEAPON_FIST) {
 					new
 						szWeapon[16],
 						szMessage[128];
@@ -2092,14 +2073,14 @@ CMD:trunktake(playerid, params[]) {
 
 					new aWeapons[13][2];
 
-					for(new i; i < 13; ++i) {
-						GetPlayerWeaponData(playerid, i, aWeapons[i][0], aWeapons[i][1]);
-						if(aWeapons[i][0] == PlayerVehicleInfo[playerid][d][pvWeapons][iWeaponSlot - 1]) return SendClientMessageEx(playerid, COLOR_GRAD1, "You are already carrying this weapon.");
+					for(new WEAPON_SLOT:i; i < MAX_WEAPON_SLOTS; ++i) {
+						GetPlayerWeaponData(playerid, i, WEAPON:aWeapons[i][0], aWeapons[i][1]);
+						if(aWeapons[i][0] == _:PlayerVehicleInfo[playerid][d][pvWeapons][iWeaponSlot - 1]) return SendClientMessageEx(playerid, COLOR_GRAD1, "You are already carrying this weapon.");
 					}
 
 					GetWeaponName(PlayerVehicleInfo[playerid][d][pvWeapons][iWeaponSlot - 1], szWeapon, sizeof(szWeapon));
 					GivePlayerValidWeapon(playerid, PlayerVehicleInfo[playerid][d][pvWeapons][iWeaponSlot - 1]);
-					PlayerVehicleInfo[playerid][d][pvWeapons][iWeaponSlot - 1] = 0;
+					PlayerVehicleInfo[playerid][d][pvWeapons][iWeaponSlot - 1] = WEAPON_FIST;
 					g_mysql_SaveVehicle(playerid, d);
 
 					format(szMessage, sizeof(szMessage), "You have withdrawn a %s from your car gun locker.", szWeapon);
@@ -2143,19 +2124,19 @@ CMD:storegun(playerid, params[])
 					return 1;
 				}
 
-				if( HouseInfo[i][hWeapons][slot-1] != 0)
+				if( HouseInfo[i][hWeapons][slot-1] != WEAPON_FIST)
 				{
 					SendClientMessageEx(playerid, COLOR_GREY, "You have a weapon stored in that slot already.");
 					return 1;
 				}
 
-				new weapon;
+				new WEAPON:weapon;
 				if(strcmp(weaponchoice, "sdpistol", true, strlen(weaponchoice)) == 0)
 				{
-					if( PlayerInfo[playerid][pGuns][2] == 23 && PlayerInfo[playerid][pAGuns][2] == 0 )
+					if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL] == 23 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_PISTOL] == 0 )
 					{
 						SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a silenced pistol into your gun locker.");
-						weapon = PlayerInfo[playerid][pGuns][2];
+						weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL];
 						format(string,sizeof(string), "* %s deposited their silenced pistol in their house safe.", GetPlayerNameEx(playerid));
 						ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 						SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -2163,10 +2144,10 @@ CMD:storegun(playerid, params[])
 				}
 				else if(strcmp(weaponchoice, "deagle", true, strlen(weaponchoice)) == 0)
 				{
-					if( PlayerInfo[playerid][pGuns][2] == 24 && PlayerInfo[playerid][pAGuns][2] == 0 )
+					if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL] == 24 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_PISTOL] == 0 )
 					{
 						SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a Desert Eagle in your gun locker.");
-						weapon = PlayerInfo[playerid][pGuns][2];
+						weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL];
 						format(string,sizeof(string), "* %s deposited their Desert Eagle in their house safe.", GetPlayerNameEx(playerid));
 						ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 						SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -2174,10 +2155,10 @@ CMD:storegun(playerid, params[])
 				}
 				else if(strcmp(weaponchoice, "shotgun", true, strlen(weaponchoice)) == 0)
 				{
-					if( PlayerInfo[playerid][pGuns][3] == 25 && PlayerInfo[playerid][pAGuns][3] == 0 )
+					if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_SHOTGUN] == 25 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_SHOTGUN] == 0 )
 					{
 						SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a shotgun in your gun locker.");
-						weapon = PlayerInfo[playerid][pGuns][3];
+						weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_SHOTGUN];
 						format(string,sizeof(string), "* %s deposited their Shotgun in their house safe.", GetPlayerNameEx(playerid));
 						ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 						SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -2185,10 +2166,10 @@ CMD:storegun(playerid, params[])
 				}
 				else if(strcmp(weaponchoice, "spas12", true, strlen(weaponchoice)) == 0)
 				{
-					if( PlayerInfo[playerid][pGuns][3] == 27 && PlayerInfo[playerid][pAGuns][3] == 0 )
+					if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_SHOTGUN] == 27 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_SHOTGUN] == 0 )
 					{
 						SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a combat shotgun in your gun locker.");
-						weapon = PlayerInfo[playerid][pGuns][3];
+						weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_SHOTGUN];
 						format(string,sizeof(string), "* %s deposited their Combat Shotgun in their house safe.", GetPlayerNameEx(playerid));
 						ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 						SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -2196,10 +2177,10 @@ CMD:storegun(playerid, params[])
 				}
 				else if(strcmp(weaponchoice, "mp5", true, strlen(weaponchoice)) == 0)
 				{
-					if( PlayerInfo[playerid][pGuns][4] == 29 && PlayerInfo[playerid][pAGuns][4] == 0 )
+					if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_MACHINE_GUN] == 29 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MACHINE_GUN] == 0 )
 					{
 						SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited an MP5 in your gun locker.");
-						weapon = PlayerInfo[playerid][pGuns][4];
+						weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_MACHINE_GUN];
 						format(string,sizeof(string), "* %s deposited their MP5 in their house safe.", GetPlayerNameEx(playerid));
 						ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 						SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -2207,10 +2188,10 @@ CMD:storegun(playerid, params[])
 				}
 				else if(strcmp(weaponchoice, "ak47", true, strlen(weaponchoice)) == 0)
 				{
-					if( PlayerInfo[playerid][pGuns][5] == 30 && PlayerInfo[playerid][pAGuns][5] == 0 )
+					if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_ASSAULT_RIFLE] == 30 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_ASSAULT_RIFLE] == 0 )
 					{
 						SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited an AK-47 in your gun locker.");
-						weapon = PlayerInfo[playerid][pGuns][5];
+						weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_ASSAULT_RIFLE];
 						format(string,sizeof(string), "* %s deposited their AK-47 in their house safe.", GetPlayerNameEx(playerid));
 						ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 						SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -2218,10 +2199,10 @@ CMD:storegun(playerid, params[])
 				}
 				else if(strcmp(weaponchoice, "m4", true, strlen(weaponchoice)) == 0)
 				{
-					if( PlayerInfo[playerid][pGuns][5] == 31 && PlayerInfo[playerid][pAGuns][5] == 0 )
+					if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_ASSAULT_RIFLE] == 31 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_ASSAULT_RIFLE] == 0 )
 					{
 						SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited an M4 in your gun locker.");
-						weapon = PlayerInfo[playerid][pGuns][5];
+						weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_ASSAULT_RIFLE];
 						format(string,sizeof(string), "* %s deposited their M4 in their house safe.", GetPlayerNameEx(playerid));
 						ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 						SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -2229,10 +2210,10 @@ CMD:storegun(playerid, params[])
 				}
 				else if(strcmp(weaponchoice, "rifle", true, strlen(weaponchoice)) == 0)
 				{
-					if( PlayerInfo[playerid][pGuns][6] == 33 && PlayerInfo[playerid][pAGuns][6] == 0 )
+					if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE] == 33 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_LONG_RIFLE] == 0 )
 					{
 						SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a rifle in your gun locker.");
-						weapon = PlayerInfo[playerid][pGuns][6];
+						weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE];
 						format(string,sizeof(string), "* %s deposited their rifle in their house safe.", GetPlayerNameEx(playerid));
 						ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 						SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -2240,10 +2221,10 @@ CMD:storegun(playerid, params[])
 				}
 				else if(strcmp(weaponchoice, "sniper", true, strlen(weaponchoice)) == 0)
 				{
-					if( PlayerInfo[playerid][pGuns][6] == 34 && PlayerInfo[playerid][pAGuns][6] == 0 )
+					if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE] == 34 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_LONG_RIFLE] == 0 )
 					{
 						SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a sniper rifle in your gun locker.");
-						weapon = PlayerInfo[playerid][pGuns][6];
+						weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE];
 						format(string,sizeof(string), "* %s deposited their sniper rifle in their house safe.", GetPlayerNameEx(playerid));
 						ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 						SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -2251,10 +2232,10 @@ CMD:storegun(playerid, params[])
 				}
 				else if(strcmp(weaponchoice, "uzi", true, strlen(weaponchoice)) == 0)
 				{
-					if( PlayerInfo[playerid][pGuns][4] == 28 && PlayerInfo[playerid][pAGuns][4] == 0 )
+					if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_MACHINE_GUN] == 28 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MACHINE_GUN] == 0 )
 					{
 						SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited an uzi in your gun locker.");
-						weapon = PlayerInfo[playerid][pGuns][4];
+						weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_MACHINE_GUN];
 						format(string,sizeof(string), "* %s deposited their uzi in their house safe.", GetPlayerNameEx(playerid));
 						ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 						SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
@@ -2262,17 +2243,17 @@ CMD:storegun(playerid, params[])
 				}
 				else if(strcmp(weaponchoice, "tec9", true, strlen(weaponchoice)) == 0)
 				{
-					if( PlayerInfo[playerid][pGuns][4] == 32 && PlayerInfo[playerid][pAGuns][4] == 0 )
+					if( PlayerInfo[playerid][pGuns][WEAPON_SLOT_MACHINE_GUN] == 32 && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MACHINE_GUN] == 0 )
 					{
 						SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have deposited a tec9 in your gun locker.");
-						weapon = PlayerInfo[playerid][pGuns][4];
+						weapon = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_MACHINE_GUN];
 						format(string,sizeof(string), "* %s deposited their tec9 in their house safe.", GetPlayerNameEx(playerid));
 						ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 						SetPVarInt(playerid, "GiveWeaponTimer", 10); SetTimerEx("OtherTimerEx", 1000, false, "ii", playerid, TYPE_GIVEWEAPONTIMER);
 					}
 				}
-				if(weapon == 0) return SendClientMessageEx(playerid, COLOR_GREY, "You don't have that weapon.");
-				if(HouseInfo[i][hWeapons][slot-1] == 0)
+				if(weapon == WEAPON_FIST) return SendClientMessageEx(playerid, COLOR_GREY, "You don't have that weapon.");
+				if(HouseInfo[i][hWeapons][slot-1] == WEAPON_FIST)
 				{
 					HouseInfo[i][hWeapons][slot-1] = weapon;
 					RemovePlayerWeapon(playerid, weapon);
@@ -2308,7 +2289,7 @@ CMD:getgun(playerid, params[])
 					SendClientMessageEx(playerid, COLOR_WHITE, string);
 					for(new s = 0; s < 5; s++)
 					{
-						if( HouseInfo[i][hWeapons][s] != 0 )
+						if( HouseInfo[i][hWeapons][s] != WEAPON_FIST )
 						{
 							GetWeaponName(HouseInfo[i][hWeapons][s], weaponname, sizeof(weaponname));
 							format(string, sizeof(string), "Slot %d: %s", s+1, weaponname);
@@ -2333,12 +2314,12 @@ CMD:getgun(playerid, params[])
 					return 1;
 				}
 
-				if(HouseInfo[i][hWeapons][slot-1] != 0)
+				if(HouseInfo[i][hWeapons][slot-1] != WEAPON_FIST)
 				{
 					new weaponname[50];
 					GetWeaponName(HouseInfo[i][hWeapons][slot-1], weaponname, sizeof(weaponname));
 					GivePlayerValidWeapon(playerid, HouseInfo[i][hWeapons][slot-1]);
-					HouseInfo[i][hWeapons][slot-1] = 0;
+					HouseInfo[i][hWeapons][slot-1] = WEAPON_FIST;
 					if(strcmp(weaponname, "silenced pistol", true, strlen(weaponname)) == 0)
 					{
 						SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have withdrawn a silenced pistol from your gun locker.");
@@ -2771,7 +2752,7 @@ CMD:workbench(playerid, params[]) {
                    			case 1:
                    			{
                    				if(PlayerInfo[playerid][pMats] < 3000) return SendClientMessageEx(playerid, COLOR_GRAD2, "You dont have enough materials to produce the gun.");
-                   				GivePlayerValidWeapon(playerid, WEAPON_SILENCED);
+                   				GivePlayerValidWeapon(playerid, 23);
                    				PlayerInfo[playerid][pMats] -= 3000;
                     			format(szMiscArray, sizeof(szMiscArray), "You have crafted a Silenced weapon.", iAmount);
                    			}

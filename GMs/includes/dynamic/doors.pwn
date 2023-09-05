@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
 	if(arrAntiCheat[playerid][ac_iFlags][AC_DIALOGSPOOFING] > 0) return 1;
@@ -66,7 +66,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 	return 0;
 }
 
-stock CreateDynamicDoor(doorid)
+CreateDynamicDoor(doorid)
 {
 	if(IsValidDynamicPickup(DDoorsInfo[doorid][ddPickupID])) DestroyDynamicPickup(DDoorsInfo[doorid][ddPickupID]);
 	if(IsValidDynamicPickup(DDoorsInfo[doorid][ddPickupID_int])) DestroyDynamicPickup(DDoorsInfo[doorid][ddPickupID_int]);
@@ -142,7 +142,7 @@ stock CreateDynamicDoor(doorid)
 	return 1;
 }
 
-stock SaveDynamicDoor(doorid)
+SaveDynamicDoor(doorid)
 {
 	new string[1024];
 
@@ -232,14 +232,14 @@ stock SaveDynamicDoor(doorid)
 	mysql_tquery(MainPipeline, string, "OnQueryFinish", "i", SENDDATA_THREAD);
 }
 
-stock LoadDynamicDoor(doorid)
+LoadDynamicDoor(doorid)
 {
 	new string[128];
 	mysql_format(MainPipeline, string, sizeof(string), "SELECT * FROM `ddoors` WHERE `id`=%d", doorid+1); // Array starts at zero, MySQL starts at 1.
 	mysql_tquery(MainPipeline, string, "OnLoadDynamicDoor", "i", doorid);
 }
 
-stock LoadDynamicDoors()
+LoadDynamicDoors()
 {
 	printf("[LoadDynamicDoors] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `ddoors`", "OnLoadDynamicDoors", "");
@@ -352,7 +352,7 @@ public OnLoadDynamicDoors()
 	return 1;
 }
 
-stock SaveDynamicDoors()
+SaveDynamicDoors()
 {
 	for(new i = 0; i < MAX_DDOORS; i++)
 	{
@@ -361,7 +361,7 @@ stock SaveDynamicDoors()
 	return 1;
 }
 
-stock RehashDynamicDoor(doorid)
+RehashDynamicDoor(doorid)
 {
 	DestroyDynamicPickup(DDoorsInfo[doorid][ddPickupID]);
 	if(IsValidDynamic3DTextLabel(DDoorsInfo[doorid][ddTextID])) DestroyDynamic3DTextLabel(DDoorsInfo[doorid][ddTextID]);
@@ -396,7 +396,7 @@ stock RehashDynamicDoor(doorid)
 	LoadDynamicDoor(doorid);
 }
 
-stock RehashDynamicDoors()
+RehashDynamicDoors()
 {
 	printf("[RehashDynamicDoors] Deleting dynamic doors from server...");
 	for(new i = 0; i < MAX_DDOORS; i++)

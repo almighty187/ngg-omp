@@ -154,7 +154,7 @@ DynVeh_Save(iDvSlotID) {
 	return mysql_tquery(MainPipeline, szMiscArray, "OnQueryFinish", "ii", SENDDATA_THREAD, INVALID_PLAYER_ID);
 }
 
-stock DynVeh_Spawn(iDvSlotID, free = 0)
+DynVeh_Spawn(iDvSlotID, free = 0)
 {
 	if(!(0 <= iDvSlotID < MAX_DYNAMIC_VEHICLES)) return 1;
 
@@ -274,7 +274,7 @@ public DynVeh_CreateDVQuery(playerid, model, col1, col2)
 	return 1;
 }
 
-stock UpdateGroupVehicleMods(groupvehicleid)
+UpdateGroupVehicleMods(groupvehicleid)
 {
 	if(GetVehicleModel(DynVehicleInfo[DynVeh[groupvehicleid]][gv_iMod][gv_iSpawnedID])) {
 		new carid = DynVehicleInfo[DynVeh[groupvehicleid]][gv_iMod][gv_iSpawnedID];
@@ -315,7 +315,7 @@ stock UpdateGroupVehicleMods(groupvehicleid)
 	}
 }
 
-stock LoadGroupVehicleMods(groupvehicleid)
+LoadGroupVehicleMods(groupvehicleid)
 {
 	if(GetVehicleModel(DynVehicleInfo[DynVeh[groupvehicleid]][gv_iSpawnedID])) {
 
@@ -331,7 +331,7 @@ stock LoadGroupVehicleMods(groupvehicleid)
 			 ChangeVehiclePaintjob(PlayerVehicleInfo[playerid][groupvehicleid][pvId], PlayerVehicleInfo[playerid][groupvehicleid][pvPaintJob]);
 			 ChangeVehicleColor(PlayerVehicleInfo[playerid][groupvehicleid][pvId], PlayerVehicleInfo[playerid][groupvehicleid][pvColor1], PlayerVehicleInfo[playerid][groupvehicleid][pvColor2]);
 		}*/
-		for(new m = 0; m < MAX_MODS; m++)
+		for(new CARMODTYPE:m; m < MAX_MODS; m++)
 		{
 		    if (DynVehicleInfo[DynVeh[groupvehicleid]][gv_iMod][m] >= 1000  && DynVehicleInfo[DynVeh[groupvehicleid]][gv_iMod][m] <= 1193)
 		    {

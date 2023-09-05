@@ -34,7 +34,7 @@
 	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 Group_DisbandGroup(iGroupID) {
 
@@ -99,7 +99,7 @@ Group_DisbandGroup(iGroupID) {
 	i = 0;
 
 	while(i < MAX_GROUP_WEAPONS) {
-		arrGroupData[iGroupID][g_iLockerGuns][i] = 0;
+		arrGroupData[iGroupID][g_iLockerGuns][i] = WEAPON_FIST;
 		arrGroupData[iGroupID][g_iLockerCost][i++] = 0;
 	}
 
@@ -109,7 +109,7 @@ Group_DisbandGroup(iGroupID) {
 		arrGroupLockers[iGroupID][i][g_fLockerPos][0] = 0.0;
 		arrGroupLockers[iGroupID][i][g_fLockerPos][1] = 0.0;
 		arrGroupLockers[iGroupID][i][g_fLockerPos][2] = 0.0;
-		arrGroupData[iGroupID][g_iLockerGuns][i] = 0;
+		arrGroupData[iGroupID][g_iLockerGuns][i] = WEAPON_FIST;
 		arrGroupData[iGroupID][g_iLockerCost][i++] = 0;
 	}
 	SaveGroup(iGroupID);
@@ -127,7 +127,7 @@ Group_DisbandGroup(iGroupID) {
 			DynVehicleInfo[x][gv_igDivID] = 0;
 			DynVehicleInfo[x][gv_fMaxHealth] = 1000;
 			DynVehicleInfo[x][gv_iUpkeep] = 0;
-			DynVehicleInfo[x][gv_iSiren] = 0;
+			DynVehicleInfo[x][gv_iSiren] = false;
 			DynVeh_Save(x);
 			DynVeh_Spawn(x);
 		}
@@ -264,7 +264,7 @@ public SaveGroup(iGroupID) {
 	return 1;
 }
 
-stock SendGroupMessage(iGroupType, color, string[], allegiance = 0)
+SendGroupMessage(iGroupType, color, const string[], allegiance = 0)
 {
 	new iGroupID;
 	foreach(new i: Player)
@@ -280,7 +280,7 @@ stock SendGroupMessage(iGroupType, color, string[], allegiance = 0)
 	}
 }
 
-stock SendMedicMessage(color, string[])
+SendMedicMessage(color, const string[])
 {
 	foreach(new i: Player)
 	{
@@ -291,7 +291,7 @@ stock SendMedicMessage(color, string[])
 	}
 }
 
-stock SendDivisionMessage(member, division, color, string[])
+SendDivisionMessage(member, division, color, const string[])
 {
 	foreach(new i: Player)
 	{
@@ -302,44 +302,44 @@ stock SendDivisionMessage(member, division, color, string[])
 }
 
 
-stock IsACop(playerid)
+IsACop(playerid)
 {
 	if((0 <= PlayerInfo[playerid][pMember] < MAX_GROUPS) && (arrGroupData[PlayerInfo[playerid][pMember]][g_iGroupType] == GROUP_TYPE_LEA)) return 1;
 	return 0;
 }
 
-stock IsAMedic(playerid)
+IsAMedic(playerid)
 {
 	if((0 <= PlayerInfo[playerid][pMember] < MAX_GROUPS) && (arrGroupData[PlayerInfo[playerid][pMember]][g_iGroupType] == GROUP_TYPE_MEDIC)) return 1;
 	return 0;
 }
 
-stock IsAReporter(playerid)
+IsAReporter(playerid)
 {
 	if((0 <= PlayerInfo[playerid][pMember] < MAX_GROUPS) && (arrGroupData[PlayerInfo[playerid][pMember]][g_iGroupType] == GROUP_TYPE_NEWS)) return 1;
 	return 0;
 }
 
-stock IsAGovernment(playerid)
+IsAGovernment(playerid)
 {
 	if((0 <= PlayerInfo[playerid][pMember] < MAX_GROUPS) && (arrGroupData[PlayerInfo[playerid][pMember]][g_iGroupType] == GROUP_TYPE_GOV)) return 1;
 	return 0;
 }
 
-stock IsAJudge(playerid)
+IsAJudge(playerid)
 {
 	if((0 <= PlayerInfo[playerid][pMember] < MAX_GROUPS) && (arrGroupData[PlayerInfo[playerid][pMember]][g_iGroupType] == GROUP_TYPE_JUDICIAL)) return 1;
 	return 0;
 }
 
-stock IsALawyer(playerid)
+IsALawyer(playerid)
 {
 	if((0 <= PlayerInfo[playerid][pMember] < MAX_GROUPS) && (arrGroupData[PlayerInfo[playerid][pMember]][g_iGroupType] == GROUP_TYPE_JUDICIAL) && PlayerInfo[playerid][pRank] > 1) return 1;
 	if(PlayerInfo[playerid][pJob] == 2 || PlayerInfo[playerid][pJob2] == 2 || PlayerInfo[playerid][pJob3] == 2) return 1;
 	return 0;
 }
 
-stock IsATaxiDriver(playerid)
+IsATaxiDriver(playerid)
 {
 	if((0 <= PlayerInfo[playerid][pMember] < MAX_GROUPS) && (arrGroupData[PlayerInfo[playerid][pMember]][g_iGroupType] == GROUP_TYPE_TAXI) && TransportDuty[playerid] > 0) return 1;
 	if(PlayerInfo[playerid][pJob] == 17 || PlayerInfo[playerid][pJob2] == 17 || PlayerInfo[playerid][pJob3] == 17 || PlayerInfo[playerid][pTaxiLicense] == 1 && TransportDuty[playerid] > 0) return 1;
@@ -347,43 +347,43 @@ stock IsATaxiDriver(playerid)
 }
 
 
-stock IsAnFTSDriver(playerid)
+IsAnFTSDriver(playerid)
 {
 	if((0 <= PlayerInfo[playerid][pMember] < MAX_GROUPS) && (arrGroupData[PlayerInfo[playerid][pMember]][g_iGroupType] == GROUP_TYPE_TAXI))	return 1;
 	return 0;
 }
 
-stock IsATowman(playerid)
+IsATowman(playerid)
 {
 	if((0 <= PlayerInfo[playerid][pMember] < MAX_GROUPS) && (arrGroupData[PlayerInfo[playerid][pMember]][g_iGroupType] == GROUP_TYPE_TOWING)) return 1;
 	return 0;
 }
 
-stock IsARacer(playerid)
+IsARacer(playerid)
 {
 	if((0 <= PlayerInfo[playerid][pMember] < MAX_GROUPS) && (arrGroupData[PlayerInfo[playerid][pMember]][g_iCrimeType] == GROUP_CRIMINAL_TYPE_RACE)) return 1;
 	return 0;
 }
 
-stock IsACriminal(playerid)
+IsACriminal(playerid)
 {
 	if((0 <= PlayerInfo[playerid][pMember] < MAX_GROUPS) && (arrGroupData[PlayerInfo[playerid][pMember]][g_iGroupType] == GROUP_TYPE_CRIMINAL)) return 1;
 	return 0;
 }
 
-stock IsADocGuard(playerid)
+IsADocGuard(playerid)
 {
 	if((0 <= PlayerInfo[playerid][pMember] < MAX_GROUPS) && (PlayerInfo[playerid][pRank] >= arrGroupData[PlayerInfo[playerid][pMember]][g_iDoCAccess])) return 1;
 	return 0;
 }
 
-stock IsFirstAid(playerid)
+IsFirstAid(playerid)
 {
 	if((0 <= PlayerInfo[playerid][pMember] < MAX_GROUPS) && arrGroupData[PlayerInfo[playerid][pMember]][g_iMedicAccess] != INVALID_DIVISION && PlayerInfo[playerid][pDivision] == arrGroupData[PlayerInfo[playerid][pMember]][g_iMedicAccess]) return 1;
 	return 0;
 }
 
-stock IsMDCPermitted(playerid)
+IsMDCPermitted(playerid)
 {
 	if(IsACop(playerid) || IsAJudge(playerid))
 	{
@@ -392,7 +392,7 @@ stock IsMDCPermitted(playerid)
 	return 0;
 }
 
-stock GetPlayerGroupInfo(targetid, rank[], division[], employer[])
+GetPlayerGroupInfo(targetid, rank[], division[], employer[])
 {
 	new
 		iGroupID = PlayerInfo[targetid][pMember],
@@ -436,7 +436,7 @@ stock GetPlayerGroupInfo(targetid, rank[], division[], employer[])
 	return 1;
 }
 
-stock ToggleDVSiren(iDvSlotID, iSlot, iTogState = 0)
+ToggleDVSiren(iDvSlotID, iSlot, iTogState = 0)
 {
 	switch(DynVehicleObjInfo[iDvSlotID][iSlot][gv_iAttachedObjectModel])
 	{
@@ -486,7 +486,7 @@ stock ToggleDVSiren(iDvSlotID, iSlot, iTogState = 0)
 	return 1;
 }
 
-stock ToggleSiren(vehid, iTogState)
+ToggleSiren(vehid, iTogState)
 {
 	if(iTogState == 1)
 	{
@@ -740,7 +740,7 @@ Group_DisplayDialog(iPlayerID, iGroupID) {
 	return ShowPlayerDialogEx(iPlayerID, DIALOG_EDITGROUP, DIALOG_STYLE_LIST, szTitle, szDialog, "Select", "Cancel");
 }
 
-stock CrateLog(groupid, string[])
+CrateLog(groupid, const string[])
 {
 	new month, day, year, file[32];
 	getdate(year, month, day);
@@ -748,7 +748,7 @@ stock CrateLog(groupid, string[])
 	return Log(file, string);
 }
 
-stock GroupLog(groupid, string[])
+GroupLog(groupid, const string[])
 {
 	new month, day, year, file[32];
 	getdate(year, month, day);
@@ -756,7 +756,7 @@ stock GroupLog(groupid, string[])
 	return Log(file, string);
 }
 
-stock GroupPayLog(groupid, string[])
+GroupPayLog(groupid, const string[])
 {
 	new month, day, year, file[32];
 	getdate(year, month, day);
@@ -764,7 +764,7 @@ stock GroupPayLog(groupid, string[])
 	return Log(file, string);
 }
 
-stock GroupLogEx(groupid, string[], type = 0) {
+GroupLogEx(groupid, const string[], type = 0) {
 
 	new month, day, year, file[32];
 	getdate(year, month, day);
@@ -790,7 +790,7 @@ ReturnCrimeGroupType(iType)
 	return szReturn;
 }
 
-hook OnPlayerStateChange(playerid, newstate, oldstate)
+hook OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate)
 {
     if(oldstate == PLAYER_STATE_ONFOOT && newstate == PLAYER_STATE_DRIVER)
     {
@@ -798,7 +798,7 @@ hook OnPlayerStateChange(playerid, newstate, oldstate)
     }
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 
 	if((newkeys & KEY_YES) && IsPlayerInAnyDynamicArea(playerid)) {
 
@@ -810,7 +810,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 
 			if(areaid[0] != INVALID_STREAMER_ID) {
 				for(new i; i < MAX_GROUP_LOCKERS; ++i) {
-					if(areaid[0] == arrGroupLockers[PlayerInfo[playerid][pMember]][i][g_iLockerAreaID]) cmd_locker(playerid, "");
+					if(areaid[0] == arrGroupLockers[PlayerInfo[playerid][pMember]][i][g_iLockerAreaID]) cmd_locker(playerid);
 				}
 			}
 		}
@@ -865,7 +865,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					}
 					else if(arrGroupData[iGroupID][g_iLockerCostType] != 0) SetArmour(playerid, 150.0);
 					else {
-						SendClientMessageEx(playerid, COLOR_RED, "The locker doesn't have the stock for your armor vest.");
+						SendClientMessageEx(playerid, COLOR_RED, "The locker doesn't have the for your armor vest.");
 						SendClientMessageEx(playerid, COLOR_GRAD2, "Contact your supervisor or the STAG and organize a crate delivery.");
 					}
 					PlayerInfo[playerid][pDuty] = 1;
@@ -986,7 +986,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					else return SendClientMessageEx(playerid, COLOR_GRAD2, " You cannot afford the vest. ($3,000)");
 				}
 				else {
-					SendClientMessageEx(playerid, COLOR_RED, "The locker doesn't have the stock for your trunk kit.");
+					SendClientMessageEx(playerid, COLOR_RED, "The locker doesn't have the for your trunk kit.");
 					SendClientMessageEx(playerid, COLOR_GRAD2, "Contact your supervisor and organize a crate delivery.");
 				}
 			}
@@ -1031,7 +1031,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				}
 
 				else {
-					SendClientMessageEx(playerid, COLOR_RED, "The locker doesn't have the stock for your armor vest.");
+					SendClientMessageEx(playerid, COLOR_RED, "The locker doesn't have the for your armor vest.");
 					SendClientMessageEx(playerid, COLOR_GRAD2, "Contact your supervisor or the SAAS and organize a crate delivery.");
 					return 1;
 				}
@@ -1048,7 +1048,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					GroupPayLog(iGroupID, str);
 					SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "* Your armor has been boosted to 150 as it's high grade.");
 				} else {
-					SendClientMessageEx(playerid, COLOR_RED, "The locker doesn't have the stock for your armor vest.");
+					SendClientMessageEx(playerid, COLOR_RED, "The locker doesn't have the for your armor vest.");
 					SendClientMessageEx(playerid, COLOR_GRAD2, "Contact your supervisor or the SAAS and organize a crate delivery.");
 				}
 			}
@@ -1096,7 +1096,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			else
 			{
 				if(PlayerInfo[playerid][pAccountRestricted] != 0) return SendClientMessageEx(playerid, COLOR_GRAD1, "Your account is restricted!");
-				new iGunID = arrGroupData[iGroupID][g_iLockerGuns][listitem];
+				new WEAPON:iGunID = arrGroupData[iGroupID][g_iLockerGuns][listitem];
 				if(arrGroupData[iGroupID][g_iLockerCostType] == 0)
 				{
 					if(arrGroupData[iGroupID][g_iLockerStock] >= arrGroupData[iGroupID][g_iLockerCost][listitem])
@@ -1108,7 +1108,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					}
 					else
 					{
-						SendClientMessageEx(playerid, COLOR_RED, "The locker doesn't have the stock for that weapon.");
+						SendClientMessageEx(playerid, COLOR_RED, "The locker doesn't have the for that weapon.");
 						SendClientMessageEx(playerid, COLOR_GRAD2, "Contact your supervisor or the SAAS and organize a crate delivery.");
 						return 1;
 					}
@@ -1314,7 +1314,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				}
 				case 23: {
 					format(szTitle, sizeof szTitle, "Edit Group Locker Stock {%s}(%s)", Group_NumToDialogHex(arrGroupData[iGroupID][g_hDutyColour]), arrGroupData[iGroupID][g_szGroupName]);
-					ShowPlayerDialogEx(playerid, DIALOG_GROUP_EDITSTOCK, DIALOG_STYLE_INPUT, szTitle, "Specify a value. Locker stock is used for weapons, and can be replenished using crates.", "Confirm", "Cancel");
+					ShowPlayerDialogEx(playerid, DIALOG_GROUP_EDITSTOCK, DIALOG_STYLE_INPUT, szTitle, "Specify a value. Locker is used for weapons, and can be replenished using crates.", "Confirm", "Cancel");
 				}
 				case 24: {
 
@@ -1956,7 +1956,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					szTitle[32 + GROUP_MAX_NAME_LEN],
 					hColour;
 
-				if(strlen(inputtext) > 6 || !ishex(inputtext)) {
+				if(strlen(inputtext) > 6 || !IsHex(inputtext)) {
 					format(szTitle, sizeof szTitle, "Edit Group Duty Color {%s}(%s)", Group_NumToDialogHex(arrGroupData[iGroupID][g_hDutyColour]), arrGroupData[iGroupID][g_szGroupName]);
 					return ShowPlayerDialogEx(playerid, DIALOG_GROUP_DUTYCOL, DIALOG_STYLE_INPUT, szTitle, "Invalid value specified.\n\nEnter a colour in hexadecimal format (for example, BCA3FF). This colour will be used to identify the group.", "Confirm", "Cancel");
 				}
@@ -1989,7 +1989,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					szTitle[32 + GROUP_MAX_NAME_LEN],
 					hColour;
 
-				if(strlen(inputtext) > 6 || !ishex(inputtext)) {
+				if(strlen(inputtext) > 6 || !IsHex(inputtext)) {
 					format(szTitle, sizeof szTitle, "Edit Group Radio Color {%s}(%s)", Group_NumToDialogHex(arrGroupData[iGroupID][g_hDutyColour]), arrGroupData[iGroupID][g_szGroupName]);
 					return ShowPlayerDialogEx(playerid, DIALOG_GROUP_RADIOCOL, DIALOG_STYLE_INPUT, szTitle, "Invalid value specified.\n\nEnter a colour in hexadecimal format (for example, BCA3FF). This colour will be used for the group's in-character radio chat.", "Confirm", "Cancel");
 				}
@@ -2016,11 +2016,11 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
 				if(isnull(inputtext) || iValue <= -1) {
 					format(szTitle, sizeof szTitle, "Edit Group Locker Stock {%s}(%s)", Group_NumToDialogHex(arrGroupData[iGroupID][g_hDutyColour]), arrGroupData[iGroupID][g_szGroupName]);
-					return ShowPlayerDialogEx(playerid, DIALOG_GROUP_EDITSTOCK, DIALOG_STYLE_INPUT, szTitle, "Invalid value specified.\n\nSpecify a value. Locker stock is used for weapons, and can be replenished using crates.", "Confirm", "Cancel");
+					return ShowPlayerDialogEx(playerid, DIALOG_GROUP_EDITSTOCK, DIALOG_STYLE_INPUT, szTitle, "Invalid value specified.\n\nSpecify a value. Locker is used for weapons, and can be replenished using crates.", "Confirm", "Cancel");
 				}
 				arrGroupData[iGroupID][g_iLockerStock] = iValue;
 
-				format(string, sizeof(string), "%s has set the locker stock to %d in %s (%d)", GetPlayerNameEx(playerid), strval(inputtext), arrGroupData[iGroupID][g_szGroupName], iGroupID+1);
+				format(string, sizeof(string), "%s has set the locker to %d in %s (%d)", GetPlayerNameEx(playerid), strval(inputtext), arrGroupData[iGroupID][g_szGroupName], iGroupID+1);
 				Log("logs/editgroup.log", string);
 
 			}
@@ -2051,14 +2051,14 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			if(response) {
 
 				new
-					iValue = strval(inputtext);
+					WEAPON:iValue = WEAPON:strval(inputtext);
 
-				if(isnull(inputtext) || !(0 <= iValue <= 46)) {
+				if(isnull(inputtext) || !(WEAPON_FIST <= iValue <= WEAPON_PARACHUTE)) {
 					return ShowPlayerDialogEx(playerid, DIALOG_GROUP_EDITWEPID, DIALOG_STYLE_INPUT, szTitle, "Invalid weapon specified.\n\nSpecify a weapon ID (zero to remove this weapon).", "Select", "Cancel");
 				}
 
 				for (new i; i < MAX_GROUP_WEAPONS; i++) {
-					if (arrGroupData[iGroupID][g_iLockerGuns][i] == iValue && iValue != 0)
+					if (arrGroupData[iGroupID][g_iLockerGuns][i] == iValue && iValue != WEAPON_FIST)
 					return ShowPlayerDialogEx(playerid, DIALOG_GROUP_EDITWEPID, DIALOG_STYLE_INPUT, szTitle, "This weapon already exists in the locker.\n\nSpecify a weapon ID (zero to remove this weapon).", "Select", "Cancel");
 				}
 
@@ -2067,8 +2067,8 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				format(string, sizeof(string), "%s has changed the locker weapon (slot %d) to %d (%s) in %s (%d)", GetPlayerNameEx(playerid), iWepID, iValue, Weapon_ReturnName(iValue), arrGroupData[iGroupID][g_szGroupName], iGroupID+1);
 				Log("logs/editgroup.log", string);
 
-				if(iValue >= 1) {
-					return ShowPlayerDialogEx(playerid, DIALOG_GROUP_EDITCOST, DIALOG_STYLE_INPUT, szTitle, "Specify an (optional) cost for this weapon. This value will be charged in locker stock (or cash, where specified).", "Select", "Back");
+				if(iValue >= WEAPON_BRASSKNUCKLE) {
+					return ShowPlayerDialogEx(playerid, DIALOG_GROUP_EDITCOST, DIALOG_STYLE_INPUT, szTitle, "Specify an (optional) cost for this weapon. This value will be charged in locker (or cash, where specified).", "Select", "Back");
 				}
 			}
 
@@ -2100,7 +2100,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
 				if(isnull(inputtext) || iValue <= -1) {
 					format(szTitle, sizeof szTitle, "Edit Group Weapon (%i) {%s}(%s)", iWepID + 1, Group_NumToDialogHex(arrGroupData[iGroupID][g_hDutyColour]), arrGroupData[iGroupID][g_szGroupName]);
-					return ShowPlayerDialogEx(playerid, DIALOG_GROUP_EDITCOST, DIALOG_STYLE_INPUT, szTitle, "Invalid value specified.\n\nSpecify an (optional) cost for this weapon. This value will be charged in locker stock (or cash, where specified).", "Select", "Back");
+					return ShowPlayerDialogEx(playerid, DIALOG_GROUP_EDITCOST, DIALOG_STYLE_INPUT, szTitle, "Invalid value specified.\n\nSpecify an (optional) cost for this weapon. This value will be charged in locker (or cash, where specified).", "Select", "Back");
 				}
 				arrGroupData[iGroupID][g_iLockerCost][iWepID] = iValue;
 
@@ -2592,7 +2592,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					szTitle[32 + GROUP_MAX_NAME_LEN],
 					hColour;
 
-				if(strlen(inputtext) > 6 || !ishex(inputtext)) {
+				if(strlen(inputtext) > 6 || !IsHex(inputtext)) {
 					format(szTitle, sizeof szTitle, "Edit Group OOC Chat Color {%s}(%s)", Group_NumToDialogHex(arrGroupData[iGroupID][g_hDutyColour]), arrGroupData[iGroupID][g_szGroupName]);
 					return ShowPlayerDialogEx(playerid, DIALOG_GROUP_RADIOCOL, DIALOG_STYLE_INPUT, szTitle, "Invalid value specified.\n\nEnter a color in hexadecimal format (for example, BCA3FF). This color will be that of their OOC Chat.", "Confirm", "Cancel");
 				}
@@ -2696,7 +2696,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			}
 		}
 		case G_LOCKER_DRUGS: {
-			if(!response) return DeletePVar(playerid, "GSafe_Opt"), cmd_locker(playerid, "");
+			if(!response) return DeletePVar(playerid, "GSafe_Opt"), cmd_locker(playerid);
 			else {
 
 				SetPVarInt(playerid, "GLocker_SID", listitem);
@@ -2705,7 +2705,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			}
 		}
 		/*case G_LOCKER_INGREDIENTS: {
-			if(!response) return DeletePVar(playerid, "GSafe_Opt"), cmd_locker(playerid, "");
+			if(!response) return DeletePVar(playerid, "GSafe_Opt"), cmd_locker(playerid);
 			else {
 
 				SetPVarInt(playerid, "GLocker_SID", listitem);
@@ -2718,7 +2718,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 		{
 			if(!response)
 			{
-				return cmd_locker(playerid, "");
+				return cmd_locker(playerid);
 			}
 			switch(listitem)
 			{
@@ -2752,7 +2752,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			{
 				DeletePVar(playerid, "GSafe_Action");
 				DeletePVar(playerid, "GSafe_Opt");
-				return cmd_locker(playerid, "");
+				return cmd_locker(playerid);
 			}
 			if(response)
 			{
@@ -2857,7 +2857,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 									DeletePVar(playerid, "GSafe_Opt");
 									SaveGroup(iGroupID);
 
-									cmd_locker(playerid, "");
+									cmd_locker(playerid);
 
 								}
 								else return ShowPlayerDialogEx(playerid, DIALOG_GROUP_SACTIONEXEC, DIALOG_STYLE_INPUT, "Gang Safe", "The amount specified exceeds that that you have on you.\nPlease input another amount.", "Input", "Cancel");
@@ -2876,7 +2876,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 									DeletePVar(playerid, "GSafe_Opt");
 									SaveGroup(iGroupID);
 
-									cmd_locker(playerid, "");
+									cmd_locker(playerid);
 								}
 								else return ShowPlayerDialogEx(playerid, DIALOG_GROUP_SACTIONTYPE, DIALOG_STYLE_INPUT, "Gang Safe", "The amount specified exceeds that in the safe.\nPlease input another amount.", "Input", "Cancel");
 							}
@@ -2900,7 +2900,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 									format(szMiscArray, sizeof(szMiscArray), "UPDATE `groups` SET `%s` = '%d' WHERE `id` = '%d'", DS_Ingredients_GetSQLName(iIngredientID), arrGroupData[iGroupID][g_iIngredients][iIngredientID], iGroupID + 1);
 									mysql_tquery(MainPipeline, szMiscArray, false, "OnQueryFinish", "i", SENDDATA_THREAD);
 
-									cmd_locker(playerid, "");
+									cmd_locker(playerid);
 								}
 								else return ShowPlayerDialogEx(playerid, DIALOG_GROUP_SACTIONEXEC, DIALOG_STYLE_INPUT, "Gang Safe", "The amount specified exceeds that that you have on you.\nPlease input another amount.", "Input", "Cancel");
 							}
@@ -2920,7 +2920,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 									format(szMiscArray, sizeof(szMiscArray), "UPDATE `groups` SET `%s` = '%d' WHERE `id` = '%d'", DS_Ingredients_GetSQLName(iIngredientID), arrGroupData[iGroupID][g_iIngredients][iIngredientID], iGroupID + 1);
 									mysql_tquery(MainPipeline, szMiscArray, false, "OnQueryFinish", "i", SENDDATA_THREAD);
 
-									cmd_locker(playerid, "");
+									cmd_locker(playerid);
 								}
 								else return ShowPlayerDialogEx(playerid, DIALOG_GROUP_SACTIONTYPE, DIALOG_STYLE_INPUT, "Gang Safe", "The amount specified exceeds that in the safe.\nPlease input another amount.", "Input", "Cancel");
 							}
@@ -2938,8 +2938,8 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			if(response) {
 
 				if(strcmp(inputtext, "Deposit Weapon", true) == 0) {
-					for(new g = 0; g < 12; g++)	{
-						if(PlayerInfo[playerid][pGuns][g] != 0 && PlayerInfo[playerid][pAGuns][g] == 0) {
+					for(new WEAPON_SLOT:g; g < WEAPON_SLOT_DETONATOR; g++)	{
+						if(PlayerInfo[playerid][pGuns][g] != WEAPON_FIST && PlayerInfo[playerid][pAGuns][g] == WEAPON_FIST) {
 							format(szMiscArray, sizeof(szMiscArray), "%s\n%s(%i)", szMiscArray, Weapon_ReturnName(PlayerInfo[playerid][pGuns][g]), PlayerInfo[playerid][pGuns][g]);
 						}
 					}
@@ -2984,7 +2984,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
 			if(!response) {
 				DeletePVar(playerid, "GLGunTake");
-				return cmd_locker(playerid, "");
+				return cmd_locker(playerid);
 			}
 
 			switch(listitem) {
@@ -3011,7 +3011,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
 			if(!response) {
 				DeletePVar(playerid, "GLGunTake");
-				return cmd_locker(playerid, "");
+				return cmd_locker(playerid);
 			}
 
 			if(!IsValidDynamicObject(arrGCrateData[iCrateID][gcr_iObject])) return SendClientMessageEx(playerid, COLOR_GRAD2, "Invalid crate ID.");
@@ -3027,9 +3027,9 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
 			new stpos = strfind(inputtext, "(");
 			new fpos = strfind(inputtext, ")");
-			new str[4], id;
+			new str[4], WEAPON:id;
 			strmid(str, inputtext, stpos+1, fpos);
-			id = strval(str);
+			id = WEAPON:strval(str);
 
 		    AddGroupSafeWeapon(playerid, iGroupID, id);
 		}
@@ -3098,7 +3098,7 @@ public OnVehicleSirenStateChange(playerid, vehicleid, newstate)
     return 1;
 }
 
-stock EditDV(playerid, iDvSlotID, params[], name[], Float:value, &slot)
+EditDV(playerid, iDvSlotID, const params[], const name[], Float:value, &slot)
 {
 	new string[128];
 	format(string, sizeof(string), "%s has edited DV Slot %d - %s.", GetPlayerNameEx(playerid), iDvSlotID, params);
@@ -3122,7 +3122,7 @@ stock EditDV(playerid, iDvSlotID, params[], name[], Float:value, &slot)
 		DynVehicleInfo[iDvSlotID][gv_igDivID] = 0;
 		DynVehicleInfo[iDvSlotID][gv_fMaxHealth] = 1000;
 		DynVehicleInfo[iDvSlotID][gv_iUpkeep] = 0;
-		DynVehicleInfo[iDvSlotID][gv_iSiren] = 0;
+		DynVehicleInfo[iDvSlotID][gv_iSiren] = false;
 		DynVeh_Save(iDvSlotID);
 		DynVeh_Spawn(iDvSlotID);
 		SendClientMessageEx(playerid, COLOR_WHITE, "You have deleted the dynamic vehicle");
@@ -3314,7 +3314,7 @@ stock EditDV(playerid, iDvSlotID, params[], name[], Float:value, &slot)
 	return 1;
 }
 
-stock IsABlankTexture(modelid)
+IsABlankTexture(modelid)
 {
 	switch(modelid)
 	{
@@ -3815,7 +3815,7 @@ CMD:gotodv(playerid, params[])
 
 			new Float:cwx2,Float:cwy2,Float:cwz2;
 			GetVehiclePos(DynVehicleInfo[moneys][gv_iSpawnedID], cwx2, cwy2, cwz2);
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, cwx2, cwy2+1, cwz2);
@@ -3928,7 +3928,7 @@ CMD:dvrespawnall(playerid, params[])
 }
 
 CMD:freedvrespawn(playerid, params[]) return cmd_dvrespawn(playerid, "1");
-CMD:dvrespawn(playerid, params[])
+CMD:dvrespawn(playerid, const params[])
 {
 	new szString[128],
 		iGroupID = PlayerInfo[playerid][pMember];
@@ -5749,7 +5749,7 @@ CMD:togfam(playerid, params[])
 	return 1;
 }
 
-CMD:locker(playerid, params[]) {
+CMD:locker(playerid) {
 
 	new
 		iGroupID = PlayerInfo[playerid][pMember],
@@ -6430,7 +6430,7 @@ CMD:clothes(playerid, params[])
 	return true;
 }
 
-stock ShowPlayerCrimeDialog(playerid)
+ShowPlayerCrimeDialog(playerid)
 {
 	new szCrime[1200];
 	format(szCrime, sizeof(szCrime), "----Misdemeanors----\n");
@@ -6516,13 +6516,13 @@ public OnShowGroupWeapons(playerid, iGroupID) {
 		tempWep[3],
 		iCount;
 
-	for(new i = 1; i <= 18; i++) {
+	for(new WEAPON:i = WEAPON_BRASSKNUCKLE; i <= WEAPON_MOLTOV; i++) {
 		valstr(tempWep, i);
 		cache_get_value_name_int(0, tempWep, iCount);
 		format(szMiscArray, sizeof(szMiscArray), "%s\n[%d]%s (%d)", szMiscArray, i, Weapon_ReturnName(i), iCount);
 	}
 
-	for(new i = 22; i <= 46; i++) {
+	for(new WEAPON:i = WEAPON_COLT45; i <= WEAPON_PARACHUTE; i++) {
 		valstr(tempWep, i);
 		cache_get_value_name_int(0, tempWep, iCount);
 		format(szMiscArray, sizeof(szMiscArray), "%s\n[%d]%s (%d)",szMiscArray, i, Weapon_ReturnName(i), iCount);
@@ -6547,8 +6547,8 @@ WithdrawGroupSafeWeapon(playerid, iGroupID, iWeaponID, iAmount = 1) {
 	return 1;
 }
 
-forward OnWithdrawGroupWeapons(playerid, iGroupID, iWeaponID, iAmount);
-public OnWithdrawGroupWeapons(playerid, iGroupID, iWeaponID, iAmount) {
+forward OnWithdrawGroupWeapons(playerid, iGroupID, WEAPON:iWeaponID, iAmount);
+public OnWithdrawGroupWeapons(playerid, iGroupID, WEAPON:iWeaponID, iAmount) {
 
 	szMiscArray[0]  = 0;
 
@@ -6557,7 +6557,7 @@ public OnWithdrawGroupWeapons(playerid, iGroupID, iWeaponID, iAmount) {
 
 		format(szMiscArray, sizeof(szMiscArray), "%s has withdrawn a %s from the locker.", GetPlayerNameEx(playerid), Weapon_ReturnName(iWeaponID));
 		GroupLog(iGroupID-1, szMiscArray);
-		if(iWeaponID != 22 && iWeaponID != 19){
+		if(iWeaponID != WEAPON_COLT45 && _:iWeaponID != 19){
 			format(szMiscArray, sizeof(szMiscArray), "You have withdrawn a %s from the locker.", Weapon_ReturnName(iWeaponID));
 		}
 		else {
@@ -6573,11 +6573,11 @@ public OnWithdrawGroupWeapons(playerid, iGroupID, iWeaponID, iAmount) {
 	return 1;
 }
 
-AddGroupSafeWeapon(playerid, iGroupID, iWeaponID, iAmount = 1) {
+AddGroupSafeWeapon(playerid, iGroupID, WEAPON:iWeaponID, iAmount = 1) {
 
 	szMiscArray[0] = 0;
 
-	if(playerid != INVALID_PLAYER_ID && PlayerInfo[playerid][pGuns][GetWeaponSlot(iWeaponID)] == 0) return 1;
+	if(playerid != INVALID_PLAYER_ID && PlayerInfo[playerid][pGuns][GetWeaponSlot(iWeaponID)] == WEAPON_FIST) return 1;
 
 	mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "UPDATE `gWeaponsNew` SET `%d` = `%d` + %d WHERE `id` = '%d'", iWeaponID, iWeaponID, iAmount, iGroupID+1);
 	//mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "INSERT INTO `gWeapons` (`Group_ID`, `Weapon_ID`) VALUES ('%d', '%d') ", iGroupID, iWeaponID);
@@ -6585,13 +6585,13 @@ AddGroupSafeWeapon(playerid, iGroupID, iWeaponID, iAmount = 1) {
 	return 1;
 }
 
-forward OnAddGroupSafeWeapon(playerid, iGroupID, iWeaponID, iAmount);
-public OnAddGroupSafeWeapon(playerid, iGroupID, iWeaponID, iAmount) {
+forward OnAddGroupSafeWeapon(playerid, iGroupID, WEAPON:iWeaponID, iAmount);
+public OnAddGroupSafeWeapon(playerid, iGroupID, WEAPON:iWeaponID, iAmount) {
 
 	szMiscArray[0] = 0;
 
 	if(playerid != INVALID_PLAYER_ID) {
-		PlayerInfo[playerid][pGuns][GetWeaponSlot(iWeaponID)] = 0;
+		PlayerInfo[playerid][pGuns][GetWeaponSlot(iWeaponID)] = WEAPON_FIST;
 		SetPlayerWeaponsEx(playerid);
 
 		format(szMiscArray, sizeof(szMiscArray), "%s has deposited a %s into the locker.", GetPlayerNameEx(playerid), Weapon_ReturnName(iWeaponID));

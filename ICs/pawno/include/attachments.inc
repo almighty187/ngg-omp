@@ -1,7 +1,6 @@
 /*
 attachments.inc
 - This include fixes the attachments bug, which is expierenced while zooming with snipers, camera, RPGs..
-- The attached object info now can be retrieved from GetPlayerAttachedObject
 - This include also restores player attachments on Spawn, so they will remain!
 - Disconnect fix; Destroys the attachments on Disconnect.
 Author:
@@ -12,7 +11,6 @@ Author:
 
 /*
 native SetPlayerAttachedObject(playerid, index, modelid, bone, Float:fOffsetX = 0.0, Float:fOffsetY = 0.0, Float:fOffsetZ = 0.0, Float:fRotX = 0.0, Float:fRotY = 0.0, Float:fRotZ = 0.0, Float:fScaleX = 1.0, Float:fScaleY = 1.0, Float:fScaleZ = 1.0, materialcolor1 = 0, materialcolor2 = 0);
-native GetPlayerAttachedObject(playerid, index, &modelid, &bone, &Float:fOffsetX, &Float:fOffsetY, &Float:fOffsetZ, &Float:fRotX, &Float:fRotY, &Float:fRotZ, &Float:fScaleX, &Float:fScaleY, &Float:fScaleZ, &materialcolor1, &materialcolor2);
 native RemovePlayerAttachedObject(playerid, index);
 */
 
@@ -186,7 +184,7 @@ public OnPlayerDisconnect(playerid, reason)
     forward ATT_OnPlayerDisconnect(playerid, reason);
 #endif
 
-public OnPlayerEditAttachedObject(playerid, response, index, modelid, boneid, Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fScaleX, Float:fScaleY, Float:fScaleZ)
+public OnPlayerEditAttachedObject(playerid, EDIT_RESPONSE:response, index, modelid, boneid, Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fScaleX, Float:fScaleY, Float:fScaleZ)
 {
 	ATT_SetInt(playerid, index, att_modelid, modelid);
 	ATT_SetInt(playerid, index, att_bone, boneid);
@@ -213,11 +211,11 @@ public OnPlayerEditAttachedObject(playerid, response, index, modelid, boneid, Fl
 #endif
 #define OnPlayerEditAttachedObject ATT_OnPlayerEditAttachedObject
 #if defined ATT_OnPlayerEditAttachedObject
-	forward ATT_OnPlayerEditAttachedObject(playerid, response, index, modelid, boneid, Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fScaleX, Float:fScaleY, Float:fScaleZ);
+	forward ATT_OnPlayerEditAttachedObject(playerid, EDIT_RESPONSE:response, index, modelid, boneid, Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fScaleX, Float:fScaleY, Float:fScaleZ);
 #endif
 
 #if ! defined KEY_AIM
-	#define KEY_AIM 128
+	#define KEY_AIM KEY_HANDBRAKE
 #endif
 
 #if ! defined HOLDING
@@ -228,7 +226,7 @@ public OnPlayerEditAttachedObject(playerid, response, index, modelid, boneid, Fl
 	#define RELEASED(%0) (((newkeys & (%0)) != (%0)) && ((oldkeys & (%0)) == (%0)))
 #endif
 
-public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
 	if (HOLDING(KEY_AIM))
 	{
@@ -287,7 +285,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 #endif
 #define OnPlayerKeyStateChange ATT_OnPlayerKeyStateChange
 #if defined ATT_OnPlayerKeyStateChange
-    forward ATT_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
+    forward ATT_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys);
 #endif
 
 stock ATT_SetPlayerAttachedObject(playerid, index, modelid, bone, Float:fOffsetX = 0.0, Float:fOffsetY = 0.0, Float:fOffsetZ = 0.0, Float:fRotX = 0.0, Float:fRotY = 0.0, Float:fRotZ = 0.0, Float:fScaleX = 1.0, Float:fScaleY = 1.0, Float:fScaleZ = 1.0, materialcolor1 = 0, materialcolor2 = 0)
@@ -319,28 +317,6 @@ stock ATT_SetPlayerAttachedObject(playerid, index, modelid, bone, Float:fOffsetX
     #define _ALS_SetPlayerAttachedObject
 #endif
 #define SetPlayerAttachedObject ATT_SetPlayerAttachedObject
-
-stock GetPlayerAttachedObject(playerid, index, &modelid, &bone, &Float:fOffsetX, &Float:fOffsetY, &Float:fOffsetZ, &Float:fRotX, &Float:fRotY, &Float:fRotZ, &Float:fScaleX, &Float:fScaleY, &Float:fScaleZ, &materialcolor1, &materialcolor2)
-{
-    if(ATT_GetInt(playerid, index, att_used))
-    {
-        modelid = ATT_GetInt(playerid, index, att_modelid);
-		bone = ATT_GetInt(playerid, index, att_bone);
-		fOffsetX = ATT_GetFloat(playerid, index, att_offset_x);
-		fOffsetY = ATT_GetFloat(playerid, index, att_offset_y);
-		fOffsetZ = ATT_GetFloat(playerid, index, att_offset_z);
-		fRotX = ATT_GetFloat(playerid, index, att_rot_x);
-		fRotY = ATT_GetFloat(playerid, index, att_rot_y);
-		fRotZ = ATT_GetFloat(playerid, index, att_rot_z);
-		fScaleX = ATT_GetFloat(playerid, index, att_scale_x);
-		fScaleY = ATT_GetFloat(playerid, index, att_scale_y);
-		fScaleZ = ATT_GetFloat(playerid, index, att_scale_z);
-		materialcolor1 = ATT_GetInt(playerid, index, att_color_1);
-		materialcolor2 = ATT_GetInt(playerid, index, att_color_2);
-        return true;
-    }
-	return false;
-}
 
 stock ATT_RemovePlayerAttachedObject(playerid, index)
 {

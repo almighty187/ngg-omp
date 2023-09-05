@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 DocIsolate(playerid, cellid)
 {
@@ -53,7 +53,7 @@ ListDetainees(playerid)
 		iCount = 0, 
 		temp[4];
 	
-	foreach(Player, i)
+	foreach(new i: Player)
 	{
 		if(GetPVarInt(i, "ArrestPoint") == GetArrestPointID(playerid) + 1)
 		{
@@ -563,7 +563,7 @@ SetPlayerIntoJailBoxing(iTargetID)
 		
 		if(arrJailBoxingData[index][iParticipants] == 2)
 		{
-			foreach(Player, i)
+			foreach(new i: Player)
 			{
 				if(GetPVarInt(i, "_InJailBoxing") == index + 1 && i != iTargetID)
 				{
@@ -595,7 +595,7 @@ public StartJailBoxing(iArenaID)
 	new string[60 + MAX_PLAYER_NAME];
 	new iRangePoint;
 	
-	foreach(Player, i)
+	foreach(new i: Player)
 	{
 		if(GetPVarType(i, "_InJailBoxing") && GetPVarInt(i, "_InJailBoxing") - 1 == iArenaID)
 		iRangePoint = i;
@@ -901,7 +901,7 @@ CMD:listprisoners(playerid, params[])
 		szString[20],
 		id;
 	if(sscanf(params, "d", id)) return SendClientMessageEx(playerid, COLOR_GREY, "USAGE: /listprisoners [arrestpoint id]");
-	foreach(Player, i)
+	foreach(new i: Player)
 	{
 		if((GetPVarInt(i, "ArrestPoint") == id + 1) && PlayerInfo[i][pJailTime] > 0)
 		{
@@ -933,7 +933,7 @@ CMD:deliverinmates(playerid, params[])
 {
 	if(!IsADocGuard(playerid)) return SendClientMessageEx(playerid, COLOR_GREY, "You must be a DOC Guard to use this command.");
 	if(!IsPlayerInRangeOfPoint(playerid, 4, -2053.6279,-198.0207,15.0703)) return SendClientMessageEx(playerid, COLOR_GREY, "You must be at the doc delivery point");
-	foreach(Player, i)
+	foreach(new i: Player)
 	{
 		if(IsPlayerInVehicle(i, GetPlayerVehicleID(playerid)) && GetPlayerVehicleSeat(i) != 0)
 		{
@@ -1231,7 +1231,7 @@ CMD:inmates(playerid, params[])
 	if(!IsADocGuard(playerid)) return SendClientMessageEx(playerid, COLOR_GREY, "You must be a DOC Guard to use this command.");
 	new szInmates[1024];
 	
-	foreach(Player, i)
+	foreach(new i: Player)
 	{
 		if(PlayerInfo[i][pJailTime] > 0 && strfind(PlayerInfo[i][pPrisonReason], "[IC]", true) != -1)
 		{
@@ -1433,7 +1433,7 @@ CMD:docjudgesentence(playerid, params[])
 						SendClientMessageEx(playerid, COLOR_WHITE, "HINT: You now use T to talk on your cellphone, type /jailhangup to hang up.");
 						ProxDetector(30.0, i, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 						SetPlayerSpecialAction(playerid, SPECIAL_ACTION_USECELLPHONE);
-						TogglePlayerControllable(playerid, 0);
+						TogglePlayerControllable(playerid, false);
 						SetPVarInt(playerid, "_UsingJailPhone", 1);
 						bJailPhoneUse[JailPhone] = true;
 						return 1;
@@ -1465,7 +1465,7 @@ CMD:jailhangup(playerid,params[])
 		ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 		Mobile[playerid] = INVALID_PLAYER_ID;
 		RemovePlayerAttachedObject(caller, 9);
-		TogglePlayerControllable(playerid, 1);
+		TogglePlayerControllable(playerid, true);
 		SetPlayerSpecialAction(caller, SPECIAL_ACTION_STOPUSECELLPHONE);
 		SetPlayerSpecialAction(playerid, SPECIAL_ACTION_STOPUSECELLPHONE);
 		bJailPhoneUse[JailPhone] = false;

@@ -57,12 +57,6 @@
 		- Alter /makeadmin or any commands like that so they cannot be made an admin if they are staff banned, a la blacklist system for HMA.
 */
 
-stock IsStaffBanned(playerid)
-{
-	if(PlayerInfo[playerid][pStaffBanned]) return 1; 
-	return 0;
-}
-
 CMD:staffban(playerid, params[])
 {
 

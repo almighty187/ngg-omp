@@ -41,30 +41,34 @@
 #define 		ADMIN_HEAD			1337
 #define 		ADMIN_EXECUTIVE 	99999
 
-stock IsAdminLevel(playerid, level, warning = 1) {
+IsAdminLevel(playerid, level, warning = 1) {
 
 	if(PlayerInfo[playerid][pAdmin] >= level) return 1;
 	if(warning) SendClientMessage(playerid, COLOR_GRAD1, "You do not have the authority to use this command.");
 	return 0;
 }
 
-stock ABroadCast(hColor, szMessage[], iLevel, bool: bUndercover = false, bool: Discord = true)
+ABroadCast(hColor, const szMessage[], iLevel, bool: bUndercover = false, bool: Discord = true)
 {
 	foreach(new i: Player) {
 		if(PlayerInfo[i][pAdmin] >= iLevel && (bUndercover || !PlayerInfo[i][pTogReports])) {
 			SendClientMessageEx(i, hColor, szMessage);
 		}
 	}
-	if(!Discord && iLevel <= 2) SendDiscordMessage(0, szMessage);
-	if(strfind(szMessage, "AdmWarning", false) != -1)
-	{
-		StripColorEmbedding(szMessage);
-		SendDiscordMessage(1, szMessage); // Route AdmWarnings to Discord
-	}
+	#if defined DISCORD_ENABLED
+		if(!Discord && iLevel <= 2) SendDiscordMessage(0, szMessage);
+		if(strfind(szMessage, "AdmWarning", false) != -1)
+		{
+			StripColorEmbedding(szMessage);
+			SendDiscordMessage(1, szMessage); // Route AdmWarnings to Discord
+		}
+	#else
+		#pragma unused Discord
+	#endif
 	return 1;
 }
 
-stock ShopTechBroadCast(color,string[])
+ShopTechBroadCast(color, const string[])
 {
 	foreach(new i: Player)
 	{
@@ -76,7 +80,7 @@ stock ShopTechBroadCast(color,string[])
 	return 1;
 }
 
-stock Player_KillCheckPoint(playerid) {
+Player_KillCheckPoint(playerid) {
 	if(PlayerInfo[playerid][pTut] != -1) {
 		SendClientMessageEx(playerid, COLOR_GREY, "-----------------------------");
 		SendClientMessageEx(playerid, COLOR_WHITE, "You have canceled the objectives tutorial. Welcome to Next Generation Gaming!");
@@ -90,7 +94,7 @@ stock Player_KillCheckPoint(playerid) {
 }
 
 
-stock GetAdminRankName(i)
+GetAdminRankName(i)
 {
 	switch(i)
 	{
@@ -104,13 +108,13 @@ stock GetAdminRankName(i)
 	return szMiscArray;
 }
 
-stock StaffAccountCheck(playerid, ip[])
+StaffAccountCheck(playerid, ip[])
 {
 	mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "SELECT NULL FROM `accounts` WHERE (`IP` = '%s' OR `SecureIP` = '%s') AND `AdminLevel` > 0", ip, ip);
 	mysql_tquery(MainPipeline, szMiscArray, "OnStaffAccountCheck", "i", playerid);
 }
 
-stock GetStaffRank(playerid)
+GetStaffRank(playerid)
 {
 	if(PlayerInfo[playerid][pSEC] > 0)
 	{
@@ -234,7 +238,7 @@ CMD:near(playerid, params[])
 CMD:givegun(playerid, params[])
 {
     if (PlayerInfo[playerid][pAdmin] >= 4 || PlayerInfo[playerid][pASM] >= 1) {
-        new playa, gun;
+        new playa, WEAPON:gun;
 
         if(sscanf(params, "udd", playa, gun)) {
             SendClientMessageEx(playerid, COLOR_GREY, "USAGE: /givegun [player] [weaponid]");
@@ -250,18 +254,18 @@ CMD:givegun(playerid, params[])
         }
 
         format(szMiscArray, sizeof(szMiscArray), "You have given %s gun ID %d!", GetPlayerNameEx(playa), gun);
-        if(gun < 1||gun > 47)
+        if(gun < WEAPON_BRASSKNUCKLE||_:gun > 47)
             { SendClientMessageEx(playerid, COLOR_GRAD1, "Invalid weapon ID!"); return 1; }
         if(IsPlayerConnected(playa))
 		{
-            if((PlayerInfo[playa][pConnectHours] < 2 || PlayerInfo[playa][pWRestricted] > 0) && gun != 46 && gun != 43) return SendClientMessageEx(playerid, COLOR_GRAD2, "That person is currently restricted from carrying weapons");
+            if((PlayerInfo[playa][pConnectHours] < 2 || PlayerInfo[playa][pWRestricted] > 0) && gun != WEAPON_PARACHUTE && gun != WEAPON_CAMERA) return SendClientMessageEx(playerid, COLOR_GRAD2, "That person is currently restricted from carrying weapons");
 			if(PlayerInfo[playa][pAccountRestricted] != 0) return SendClientMessageEx(playerid, COLOR_GRAD1, "You cannot do this to someone that has his account restricted!");
-		    if(playa != INVALID_PLAYER_ID && gun <= 20 || gun >= 22) {
+		    if(playa != INVALID_PLAYER_ID && _:gun <= 20 || gun >= WEAPON_COLT45) {
                 PlayerInfo[playa][pGuns][GetWeaponSlot(gun)] = gun;
                 GivePlayerValidWeapon(playa, gun);
                 SendClientMessageEx(playerid, COLOR_GRAD1, szMiscArray);
             }
-            else if(playa != INVALID_PLAYER_ID && gun == 21) {
+            else if(playa != INVALID_PLAYER_ID && _:gun == 21) {
                 JetPack[playa] = 1;
                 SetPlayerSpecialAction(playa, SPECIAL_ACTION_USEJETPACK);
                 SendClientMessageEx(playerid, COLOR_GRAD1, szMiscArray);
@@ -473,7 +477,7 @@ CMD:admins(playerid, params[])
 				new tdate[11], thour[9], i_timestamp[3];
 				getdate(i_timestamp[0], i_timestamp[1], i_timestamp[2]);
 				format(tdate, sizeof(tdate), "%d-%02d-%02d", i_timestamp[0], i_timestamp[1], i_timestamp[2]);
-				format(thour, sizeof(thour), "%02d:00:00", hour);
+				format(thour, sizeof(thour), "%02d:00:00", hour_);
 
 				if(PlayerInfo[playerid][pAdmin] >= 4 || PlayerInfo[playerid][pASM] >= 1)
 				{
@@ -534,7 +538,7 @@ CMD:dn(playerid, params[])
 	{
         new Float:slx, Float:sly, Float:slz;
 		GetPlayerPos(playerid, slx, sly, slz);
-		if (GetPlayerState(playerid) == 2)
+		if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 		{
 			new tmpcar = GetPlayerVehicleID(playerid);
 			SetVehiclePos(tmpcar, slx, sly, slz-2);
@@ -559,7 +563,7 @@ CMD:up(playerid, params[])
 	{
         new Float:slx, Float:sly, Float:slz;
         GetPlayerPos(playerid, slx, sly, slz);
-		if (GetPlayerState(playerid) == 2)
+		if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 		{
 			new tmpcar = GetPlayerVehicleID(playerid);
 			SetVehiclePos(tmpcar, slx, sly, slz+5);
@@ -585,7 +589,7 @@ CMD:fly(playerid, params[])
         GetPlayerFacingAngle(playerid,pa);
         if(pa >= 0.0 && pa <= 22.5) {             //n1
             GetPlayerPos(playerid, px, py, pz);
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, px, py+30, pz+5);
@@ -598,7 +602,7 @@ CMD:fly(playerid, params[])
         }
         if(pa >= 332.5 && pa < 0.0) {             //n2
             GetPlayerPos(playerid, px, py, pz);
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, px, py+30, pz+5);
@@ -611,7 +615,7 @@ CMD:fly(playerid, params[])
         }
         if(pa >= 22.5 && pa <= 67.5) {            //nw
             GetPlayerPos(playerid, px, py, pz);
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, px-15, py+15, pz+5);
@@ -624,7 +628,7 @@ CMD:fly(playerid, params[])
         }
         if(pa >= 67.5 && pa <= 112.5) {           //w
             GetPlayerPos(playerid, px, py, pz);
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, px-30, py, pz+5);
@@ -637,7 +641,7 @@ CMD:fly(playerid, params[])
         }
         if(pa >= 112.5 && pa <= 157.5) {          //sw
             GetPlayerPos(playerid, px, py, pz);
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, px-15, py-15, pz+5);
@@ -650,7 +654,7 @@ CMD:fly(playerid, params[])
         }
         if(pa >= 157.5 && pa <= 202.5) {          //s
             GetPlayerPos(playerid, px, py, pz);
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, px, py-30, pz+5);
@@ -663,7 +667,7 @@ CMD:fly(playerid, params[])
         }
         if(pa >= 202.5 && pa <= 247.5) {          //se
             GetPlayerPos(playerid, px, py, pz);
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, px+15, py-15, pz+5);
@@ -676,7 +680,7 @@ CMD:fly(playerid, params[])
         }
         if(pa >= 247.5 && pa <= 292.5) {          //e
             GetPlayerPos(playerid, px, py, pz);
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, px+30, py, pz+5);
@@ -689,7 +693,7 @@ CMD:fly(playerid, params[])
         }
         if(pa >= 292.5 && pa <= 332.5) {          //e
             GetPlayerPos(playerid, px, py, pz);
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, px+15, py+15, pz+5);
@@ -713,7 +717,7 @@ CMD:lt(playerid, params[])
 	{
         new Float:slx, Float:sly, Float:slz;
         GetPlayerPos(playerid, slx, sly, slz);
-		if (GetPlayerState(playerid) == 2)
+		if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 		{
 			new tmpcar = GetPlayerVehicleID(playerid);
 			SetVehiclePos(tmpcar, slx-2, sly, slz);
@@ -738,7 +742,7 @@ CMD:rt(playerid, params[])
 	{
         new Float:slx, Float:sly, Float:slz;
         GetPlayerPos(playerid, slx, sly, slz);
-		if (GetPlayerState(playerid) == 2)
+		if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 		{
 			new tmpcar = GetPlayerVehicleID(playerid);
 			SetVehiclePos(tmpcar, slx+2, sly, slz);
@@ -763,7 +767,7 @@ CMD:fd(playerid, params[])
 	{
         new Float:slx, Float:sly, Float:slz;
         GetPlayerPos(playerid, slx, sly, slz);
-		if (GetPlayerState(playerid) == 2)
+		if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 		{
 			new tmpcar = GetPlayerVehicleID(playerid);
 			SetVehiclePos(tmpcar, slx, sly+2, slz);
@@ -788,7 +792,7 @@ CMD:bk(playerid, params[])
 	{
         new Float:slx, Float:sly, Float:slz;
         GetPlayerPos(playerid, slx, sly, slz);
-		if (GetPlayerState(playerid) == 2)
+		if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 		{
 			new tmpcar = GetPlayerVehicleID(playerid);
 			SetVehiclePos(tmpcar, slx, sly-2, slz);
@@ -1156,7 +1160,7 @@ CMD:mark2(playerid, params[])
 CMD:gotojet(playerid, params[])
 {
     if (PlayerInfo[playerid][pAdmin] >= 3) {
-        if (GetPlayerState(playerid) == 2) {
+        if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER) {
             new tmpcar = GetPlayerVehicleID(playerid);
             SetVehiclePos(tmpcar, 1.71875, 30.4062, 1200.34);
         }
@@ -1792,12 +1796,9 @@ CMD:makeadmin(playerid, params[])  {
 					szMessage[47 + (MAX_PLAYER_NAME * 2)];*/
 
                 PriorityReport[iTargetID] = TextDrawCreate(261.000000, 373.000000, "New Report");
-				TextDrawBackgroundColor(PriorityReport[iTargetID], 255);
-				TextDrawFont(PriorityReport[iTargetID], 2);
+				TextDrawFont(PriorityReport[iTargetID], TEXT_DRAW_FONT_2);
 				TextDrawLetterSize(PriorityReport[iTargetID], 0.460000, 1.800000);
-				TextDrawColor(PriorityReport[iTargetID], -65281);
-				TextDrawSetOutline(PriorityReport[iTargetID], 0);
-				TextDrawSetProportional(PriorityReport[iTargetID], 1);
+				TextDrawColour(PriorityReport[iTargetID], -65281);
 				TextDrawSetShadow(PriorityReport[iTargetID], 1);
 
 
@@ -1877,7 +1878,7 @@ CMD:apark(playerid, params[]) {
 					UpdatePlayerVehicleParkPosition(ownerid, d, x, y, z, angle, health, GetPlayerVirtualWorld(ownerid), GetPlayerInterior(ownerid));
 					IsPlayerEntering{playerid} = true;
 					PutPlayerInVehicle(playerid, GetPlayerVehicleID(playerid), 0);
-					SetPlayerArmedWeapon(playerid, 0);
+					SetPlayerArmedWeapon(playerid, WEAPON_FIST);
 
 					new szMessage[128];
 
@@ -1918,8 +1919,10 @@ CMD:admin(playerid, params[])  {
 				}
 			}
 
-			format(szMessage, sizeof(szMessage), "%s %s: %s", GetAdminRankName(PlayerInfo[playerid][pAdmin]), GetPlayerNameEx(playerid), params);
-			SendDiscordMessage(0, szMessage);
+			#if defined DISCORD_ENABLED
+				format(szMessage, sizeof(szMessage), "%s %s: %s", GetAdminRankName(PlayerInfo[playerid][pAdmin]), GetPlayerNameEx(playerid), params);
+				SendDiscordMessage(0, szMessage);
+			#endif
 		}
 		else SendClientMessageEx(playerid, COLOR_GREY, "USAGE: (/a)dmin [admin chat]");
 	}
@@ -1946,8 +1949,10 @@ CMD:headadmin(playerid, params[])  {
 				}
 			}
 
-			format(szMessage, sizeof(szMessage), "%s %s: %s", GetAdminRankName(PlayerInfo[playerid][pAdmin]), GetPlayerNameEx(playerid), params);
-			SendDiscordMessage(2, szMessage);
+			#if defined DISCORD_ENABLED
+				format(szMessage, sizeof(szMessage), "%s %s: %s", GetAdminRankName(PlayerInfo[playerid][pAdmin]), GetPlayerNameEx(playerid), params);
+				SendDiscordMessage(2, szMessage);
+			#endif
 		}
 		else SendClientMessageEx(playerid, COLOR_GREY, "USAGE: (/ha)eadmin [Head admin+ chat]");
 	}
@@ -2309,7 +2314,7 @@ CMD:setfightstyle(playerid, params[])
 {
 	if (PlayerInfo[playerid][pAdmin] >= 4 || PlayerInfo[playerid][pASM] >= 1)
 	{
-		new string[128], giveplayerid, fightstyle;
+		new string[128], giveplayerid, FIGHT_STYLE:fightstyle;
 		if(sscanf(params, "ud", giveplayerid, fightstyle))
 		{
 			SendClientMessageEx(playerid, COLOR_GREY, "USAGE: /setfightstyle [player] [fightstyle]");
@@ -2317,7 +2322,7 @@ CMD:setfightstyle(playerid, params[])
 			return 1;
 		}
 
-		if(fightstyle > 3 && fightstyle < 8 || fightstyle == 15 || fightstyle == 26)
+		if(_:fightstyle > 3 && _:fightstyle < 8 || fightstyle == FIGHT_STYLE_GRABKICK || _:fightstyle == 26)
 		{
 			format(string, sizeof(string), " Your fighting style has been changed to %d.", fightstyle);
 			SendClientMessageEx(giveplayerid,COLOR_YELLOW,string);
@@ -2873,7 +2878,7 @@ CMD:listguns(playerid, params[])
 
 		if(IsPlayerConnected(giveplayerid))
 		{
-			new weapons[13][2], weaponname[50];
+			new weapons[MAX_WEAPON_SLOTS][2], weaponname[50];
 			if(GetPVarInt(giveplayerid, "EventToken") != 0 || GetPVarType(giveplayerid, "IsInArena"))
 			{
 				SendClientMessageEx(playerid, COLOR_GRAD2, "That person is at an event/paintball so the weapons may appear as non-server sided.");
@@ -2881,20 +2886,20 @@ CMD:listguns(playerid, params[])
 			SendClientMessageEx(playerid, COLOR_GREEN,"_______________________________________");
 			format(string, sizeof(string), "Weapons on %s:", GetPlayerNameEx(giveplayerid));
 			SendClientMessageEx(playerid, COLOR_WHITE, string);
-			for (new i = 0; i < 13; i++)
+			for (new WEAPON_SLOT:i; i < MAX_WEAPON_SLOTS; i++)
 			{
-				GetPlayerWeaponData(giveplayerid, i, weapons[i][0], weapons[i][1]);
+				GetPlayerWeaponData(giveplayerid, i, WEAPON:weapons[i][0], weapons[i][1]);
 				if(weapons[i][0] > 0)
 				{
-					if(PlayerInfo[giveplayerid][pGuns][i] == weapons[i][0])
+					if(_:PlayerInfo[giveplayerid][pGuns][i] == weapons[i][0])
 					{
-						GetWeaponName(weapons[i][0], weaponname, sizeof(weaponname));
+						GetWeaponName(WEAPON:weapons[i][0], weaponname, sizeof(weaponname));
 						format(string, sizeof(string), "%s (%d).", weaponname, weapons[i][0]);
 						SendClientMessageEx(playerid, COLOR_GRAD1, string);
 					}
 					else
 					{
-						GetWeaponName(weapons[i][0], weaponname, sizeof(weaponname));
+						GetWeaponName(WEAPON:weapons[i][0], weaponname, sizeof(weaponname));
 						format(string, sizeof(string), "%s (%d) (non server-side).", weaponname, weapons[i][0]);
 						SendClientMessageEx(playerid, COLOR_GRAD1, string);
 					}
@@ -3384,7 +3389,7 @@ CMD:rcabuse(playerid, params[]) {
 						SendClientMessageToAllEx(COLOR_LIGHTRED, szMessage);
 						PlayerInfo[iTargetID][pBanned] = 1;
 						AddBan(playerid, iTargetID, "Abuse of faction vehicles.");
-						SetTimerEx("KickEx", 1000, 0, "i", iTargetID);
+						SetTimerEx("KickEx", 1000, false, "i", iTargetID);
 					}
 				}
 			}
@@ -4463,7 +4468,7 @@ CMD:gotocar(playerid, params[])
 
 		new Float:cwx2,Float:cwy2,Float:cwz2;
 		GetVehiclePos(carid, cwx2, cwy2, cwz2);
-		if (GetPlayerState(playerid) == 2)
+		if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 		{
 			new tmpcar = GetPlayerVehicleID(playerid);
 			SetVehiclePos(tmpcar, cwx2, cwy2, cwz2);
@@ -4511,7 +4516,7 @@ CMD:gotoid(playerid, params[])
 			SetPlayerVirtualWorld(playerid, PlayerInfo[giveplayerid][pVW]);
 			Streamer_UpdateEx(playerid, plocx, plocy, plocz);
 
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, plocx, plocy+4, plocz);
@@ -4577,7 +4582,7 @@ CMD:sendtoid(playerid, params[])
 			SetPlayerVirtualWorld(giveplayerid, PlayerInfo[targetplayerid][pVW]);
 			Streamer_UpdateEx(giveplayerid, plocx, plocy, plocz);
 			DeletePVar(giveplayerid, "BusinessesID");
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, plocx, plocy+4, plocz);
@@ -4638,7 +4643,7 @@ CMD:gethere(playerid, params[])
 			SetPlayerVirtualWorld(giveplayerid, PlayerInfo[playerid][pVW]);
 			Streamer_UpdateEx(giveplayerid, plocx, plocy, plocz);
 			DeletePVar(giveplayerid, "BusinessesID");
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				fVehSpeed[giveplayerid] = 0.0;
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
@@ -4744,9 +4749,9 @@ CMD:takeadminweapons(playerid, params[])
 
 		if(IsPlayerConnected(giveplayerid))
 		{
-			for(new s = 0; s < 12; s++)
+			for(new WEAPON_SLOT:s; s < WEAPON_SLOT_DETONATOR; s++)
 			{
-				if(PlayerInfo[giveplayerid][pAGuns][s] != 0)
+				if(PlayerInfo[giveplayerid][pAGuns][s] != WEAPON_FIST)
 				{
 					RemovePlayerWeapon(giveplayerid, PlayerInfo[giveplayerid][pAGuns][s]);
 				}
@@ -4987,7 +4992,7 @@ CMD:kick(playerid, params[])
 				SendClientMessageToAllEx(COLOR_LIGHTRED, string);
 				DBLog(playerid, giveplayerid, "Kick", reason);
 				StaffAccountCheck(giveplayerid, GetPlayerIpEx(giveplayerid));
-				SetTimerEx("KickEx", 1000, 0, "i", giveplayerid);
+				SetTimerEx("KickEx", 1000, false, "i", giveplayerid);
 				if(GetPVarType(giveplayerid, "RepFam_TL")) Rivalry_Toggle(giveplayerid, false);
 			}
 			return 1;
@@ -5139,7 +5144,7 @@ CMD:skick(playerid, params[])
 			{
 				format(string, sizeof(string), "AdmCmd: %s has been auto-kicked, reason: Trying to /skick a higher admin.", GetPlayerNameEx(playerid));
 				ABroadCast(COLOR_YELLOW,string,2);
-				SetTimerEx("KickEx", 1000, 0, "i", playerid);
+				SetTimerEx("KickEx", 1000, false, "i", playerid);
 				return 1;
 			}
 			else
@@ -5152,7 +5157,7 @@ CMD:skick(playerid, params[])
 				ABroadCast(COLOR_LIGHTRED,string,2);
 
 				StaffAccountCheck(giveplayerid, GetPlayerIpEx(giveplayerid));
-				SetTimerEx("KickEx", 1000, 0, "i", giveplayerid);
+				SetTimerEx("KickEx", 1000, false, "i", giveplayerid);
 			}
 			return 1;
 
@@ -5177,7 +5182,7 @@ CMD:freeze(playerid, params[])
 				return 1;
 			}
 
-			TogglePlayerControllable(giveplayerid, 0);
+			TogglePlayerControllable(giveplayerid, false);
 			SetPVarInt(giveplayerid, "IsFrozen", 1);
 			format(string, sizeof(string), "AdmCmd: %s was frozen by %s",GetPlayerNameEx(giveplayerid), GetPlayerNameEx(playerid));
 			ABroadCast(COLOR_LIGHTRED,string, 2);
@@ -5205,7 +5210,7 @@ CMD:unfreeze(playerid, params[])
 			DeletePVar(giveplayerid, "PlayerCuffed");
 			PlayerCuffed[giveplayerid] = 0;
 			PlayerTied[giveplayerid] = 0;
-			TogglePlayerControllable(giveplayerid, 1);
+			TogglePlayerControllable(giveplayerid, true);
 			format(string, sizeof(string), "AdmCmd: %s was unfrozen by %s.",GetPlayerNameEx(giveplayerid),GetPlayerNameEx(playerid));
 			ABroadCast(COLOR_LIGHTRED,string,2);
 			DBLog(playerid, giveplayerid, "Admin", "Was un-frozen");
@@ -5739,7 +5744,7 @@ CMD:akick(playerid, params[])
 	{
 		format(string, sizeof(string), "AdmCmd: %s has been auto-kicked, reason: Trying to /akick a higher admin.", GetPlayerNameEx(playerid));
 		ABroadCast(COLOR_YELLOW,string,2);
-		SetTimerEx("KickEx", 1000, 0, "i", playerid);
+		SetTimerEx("KickEx", 1000, false, "i", playerid);
 		return 1;
 	}
 	format(string, sizeof(string), "AdmCmd: %s(%d) (IP:%s) was admin kicked by %s, reason: %s", GetPlayerNameEx(giveplayerid), GetPlayerSQLId(giveplayerid), GetPlayerIpEx(giveplayerid), GetPlayerNameEx(playerid), reason);
@@ -5749,7 +5754,7 @@ CMD:akick(playerid, params[])
 	StaffAccountCheck(giveplayerid, GetPlayerIpEx(giveplayerid));
 	format(string, sizeof(string), "AdmCmd: %s was admin kicked by a Admin, reason: %s", GetPlayerNameEx(giveplayerid), reason);
 	SendClientMessageEx(giveplayerid, COLOR_LIGHTRED, string);
-	SetTimerEx("KickEx", 1000, 0, "i", giveplayerid);
+	SetTimerEx("KickEx", 1000, false, "i", giveplayerid);
 	return 1;
 }
 

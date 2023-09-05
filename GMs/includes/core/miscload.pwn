@@ -2,23 +2,19 @@
 	Secondary Chatbox
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 hook OnGameModeInit() {
 
 	TD_ServerError = TextDrawCreate(321.000000, 428.000000, "SERVER: Unknown command");
-	TextDrawAlignment(TD_ServerError, 2);
-	TextDrawBackgroundColor(TD_ServerError, 255);
-	TextDrawFont(TD_ServerError, 2);
+	TextDrawAlignment(TD_ServerError, TEXT_DRAW_ALIGN_CENTRE);
+	TextDrawFont(TD_ServerError, TEXT_DRAW_FONT_2);
 	TextDrawLetterSize(TD_ServerError, 0.210000, 0.899999);
-	TextDrawColor(TD_ServerError, -1);
-	TextDrawSetOutline(TD_ServerError, 0);
-	TextDrawSetProportional(TD_ServerError, 1);
+	TextDrawColour(TD_ServerError, -1);
 	TextDrawSetShadow(TD_ServerError, 1);
-	TextDrawUseBox(TD_ServerError, 1);
-	TextDrawBoxColor(TD_ServerError, -14803426);
+	TextDrawUseBox(TD_ServerError, true);
+	TextDrawBoxColour(TD_ServerError, -14803426);
 	TextDrawTextSize(TD_ServerError, -300.000000, 655.000000);
-	TextDrawSetSelectable(TD_ServerError, 0);
 }
 
 
@@ -142,7 +138,7 @@ hook OnPlayerConnect(playerid) {
 	return 1;
 }
 
-stock Misc_Save() {
+Misc_Save() {
 
 	new
 		szFileStr[50],
@@ -194,7 +190,7 @@ stock Misc_Save() {
 	fclose(iFileHandle);
 }
 
-stock Misc_Load() {
+Misc_Load() {
 
 	new
 		szResult[32],

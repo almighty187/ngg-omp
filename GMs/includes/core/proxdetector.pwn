@@ -1,4 +1,4 @@
-ProxDetector(Float: f_Radius, playerid, string[],col1,col2,col3,col4,col5, chat=0, chattype = -1, ooc = -1)
+ProxDetector(Float: f_Radius, playerid, const string[],col1,col2,col3,col4,col5, chat=0, chattype = -1, ooc = -1)
 {
 	if(GetPVarType(playerid, "WatchingTV")) return 1;
 
@@ -9,7 +9,7 @@ ProxDetector(Float: f_Radius, playerid, string[],col1,col2,col3,col4,col5, chat=
 	new str[128];
 	foreach(new i: Player)
 	{
-		if((InsidePlane[playerid] == GetPlayerVehicleID(i) && GetPlayerState(i) == 2) || (InsidePlane[i] == GetPlayerVehicleID(playerid) && GetPlayerState(playerid) == 2) || (InsidePlane[playerid] != INVALID_VEHICLE_ID && InsidePlane[playerid] == InsidePlane[i])) {
+		if((InsidePlane[playerid] == GetPlayerVehicleID(i) && GetPlayerState(i) == PLAYER_STATE_DRIVER) || (InsidePlane[i] == GetPlayerVehicleID(playerid) && GetPlayerState(playerid) == PLAYER_STATE_DRIVER) || (InsidePlane[playerid] != INVALID_VEHICLE_ID && InsidePlane[playerid] == InsidePlane[i])) {
 			SendClientMessageEx(i, col1, string);
 		}
 		else if(GetPlayerVirtualWorld(i) == GetPlayerVirtualWorld(playerid)) {
@@ -76,7 +76,7 @@ ProxDetectorS(Float:radi, playerid, targetid)
 	return 0;
 }
 
-ProxDetectorWrap(playerid, string[], width, Float:wrap_radius, col1, col2, col3, col4, col5)
+ProxDetectorWrap(playerid, const string[], width, Float:wrap_radius, col1, col2, col3, col4, col5)
 {
 	if(strlen(string) > width)
 	{

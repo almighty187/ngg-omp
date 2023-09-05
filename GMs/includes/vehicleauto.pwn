@@ -1,8 +1,8 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 #define VEHICLE_PARAMS_TOG	10030
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 
 	new vehicleid = GetPlayerVehicleID(playerid);
 

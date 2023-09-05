@@ -32,13 +32,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <YSI_Coding\y_hooks>
+
 // This is the first hooked OnDialogResponse. It's used to check dialog spoofing.
 hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 	if(dialogid != iLastDialogID[playerid]) {
 		if(dialogid != DIALOG_FS_ELEVATOR1 && dialogid != DIALOG_FS_ELEVATOR2) { // For dialogs called from filterscripts.
 			if(PlayerInfo[playerid][pAdmin] == 99999 || dialogid == 32700) return 1;
 	    	SendClientMessageEx(playerid, COLOR_LIGHTRED, "[SYSTEM] Please delete your dialog CLEO.");
-	    	SetTimerEx("KickEx", 1000, 0, "i", playerid);
+	    	SetTimerEx("KickEx", 1000, false, "i", playerid);
 	    }
 	}
     iLastDialogID[playerid] = -1;
@@ -435,7 +437,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					PlayerVehicleInfo[playerid][i][pvTicket] = 0;
 					for(new j = 0; j < 3; j++)
 					{
-						PlayerVehicleInfo[playerid][i][pvWeapons][j] = 0;
+						PlayerVehicleInfo[playerid][i][pvWeapons][j] = WEAPON_FIST;
 					}
 					PlayerVehicleInfo[playerid][i][pvImpounded] = 0;
 					PlayerVehicleInfo[playerid][i][pvSpawned] = 0;
@@ -728,7 +730,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					new partID = GetPVarInt(playerid, string);
 					if (partID == 999)
 					{
-						for(new f = 0 ; f < MAX_MODS; f++)
+						for(new CARMODTYPE:f; f < MAX_MODS; f++)
 						{
 							SetPVarInt(playerid, "unMod", 1);
 							RemoveVehicleComponent(PlayerVehicleInfo[playerid][d][pvId], GetVehicleComponentInSlot(PlayerVehicleInfo[playerid][d][pvId], f));
@@ -739,8 +741,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					}
 					SetPVarInt(playerid, "unMod", 1);
 					RemoveVehicleComponent(GetPlayerVehicleID(playerid), partID);
-					if(GetVehicleComponentType(partID) == 3) {
-						PlayerVehicleInfo[playerid][d][pvMods][14] = 0;
+					if(GetVehicleComponentType(partID) == CARMODTYPE_SIDESKIRT) {
+						PlayerVehicleInfo[playerid][d][pvMods][CARMODTYPE_FRONT_BULLBAR] = 0;
 					}
 					PlayerVehicleInfo[playerid][d][pvMods][GetVehicleComponentType(partID)] = 0;
 					SendClientMessageEx(playerid, COLOR_WHITE, "The modification you requested has been removed.");
@@ -950,20 +952,20 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			new iTruckModel = GetVehicleModel(GetPlayerVehicleID(playerid));
 			if (iTruckModel != 443 && Businesses[iBusiness][bType] == BUSINESS_TYPE_NEWCARDEALERSHIP) {
 				SendClientMessageEx(playerid, COLOR_WHITE, "You need to be driving a Packer in order to accept orders from car dealerships.");
-				TogglePlayerControllable(playerid, 1);
+				TogglePlayerControllable(playerid, true);
 				DeletePVar(playerid, "IsFrozen");
 				return 1;
 			}
 			if (iTruckModel != 514 && Businesses[iBusiness][bType] == BUSINESS_TYPE_GASSTATION) {
 				SendClientMessageEx(playerid, COLOR_WHITE, "You need to be driving a tank truck in order to accept orders from gas stations.");
-				TogglePlayerControllable(playerid, 1);
+				TogglePlayerControllable(playerid, true);
 				DeletePVar(playerid, "IsFrozen");
 				return 1;
 			}
 			if ((iTruckModel == 443 || iTruckModel == 514) && Businesses[iBusiness][bType] != BUSINESS_TYPE_NEWCARDEALERSHIP && Businesses[iBusiness][bType] != BUSINESS_TYPE_GASSTATION)
 			{
 				SendClientMessageEx(playerid, COLOR_WHITE, "You need to be driving a regular truck (i.e not packer or tank truck) in order to accept orders from this type of business.");
-				TogglePlayerControllable(playerid, 1);
+				TogglePlayerControllable(playerid, true);
 				DeletePVar(playerid, "IsFrozen");
 				return 1;
 			}
@@ -973,12 +975,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			format(string,sizeof(string),"* Please wait a moment while the vehicle is being loaded with %s...", GetInventoryType(iBusiness));
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, string);
 			SetPVarInt(playerid, "LoadTruckTime", 10);
-			SetTimerEx("LoadTruck", 1000, 0, "d", playerid);
+			SetTimerEx("LoadTruck", 1000, false, "d", playerid);
 		}
 		else
 		{
 			DeletePVar(playerid, "IsFrozen");
-			TogglePlayerControllable(playerid, 1);
+			TogglePlayerControllable(playerid, true);
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You canceled the loading of the shipment, type /loadshipment to try again.");
 		}
 	}
@@ -2085,7 +2087,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 		if(response == 0)
 		{
 			SendClientMessage(playerid, COLOR_RED, "SERVER: You have been kicked out automatically.");
-			SetTimerEx("KickEx", 1000, 0, "i", playerid);
+			SetTimerEx("KickEx", 1000, false, "i", playerid);
 		}
 		else if(dialogid == MAINMENU)
 		{
@@ -2336,7 +2338,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 									GivePlayerCash(playerid,-1000);
 									gBike[playerid] = 3;
 									gBikeRenting[playerid] = 1;
-									TogglePlayerControllable(playerid, 1);
+									TogglePlayerControllable(playerid, true);
 									SendClientMessageEx(playerid,COLOR_GREY," You have rented a bike for 15 minutes, enjoy!");
 									SetPVarInt(playerid, "RentTime", SetTimerEx("RentTimer", (1000*60)*15, true, "d", playerid));
 								}
@@ -2357,7 +2359,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 								GivePlayerCash(playerid,-2000);
 								gBike[playerid] = 6;
 								gBikeRenting[playerid] = 1;
-								TogglePlayerControllable(playerid, 1);
+								TogglePlayerControllable(playerid, true);
 								SendClientMessageEx(playerid,COLOR_GREY," You have rented a bike for 30 minutes, enjoy!");
 								SetPVarInt(playerid, "RentTime", SetTimerEx("RentTimer", (1000*60)*30, true, "d", playerid));
 							}
@@ -2378,7 +2380,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 								GivePlayerCash(playerid,-4000);
 								gBike[playerid] = 12;
 								gBikeRenting[playerid] = 1;
-								TogglePlayerControllable(playerid, 1);
+								TogglePlayerControllable(playerid, true);
 								SendClientMessageEx(playerid,COLOR_GREY," You have rented a bike for an hour, enjoy!");
 								SetPVarInt(playerid, "RentTime", SetTimerEx("RentTimer", (1000*60)*60, true, "d", playerid));
 							}
@@ -2605,7 +2607,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 
 		}
 		DestroyPlayerVehicle(giveplayerid, listitem);
-		for(new m = 0; m < MAX_MODS; m++)
+		for(new CARMODTYPE:m; m < MAX_MODS; m++)
 		{
 			PlayerVehicleInfo[giveplayerid][listitem][pvMods][m] = 0;
 		}
@@ -2805,7 +2807,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					format(string, sizeof(string), "VIP: You have traded 3 tokens for a Desert Eagle, you now have %d token(s).", PlayerInfo[playerid][pTokens]);
 					SendClientMessageEx(playerid, COLOR_YELLOW, string);
 				}
-				GivePlayerValidWeapon(playerid, 24);
+				GivePlayerValidWeapon(playerid, WEAPON_DEAGLE);
 				PlayerInfo[playerid][pVIPGuncount]++;
 			}
 			case 1:
@@ -2822,7 +2824,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					format(string, sizeof(string), "VIP: You have traded 2 tokens for a shotgun, you now have %d token(s).", PlayerInfo[playerid][pTokens]);
 					SendClientMessageEx(playerid, COLOR_YELLOW, string);
 				}
-				GivePlayerValidWeapon(playerid, 25);
+				GivePlayerValidWeapon(playerid, WEAPON_SHOTGUN);
 				PlayerInfo[playerid][pVIPGuncount]++;
 			}
 			case 2:
@@ -2838,7 +2840,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					format(string, sizeof(string), "VIP: You have traded 3 tokens for an MP5, you now have %d token(s).", PlayerInfo[playerid][pTokens]);
 					SendClientMessageEx(playerid, COLOR_YELLOW, string);
 				}
-				GivePlayerValidWeapon(playerid, 29);
+				GivePlayerValidWeapon(playerid, WEAPON_MP5);
 				PlayerInfo[playerid][pVIPGuncount]++;
 			}
 			case 3:
@@ -2857,7 +2859,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						return 1;
 					}
 				}
-				GivePlayerValidWeapon(playerid, 23);
+				GivePlayerValidWeapon(playerid, WEAPON_SILENCED);
 				PlayerInfo[playerid][pVIPGuncount]++;
 			}
 			case 4:
@@ -2876,7 +2878,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						return 1;
 					}
 				}
-				GivePlayerValidWeapon(playerid, 2);
+				GivePlayerValidWeapon(playerid, WEAPON_GOLFCLUB);
 				PlayerInfo[playerid][pVIPGuncount]++;
 			}
 			case 5:
@@ -2895,7 +2897,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						return 1;
 					}
 				}
-				GivePlayerValidWeapon(playerid, 5);
+				GivePlayerValidWeapon(playerid, WEAPON_BAT);
 			}
 			case 6:
 			{
@@ -2913,7 +2915,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						return 1;
 					}
 				}
-				GivePlayerValidWeapon(playerid, 10);
+				GivePlayerValidWeapon(playerid, WEAPON_DILDO);
 				PlayerInfo[playerid][pVIPGuncount]++;
 			}
 			case 7:
@@ -2932,7 +2934,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						return 1;
 					}
 				}
-				GivePlayerValidWeapon(playerid, 8);
+				GivePlayerValidWeapon(playerid, WEAPON_KATANA);
 			}
 			case 8:
 			{
@@ -2950,7 +2952,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						return 1;
 					}
 				}
-				GivePlayerValidWeapon(playerid, 22);
+				GivePlayerValidWeapon(playerid, WEAPON_COLT45);
 				PlayerInfo[playerid][pVIPGuncount]++;
 			}
 		}
@@ -3002,55 +3004,55 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 		{
 			case 0: //Deagle
 			{
-				GivePlayerValidWeapon(playerid, 24);
+				GivePlayerValidWeapon(playerid, WEAPON_DEAGLE);
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] You have taken a Desert Eagle from the famed locker.");
 			}
 			case 1: //MP5
 			{
-				GivePlayerValidWeapon(playerid, 29);
+				GivePlayerValidWeapon(playerid, WEAPON_MP5);
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] You have taken a Semi-Automatic MP5 from the famed locker.");
 			}
 			case 2: //Shotgun
 			{
-				GivePlayerValidWeapon(playerid, 25);
+				GivePlayerValidWeapon(playerid, WEAPON_SHOTGUN);
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] You have taken a Pump Shotgun from the famed locker.");
 			}
 			case 3: //Rifle
 			{
-				GivePlayerValidWeapon(playerid, 33);
+				GivePlayerValidWeapon(playerid, WEAPON_RIFLE);
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] You have taken a County Rifle from the famed locker.");
 			}
 			case 4: //SD Pistol
 			{
-				GivePlayerValidWeapon(playerid, 23);
+				GivePlayerValidWeapon(playerid, WEAPON_SILENCED);
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] You have taken a Silenced Pistol from the famed locker.");
 			}
 			case 5: //Katana
 			{
-				GivePlayerValidWeapon(playerid, 8);
+				GivePlayerValidWeapon(playerid, WEAPON_KATANA);
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] You have taken a Japanese Katana from the famed locker.");
 			}
 			case 6: //Purple Dildo
 			{
-				GivePlayerValidWeapon(playerid, 10);
+				GivePlayerValidWeapon(playerid, WEAPON_DILDO);
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] You have taken a Purple Dildo from the famed locker.");
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] Have Fun...");
 			}
 			case 7: //White Dildo
 			{
-				GivePlayerValidWeapon(playerid, 11);
+				GivePlayerValidWeapon(playerid, WEAPON_DILDO2);
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] You have taken a White Dildo from the famed locker.");
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] Have Fun...");
 			}
 			case 8: //Big Vibrator
 			{
-				GivePlayerValidWeapon(playerid, 12);
+				GivePlayerValidWeapon(playerid, WEAPON_VIBRATOR);
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] You have taken a Big Vibrator from the famed locker.");
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] Have Fun...");
 			}
 			case 9: //Silver Vibrator
 			{
-				GivePlayerValidWeapon(playerid, 13);
+				GivePlayerValidWeapon(playerid, WEAPON_VIBRATOR2);
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] You have taken a Silver Vibrator from the famed locker.");
 				SendClientMessageEx(playerid, COLOR_YELLOW, "[Famed Locker] Have Fun...");
 			}
@@ -4065,7 +4067,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						SetPVarInt(playerid, "penalty", 1);
 						GivePlayerStoreItem(playerid, 0, iBusiness, iItem, cost);
 					}
-					else return SendClientMessageEx(playerid, COLOR_GRAD2, "The store does not have enough stock for that item!");
+					else return SendClientMessageEx(playerid, COLOR_GRAD2, "The store does not have enough for that item!");
 				}
 				else
 				{
@@ -4345,7 +4347,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			PlayerInfo[playerid][pAcceptReport]++;
 			ReportCount[playerid]++;
 			ReportHourCount[playerid]++;
-			Reports[reportid][ReplyTimerr] = SetTimerEx("ReplyTimer", 30000, 0, "d", reportid);
+			Reports[reportid][ReplyTimerr] = SetTimerEx("ReplyTimer", 30000, false, "d", reportid);
 			Reports[reportid][CheckingReport] = playerid;
 			//Reports[reportid][ReportFrom] = INVALID_PLAYER_ID;
 			Reports[reportid][BeingUsed] = 0;
@@ -5094,7 +5096,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					SetPlayerToTeamColor(suspect);
 					SetPlayerWantedLevel(suspect, 0);
 					WantLawyer[suspect] = 1;
-					TogglePlayerControllable(suspect, 1);
+					TogglePlayerControllable(suspect, true);
 					ClearAnimationsEx(suspect);
 					SetPlayerSpecialAction(suspect, SPECIAL_ACTION_NONE);
 					PlayerCuffed[suspect] = 0;
@@ -5168,7 +5170,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					SetPlayerToTeamColor(suspect);
 					SetPlayerWantedLevel(suspect, 0);
 					WantLawyer[suspect] = 1;
-					TogglePlayerControllable(suspect, 1);
+					TogglePlayerControllable(suspect, true);
 					ClearAnimationsEx(suspect);
 					SetPlayerSpecialAction(suspect, SPECIAL_ACTION_NONE);
 					PlayerCuffed[suspect] = 0;
@@ -6814,7 +6816,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						new
 							Message[128];
 
-						TogglePlayerControllable(playerid, 0);
+						TogglePlayerControllable(playerid, false);
 						SetPVarInt(playerid, "IsFrozen", 1);
 						SetPVarInt(playerid, "_rAutoM", 5);
 						SetPVarInt(playerid, "_rRepID", playerid);
@@ -6960,7 +6962,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					SetPVarInt( playerid, "COMMUNITY_ADVISOR_REQUEST", 1 );
 					SetPVarInt( playerid, "HelpTime", 5);
 					SetPVarString( playerid, "HelpReason", "Report Menu");
-					SetTimerEx( "HelpTimer", 60000, 0, "d", playerid);
+					SetTimerEx( "HelpTimer", 60000, false, "d", playerid);
 				}
 				case 11: //Request Unmute
 				{
@@ -8137,7 +8139,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 		new iBusiness = PlayerInfo[playerid][pBusiness];
 
 		if (response) {
-			new iPrice = strval(inputtext), item = GetPVarInt(playerid, "EditingStoreItem");
+			new iPrice = strval(inputtext), WEAPON:item = WEAPON:GetPVarInt(playerid, "EditingStoreItem");
 
 			if (iPrice < 0 || iPrice > 500000) {
 				format(string, sizeof(string), "{FF0000}Error: {DDDDDD}Price is out of range{FFFFFF}\n\nEnter the new sale price for %s", StoreItems[item]);
@@ -8250,7 +8252,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 		// Account Eating Bug Fix
 		if(!IsPlayerInAnyVehicle(playerid))
 		{
-			TogglePlayerControllable(playerid, 1);
+			TogglePlayerControllable(playerid, true);
 			SendClientMessageEx(playerid,COLOR_GRAD2,"You need to be in the vehicle you wish to purchase.");
 			return 1;
 		}
@@ -8263,7 +8265,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 		{
 			if(!vehicleCountCheck(playerid))
 			{
-				TogglePlayerControllable(playerid, 1);
+				TogglePlayerControllable(playerid, true);
  				RemovePlayerFromVehicle(playerid);
  				new Float:slx, Float:sly, Float:slz;
  				GetPlayerPos(playerid, slx, sly, slz);
@@ -8278,14 +8280,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				new Float:slx, Float:sly, Float:slz;
 				GetPlayerPos(playerid, slx, sly, slz);
 				SetPlayerPos(playerid, slx, sly, slz+1.2);
-				TogglePlayerControllable(playerid, 1);
+				TogglePlayerControllable(playerid, true);
 				return 1;
 			}
 
 			new randcolor1 = Random(0, 126);
 			new randcolor2 = Random(0, 126);
 			SetPlayerPos(playerid, Businesses[d][bParkPosX][v], Businesses[d][bParkPosY][v], Businesses[d][bParkPosZ][v]+2);
-			TogglePlayerControllable(playerid, 1);
+			TogglePlayerControllable(playerid, true);
 			new cost;
 			if(PlayerInfo[playerid][pDonateRank] < 1)
 			{
@@ -8346,7 +8348,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			new Float:slx, Float:sly, Float:slz;
 			GetPlayerPos(playerid, slx, sly, slz);
 			SetPlayerPos(playerid, slx, sly, slz+1.2);
-			TogglePlayerControllable(playerid, 1);
+			TogglePlayerControllable(playerid, true);
 			return 1;
 		}
 	}
@@ -8387,7 +8389,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 		else
 		{
 			DeletePVar(playerid, "IsFrozen");
-			TogglePlayerControllable(playerid, 1);
+			TogglePlayerControllable(playerid, true);
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You canceled the loading of the shipment, type /loadshipment to try again.");
 		}
 	}
@@ -8419,12 +8421,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			}
 			SetPVarInt(playerid, "LoadType", 1);
 			SetPVarInt(playerid, "LoadTruckTime", 10);
-			SetTimerEx("LoadTruckOld", 1000, 0, "d", playerid);
+			SetTimerEx("LoadTruckOld", 1000, false, "d", playerid);
 		}
 		else
 		{
 			DeletePVar(playerid, "IsFrozen");
-			TogglePlayerControllable(playerid, 1);
+			TogglePlayerControllable(playerid, true);
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You canceled the loading of the shipment, type /loadshipment to try again.");
 		}
 	}
@@ -8458,12 +8460,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			}
 			SetPVarInt(playerid, "LoadType", 1);
 			SetPVarInt(playerid, "LoadTruckTime", 10);
-			SetTimerEx("LoadTruckOld", 1000, 0, "d", playerid);
+			SetTimerEx("LoadTruckOld", 1000, false, "d", playerid);
 		}
 		else
 		{
 			DeletePVar(playerid, "IsFrozen");
-			TogglePlayerControllable(playerid, 1);
+			TogglePlayerControllable(playerid, true);
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You canceled the loading of the shipment, type /loadshipment to try again.");
 		}
 	}
@@ -8753,7 +8755,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						SetPVarFloat(playerid, "tmpPkrRY", PokerTable[tableid][pkrRY]);
 						SetPVarFloat(playerid, "tmpPkrRZ", PokerTable[tableid][pkrRZ]);
 
-						EditObject(playerid, PokerTable[tableid][pkrObjectID]);
+						BeginObjectEditing(playerid, PokerTable[tableid][pkrObjectID]);
 
 						new szString[128];
 						format(szString, sizeof(szString), "You have selected Poker Table %d, You may now customize it's position/rotation.", tableid);
@@ -8951,7 +8953,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			SetPVarString(playerid, "pkrStatusString", "Call");
 			PokerRotateActivePlayer(tableid);
 
-			ApplyAnimation(playerid, "CASINO", "cards_raise", 4.1, 0, 1, 1, 1, 1, 1);
+			ApplyAnimation(playerid, "CASINO", "cards_raise", 4.1, false, true, true, true, 1, SYNC_ALL);
 		}
 
 		DeletePVar(playerid, "pkrActionChoice");
@@ -8974,7 +8976,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				PokerTable[tableid][pkrRotations] = 0;
 				PokerRotateActivePlayer(tableid);
 
-				ApplyAnimation(playerid, "CASINO", "cards_raise", 4.1, 0, 1, 1, 1, 1, 1);
+				ApplyAnimation(playerid, "CASINO", "cards_raise", 4.1, false, true, true, true, 1, SYNC_ALL);
 			} else {
 				ShowCasinoGamesMenu(playerid, DIALOG_CGAMESRAISEPOKER);
 			}
@@ -11338,7 +11340,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			if(PlayerInfo[playerid][pDonateRank] != 0)
 				return SendClientMessageEx(playerid, COLOR_GREY, "You already have VIP, please wait for it to expire.");
 
-			if(GetPVarType(playerid, "VIPType") != 1)
+			if(GetPVarType(playerid, "VIPType") != VARTYPE_INT)
 				return SendClientMessageEx(playerid, COLOR_GREY, "An error has occured, please try again.");
 
 
@@ -12810,7 +12812,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 	}
 	if(dialogid == DIALOG_MICROSHOP2)
 	{
-		if(!response) return cmd_microshop(playerid, "");
+		if(!response) return cmd_microshop(playerid);
 		if(response)
 		{
 			new item;
@@ -12940,7 +12942,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				{
 					format(string, sizeof(string), "You have purchased this item 3 times in the past 24 hours, please wait %s to purchase it again.", ConvertTimeS(PlayerInfo[playerid][mCooldown][item]-gettime()));
 					SendClientMessageEx(playerid, COLOR_GRAD2, string);
-					return cmd_microshop(playerid, "");
+					return cmd_microshop(playerid);
 				}
 				PlayerInfo[playerid][mCooldown][item] = 0;
 				return ShowPlayerDialogEx(playerid, 7484, DIALOG_STYLE_LIST, "Micro Shop: Job Center", "Detective\nLawyer\nWhore\nDrugs Dealer\nBodyguard\nMechanic\nArms Dealer\nBoxer\nDrugs Smuggler\nTaxi Driver\nCraftsman\nBartender\nShipment Contractor\nPizza Boy", "Proceed", "Cancel");
@@ -12951,7 +12953,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				{
 					format(string, sizeof(string), "You currently have a active job boost, please wait for it to expire in %d minute(s) to purchase again.", PlayerInfo[playerid][mCooldown][item]);
 					SendClientMessageEx(playerid, COLOR_GRAD2, string);
-					return cmd_microshop(playerid, "");
+					return cmd_microshop(playerid);
 				}
 				return ShowPlayerDialogEx(playerid, 7484, DIALOG_STYLE_LIST, "Micro Shop: Job Boost", "Detective\nLawyer\nWhore\nDrugs Dealer\nMechanic\nArms Dealer\nBoxer\nShipment Contractor", "Proceed", "Cancel");
 			}
@@ -12963,7 +12965,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				{
 					format(string, sizeof(string), "You have purchased this item in the past 24 hours, please wait %s to purchase it again.", ConvertTimeS(PlayerInfo[playerid][mCooldown][item]-gettime()));
 					SendClientMessageEx(playerid, COLOR_GRAD2, string);
-					return cmd_microshop(playerid, "");
+					return cmd_microshop(playerid);
 				}
 				PlayerInfo[playerid][mCooldown][item] = 0;
 			}
@@ -12974,7 +12976,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				{
 					format(string, sizeof(string), "You have purchased this item 3 times in the past 24 hours, please wait %s to purchase it again.", ConvertTimeS(PlayerInfo[playerid][mCooldown][item]-gettime()));
 					SendClientMessageEx(playerid, COLOR_GRAD2, string);
-					return cmd_microshop(playerid, "");
+					return cmd_microshop(playerid);
 				}
 				PlayerInfo[playerid][mCooldown][item] = 0;
 			}
@@ -12996,7 +12998,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				{
 					format(string, sizeof(string), "You have purchased this item 2 times in the past 24 hours, please wait %s to purchase it again.", ConvertTimeS(PlayerInfo[playerid][mCooldown][item]-gettime()));
 					SendClientMessageEx(playerid, COLOR_GRAD2, string);
-					return cmd_microshop(playerid, "");
+					return cmd_microshop(playerid);
 				}
 				PlayerInfo[playerid][mCooldown][item] = 0;
 			}
@@ -13006,7 +13008,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				{
 					format(string, sizeof(string), "You currently have a active Quick Bank Access, please wait for it to expire in %d minute(s) to purchase again.", PlayerInfo[playerid][mCooldown][item]);
 					SendClientMessageEx(playerid, COLOR_GRAD2, string);
-					return cmd_microshop(playerid, "");
+					return cmd_microshop(playerid);
 				}
 			}
 			if(item == 13)//Restricted Skin
@@ -13015,7 +13017,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				{
 					format(string, sizeof(string), "You have purchased this item 3 times in the past 24 hours, please wait %s to purchase it again.", ConvertTimeS(PlayerInfo[playerid][mCooldown][item]-gettime()));
 					SendClientMessageEx(playerid, COLOR_GRAD2, string);
-					return cmd_microshop(playerid, "");
+					return cmd_microshop(playerid);
 				}
 				PlayerInfo[playerid][mCooldown][item] = 0;
 			}
@@ -13025,7 +13027,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 	}
 	if(dialogid == DIALOG_MICROSHOP3)
 	{
-		if(!response) return cmd_microshop(playerid, "");
+		if(!response) return cmd_microshop(playerid);
 		if(response)
 		{
 			new item = GetPVarInt(playerid, "m_Item");

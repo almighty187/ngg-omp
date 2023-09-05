@@ -35,9 +35,9 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
-stock SaveGarages()
+SaveGarages()
 {
 	for(new i = 0; i < MAX_GARAGES; i++)
 	{
@@ -508,7 +508,7 @@ CMD:garagehelp(playerid, params[])
 	return 1;
 }
 
-stock LoadGarages()
+LoadGarages()
 {
 	printf("[LoadGarages] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `garages`", "OnLoadGarages", "");
@@ -547,7 +547,7 @@ public OnLoadGarages()
 	return 1;
 }
 
-stock SaveGarage(garageid)
+SaveGarage(garageid)
 {
 	new string[512];
 	mysql_format(MainPipeline, string, sizeof(string), "UPDATE `garages` SET \
@@ -589,7 +589,7 @@ stock SaveGarage(garageid)
 	mysql_tquery(MainPipeline, string, "OnQueryFinish", "i", SENDDATA_THREAD);
 }
 
-stock CreateGarage(garageid)
+CreateGarage(garageid)
 {
 	if(IsValidDynamic3DTextLabel(GarageInfo[garageid][gar_TextID])) DestroyDynamic3DTextLabel(GarageInfo[garageid][gar_TextID]), GarageInfo[garageid][gar_TextID] = Text3D:-1;
 	if(GarageInfo[garageid][gar_ExteriorX] == 0.0) return 1;

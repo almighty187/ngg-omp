@@ -37,7 +37,7 @@
 
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 /*
 enum {
@@ -443,7 +443,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 	return 0;
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
 	if(GetGVarInt("RobberyStage") && !GetPVarInt(playerid, "_RobbingSafe") && newkeys == KEY_SECONDARY_ATTACK)
 	{

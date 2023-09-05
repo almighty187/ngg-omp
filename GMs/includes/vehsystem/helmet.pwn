@@ -35,9 +35,9 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-CMD:hm(playerid, params[]) return cmd_helmet(playerid, params);
+CMD:hm(playerid) return cmd_helmet(playerid);
 
-CMD:helmet(playerid, params[])
+CMD:helmet(playerid)
 {
     if(!IsABike(GetPlayerVehicleID(playerid)))
 	{

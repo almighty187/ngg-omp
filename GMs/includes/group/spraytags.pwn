@@ -35,16 +35,16 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
-stock LoadGangTags()
+LoadGangTags()
 {
 	new query[128];
 	format(query, sizeof(query), "SELECT * FROM `gangtags` LIMIT %d", MAX_GANGTAGS);
 	mysql_tquery(MainPipeline, query, true, "OnGangTagQueryFinish", "ii", LOAD_GANGTAGS, -1);
 }
 
-stock SaveGangTag(gangtag)
+SaveGangTag(gangtag)
 {
 	new query[256];
 	format(query, sizeof(query), "UPDATE `gangtags` SET \
@@ -129,7 +129,7 @@ public OnGangTagQueryFinish(threadid, extraid)
 	return 1;
 }
 
-stock ClearGangTag(gangtag)
+ClearGangTag(gangtag)
 {
 	GangTags[gangtag][gt_PosX] = 0.0;
 	GangTags[gangtag][gt_PosY] = 0.0;
@@ -150,7 +150,7 @@ stock ClearGangTag(gangtag)
 	return 1;
 }
 
-stock CreateGangTag(gangtag)
+CreateGangTag(gangtag)
 {
 	if(GangTags[gangtag][gt_Used] == 0)
 	{
@@ -180,7 +180,7 @@ stock CreateGangTag(gangtag)
 	return 1;
 }
 
-stock GetFreeGangTag()
+GetFreeGangTag()
 {
 	for(new i = 0; i < MAX_GANGTAGS; i++)
 	{
@@ -192,7 +192,7 @@ stock GetFreeGangTag()
 	return -1;
 }
 
-stock ReCreateGangTags(fam)
+ReCreateGangTags(fam)
 {
 	for(new i = 0; i < MAX_GANGTAGS; ++i)
 	{

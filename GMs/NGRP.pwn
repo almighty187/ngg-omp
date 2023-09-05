@@ -77,29 +77,32 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
- #include <a_samp>
+ #define MAX_PLAYERS 500
+ #include <open.mp>
 
 /*  ---------------- SCRIPT REVISION ----------------- */
 
 // Do not forget to change this everytime you commit - it's mandatory!
-#define SERVER_GM_TEXT "NG:RP v3.0.451"
+#define SERVER_GM_TEXT "NG:RP v3.1.0"
 
+#define YSI_NO_HEAP_MALLOC
 //#define AREA_DEBUG
 //#define TEXTLABEL_DEBUG
 
-#undef  MAX_PLAYERS
-#define MAX_PLAYERS (500)
 #include <a_mysql>
 #include <streamer>
 #include <yom_buttons>
-#include <ZCMD>
+#include <zcmd>
 #include <sscanf2>
 #include <crashdetect>
-#include <YSI\y_timers>
-#include <YSI\y_utils>
+#include <YSI_Coding\y_timers>
+#include <YSI_Core\y_utils>
+#include <YSI_Coding\y_va>
 #include <mSelection>
 #include <gvar>
-#include <discord-connector>
+#if defined DISCORD_ENABLED
+	#include <discord-connector>
+#endif
 #include <geo_ip>
 #include <easyDialog>
 #include <callbacks>
@@ -122,7 +125,9 @@
 #include "./includes/textdraws.pwn"
 #include "./includes/streamer.pwn"
 #include "./includes/OnDialogResponse.pwn"
-#include "./includes/discord.pwn"
+#if defined DISCORD_ENABLED
+	#include "./includes/discord.pwn"
+#endif
 #include "./includes/walkstyle.pwn"
 
 #if defined AREA_DEBUG

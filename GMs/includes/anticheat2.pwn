@@ -6,7 +6,7 @@
 
 // add autocbug
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 new PLoss; // Temp. var to toggle packet loss function.
 
@@ -14,7 +14,7 @@ new PLoss; // Temp. var to toggle packet loss function.
 #define GetRotationFor2Point2D(%0,%1,%2,%3,%4)			(CompRotationFloat((atan2((%3)-(%1),(%2)-(%0))-90.0),(%4)))
 #define GetDistanceBetweenPoints3D(%1,%2,%3,%4,%5,%6)	VectorSize((%1)-(%4),(%2)-(%5),(%3)-(%6))
 
-stock Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0){
+Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0){
 	crotation = rotation;
 	while(crotation < 0.0) crotation += 360.0;
 	while(crotation >= 360.0) crotation -= 360.0;
@@ -22,7 +22,7 @@ stock Float:CompRotationFloat(Float:rotation,&Float:crotation=0.0){
 }
 
 //new code version support 3D made by Abyss Morgan
-stock bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz){
+bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Float:tz,&Float:rx,&Float:rz){
 	new Float:radius = GetDistanceBetweenPoints3D(x,y,z,tx,ty,tz);
 	if(radius <= 0.0) return false;
 	CompRotationFloat(-(acos((tz-z)/radius)-90.0),rx);
@@ -31,7 +31,7 @@ stock bool:GetRotationFor2Point3D(Float:x,Float:y,Float:z,Float:tx,Float:ty,Floa
 }
 
 // Made by Fusez
-stock Float:GetPlayerPacketloss(playerid) {
+Float:GetPlayerPacketloss(playerid) {
 
 	if(PLoss == 1) return 0.0;
 	if(!IsPlayerConnected(playerid)) return 0.0;
@@ -203,7 +203,7 @@ enum {
 
 // Must be in sync with the enum above
 // Used in debug messages and GetRejectedHit
-stock const g_HitRejectReasons[][] = {
+const g_HitRejectReasons[][] = {
 	"None or invalid player shot",
 	"Invalid weapon",
 	"Last shot invalid",
@@ -230,7 +230,7 @@ stock const g_HitRejectReasons[][] = {
 	"Hit a disconnected player ID: %d"
 };
 
-stock const g_WeaponName[57][59] = {
+const g_WeaponName[57][59] = {
 	{"Fist"             }, {"Brass knuckles"}, {"Golf club"           },
 	{"Nightstick"       }, {"Knife"         }, {"Bat"                 },
 	{"Shovel"           }, {"Pool cue"      }, {"Katana"              },
@@ -252,7 +252,7 @@ stock const g_WeaponName[57][59] = {
 	{"Collision"        }, {"Splat"         }, {"Unknown"             }
 };
 
-stock const ac_ACNames[][] = {
+const ac_ACNames[][] = {
 	"Aimbot",
 	"(Auto) C-Bug",
 	"Silent Aim",
@@ -634,7 +634,7 @@ hook OnPlayerUpdate(playerid) {
 	return 1;
 }
 
-hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 
 	if(newkeys == KEY_YES) ac_iPlayerKeySpam[playerid]++;
 	if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT) {
@@ -669,7 +669,7 @@ hook OnPlayerEnterVehicle(playerid, vehicleid, ispassenger) {
 	arrAntiCheat[playerid][ac_iVehID] = vehicleid;
 }
 
-hook OnPlayerStateChange(playerid, newstate, oldstate) {
+hook OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate) {
 
 	if(newstate == PLAYER_STATE_DRIVER) ac_iLastVehicleID[playerid] = GetPlayerVehicleID(playerid);
 	if(oldstate == PLAYER_STATE_DRIVER && newstate == PLAYER_STATE_ONFOOT) defer AC_ResetPVars(playerid, 0);
@@ -681,7 +681,7 @@ hook OnPlayerSpawn(playerid) {
 	if(ac_IsDead[playerid]) ac_IsDead[playerid] = false;
 }
 
-hook OnPlayerDeath(playerid, killerid, reason) {
+hook OnPlayerDeath(playerid, killerid, WEAPON:reason) {
 
 	ac_IsDead[playerid] = true;
 	new iKillerID = GetDriverID(ac_iLastVehicleID[playerid]),
@@ -725,7 +725,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 }
 
 
-public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ) {
+public OnPlayerWeaponShot(playerid, WEAPON:weaponid, BULLET_HIT_TYPE:hittype, hitid, Float:fX, Float:fY, Float:fZ) {
 
 	szMiscArray[0] = 0;
 
@@ -733,10 +733,6 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 	if(!IsCorrectCameraMode(playerid)) AC_Process(playerid, AC_DESYNC, GetPlayerCameraMode(playerid));
 
 	new vehmodel = GetVehicleModel(GetPlayerVehicleID(playerid));
-	if(hittype == BULLET_HIT_TYPE_PLAYER && (BadFloat(fX) || BadFloat(fY) || BadFloat(fZ)))	{
-		Kick(playerid); // CRASHER DETECTED
-	    return 0;
-	}
 	if(weaponid == WEAPON_SILENCED && pTazer{playerid} == 1) {
 		new iShots = GetPVarInt(playerid, "TazerShots");
 
@@ -1195,7 +1191,7 @@ hook OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart) {
 }
 
 // Is called after OnPlayerWeaponShot
-hook OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart) {
+hook OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bodypart) {
 
 	// Ignore unreliable and invalid damage
 	if(playerid == INVALID_PLAYER_ID) return 0;
@@ -1219,7 +1215,7 @@ hook OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart) {
 	return 1;
 }
 
-stock AC_InitWeaponData() {
+AC_InitWeaponData() {
 
 	// Default weapon.dat
 	arrWeaponData[0][ac_WeaponDamage] = 1.0; // 0 - Fist
@@ -1279,7 +1275,7 @@ stock AC_InitWeaponData() {
 	arrWeaponData[54][ac_WeaponDamage] = 165.0;  // 54 - Splat
 }
 
-stock AC_AddRejectedHit(playerid, damagedid, reason, weapon, inf0 = 0, inf1 = 0, inf2 = 0) {
+AC_AddRejectedHit(playerid, damagedid, reason, weapon, inf0 = 0, inf1 = 0, inf2 = 0) {
 
 	new idx = ac_RejectedHitsIdx[playerid];
 	if (arrRejectedHitData[playerid][idx][acr_iTime]) {
@@ -1309,12 +1305,12 @@ stock AC_AddRejectedHit(playerid, damagedid, reason, weapon, inf0 = 0, inf1 = 0,
 	}
 }
 
-/*stock IsPlayerPaused(playerid) {
+/*IsPlayerPaused(playerid) {
 
 	return (GetTickCount() - ac_LastUpdate[playerid] > 2000);
 }*/
 
-stock IsPlayerSpawned(playerid) {
+IsPlayerSpawned(playerid) {
 
 	if(ac_IsDead[playerid] || ac_BeingResynced[playerid]) {
 		return false;
@@ -1327,13 +1323,13 @@ stock IsPlayerSpawned(playerid) {
 }
 
 forward Float:AngleBetweenPoints(Float:x1, Float:y1, Float:x2, Float:y2);
-stock Float:AngleBetweenPoints(Float:x1, Float:y1, Float:x2, Float:y2) {
+Float:AngleBetweenPoints(Float:x1, Float:y1, Float:x2, Float:y2) {
 
 	return -(90.0 - atan2(y1 - y2, x1 - x2));
 }
 
 forward GetPlayerSpeed(i);
-stock GetPlayerSpeed(i) {
+GetPlayerSpeed(i) {
 
 	new Float:fVel[3],
 		iSpeed;
@@ -1344,7 +1340,7 @@ stock GetPlayerSpeed(i) {
 	return iSpeed;
 }
 
-stock GetDriverID(iVehID) {
+GetDriverID(iVehID) {
 
 	if(iVehID == INVALID_VEHICLE_ID) return INVALID_PLAYER_ID;
 	foreach(new i : Player) {
@@ -1602,7 +1598,7 @@ AC_PlayerHealthArmor(playerid) {
 }
 
 
-stock AC_GetWeaponName(weaponid) {
+AC_GetWeaponName(weaponid) {
 
 	new szWeaponName[32];
 	if(!(0 <= weaponid <= sizeof(g_WeaponName))) format(szWeaponName, sizeof(szWeaponName), "Weapon %d", weaponid);
@@ -1610,12 +1606,12 @@ stock AC_GetWeaponName(weaponid) {
 	return szWeaponName;
 }
 
-stock IsBulletWeapon(weaponid) {
+IsBulletWeapon(weaponid) {
 
 	return (WEAPON_COLT45 <= weaponid <= WEAPON_SNIPER) || weaponid == WEAPON_MINIGUN;
 }
 
-stock IsHighRateWeapon(weaponid) {
+IsHighRateWeapon(weaponid) {
 
 	switch (weaponid) {
 		case WEAPON_FLAMETHROWER, WEAPON_DROWN, WEAPON_CARPARK,
@@ -1627,7 +1623,7 @@ stock IsHighRateWeapon(weaponid) {
 	return false;
 }
 
-stock IsMeleeWeapon(weaponid) {
+IsMeleeWeapon(weaponid) {
 
 	return (WEAPON_UNARMED <= weaponid <= WEAPON_KATANA) || (WEAPON_DILDO <= weaponid <= WEAPON_CANE) || weaponid == WEAPON_PISTOLWHIP;
 }
@@ -1879,7 +1875,7 @@ For each time slice t, the inference carries out in two stages: (See paper)
 
 
 
-stock AC_BayesianNetwork(playerid, iTargetID) {
+AC_BayesianNetwork(playerid, iTargetID) {
 
 	if(!arrAntiCheat[playerid][ac_inTrainingMode]) return 1;
 	
@@ -1999,7 +1995,7 @@ stock AC_BayesianNetwork(playerid, iTargetID) {
 	return 1;
 }
 
-stock AC_Probability(playerid, iTargetID) {
+AC_Probability(playerid, iTargetID) {
 
 	new Float:fDeltaAimingDirection,
 		Float:fPlayerAngle[2], //t and t=-1
@@ -2247,7 +2243,7 @@ public OnACQueryResult2(i, iRows) {
 }
 
 
-stock ACSQLQuery(i, iRows) {
+ACSQLQuery(i, iRows) {
 
 	format(szMiscArray, sizeof(szMiscArray), "SELECT * FROM `aimbot` WHERE `accuracy` = '%d' AND `ischeating` = '%d' \
 			AND `aimingdirection` = '%d' AND `playerspeed` = '%d' AND `targetspeed` = '%d' AND `distance` = '%d' AND `deltaaim` = '%d'",
@@ -2290,7 +2286,7 @@ GetHealthArmorForLabel(playerid) {
 */
 
 /*
-stock GetPValueForLabel(Float:fData) {
+GetPValueForLabel(Float:fData) {
 
 	new szString[128],
 		iData;

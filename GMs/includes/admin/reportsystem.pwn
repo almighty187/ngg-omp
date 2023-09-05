@@ -45,7 +45,7 @@ public ReplyTimer(reportid)
     Reports[reportid][CheckingReport] = INVALID_PLAYER_ID;
 }
 
-stock SendReportToQue(reportfrom, report[], reportlevel, reportpriority)
+SendReportToQue(reportfrom, const report[], reportlevel, reportpriority)
 {
     new newid = INVALID_REPORT_ID, string[128];
 
@@ -89,7 +89,7 @@ stock SendReportToQue(reportfrom, report[], reportlevel, reportpriority)
 					{
 						TextDrawSetString(PriorityReport[i], "~y~New Report");
 						TextDrawShowForPlayer(i, PriorityReport[i]);
-						SetTimerEx("HideReportText", 2000, 0, "d", i);
+						SetTimerEx("HideReportText", 2000, false, "d", i);
 					}
 				}	
     		}
@@ -102,7 +102,7 @@ stock SendReportToQue(reportfrom, report[], reportlevel, reportpriority)
 						//GameTextForPlayer(i, "~w~~n~n~n~Priority 5 Item Pending", 1500, 3);
 						TextDrawSetString(PriorityReport[i], "~w~Priority 5 Item Pending");
 						TextDrawShowForPlayer(i, PriorityReport[i]);
-						SetTimerEx("HideReportText", 2000, 0, "d", i);
+						SetTimerEx("HideReportText", 2000, false, "d", i);
 					}
 				}	
     		}
@@ -131,7 +131,7 @@ stock SendReportToQue(reportfrom, report[], reportlevel, reportpriority)
         	Reports[newid][HasBeenUsed] = 1;
         	Reports[newid][BeingUsed] = 1;
         	Reports[newid][ReportPriority] = reportpriority;
-        	Reports[newid][ReportExpireTimer] = SetTimerEx("ReportTimer", 60000, 0, "d", newid);
+        	Reports[newid][ReportExpireTimer] = SetTimerEx("ReportTimer", 60000, false, "d", newid);
 		}
 		else
 		{
@@ -141,7 +141,7 @@ stock SendReportToQue(reportfrom, report[], reportlevel, reportpriority)
         	Reports[newid][HasBeenUsed] = 1;
         	Reports[newid][BeingUsed] = 1;
         	Reports[newid][ReportPriority] = reportpriority;
-        	Reports[newid][ReportExpireTimer] = SetTimerEx("ReportTimer", 60000, 0, "d", newid);
+        	Reports[newid][ReportExpireTimer] = SetTimerEx("ReportTimer", 60000, false, "d", newid);
 		}
     }
     else
@@ -151,7 +151,7 @@ stock SendReportToQue(reportfrom, report[], reportlevel, reportpriority)
     }
 }
 
-stock ClearReports()
+ClearReports()
 {
 	for(new i=0;i<MAX_REPORTS;i++)
 	{
@@ -184,7 +184,7 @@ public ReportTimer(reportid)
 	    if(Reports[reportid][TimeToExpire] >= 0)
 	    {
 	        Reports[reportid][TimeToExpire]++;
-  			Reports[reportid][ReportExpireTimer] = SetTimerEx("ReportTimer", 60000, 0, "d", reportid);
+  			Reports[reportid][ReportExpireTimer] = SetTimerEx("ReportTimer", 60000, false, "d", reportid);
 		}
 	}
 	return 1;
@@ -896,7 +896,7 @@ CMD:ar(playerid, params[])
 		}		PlayerInfo[playerid][pAcceptReport]++;
 		ReportCount[playerid]++;
 		ReportHourCount[playerid]++;
-		Reports[reportid][ReplyTimerr] = SetTimerEx("ReplyTimer", 30000, 0, "d", reportid);
+		Reports[reportid][ReplyTimerr] = SetTimerEx("ReplyTimer", 30000, false, "d", reportid);
 		Reports[reportid][CheckingReport] = playerid;
 		Reports[reportid][BeingUsed] = 0;
 		Reports[reportid][TimeToExpire] = 0;

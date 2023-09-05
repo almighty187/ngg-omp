@@ -37,11 +37,11 @@
 */
 
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 new dr_iPlayerTimeStamp[MAX_PLAYERS];
 
-CMD:odrughelp(playerid, params[])
+CMD:odrughelp(playerid)
 {
 	SendClientMessageEx(playerid, COLOR_WHITE,"-----------------------------------------------------------------------------------");
 	SendClientMessageEx(playerid, COLOR_GREY, "GENERAL: /mydrugs, /usedrug, /buypot, /buyopium, /plantpot, /plantopium, /pickplant, /checkplant /makeheroin");
@@ -122,7 +122,7 @@ CMD:usedrug(playerid, params[])
 	if(drug == 4 && PlayerInfo[playerid][pSyringes] <= 0) return SendClientMessageEx(playerid, COLOR_GRAD1, "You need a syringe. Craft one or buy one from a craftsman.");
 	if(drug != 4 && dr_iPlayerTimeStamp[playerid] > gettime() - 60) return SendClientMessageEx(playerid, COLOR_GRAD1, "You have been injured in the last minute");
 	if(drug != 4 && GetPVarType(playerid, "Injured")) return SendClientMessageEx(playerid, COLOR_GRAD1, "You cannot do this right now.");
-	if(!IsPlayerInAnyVehicle(playerid) && drug != 4) ApplyAnimation(playerid,"SMOKING","M_smkstnd_loop",2.1,0,0,0,0,0);
+	if(!IsPlayerInAnyVehicle(playerid) && drug != 4) ApplyAnimation(playerid,"SMOKING","M_smkstnd_loop",2.1,false,false,false,false,0);
 
 	PlayerInfo[playerid][pDrugs][drug] -= amount;
 
@@ -187,7 +187,7 @@ public DrugEffectTime(playerid)
     return 1;
 }
 
-hook OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
+hook OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bodypart)
 {
 	dr_iPlayerTimeStamp[playerid] = gettime();
 }
@@ -248,9 +248,9 @@ GivePlayerDrugEffects(playerid, id, amount)
 				SetPVarInt(playerid, "HeroinLastUsed", gettime());
 				PlayerInfo[playerid][pSyringes] -= 1;
 
-				SetPVarInt(playerid, "InjectHeroinStanding", SetTimerEx("InjectHeroinStanding", 5000, 0, "i", playerid));
+				SetPVarInt(playerid, "InjectHeroinStanding", SetTimerEx("InjectHeroinStanding", 5000, false, "i", playerid));
 
-				if(!IsPlayerInAnyVehicle(playerid)) ApplyAnimation(playerid,"SMOKING","M_smkstnd_loop",2.1,0,0,0,0,0);
+				if(!IsPlayerInAnyVehicle(playerid)) ApplyAnimation(playerid,"SMOKING","M_smkstnd_loop",2.1,false,false,false,false,0);
 
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have injected heroin into yourself, the effects will begin in 5 seconds.");
 				format(string, sizeof(string), "* %s injects heroin into themself.", GetPlayerNameEx(playerid));
@@ -262,7 +262,7 @@ GivePlayerDrugEffects(playerid, id, amount)
 			PlayerInfo[playerid][pSyringes] -= 1;
 
 			SetPVarInt(playerid, "Health", 30);
-			SetPVarInt(playerid, "InjectHeroin", SetTimerEx("InjectHeroin", 5000, 0, "i", playerid));
+			SetPVarInt(playerid, "InjectHeroin", SetTimerEx("InjectHeroin", 5000, false, "i", playerid));
 
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have injected heroin into yourself, the effects will begin in 5 seconds.");
 			format(string, sizeof(string), "* %s injects heroin into themself.", GetPlayerNameEx(playerid));
@@ -280,7 +280,7 @@ public InjectHeroin(playerid)
     KillEMSQueue(playerid);
 	ClearAnimationsEx(playerid);
 	SetHealth(playerid, 30);
-	SetPVarInt(playerid, "HeroinEffect", SetTimerEx("HeroinEffect", 1000, 1, "i", playerid));
+	SetPVarInt(playerid, "HeroinEffect", SetTimerEx("HeroinEffect", 1000, true, "i", playerid));
 
 	SendClientMessageEx(playerid, COLOR_GREEN, "The effects of the heroin have started.");
 	return 1;
@@ -315,7 +315,7 @@ public InjectHeroinStanding(playerid)
 {
 	SetPVarInt(playerid, "HeroinDamageResist", 1);
 	SendClientMessageEx(playerid, COLOR_GREEN, "The effects of the heroin have started.");
-	SetPVarInt(playerid, "HeroinEffectStanding", SetTimerEx("HeroinEffectStanding", 30000, 0, "i", playerid));
+	SetPVarInt(playerid, "HeroinEffectStanding", SetTimerEx("HeroinEffectStanding", 30000, false, "i", playerid));
 	return 1;
 }
 
@@ -385,7 +385,7 @@ ListDrugs(playerid)
 	SendClientMessageEx(playerid, COLOR_GRAD1, szMiscArray);
 }
 
-GetDrugID(Drug[])
+GetDrugID(const Drug[])
 {
 	for(new i; i < sizeof(Drugs); ++i) {
 
@@ -481,7 +481,7 @@ Character_Actor(playerid, choice)
 
 // PLANT SYSTEM //
 
-stock LoadPlants() {
+LoadPlants() {
 	printf("[LoadPlants] Loading data from database...");
 	mysql_tquery(MainPipeline, "SELECT * FROM `plants`", "PlantsLoadQuery", "");
 }
@@ -520,26 +520,13 @@ public PlantsLoadQuery() {
 	return 1;
 }
 
-stock SavePlant(plant)
+SavePlant(plant)
 {
 	new query[300];
 	mysql_format(MainPipeline, query, sizeof(query), "UPDATE `plants` SET `Owner` = %d, `Object` = %d, `PlantType` = %d, `PositionX` = %f, `PositionY` = %f, `PositionZ` = %f, `Virtual` = %d, \
 	`Interior` = %d, `Growth` = %d, `Expires` = %d, `DrugsSkill` = %d WHERE `PlantID` = %d",Plants[plant][pOwner], Plants[plant][pObject], Plants[plant][pPlantType], Plants[plant][pPos][0], Plants[plant][pPos][1], Plants[plant][pPos][2],
 	Plants[plant][pVirtual], Plants[plant][pInterior], Plants[plant][pGrowth], Plants[plant][pExpires], Plants[plant][pDrugsSkill], plant+1);
 	mysql_tquery(MainPipeline, query, "OnQueryFinish", "i", SENDDATA_THREAD);
-	return 1;
-}
-
-stock SavePlants()
-{
-	new i = 0;
-	while(i < MAX_PLANTS)
-	{
-		SavePlant(i);
-		i++;
-	}
-	if(i > 0) printf("[plant] %i plants saved", i);
-	else printf("[plant] Error: No plants saved!");
 	return 1;
 }
 
@@ -561,7 +548,7 @@ CMD:makeheroin(playerid, params[])
 	ProxDetector(25.0, playerid, szMessage, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 
 	Purification[0] = 1;
-	SetPVarInt(playerid, "AttemptPurify", SetTimerEx("AttemptPurify", 1000, 1, "i", playerid));
+	SetPVarInt(playerid, "AttemptPurify", SetTimerEx("AttemptPurify", 1000, true, "i", playerid));
 	return 1;
 }
 
@@ -584,7 +571,7 @@ CMD:plantopium(playerid, params[])
 					szMessage[48],
 					Float:xyz[3];
 
-        		ApplyAnimation(playerid,"BOMBER","BOM_Plant_Crouch_In", 4.0, 0, 0, 0, 0, 0, 1);
+        		ApplyAnimation(playerid,"BOMBER","BOM_Plant_Crouch_In", 4.0, false, false, false, false, 0, SYNC_ALL);
 				SendClientMessageEx(playerid, COLOR_GREEN, "You have planted some opium. It will take around 2 hours to grow.");
 		        GetPlayerPos(playerid, xyz[0], xyz[1], xyz[2]);
 		        xyz[2] -= 1.0;
@@ -626,7 +613,7 @@ CMD:plantpot(playerid, params[])
 					szMessage[48],
 					Float: xyz[3];
 
-        		ApplyAnimation(playerid,"BOMBER","BOM_Plant_Crouch_In", 4.0, 0, 0, 0, 0, 0, 1);
+        		ApplyAnimation(playerid,"BOMBER","BOM_Plant_Crouch_In", 4.0, false, false, false, false, 0, SYNC_ALL);
 				SendClientMessageEx(playerid, COLOR_GREEN, "You have planted some weed. It will take around 20-45 minutes to grow.");
 		        GetPlayerPos(playerid, xyz[0], xyz[1], xyz[2]);
 				xyz[2] -= 1.5;
@@ -710,7 +697,7 @@ CMD:destroyplant(playerid, params[])
 					new
 						szMessage[128];
 
-					ApplyAnimation(playerid,"BOMBER","BOM_Plant_Crouch_Out", 4.0, 0, 0, 0, 0, 0, 1);
+					ApplyAnimation(playerid,"BOMBER","BOM_Plant_Crouch_Out", 4.0, false, false, false, false, 0, SYNC_ALL);
 
 					switch(Plants[i][pPlantType]) {
 	    				case 1:
@@ -822,7 +809,7 @@ CMD:pickplant(playerid, params[])
 						{
 							new szMessage[128];
 
-							ApplyAnimation(playerid,"BOMBER","BOM_Plant_Crouch_Out", 4.0, 0, 0, 0, 0, 0, 1);
+							ApplyAnimation(playerid,"BOMBER","BOM_Plant_Crouch_Out", 4.0, false, false, false, false, 0, SYNC_ALL);
 
 							format(szMessage, sizeof(szMessage), "You picked the plant and gathered %d grams of pot.", Plants[i][pGrowth]);
 							SendClientMessageEx(playerid, COLOR_GREY, szMessage);
@@ -852,7 +839,7 @@ CMD:pickplant(playerid, params[])
 							new szMessage[128],
 								Grams = Random(10, 30);
 
-							ApplyAnimation(playerid,"BOMBER","BOM_Plant_Crouch_Out", 4.0, 0, 0, 0, 0, 0, 1);
+							ApplyAnimation(playerid,"BOMBER","BOM_Plant_Crouch_Out", 4.0, false, false, false, false, 0, SYNC_ALL);
 
 							format(szMessage, sizeof(szMessage), "You picked the plant and gathered %d milligrams of opium.", Grams);
 							SendClientMessageEx(playerid, COLOR_GREY, szMessage);

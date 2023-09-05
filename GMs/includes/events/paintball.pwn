@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 IsPlayerInArea(playerid, Float:minx, Float:maxx, Float:miny, Float:maxy)
 {
@@ -45,7 +45,7 @@ IsPlayerInArea(playerid, Float:minx, Float:maxx, Float:miny, Float:maxy)
     return 0;
 }
 
-stock PaintballEditMenu(playerid)
+PaintballEditMenu(playerid)
 {
 	new status[64];
 	for(new i = 0; i < MAX_ARENAS; i++)
@@ -71,7 +71,7 @@ stock PaintballEditMenu(playerid)
 	ShowPlayerDialogEx(playerid,PBEDITMENU,DIALOG_STYLE_LIST,"Paintball Arena - Edit Menu:",szMiscArray,"Select","Back");
 }
 
-stock PaintballEditArenaMenu(playerid)
+PaintballEditArenaMenu(playerid)
 {
 	if(!GetPVarType(playerid, "ArenaNumber")) { return 1; }
 
@@ -81,7 +81,7 @@ stock PaintballEditArenaMenu(playerid)
 	return 1;
 }
 
-stock PaintballEditArenaName(playerid)
+PaintballEditArenaName(playerid)
 {
 	if(!GetPVarType(playerid, "ArenaNumber")) { return 1; }
 
@@ -91,49 +91,49 @@ stock PaintballEditArenaName(playerid)
 	return 1;
 }
 
-stock PaintballEditArenaDMSpawns(playerid)
+PaintballEditArenaDMSpawns(playerid)
 {
     if(!GetPVarType(playerid, "ArenaNumber")) { return 1; }
 	ShowPlayerDialogEx(playerid,PBEDITARENADMSPAWNS,DIALOG_STYLE_LIST,"Paintball Arena - Edit Arena DM Spawns:","Deathmatch Spawn 1\nDeathmatch Spawn 2\nDeathmatch Spawn 3\nDeathmatch Spawn 4","Change","Back");
 	return 1;
 }
 
-stock PaintballEditArenaTeamSpawns(playerid)
+PaintballEditArenaTeamSpawns(playerid)
 {
 	if(!GetPVarType(playerid, "ArenaNumber")) { return 1; }
 	ShowPlayerDialogEx(playerid,PBEDITARENATEAMSPAWNS,DIALOG_STYLE_LIST,"Paintball Arena - Edit Arena Team Spawns:","Red Team Spawn 1\nRed Team Spawn 2\nRed Team Spawn 3\nBlue Team Spawn 1\nBlue Team Spawn 2\nBlue Team Spawn 3","Change","Back");
 	return 1;
 }
 
-stock PaintballEditArenaFlagSpawns(playerid)
+PaintballEditArenaFlagSpawns(playerid)
 {
 	if(!GetPVarType(playerid, "ArenaNumber")) { return 1; }
 	ShowPlayerDialogEx(playerid,PBEDITARENAFLAGSPAWNS,DIALOG_STYLE_LIST,"Paintball Arena - Edit Arena Flag Spawns:","Red Team Flag\nBlue Team Flag","Change","Back");
 	return 1;
 }
 
-stock PaintballEditArenaInt(playerid)
+PaintballEditArenaInt(playerid)
 {
 	if(!GetPVarType(playerid, "ArenaNumber")) { return 1; }
 	ShowPlayerDialogEx(playerid,PBEDITARENAINT,DIALOG_STYLE_INPUT,"Paintball Arena - Edit Arena Interior:","Please enter a new interior id to place on the Arena:","Change","Back");
 	return 1;
 }
 
-stock PaintballEditArenaVW(playerid)
+PaintballEditArenaVW(playerid)
 {
 	if(!GetPVarType(playerid, "ArenaNumber")) { return 1; }
 	ShowPlayerDialogEx(playerid,PBEDITARENAVW,DIALOG_STYLE_INPUT,"Paintball Arena - Edit Arena Virtual World:","Please enter a new virtual world id to place on the Arena:","Change","Back");
 	return 1;
 }
 
-stock PaintballEditArenaHillRadius(playerid)
+PaintballEditArenaHillRadius(playerid)
 {
 	if(!GetPVarType(playerid, "ArenaNumber")) { return 1; }
 	ShowPlayerDialogEx(playerid,PBEDITARENAHILLRADIUS,DIALOG_STYLE_INPUT,"Paintball Arena - Edit Arena Hill Radius:","Please enter a new hill radius for the Arena:","Change","Back");
 	return 1;
 }
 
-stock PaintballScoreboard(playerid, arenaid)
+PaintballScoreboard(playerid, arenaid)
 {
 	szMiscArray[0] = 0;
 	
@@ -214,7 +214,7 @@ stock PaintballScoreboard(playerid, arenaid)
 	return 1;
 }
 
-stock PaintballArenaSelection(playerid)
+PaintballArenaSelection(playerid)
 {
 	new status[64], gametype[64], eperm[64], war[32], limit, count, money;
  	for(new i = 0; i < MAX_ARENAS; i++) if(!isnull(PaintBallArena[i][pbArenaName]))
@@ -291,16 +291,16 @@ stock PaintballArenaSelection(playerid)
 	ShowPlayerDialogEx(playerid,PBARENASELECTION,DIALOG_STYLE_LIST,"Paintball Arena - Choose a Arena:",szMiscArray,"Select","Back");
 }
 
-stock PaintballTokenBuyMenu(playerid)
+PaintballTokenBuyMenu(playerid)
 {
 	format(szMiscArray,sizeof(szMiscArray),"{FFFFFF}How many Paintball Tokens do you wish to purchase?\n\nEach token costs a total of $%d. You currently have {AA3333}%d{FFFFFF} Tokens.", 5000, PlayerInfo[playerid][pPaintTokens]);
 	ShowPlayerDialogEx(playerid,PBTOKENBUYMENU,DIALOG_STYLE_INPUT,"Paintball Arena - Paintball Tokens:",szMiscArray,"Buy","Back");
 }
 
-stock PaintballSetupArena(playerid)
+PaintballSetupArena(playerid)
 {
 	new gametype[32], password[64], wepname1[128], wepname2[128], wepname3[128], eperm[64], finstagib[64], fnoweapons[64], war[32];
-	new timelimit, limit, money, Float:health, Float:armor, wep1, wep2, wep3;
+	new timelimit, limit, money, Float:health, Float:armor, WEAPON:wep1, WEAPON:wep2, WEAPON:wep3;
 	new a = GetPVarInt(playerid, "ArenaNumber");
 
 	format(password,sizeof(password),"%s", PaintBallArena[a][pbPassword]);
@@ -399,7 +399,7 @@ stock PaintballSetupArena(playerid)
 	ShowPlayerDialogEx(playerid,PBSETUPARENA,DIALOG_STYLE_LIST,"Paintball Arena - Setup Arena:",szMiscArray,"Select","Leave");
 }
 
-stock PaintballSwitchTeam(playerid)
+PaintballSwitchTeam(playerid)
 {
 	new arenaid = GetPVarInt(playerid, "IsInArena");
 	new teamlimit = PaintBallArena[arenaid][pbLimit]/2;
@@ -407,7 +407,7 @@ stock PaintballSwitchTeam(playerid)
 	ShowPlayerDialogEx(playerid,PBSWITCHTEAM,DIALOG_STYLE_LIST,"Paintball Arena - Choose a Team:", szMiscArray,"Switch","Cancel");
 }
 
-stock InitPaintballArenas()
+InitPaintballArenas()
 {
 	for(new i = 0; i < MAX_ARENAS; i++)
 	{
@@ -433,9 +433,9 @@ stock InitPaintballArenas()
 		PaintBallArena[i][pbTeamBlue] = 0;
 		PaintBallArena[i][pbBidMoney] = 500;
 		PaintBallArena[i][pbMoneyPool] = 0;
-		PaintBallArena[i][pbWeapons][0] = 29;
-		PaintBallArena[i][pbWeapons][1] = 24;
-		PaintBallArena[i][pbWeapons][2] = 27;
+		PaintBallArena[i][pbWeapons][0] = WEAPON_MP5;
+		PaintBallArena[i][pbWeapons][1] = WEAPON_DEAGLE;
+		PaintBallArena[i][pbWeapons][2] = WEAPON_SHOTGSPA;
 		PaintBallArena[i][pbHillX] = 0.0;
 		PaintBallArena[i][pbHillY] = 0.0;
 		PaintBallArena[i][pbHillZ] = 0.0;
@@ -444,7 +444,7 @@ stock InitPaintballArenas()
 	return 1;
 }
 
-stock ResetPaintballArena(arenaid)
+ResetPaintballArena(arenaid)
 {
 	format(szMiscArray, sizeof(szMiscArray), "Unoccupied");
 	strmid(PaintBallArena[arenaid][pbOwner], szMiscArray, 0, strlen(szMiscArray), 64);
@@ -484,9 +484,9 @@ stock ResetPaintballArena(arenaid)
 	PaintBallArena[arenaid][pbTeamBlue] = 0;
 	PaintBallArena[arenaid][pbBidMoney] = 500;
 	PaintBallArena[arenaid][pbMoneyPool] = 0;
-	PaintBallArena[arenaid][pbWeapons][0] = 29;
-	PaintBallArena[arenaid][pbWeapons][1] = 24;
-	PaintBallArena[arenaid][pbWeapons][2] = 27;
+	PaintBallArena[arenaid][pbWeapons][0] = WEAPON_MP5;
+	PaintBallArena[arenaid][pbWeapons][1] = WEAPON_DEAGLE;
+	PaintBallArena[arenaid][pbWeapons][2] = WEAPON_SHOTGSPA;
 	PaintBallArena[arenaid][pbTeamRedKills] = 0;
 	PaintBallArena[arenaid][pbTeamBlueKills] = 0;
 	PaintBallArena[arenaid][pbTeamRedDeaths] = 0;
@@ -525,15 +525,15 @@ stock ResetPaintballArena(arenaid)
 	return 1;
 }
 
-stock CreatePaintballArenaHill(arenaid) {
-	PaintBallArena[arenaid][pbHillTextID] = Create3DTextLabel("Hill", COLOR_GREEN, PaintBallArena[arenaid][pbHillX], PaintBallArena[arenaid][pbHillY], PaintBallArena[arenaid][pbHillZ], 200.0, PaintBallArena[arenaid][pbVirtual], 0);
+CreatePaintballArenaHill(arenaid) {
+	PaintBallArena[arenaid][pbHillTextID] = Create3DTextLabel("Hill", COLOR_GREEN, PaintBallArena[arenaid][pbHillX], PaintBallArena[arenaid][pbHillY], PaintBallArena[arenaid][pbHillZ], 200.0, PaintBallArena[arenaid][pbVirtual]);
 }
 
-stock ResetPaintballArenaHill(arenaid) {
+ResetPaintballArenaHill(arenaid) {
     Delete3DTextLabel(PaintBallArena[arenaid][pbHillTextID]);
 }
 
-stock SortWinnerPaintballScores(arenaid)
+SortWinnerPaintballScores(arenaid)
 {
 	new highscore = 0;
 	new score = 0;
@@ -556,7 +556,7 @@ stock SortWinnerPaintballScores(arenaid)
 	return winnerid;
 }
 
-stock SendPaintballArenaTextMessage(arenaid, style, message[])
+SendPaintballArenaTextMessage(arenaid, style, const message[])
 {
 	foreach(new p: Player)
 	{	
@@ -569,7 +569,7 @@ stock SendPaintballArenaTextMessage(arenaid, style, message[])
 	return 1;
 }
 
-stock SendPaintballArenaMessage(arenaid, color, message[])
+SendPaintballArenaMessage(arenaid, color, const message[])
 {
 	foreach(new p: Player)
 	{
@@ -583,7 +583,7 @@ stock SendPaintballArenaMessage(arenaid, color, message[])
 }
 
 /*
-stock SendPaintballArenaSound(arenaid, soundid)
+SendPaintballArenaSound(arenaid, soundid)
 {
     foreach(new p: Player) {
    		new carenaid = GetPVarInt(p, "IsInArena");
@@ -594,7 +594,7 @@ stock SendPaintballArenaSound(arenaid, soundid)
 	return 1;
 }
 
-stock //SendPaintballArenaAudio(arenaid)
+//SendPaintballArenaAudio(arenaid)
 {
 	foreach(new p: Player) {
 	    new carenaid = GetPVarInt(p, "IsInArena");
@@ -605,7 +605,7 @@ stock //SendPaintballArenaAudio(arenaid)
 	return 1;
 }
 
-stock SendPaintballArenaAudioTeam(arenaid, team)
+SendPaintballArenaAudioTeam(arenaid, team)
 {
 	foreach(new p: Player) {
 	    new carenaid = GetPVarInt(p, "IsInArena");
@@ -617,7 +617,7 @@ stock SendPaintballArenaAudioTeam(arenaid, team)
 	}
 }*/
 
-stock ResetFlagPaintballArena(arenaid, flagid)
+ResetFlagPaintballArena(arenaid, flagid)
 {
 	switch(flagid)
 	{
@@ -659,7 +659,7 @@ stock ResetFlagPaintballArena(arenaid, flagid)
 	}
 }
 
-stock ScoreFlagPaintballArena(playerid, arenaid, flagid)
+ScoreFlagPaintballArena(playerid, arenaid, flagid)
 {
 	switch(flagid)
 	{
@@ -720,7 +720,7 @@ stock ScoreFlagPaintballArena(playerid, arenaid, flagid)
 	}
 }
 
-stock DropFlagPaintballArena(playerid, arenaid, flagid)
+DropFlagPaintballArena(playerid, arenaid, flagid)
 {
 	new Float:X, Float:Y, Float:Z;
 	GetPlayerPos(playerid, X, Y, Z);
@@ -737,7 +737,7 @@ stock DropFlagPaintballArena(playerid, arenaid, flagid)
 			format(szMiscArray,sizeof(szMiscArray),"[Paintball Arena] %s has dropped the Red Flag!", GetPlayerNameEx(playerid));
 	        SendPaintballArenaMessage(arenaid, COLOR_YELLOW, szMiscArray);
 	        PaintBallArena[arenaid][pbFlagRedID] = CreateDynamicObject(RED_FLAG_OBJ, X, Y, Z, 0.0, 0.0, 0.0, PaintBallArena[arenaid][pbVirtual], PaintBallArena[arenaid][pbInterior], -1);
-	        PaintBallArena[arenaid][pbFlagRedTextID] = Create3DTextLabel("Red Flag", COLOR_RED, X, Y, Z, 200.0, PaintBallArena[arenaid][pbVirtual], 0);
+	        PaintBallArena[arenaid][pbFlagRedTextID] = Create3DTextLabel("Red Flag", COLOR_RED, X, Y, Z, 200.0, PaintBallArena[arenaid][pbVirtual]);
 	        //PaintBallArena[arenaid][pbFlagRedTextID] = CreateDynamic3DTextLabel("Red Flag", COLOR_RED, X, Y, Z, 200.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, PaintBallArena[arenaid][pbVirtual], PaintBallArena[arenaid][pbInterior]);
 	        PaintBallArena[arenaid][pbFlagRedActiveTime] = 30;
 
@@ -753,7 +753,7 @@ stock DropFlagPaintballArena(playerid, arenaid, flagid)
 			format(szMiscArray,sizeof(szMiscArray),"[Paintball Arena] %s has dropped the Blue Flag!", GetPlayerNameEx(playerid));
 	        SendPaintballArenaMessage(arenaid, COLOR_YELLOW, szMiscArray);
 	        PaintBallArena[arenaid][pbFlagBlueID] = CreateDynamicObject(BLUE_FLAG_OBJ, X, Y, Z, 0.0, 0.0, 0.0, PaintBallArena[arenaid][pbVirtual], PaintBallArena[arenaid][pbInterior], -1);
-	        PaintBallArena[arenaid][pbFlagBlueTextID] = Create3DTextLabel("Blue Flag", COLOR_DBLUE, X, Y, Z, 200.0, PaintBallArena[arenaid][pbVirtual], 0);
+	        PaintBallArena[arenaid][pbFlagBlueTextID] = Create3DTextLabel("Blue Flag", COLOR_DBLUE, X, Y, Z, 200.0, PaintBallArena[arenaid][pbVirtual]);
 	        //PaintBallArena[arenaid][pbFlagBlueTextID] = CreateDynamic3DTextLabel("Blue Flag", COLOR_DBLUE, X, Y, Z, 200.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, PaintBallArena[arenaid][pbVirtual], PaintBallArena[arenaid][pbInterior]);
 	        PaintBallArena[arenaid][pbFlagBlueActiveTime] = 30;
 
@@ -764,7 +764,7 @@ stock DropFlagPaintballArena(playerid, arenaid, flagid)
 	}
 }
 
-stock PickupFlagPaintballArena(playerid, arenaid, flagid)
+PickupFlagPaintballArena(playerid, arenaid, flagid)
 {
 	new index = -1;
     if(GetPlayerState(playerid) == PLAYER_STATE_WASTED) { return 1; }
@@ -811,7 +811,7 @@ stock PickupFlagPaintballArena(playerid, arenaid, flagid)
 	return 1;
 }
 
-stock SpawnPaintballArena(playerid, arenaid)
+SpawnPaintballArena(playerid, arenaid)
 {
 	switch(PaintBallArena[arenaid][pbGameType])
 	{
@@ -910,7 +910,7 @@ stock SpawnPaintballArena(playerid, arenaid)
  	GivePlayerValidWeapon(playerid, PaintBallArena[arenaid][pbWeapons][2]);
 }
 
-stock JoinPaintballArena(playerid, arenaid, password[])
+JoinPaintballArena(playerid, arenaid, const password[])
 {
 	new name[MAX_PLAYER_NAME];
 	GetPlayerName(playerid,name,sizeof(name));
@@ -1047,7 +1047,7 @@ stock JoinPaintballArena(playerid, arenaid, password[])
  	return 1;
 }
 
-stock LeavePaintballArena(playerid, arenaid, disconnect = 0)
+LeavePaintballArena(playerid, arenaid, disconnect = 0)
 {
 	if(!GetPVarType(playerid, "IsInArena")) return 1;
 	if(arenaid == GetPVarInt(playerid, "IsInArena"))
@@ -1179,7 +1179,7 @@ public TickCTF(playerid)
 					        }
 					        if(PaintBallArena[arenaid][pbFlagNoWeapons] == 1)
 					        {
-					            SetPlayerArmedWeapon(playerid, 0);
+					            SetPlayerArmedWeapon(playerid, WEAPON_FIST);
 					        }
 							PickupFlagPaintballArena(playerid, arenaid, 2);
 					    }
@@ -1195,7 +1195,7 @@ public TickCTF(playerid)
 					        }
 					        if(PaintBallArena[arenaid][pbFlagNoWeapons] == 1)
 					        {
-					            SetPlayerArmedWeapon(playerid, 0);
+					            SetPlayerArmedWeapon(playerid, WEAPON_FIST);
 					        }
 							PickupFlagPaintballArena(playerid, arenaid, 2);
 					    }
@@ -1234,7 +1234,7 @@ public TickCTF(playerid)
 					        }
 					        if(PaintBallArena[arenaid][pbFlagNoWeapons] == 1)
 					        {
-					            SetPlayerArmedWeapon(playerid, 0);
+					            SetPlayerArmedWeapon(playerid, WEAPON_FIST);
 					        }
 							PickupFlagPaintballArena(playerid, arenaid, 1);
 					    }
@@ -1250,7 +1250,7 @@ public TickCTF(playerid)
 					        }
 					        if(PaintBallArena[arenaid][pbFlagNoWeapons] == 1)
 					        {
-					            SetPlayerArmedWeapon(playerid, 0);
+					            SetPlayerArmedWeapon(playerid, WEAPON_FIST);
 					        }
 							PickupFlagPaintballArena(playerid, arenaid, 1);
 					    }
@@ -2376,9 +2376,9 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 							PaintBallArena[arenaid][pbTeamRed] = 1;
 
 							// Spawn Flags
-							PaintBallArena[arenaid][pbTeamRedTextID] = Create3DTextLabel("Red Base", COLOR_RED, PaintBallArena[arenaid][pbFlagRedSpawn][0], PaintBallArena[arenaid][pbFlagRedSpawn][1], PaintBallArena[arenaid][pbFlagRedSpawn][2], 1000.0, PaintBallArena[arenaid][pbVirtual], 0);
+							PaintBallArena[arenaid][pbTeamRedTextID] = Create3DTextLabel("Red Base", COLOR_RED, PaintBallArena[arenaid][pbFlagRedSpawn][0], PaintBallArena[arenaid][pbFlagRedSpawn][1], PaintBallArena[arenaid][pbFlagRedSpawn][2], 1000.0, PaintBallArena[arenaid][pbVirtual]);
 							//PaintBallArena[arenaid][pbTeamRedTextID] = CreateDynamic3DTextLabel("Red Base", COLOR_RED, PaintBallArena[arenaid][pbFlagRedSpawn][0], PaintBallArena[arenaid][pbFlagRedSpawn][1], PaintBallArena[arenaid][pbFlagRedSpawn][2], 1000.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, PaintBallArena[arenaid][pbVirtual], PaintBallArena[arenaid][pbInterior]);
-							PaintBallArena[arenaid][pbTeamBlueTextID] = Create3DTextLabel("Blue Base", COLOR_DBLUE, PaintBallArena[arenaid][pbFlagBlueSpawn][0], PaintBallArena[arenaid][pbFlagBlueSpawn][1], PaintBallArena[arenaid][pbFlagBlueSpawn][2], 1000.0, PaintBallArena[arenaid][pbVirtual], 0);
+							PaintBallArena[arenaid][pbTeamBlueTextID] = Create3DTextLabel("Blue Base", COLOR_DBLUE, PaintBallArena[arenaid][pbFlagBlueSpawn][0], PaintBallArena[arenaid][pbFlagBlueSpawn][1], PaintBallArena[arenaid][pbFlagBlueSpawn][2], 1000.0, PaintBallArena[arenaid][pbVirtual]);
 							//PaintBallArena[arenaid][pbTeamBlueTextID] = CreateDynamic3DTextLabel("Blue Base", COLOR_DBLUE, PaintBallArena[arenaid][pbFlagBlueSpawn][0], PaintBallArena[arenaid][pbFlagBlueSpawn][1], PaintBallArena[arenaid][pbFlagBlueSpawn][2], 1000.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, PaintBallArena[arenaid][pbVirtual], PaintBallArena[arenaid][pbInterior]);
 							PaintBallArena[arenaid][pbFlagRedID] = CreateDynamicObject(RED_FLAG_OBJ, PaintBallArena[arenaid][pbFlagRedSpawn][0], PaintBallArena[arenaid][pbFlagRedSpawn][1], PaintBallArena[arenaid][pbFlagRedSpawn][2], 0.0, 0.0, 0.0, PaintBallArena[arenaid][pbVirtual], PaintBallArena[arenaid][pbInterior], -1);
 							PaintBallArena[arenaid][pbFlagBlueID] = CreateDynamicObject(BLUE_FLAG_OBJ, PaintBallArena[arenaid][pbFlagBlueSpawn][0], PaintBallArena[arenaid][pbFlagBlueSpawn][1], PaintBallArena[arenaid][pbFlagBlueSpawn][2], 0.0, 0.0, 0.0, PaintBallArena[arenaid][pbVirtual], PaintBallArena[arenaid][pbInterior], -1);
@@ -2661,7 +2661,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					ShowPlayerDialogEx(playerid,PBCHANGEWEAPONS1,DIALOG_STYLE_INPUT,"Paintball Arena - Change Weapons (Slot 1):","Please enter a weapon ID for slot 1 for each player (0-34):","Change","Back");
 					return 1;
 				}
-				PaintBallArena[arenaid][pbWeapons][0] = strval(inputtext);
+				PaintBallArena[arenaid][pbWeapons][0] = WEAPON:strval(inputtext);
 				PaintballSetupArena(playerid);
 			}
 			else
@@ -2694,7 +2694,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					ShowPlayerDialogEx(playerid,PBCHANGEWEAPONS2,DIALOG_STYLE_INPUT,"Paintball Arena - Change Weapons (Slot 2):","Please enter a weapon ID for slot 2 for each player (0-34):","Change","Back");
 					return 1;
 				}
-				PaintBallArena[arenaid][pbWeapons][1] = strval(inputtext);
+				PaintBallArena[arenaid][pbWeapons][1] = WEAPON:strval(inputtext);
 				PaintballSetupArena(playerid);
 			}
 			else
@@ -2727,7 +2727,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					ShowPlayerDialogEx(playerid,PBCHANGEWEAPONS3,DIALOG_STYLE_INPUT,"Paintball Arena - Change Weapons (Slot 3):","Please enter a weapon ID for slot 3 for each player (0-34):","Change","Back");
 					return 1;
 				}
-				PaintBallArena[arenaid][pbWeapons][2] = strval(inputtext);
+				PaintBallArena[arenaid][pbWeapons][2] = WEAPON:strval(inputtext);
 				PaintballSetupArena(playerid);
 			}
 			else
@@ -3433,7 +3433,7 @@ CMD:joinarena(playerid, params[])
         }
         if(pTazer{playerid} != 0)
 		{
-			RemovePlayerWeapon(playerid, 23);
+			RemovePlayerWeapon(playerid, WEAPON_SILENCED);
 			GivePlayerValidWeapon(playerid, pTazerReplace{playerid});
 			format(szMiscArray, sizeof(szMiscArray), "* %s holsters their tazer.", GetPlayerNameEx(playerid));			ProxDetector(4.0, playerid, szMiscArray, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
  			pTazer{playerid} = 0;

@@ -1,4 +1,4 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 new SystemUpdate, SystemTimer;
 new Text:UpdateIn[2];
@@ -6,25 +6,13 @@ new Text:UpdateIn[2];
 hook OnGameModeInit() {
 	UpdateIn[0] = TextDrawCreate(483.999969, 431.007720, "Server_update_in:");
 	TextDrawLetterSize(UpdateIn[0], 0.424666, 1.612444);
-	TextDrawAlignment(UpdateIn[0], 1);
-	TextDrawColor(UpdateIn[0], -1);
-	TextDrawSetShadow(UpdateIn[0], 0);
+	TextDrawColour(UpdateIn[0], -1);
 	TextDrawSetOutline(UpdateIn[0], 1);
-	TextDrawBackgroundColor(UpdateIn[0], 255);
-	TextDrawFont(UpdateIn[0], 1);
-	TextDrawSetProportional(UpdateIn[0], 1);
-	TextDrawSetShadow(UpdateIn[0], 0);
 
 	UpdateIn[1] = TextDrawCreate(595.181335, 431.007720, "00:00");
 	TextDrawLetterSize(UpdateIn[1], 0.424666, 1.612444);
-	TextDrawAlignment(UpdateIn[1], 1);
-	TextDrawColor(UpdateIn[1], -1);
-	TextDrawSetShadow(UpdateIn[1], 0);
+	TextDrawColour(UpdateIn[1], -1);
 	TextDrawSetOutline(UpdateIn[1], 1);
-	TextDrawBackgroundColor(UpdateIn[1], 255);
-	TextDrawFont(UpdateIn[1], 1);
-	TextDrawSetProportional(UpdateIn[1], 1);
-	TextDrawSetShadow(UpdateIn[1], 0);
 	return 1;
 }
 

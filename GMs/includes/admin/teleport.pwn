@@ -19,7 +19,7 @@ CMD:goto(playerid, params[])
 		}
         if(strcmp(location, "lascolinas", true) == 0 || strcmp(location, "lc", true) == 0)
         {
-            if (GetPlayerState(playerid) == 2)
+            if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 2155.5400, -1011.4443, 62.9631);
@@ -31,7 +31,7 @@ CMD:goto(playerid, params[])
         }
 		else if(strcmp(location,"glenpark",true) == 0 || strcmp(location,"gp",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 2012.500366, -1264.768554, 23.547389);
@@ -43,7 +43,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"palomino",true) == 0 || strcmp(location,"pc",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 2229.485351, -63.457298, 26.134857);
@@ -55,7 +55,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"nggshop",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 2930.920410, -1429.603637, 10.675988);
@@ -71,7 +71,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"sfdocks", true) == 0)
 		{
-			if(GetPlayerState(playerid) == 2)
+			if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -1576.40, 79.49, 3.95);
@@ -83,7 +83,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"ls",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 1529.6,-1691.2,13.3);
@@ -95,7 +95,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"garagexlg",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar,1111.0139,1546.9510,5290.2793);
@@ -107,7 +107,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"garagelg",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar,1192.8501,1540.0295,5290.2871);
@@ -119,7 +119,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"garagemed",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar,1069.1473,1582.1029,5290.2529);
@@ -131,7 +131,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"garagesm",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar,1198.1407,1589.2153,5290.2871);
@@ -143,7 +143,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"cave",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -1993.01, -1580.44, 86.39);
@@ -155,7 +155,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"sfairport",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -1412.5375,-301.8998,14.1411);
@@ -167,7 +167,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"sf",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -1605.0,720.0,12.0);
@@ -179,7 +179,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"lv",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 1699.2, 1435.1, 10.7);
@@ -191,7 +191,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"island",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -14.3755,-4472.8506, 4);
@@ -203,7 +203,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"cracklab",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 2348.2871, -1146.8298, 27.3183);
@@ -215,7 +215,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"bank",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 1487.91, -1030.60, 23.66);
@@ -227,7 +227,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"allsaints",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 1192.78, -1292.68, 13.38);
@@ -239,7 +239,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"countygen",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 2000.05, -1409.36, 16.99);
@@ -251,7 +251,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"gym",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 2227.60, -1674.89, 14.62);
@@ -263,7 +263,7 @@ CMD:goto(playerid, params[])
    		}
 		else if(strcmp(location,"fbi",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 344.77,-1526.08,33.28);
@@ -273,7 +273,7 @@ CMD:goto(playerid, params[])
 		}
   		else if(strcmp(location,"rc",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 1253.70, 343.73, 19.41);
@@ -285,7 +285,7 @@ CMD:goto(playerid, params[])
    		}
      	else if(strcmp(location,"lsvip",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 1810.39, -1601.15, 13.54);
@@ -297,7 +297,7 @@ CMD:goto(playerid, params[])
 		}
      	else if(strcmp(location,"sfvip",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -2433.63, 511.45, 30.38);
@@ -309,7 +309,7 @@ CMD:goto(playerid, params[])
 		}
        	else if(strcmp(location,"lvvip",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 1875.7731, 1366.0796, 16.8998);
@@ -321,7 +321,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"demorgan",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 112.67, 1917.55, 18.72);
@@ -342,7 +342,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location, "doc", true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 1435.95, -2695.33, 13.90);
@@ -363,7 +363,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"stadium1",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -1424.93, -664.59, 1059.86);
@@ -381,7 +381,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"stadium2",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -1395.96, -208.20, 1051.28);
@@ -399,7 +399,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"stadium3",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -1410.72, 1591.16, 1052.53);
@@ -417,7 +417,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"stadium4",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -1394.20, 987.62, 1023.96);
@@ -435,7 +435,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"int1",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 1416.107000,0.268620,1000.926000);
@@ -453,7 +453,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"mark",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, GetPVarFloat(playerid, "tpPosX1"), GetPVarFloat(playerid, "tpPosY1"), GetPVarFloat(playerid, "tpPosZ1"));
@@ -468,7 +468,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"mark2",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, GetPVarFloat(playerid, "tpPosX2"), GetPVarFloat(playerid, "tpPosY2"), GetPVarFloat(playerid, "tpPosZ2"));
@@ -483,7 +483,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"mall",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 1133.71,-1464.52,15.77);
@@ -495,7 +495,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"elque",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -1446.5997,2608.4478,55.8359);
@@ -507,7 +507,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"bayside",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -2465.1348,2333.6572,4.8359);
@@ -519,7 +519,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"dillimore",true) == 0)
 		{
-		 	if (GetPlayerState(playerid) == 2)
+		 	if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 634.9734, -594.6402, 16.3359);
@@ -531,7 +531,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"famed",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 1020.29, -1129.06, 23.87);
@@ -543,7 +543,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"rodeo",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 587.0106,-1238.3374,17.8049);
@@ -555,7 +555,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"flint",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -108.1058,-1172.5293,2.8906);
@@ -567,7 +567,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"idlewood",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 1955.1357,-1796.8896,13.5469);
@@ -579,7 +579,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"mhc",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				Player_StreamPrep(playerid, 1700.2124, 1461.1771, 1145.7766, FREEZE_TIME);
@@ -592,7 +592,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"fc",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, -203.2537, 1105.27, 18.73);
@@ -605,7 +605,7 @@ CMD:goto(playerid, params[])
 		}
 		else if(strcmp(location,"unity",true) == 0)
 		{
-			if (GetPlayerState(playerid) == 2)
+			if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(playerid);
 				SetVehiclePos(tmpcar, 1811.48, -1891.17, 12.3936);
@@ -675,7 +675,7 @@ CMD:sendto(playerid, params[])
 		}
         else if(strcmp(location,"loscolinas",true) == 0 || strcmp(location,"lc",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 2155.5400, -1011.4443, 62.9631);
@@ -697,7 +697,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"glenpark",true) == 0 || strcmp(location,"gp",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 2012.500366, -1264.768554, 23.547389);
@@ -719,7 +719,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"palomino",true) == 0 || strcmp(location,"pc",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 2229.485351, -63.457298, 26.134857);
@@ -741,7 +741,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"nggshop",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 2930.920410, -1429.603637, 10.675988);
@@ -763,7 +763,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"sfdocks", true) == 0)
 		{
-			if(GetPlayerState(giveplayerid) == 2)
+			if(GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -1576.40, 79.49, 3.95);
@@ -785,7 +785,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"ls",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 1529.6,-1691.2,13.3);
@@ -807,7 +807,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"cave",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -1993.01, -1580.44, 86.39);
@@ -829,7 +829,7 @@ CMD:sendto(playerid, params[])
 		}
   		else if(strcmp(location, "sfairport", true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -1412.5375, -301.8998, 14.1411);
@@ -851,7 +851,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location, "doc", true) == 0)
 		{
-			if(GetPlayerState(giveplayerid) == 2)
+			if(GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 1435.95, -2695.33, 13.90);
@@ -873,7 +873,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location, "cracklab", true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 2348.2871, -1146.8298, 27.3183);
@@ -895,7 +895,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"sf",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -1605.0,720.0,12.0);
@@ -917,7 +917,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"dillimore",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 634.9734, -594.6402, 16.3359);
@@ -939,7 +939,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"lv",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 1699.2, 1435.1, 10.7);
@@ -962,7 +962,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"island",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -14.3755,-4472.8506, 4);
@@ -985,7 +985,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"bank",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 1487.91, -1030.60, 23.66);
@@ -1008,7 +1008,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"allsaints",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 1192.78, -1292.68, 13.38);
@@ -1031,7 +1031,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"countygen",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 2000.05, -1409.36, 16.99);
@@ -1054,7 +1054,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"gym",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 2227.60, -1674.89, 14.62);
@@ -1077,7 +1077,7 @@ CMD:sendto(playerid, params[])
    		}
 		else if(strcmp(location,"fbi",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 344.77,-1526.08,33.28);
@@ -1098,7 +1098,7 @@ CMD:sendto(playerid, params[])
 		}
   		else if(strcmp(location,"rc",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 1253.70, 343.73, 19.41);
@@ -1121,7 +1121,7 @@ CMD:sendto(playerid, params[])
    		}
      	else if(strcmp(location,"lsvip",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 1810.39, -1601.15, 13.54);
@@ -1143,7 +1143,7 @@ CMD:sendto(playerid, params[])
 		}
      	else if(strcmp(location,"sfvip",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -2433.63, 511.45, 30.38);
@@ -1165,7 +1165,7 @@ CMD:sendto(playerid, params[])
 		}
        	else if(strcmp(location,"lvvip",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 1875.7731, 1366.0796, 16.8998);
@@ -1187,7 +1187,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"demorgan",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 112.67, 1917.55, 18.72);
@@ -1270,7 +1270,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"stadium1",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -1424.93, -664.59, 1059.86);
@@ -1293,7 +1293,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"stadium2",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -1395.96, -208.20, 1051.28);
@@ -1316,7 +1316,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"stadium3",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -1410.72, 1591.16, 1052.53);
@@ -1339,7 +1339,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"stadium4",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -1394.20, 987.62, 1023.96);
@@ -1362,7 +1362,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"int1",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 1416.107000,0.268620,1000.926000);
@@ -1385,7 +1385,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"mark",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, GetPVarFloat(playerid, "tpPosX1"), GetPVarFloat(playerid, "tpPosY1"), GetPVarFloat(playerid, "tpPosZ1"));
@@ -1403,7 +1403,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"mark2",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, GetPVarFloat(playerid, "tpPosX2"), GetPVarFloat(playerid, "tpPosY2"), GetPVarFloat(playerid, "tpPosZ2"));
@@ -1421,7 +1421,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"mall",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 1133.71,-1464.52,15.77);
@@ -1444,7 +1444,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"elque",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -1446.5997,2608.4478,55.8359);
@@ -1467,7 +1467,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"bayside",true) == 0)
 		{
-		 	if (GetPlayerState(giveplayerid) == 2)
+		 	if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -2465.1348,2333.6572,4.8359);
@@ -1489,7 +1489,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"famed",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 1020.29, -1129.06, 23.87);
@@ -1511,7 +1511,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"rodeo",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 587.0106,-1238.3374,17.8049);
@@ -1533,7 +1533,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"flint",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -108.1058,-1172.5293,2.8906);
@@ -1555,7 +1555,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"idlewood",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 1955.1357,-1796.8896,13.5469);
@@ -1577,7 +1577,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"mhc",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				Player_StreamPrep(giveplayerid, 1700.2124, 1461.1771, 1145.7766, FREEZE_TIME);
@@ -1600,7 +1600,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"fc",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, -203.2537, 1105.27, 18.73);
@@ -1622,7 +1622,7 @@ CMD:sendto(playerid, params[])
 		}
 		else if(strcmp(location,"unity",true) == 0)
 		{
-			if (GetPlayerState(giveplayerid) == 2)
+			if (GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
 			{
 				new tmpcar = GetPlayerVehicleID(giveplayerid);
 				SetVehiclePos(tmpcar, 1811.48, -1891.17, 12.3936);

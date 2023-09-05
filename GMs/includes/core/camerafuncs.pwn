@@ -25,7 +25,7 @@ CameraRadiusSetPos(playerid, Float:x, Float:y, Float:z, Float:degree = 0.0, Floa
 	SetPlayerCameraLookAt(playerid, x, y, z);
 }
 
-stock IsPlayerAimingAt(playerid, Float:x, Float:y, Float:z, Float:radius)
+IsPlayerAimingAt(playerid, Float:x, Float:y, Float:z, Float:radius)
 {
     new Float:cx,Float:cy,Float:cz,Float:fx,Float:fy,Float:fz;
     GetPlayerCameraPos(playerid, cx, cy, cz);

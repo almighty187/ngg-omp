@@ -1,16 +1,16 @@
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 new DB:db_iHandle;
 
 hook OnGameModeInit() {
 	
-	db_iHandle = db_open("logs.db");
+	db_iHandle = DB_Open("logs.db");
 
 	return 1;
 }
 
 hook OnGameModeExit() {
-	db_close(db_iHandle);
+	DB_Close(db_iHandle);
 }
 
 /*
@@ -80,29 +80,29 @@ hook OnGameModeExit() {
 
 */		
 //DBLog(iPlayerID, iTargetID = INVALID_PLAYER_ID, szLogTable[], szLogText[]) {
-DBLog(iPlayerID, iTargetID = INVALID_PLAYER_ID, szLogTable[], szLogText[]) {
+DBLog(iPlayerID, iTargetID = INVALID_PLAYER_ID, const szLogTable[], const szLogText[]) {
 
 	format(szMiscArray, sizeof(szMiscArray), "INSERT INTO `%s` (`Timestamp`,`PlayerID`,`TargetID`,`LogText`,`PlayerIP`,`TargetIP`) VALUES ('%d','%d','%d','%s','%s','%s')", szLogTable, gettime(), PlayerInfo[iPlayerID][pId], PlayerInfo[iTargetID][pId], szLogText, PlayerInfo[iPlayerID][pIP], PlayerInfo[iTargetID][pIP]);
-	db_free_result(db_query(db_iHandle, szMiscArray));
+	DB_FreeResultSet(DB_ExecuteQuery(db_iHandle, szMiscArray));
 	printf("%s",szMiscArray);
 
 	return 1;
 }
 
-ChatDBLog(iPlayerID, szLogTable[], szLogText[]) {
+ChatDBLog(iPlayerID, const szLogTable[], const szLogText[]) {
 
 	format(szMiscArray, sizeof(szMiscArray), "INSERT INTO `%s` (`Timestamp`,`PlayerID`,`LogText`,`PlayerIP`) VALUES ('%d','%d','%s','%s')", szLogTable, gettime(), PlayerInfo[iPlayerID][pId], szLogText, PlayerInfo[iPlayerID][pIP]);
-	db_free_result(db_query(db_iHandle, szMiscArray));
+	DB_FreeResultSet(DB_ExecuteQuery(db_iHandle, szMiscArray));
 	printf("%s",szMiscArray);
 
 	return 1;
 }
 
-CasinoDBLog(iPlayerID, game[], amount, prize, num1, num2, num3) {
+CasinoDBLog(iPlayerID, const game[], amount, prize, num1, num2, num3) {
 
 	mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "INSERT INTO `cp_casino_log` (`Timestamp`, `PlayerID`, `game`, `amount`,`prize`,`num1`,`num2`,`num3`,`PlayerIP`) VALUES ('%d','%d','%s','%d','%d','%d','%d','%d','%s')", gettime(), PlayerInfo[iPlayerID][pId], game, amount, prize, num1, num2, num3, PlayerInfo[iPlayerID][pIP]);
 	mysql_tquery(MainPipeline, szMiscArray, "OnQueryFinish", "i", SENDDATA_THREAD);
-	//db_free_result(db_query(db_iHandle, szMiscArray));
+	//DB_FreeResultSet(DB_ExecuteQuery(db_iHandle, szMiscArray));
 	printf("%s",szMiscArray);
 
 	return 1;
@@ -112,7 +112,7 @@ CasinoDBLog(iPlayerID, game[], amount, prize, num1, num2, num3) {
 PropertyDBLog(iPlayerID, iTargetID = INVALID_PLAYER_ID, PropertyID, szLogTable[], szLogText[]) {
 
 	format(szMiscArray, sizeof(szMiscArray), "INSERT INTO `%s` (`Timestamp`,`PlayerID`,`PropertyID`,`LogText`,`PlayerIP`) VALUES ('%d','%d','%d','%s','%s')", szLogTable, gettime(), PlayerInfo[iPlayerID][pId], PropertyID, szLogText, PlayerInfo[iPlayerID][pIP]);
-	db_free_result(db_query(db_iHandle, szMiscArray));
+	DB_FreeResultSet(DB_ExecuteQuery(db_iHandle, szMiscArray));
 	printf("%s",szMiscArray);
 
 	return 1;
@@ -134,7 +134,7 @@ PropertyDBLog(iPlayerID, iTargetID = INVALID_PLAYER_ID, PropertyID, szLogTable[]
 GroupDBLog(iPlayerID, iGroupID, szLogText) {
 
 	format(szMiscArray, sizeof(szMiscArray),  "INSERT INTO `cp_log_group` (`Timestamp`,`GroupID`,`PlayerID`,`LogText`,`PlayerIP`) VALUES ('%d','%d','%d','%s','%s')", gettime(), iGroupID, PlayerInfo[iPlayerID][pId], szLogText, PlayerInfo[iPlayerID][pIP]);
-	db_free_result(db_query(db_iHandle, szMiscArray));
+	DB_FreeResultSet(DB_ExecuteQuery(db_iHandle, szMiscArray));
 	printf("%s",szMiscArray);
 
 	return 1;
@@ -150,7 +150,7 @@ GroupDBLog(iPlayerID, iGroupID, szLogText) {
 ConnectionDBLog(iPlayerID) {
 
 	format(szMiscArray, sizeof(szMiscArray), "INSERT INTO `Connections` (`Timestamp`,`PlayerID`,`PlayerIP`) VALUES ('%d', '%d', '%s')", gettime(), PlayerInfo[iPlayerID][pId], PlayerInfo[iPlayerID][pIP]);
-	db_free_result(db_query(db_iHandle, szMiscArray));
+	DB_FreeResultSet(DB_ExecuteQuery(db_iHandle, szMiscArray));
 	
 	return 1;
 }

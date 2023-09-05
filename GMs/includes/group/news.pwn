@@ -34,7 +34,7 @@
 	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-stock IsANewsCar(carid)
+IsANewsCar(carid)
 {
 	if(DynVeh[carid] != -1)
 	{
@@ -47,7 +47,7 @@ stock IsANewsCar(carid)
 	return 0;
 }
 
-stock OOCNews(color, string[])
+OOCNews(color, const string[])
 {
 	foreach(new i: Player) {
 		
@@ -126,8 +126,8 @@ CMD:live(playerid, params[])
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "* Live conversation ended.");
 			SendClientMessageEx(TalkingLive[playerid], COLOR_LIGHTBLUE, "* Live conversation ended.");
-			TogglePlayerControllable(playerid, 1);
-			TogglePlayerControllable(TalkingLive[playerid], 1);
+			TogglePlayerControllable(playerid, true);
+			TogglePlayerControllable(TalkingLive[playerid], true);
 			DeletePVar(playerid, "IsLive");
 			DeletePVar(TalkingLive[playerid], "IsLive");
 			TalkingLive[TalkingLive[playerid]] = INVALID_PLAYER_ID;

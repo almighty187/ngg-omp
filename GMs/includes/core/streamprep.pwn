@@ -8,7 +8,7 @@ public Player_StreamPrep(iPlayer, Float: fPosX, Float: fPosY, Float: fPosZ, iTim
    			{
    			    ShowNoticeGUIFrame(iPlayer, 4);
 		    	sobeitCheckIsDone[iPlayer] = 1;
-   				SetTimerEx("sobeitCheck", 10000, 0, "i", iPlayer);
+   				SetTimerEx("sobeitCheck", 10000, false, "i", iPlayer);
 				TogglePlayerControllable(iPlayer, false);
 				return 1;
 			}

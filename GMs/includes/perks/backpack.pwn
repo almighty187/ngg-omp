@@ -35,9 +35,9 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
-stock IsBackpackAvailable(playerid)
+IsBackpackAvailable(playerid)
 {
 	#if defined zombiemode
 		if(zombieevent == 1 && GetPVarType(playerid, "pIsZombie"))
@@ -51,7 +51,7 @@ stock IsBackpackAvailable(playerid)
 	return 1;
 }
 
-stock GetBackpackFreeSlotGun(playerid) {
+GetBackpackFreeSlotGun(playerid) {
 	new slot;
 	for(new g = 6; g < 11; g++)
 	{
@@ -65,7 +65,7 @@ stock GetBackpackFreeSlotGun(playerid) {
 	return slot;
 }
 
-ShowBackpackMenu(playerid, dialogid, extramsg[]) {
+ShowBackpackMenu(playerid, dialogid, const extramsg[]) {
 	new dgTitle[128],
 		string[15];
 
@@ -119,7 +119,7 @@ ShowBackpackMenu(playerid, dialogid, extramsg[]) {
 			{
 				if(PlayerInfo[playerid][pBItems][i] > 0)
 				{
-					GetWeaponName(PlayerInfo[playerid][pBItems][i], weapname, sizeof(weapname));
+					GetWeaponName(WEAPON:PlayerInfo[playerid][pBItems][i], weapname, sizeof(weapname));
 					format(szMiscArray, sizeof(szMiscArray), "%s%s (%i)\n", szMiscArray, weapname, i);
 					format(string, sizeof(string), "ListItem%dSId", itemcount);
 					SetPVarInt(playerid, string, i);
@@ -143,7 +143,7 @@ ShowBackpackMenu(playerid, dialogid, extramsg[]) {
 	return 1;
 }
 
-stock GetBackpackName(backpackid) {
+GetBackpackName(backpackid) {
 	new bpName[16];
 	switch(backpackid) {
 		case 1: bpName = "Small Backpack";
@@ -153,26 +153,11 @@ stock GetBackpackName(backpackid) {
 	return bpName;
 }
 
-stock GetBackpackNarcoticsGrams(playerid) {
+GetBackpackNarcoticsGrams(playerid) {
 
 	new grams;
 	for(new i; i < sizeof(Drugs); ++i) grams += PlayerInfo[playerid][pBDrugs][i];
 	return grams;
-}
-
-stock GetBackpackIngredientsGrams(playerid) {
-
-	new grams;
-	for(new i; i < sizeof(szIngredients); ++i) grams += PlayerInfo[playerid][pBIngredients][i];
-	return grams;
-}
-
-stock CountBackpackGuns(playerid) {
-	new count;
-	for(new i = 6; i < 11); i++)
-		if(PlayerInfo[playerid][pBItems][i] > 0)
-			count++;
-	return count;
 }
 
 CMD:shopbpack(playerid, params[]) {
@@ -292,7 +277,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				{
 					defer FinishMeal(playerid);
 					SetPVarInt(playerid, "BackpackMeal", 1);
-					ApplyAnimation(playerid, "BOMBER", "BOM_Plant", 4.0, 0, 0, 0, 0, 0, 1);
+					ApplyAnimation(playerid, "BOMBER", "BOM_Plant", 4.0, false, false, false, false, 0, SYNC_ALL);
 					format(szMiscArray, sizeof(szMiscArray), "{FF8000}** {C2A2DA}%s opens a backpack and takes out a Full Meal.", GetPlayerNameEx(playerid));
 					SendClientMessageEx(playerid, COLOR_WHITE, "You are taking the Meal from your backpack, please wait.");
 					ProxDetector(30.0, playerid, szMiscArray, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -315,7 +300,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				{
 					defer FinishMedKit(playerid);
 					SetPVarInt(playerid, "BackpackMedKit", 1);
-					ApplyAnimation(playerid, "BOMBER", "BOM_Plant", 4.0, 0, 0, 0, 0, 0, 1);
+					ApplyAnimation(playerid, "BOMBER", "BOM_Plant", 4.0, false, false, false, false, 0, SYNC_ALL);
 					format(szMiscArray, sizeof(szMiscArray), "{FF8000}** {C2A2DA}%s opens a backpack and takes out a Kevlar Vest & First Aid Kit inside.", GetPlayerNameEx(playerid));
 					SendClientMessageEx(playerid, COLOR_WHITE, "You are taking the Med Kit from your backpack, please wait.");
 					ProxDetector(30.0, playerid, szMiscArray, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -423,32 +408,31 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					switch(PlayerInfo[playerid][pBackpack]) {
 						case 1: {
 							new myweapons[2], itemcount;
-							GetPlayerWeaponData(playerid, 1, myweapons[0], myweapons[1]);
-							if(myweapons[0] > 0 && myweapons[0] != 9 && myweapons[0] != 4 && PlayerInfo[playerid][pGuns][1] == myweapons[0] && PlayerInfo[playerid][pAGuns][1] == 0)
+							GetPlayerWeaponData(playerid, WEAPON_SLOT_MELEE, WEAPON:myweapons[0], myweapons[1]);
+							if(myweapons[0] > 0 && myweapons[0] != 9 && myweapons[0] != 4 && PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == myweapons[0] && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MELEE] == 0)
 							{
-								GetWeaponName(myweapons[0], weapname, sizeof(weapname));
+								GetWeaponName(WEAPON:myweapons[0], weapname, sizeof(weapname));
 								format(szDialog, sizeof(szDialog), "%s%s (%d)\n", szDialog, weapname, myweapons[0]);
 								format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", itemcount);
 								SetPVarInt(playerid, szMiscArray, myweapons[0]);
 								itemcount++;
 							}
-							GetPlayerWeaponData(playerid, 10, myweapons[0], myweapons[1]);
-							if(myweapons[0] > 0 && PlayerInfo[playerid][pGuns][10] == myweapons[0] && PlayerInfo[playerid][pAGuns][10] == 0)
+							GetPlayerWeaponData(playerid, WEAPON_SLOT_GIFT, WEAPON:myweapons[0], myweapons[1]);
+							if(myweapons[0] > 0 && PlayerInfo[playerid][pGuns][WEAPON_SLOT_GIFT] == myweapons[0] && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_GIFT] == 0)
 							{
-								GetWeaponName(myweapons[0], weapname, sizeof(weapname));
+								GetWeaponName(WEAPON:myweapons[0], weapname, sizeof(weapname));
 								format(szDialog, sizeof(szDialog), "%s%s (%d)\n", szDialog, weapname, myweapons[0]);
 								format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", itemcount);
 								SetPVarInt(playerid, szMiscArray, myweapons[0]);
 								itemcount++;
 							}
-							GetPlayerWeaponData(playerid, 2, myweapons[0], myweapons[1]);
-							if(myweapons[0] > 0 && pTazer{playerid} == 0 && PlayerInfo[playerid][pGuns][2] == myweapons[0] && PlayerInfo[playerid][pAGuns][2] == 0)
+							GetPlayerWeaponData(playerid, WEAPON_SLOT_PISTOL, WEAPON:myweapons[0], myweapons[1]);
+							if(myweapons[0] > 0 && pTazer{playerid} == 0 && PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL] == myweapons[0] && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_PISTOL] == 0)
 							{
-								GetWeaponName(myweapons[0], weapname, sizeof(weapname));
+								GetWeaponName(WEAPON:myweapons[0], weapname, sizeof(weapname));
 								format(szDialog, sizeof(szDialog), "%s%s (%d)\n", szDialog, weapname, myweapons[0]);
 								format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", itemcount);
 								SetPVarInt(playerid, szMiscArray, myweapons[0]);
-								itemcount++;
 							}
 							if(strlen(szDialog) > 0) ShowPlayerDialogEx(playerid, DIALOG_BGUNS2, DIALOG_STYLE_LIST, "Select a weapon to deposit", szDialog, "Select", "Cancel");
 							else {
@@ -457,68 +441,66 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						}
 						case 2, 3: {
 							new myweapons[2], itemcount;
-							GetPlayerWeaponData(playerid, 1, myweapons[0], myweapons[1]);
-							if(myweapons[0] > 0 && myweapons[0] != 9 && myweapons[0] != 4 && PlayerInfo[playerid][pGuns][1] == myweapons[0] && PlayerInfo[playerid][pAGuns][1] == 0)
+							GetPlayerWeaponData(playerid, WEAPON_SLOT_MELEE, WEAPON:myweapons[0], myweapons[1]);
+							if(myweapons[0] > 0 && myweapons[0] != 9 && myweapons[0] != 4 && PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == myweapons[0] && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MELEE] == 0)
 							{
-								GetWeaponName(myweapons[0], weapname, sizeof(weapname));
+								GetWeaponName(WEAPON:myweapons[0], weapname, sizeof(weapname));
 								format(szDialog, sizeof(szDialog), "%s%s (%d)\n", szDialog, weapname, myweapons[0]);
 								format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", itemcount);
 								SetPVarInt(playerid, szMiscArray, myweapons[0]);
 								itemcount++;
 							}
-							GetPlayerWeaponData(playerid, 10, myweapons[0], myweapons[1]);
-							if(myweapons[0] > 0 && PlayerInfo[playerid][pGuns][10] == myweapons[0] && PlayerInfo[playerid][pAGuns][10] == 0)
+							GetPlayerWeaponData(playerid, WEAPON_SLOT_GIFT, WEAPON:myweapons[0], myweapons[1]);
+							if(myweapons[0] > 0 && PlayerInfo[playerid][pGuns][WEAPON_SLOT_GIFT] == myweapons[0] && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_GIFT] == 0)
 							{
-								GetWeaponName(myweapons[0], weapname, sizeof(weapname));
+								GetWeaponName(WEAPON:myweapons[0], weapname, sizeof(weapname));
 								format(szDialog, sizeof(szDialog), "%s%s (%d)\n", szDialog, weapname, myweapons[0]);
 								format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", itemcount);
 								SetPVarInt(playerid, szMiscArray, myweapons[0]);
 								itemcount++;
 							}
-							GetPlayerWeaponData(playerid, 2, myweapons[0], myweapons[1]);
-							if(myweapons[0] > 0 && pTazer{playerid} == 0 && PlayerInfo[playerid][pGuns][2] == myweapons[0] && PlayerInfo[playerid][pAGuns][2] == 0)
+							GetPlayerWeaponData(playerid, WEAPON_SLOT_PISTOL, WEAPON:myweapons[0], myweapons[1]);
+							if(myweapons[0] > 0 && pTazer{playerid} == 0 && PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL] == myweapons[0] && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_PISTOL] == 0)
 							{
-								GetWeaponName(myweapons[0], weapname, sizeof(weapname));
+								GetWeaponName(WEAPON:myweapons[0], weapname, sizeof(weapname));
+								format(szDialog, sizeof(szDialog), "%s%s (%d)\n", szDialog, weapname, myweapons[0]);
+								format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", itemcount);
+								SetPVarInt(playerid, szMiscArray, myweapons[0]);
+							}
+							GetPlayerWeaponData(playerid, WEAPON_SLOT_SHOTGUN, WEAPON:myweapons[0], myweapons[1]);
+							if(myweapons[0] > 0 && PlayerInfo[playerid][pGuns][WEAPON_SLOT_SHOTGUN] == myweapons[0] && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_SHOTGUN] == 0)
+							{
+								GetWeaponName(WEAPON:myweapons[0], weapname, sizeof(weapname));
 								format(szDialog, sizeof(szDialog), "%s%s (%d)\n", szDialog, weapname, myweapons[0]);
 								format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", itemcount);
 								SetPVarInt(playerid, szMiscArray, myweapons[0]);
 								itemcount++;
 							}
-							GetPlayerWeaponData(playerid, 3, myweapons[0], myweapons[1]);
-							if(myweapons[0] > 0 && PlayerInfo[playerid][pGuns][3] == myweapons[0] && PlayerInfo[playerid][pAGuns][3] == 0)
+							GetPlayerWeaponData(playerid, WEAPON_SLOT_MACHINE_GUN, WEAPON:myweapons[0], myweapons[1]);
+							if(myweapons[0] > 0 && PlayerInfo[playerid][pGuns][WEAPON_SLOT_MACHINE_GUN] == myweapons[0] && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_MACHINE_GUN] == 0)
 							{
-								GetWeaponName(myweapons[0], weapname, sizeof(weapname));
+								GetWeaponName(WEAPON:myweapons[0], weapname, sizeof(weapname));
 								format(szDialog, sizeof(szDialog), "%s%s (%d)\n", szDialog, weapname, myweapons[0]);
 								format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", itemcount);
 								SetPVarInt(playerid, szMiscArray, myweapons[0]);
 								itemcount++;
 							}
-							GetPlayerWeaponData(playerid, 4, myweapons[0], myweapons[1]);
-							if(myweapons[0] > 0 && PlayerInfo[playerid][pGuns][4] == myweapons[0] && PlayerInfo[playerid][pAGuns][4] == 0)
+							GetPlayerWeaponData(playerid, WEAPON_SLOT_ASSAULT_RIFLE, WEAPON:myweapons[0], myweapons[1]);
+							if(myweapons[0] > 0 && PlayerInfo[playerid][pGuns][WEAPON_SLOT_ASSAULT_RIFLE] == myweapons[0] && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_ASSAULT_RIFLE] == 0)
 							{
-								GetWeaponName(myweapons[0], weapname, sizeof(weapname));
+								GetWeaponName(WEAPON:myweapons[0], weapname, sizeof(weapname));
 								format(szDialog, sizeof(szDialog), "%s%s (%d)\n", szDialog, weapname, myweapons[0]);
 								format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", itemcount);
 								SetPVarInt(playerid, szMiscArray, myweapons[0]);
 								itemcount++;
 							}
-							GetPlayerWeaponData(playerid, 5, myweapons[0], myweapons[1]);
-							if(myweapons[0] > 0 && PlayerInfo[playerid][pGuns][5] == myweapons[0] && PlayerInfo[playerid][pAGuns][5] == 0)
+							GetPlayerWeaponData(playerid, WEAPON_SLOT_LONG_RIFLE, WEAPON:myweapons[0], myweapons[1]);
+							if(myweapons[0] > 0 && PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE] == myweapons[0] && PlayerInfo[playerid][pAGuns][WEAPON_SLOT_LONG_RIFLE] == 0)
 							{
-								GetWeaponName(myweapons[0], weapname, sizeof(weapname));
+								GetWeaponName(WEAPON:myweapons[0], weapname, sizeof(weapname));
 								format(szDialog, sizeof(szDialog), "%s%s (%d)\n", szDialog, weapname, myweapons[0]);
 								format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", itemcount);
 								SetPVarInt(playerid, szMiscArray, myweapons[0]);
-								itemcount++;
-							}
-							GetPlayerWeaponData(playerid, 6, myweapons[0], myweapons[1]);
-							if(myweapons[0] > 0 && PlayerInfo[playerid][pGuns][6] == myweapons[0] && PlayerInfo[playerid][pAGuns][6] == 0)
-							{
-								GetWeaponName(myweapons[0], weapname, sizeof(weapname));
-								format(szDialog, sizeof(szDialog), "%s%s (%d)\n", szDialog, weapname, myweapons[0]);
-								format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", itemcount);
-								SetPVarInt(playerid, szMiscArray, myweapons[0]);
-								itemcount++;
 							}
 							if(strlen(szDialog) > 0) ShowPlayerDialogEx(playerid, DIALOG_BGUNS2, DIALOG_STYLE_LIST, "Select a weapon to deposit", szDialog, "Select", "Cancel");
 							else {
@@ -533,15 +515,15 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					new slot = GetPVarInt(playerid, szMiscArray);
 					if(PlayerInfo[playerid][pBItems][slot] > 0) {
 
-						new aWeapons[13][2];
+						new aWeapons[MAX_WEAPON_SLOTS][2];
 
-						for(new i; i < 13; ++i) {
-							GetPlayerWeaponData(playerid, i, aWeapons[i][0], aWeapons[i][1]);
+						for(new WEAPON_SLOT:i; i < MAX_WEAPON_SLOTS; ++i) {
+							GetPlayerWeaponData(playerid, i, WEAPON:aWeapons[i][0], aWeapons[i][1]);
 							if(aWeapons[i][0] == PlayerInfo[playerid][pBItems][slot]) return SendClientMessageEx(playerid, COLOR_GRAD1, "You are already carrying this weapon.");
 						}
 
-						GetWeaponName(PlayerInfo[playerid][pBItems][slot], weapname, sizeof(weapname));
-						GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pBItems][slot]);
+						GetWeaponName(WEAPON:PlayerInfo[playerid][pBItems][slot], weapname, sizeof(weapname));
+						GivePlayerValidWeapon(playerid, WEAPON:PlayerInfo[playerid][pBItems][slot]);
 
 						DeletePVar(playerid, szMiscArray);
 
@@ -570,22 +552,22 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					DeletePVar(playerid, "BackpackOpen"), DeletePVar(playerid, "BackpackProt"), SendClientMessageEx(playerid, COLOR_GREY, "You cannot use your backpack at this moment.");
 					return 1;
 				}
-				new handguns, primguns, wbid, slot = GetBackpackFreeSlotGun(playerid), weapname[32];
+				new handguns, primguns, WEAPON:wbid, slot = GetBackpackFreeSlotGun(playerid), weapname[32];
 				for(new i = 6; i < 11; i++) {
 					if(PlayerInfo[playerid][pBItems][i] > 0) {
-						if(IsWeaponHandgun(PlayerInfo[playerid][pBItems][i])) handguns++;
-						else if(IsWeaponPrimary(PlayerInfo[playerid][pBItems][i])) primguns++;
+						if(IsWeaponHandgun(WEAPON:PlayerInfo[playerid][pBItems][i])) handguns++;
+						else if(IsWeaponPrimary(WEAPON:PlayerInfo[playerid][pBItems][i])) primguns++;
 					}
 				}
 				switch(PlayerInfo[playerid][pBackpack]) {
 					case 1: {
 						format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", listitem);
-						wbid = GetPVarInt(playerid, szMiscArray);
+						wbid = WEAPON:GetPVarInt(playerid, szMiscArray);
 						if(handguns > 1 || primguns > 0 || IsWeaponPrimary(wbid)) {
 							ShowBackpackMenu(playerid, DIALOG_BGUNS, "- {02B0F5}You can only carry 2 handguns");
 							return 1;
 						}
-						if(slot != 0 && PlayerInfo[playerid][pGuns][GetWeaponSlot(wbid)] == wbid && PlayerInfo[playerid][pAGuns][GetWeaponSlot(wbid)] == 0) {
+						if(slot != 0 && PlayerInfo[playerid][pGuns][GetWeaponSlot(wbid)] == wbid && PlayerInfo[playerid][pAGuns][GetWeaponSlot(wbid)] == WEAPON_FIST) {
 							RemovePlayerWeapon(playerid, wbid);
 							PlayerInfo[playerid][pBItems][slot] = wbid;
 							GetWeaponName(wbid, weapname, sizeof(weapname));
@@ -607,12 +589,12 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					}
 					case 2: {
 						format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", listitem);
-						wbid = GetPVarInt(playerid, szMiscArray);
+						wbid = WEAPON:GetPVarInt(playerid, szMiscArray);
 						if((handguns >= 2 && IsWeaponHandgun(wbid)) || (IsWeaponPrimary(wbid) && primguns >= 1) || (handguns >= 2 && primguns >= 1)) {
 							ShowBackpackMenu(playerid, DIALOG_BGUNS, "- {02B0F5}You can only carry 2 handguns and 1 primary");
 							return 1;
 						}
-						if(slot != 0 && PlayerInfo[playerid][pGuns][GetWeaponSlot(wbid)] == wbid && PlayerInfo[playerid][pAGuns][GetWeaponSlot(wbid)] == 0) {
+						if(slot != 0 && PlayerInfo[playerid][pGuns][GetWeaponSlot(wbid)] == wbid && PlayerInfo[playerid][pAGuns][GetWeaponSlot(wbid)] == WEAPON_FIST) {
 							RemovePlayerWeapon(playerid, wbid);
 							PlayerInfo[playerid][pBItems][slot] = wbid;
 							GetWeaponName(wbid, weapname, sizeof(weapname));
@@ -634,12 +616,12 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					}
 					case 3: {
 						format(szMiscArray, sizeof(szMiscArray), "ListItem%dWId", listitem);
-						wbid = GetPVarInt(playerid, szMiscArray);
+						wbid = WEAPON:GetPVarInt(playerid, szMiscArray);
 						if((handguns >= 2 && primguns >= 3) || (primguns >= 3 && IsWeaponPrimary(wbid)) || (handguns >= 2 && IsWeaponHandgun(wbid))) {
 							ShowBackpackMenu(playerid, DIALOG_BGUNS, "- You can only carry 2 handguns and 3 primary");
 							return 1;
 						}
-						if(slot != 0 && PlayerInfo[playerid][pGuns][GetWeaponSlot(wbid)] == wbid && PlayerInfo[playerid][pAGuns][GetWeaponSlot(wbid)] == 0) {
+						if(slot != 0 && PlayerInfo[playerid][pGuns][GetWeaponSlot(wbid)] == wbid && PlayerInfo[playerid][pAGuns][GetWeaponSlot(wbid)] == WEAPON_FIST) {
 							RemovePlayerWeapon(playerid, wbid);
 							PlayerInfo[playerid][pBItems][slot] = wbid;
 							GetWeaponName(wbid, weapname, sizeof(weapname));
@@ -832,7 +814,7 @@ CMD:listbitems(playerid, params[])
 						SendClientMessageEx(playerid, COLOR_WHITE, string);
 						sent = 1;
 					}
-					GetWeaponName(PlayerInfo[giveplayerid][pBItems][i], weaponname, sizeof(weaponname));
+					GetWeaponName(WEAPON:PlayerInfo[giveplayerid][pBItems][i], weaponname, sizeof(weaponname));
 					format(string, sizeof(string), "Weapon: %s.", weaponname);
 					SendClientMessageEx(playerid, COLOR_GRAD1, string);
 				}
@@ -906,7 +888,7 @@ CMD:bsearch(playerid, params[])
 						SendClientMessageEx(playerid, COLOR_WHITE, string);
 						sent = 1;
 					}
-					GetWeaponName(PlayerInfo[giveplayerid][pBItems][i], weaponname, sizeof(weaponname));
+					GetWeaponName(WEAPON:PlayerInfo[giveplayerid][pBItems][i], weaponname, sizeof(weaponname));
 					format(string, sizeof(string), "Weapon: %s.", weaponname);
 					SendClientMessageEx(playerid, COLOR_GRAD1, string);
 				}
@@ -1020,8 +1002,8 @@ CMD:bwear(playerid, params[])
 				}
 			}
 			if(pvid == -1) return SendClientMessageEx(playerid,COLOR_GREY,"You are not near the vehicle where the backpack is stored.");
-			new engine,lights,alarm,doors,bonnet,boot,objective;
-			GetVehicleParamsEx(PlayerVehicleInfo[playerid][pvid][pvId],engine,lights,alarm,doors,bonnet,boot,objective);
+			new bool:boot;
+			GetVehicleParamsEx(PlayerVehicleInfo[playerid][pvid][pvId], .boot = boot);
 			if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET) return SendClientMessageEx(playerid, COLOR_GRAD3, "You can't take/put stuff inside the trunk if it's closed!(/car trunk to open it)");
 			if(PlayerHoldingObject[playerid][9] != 0 || IsPlayerAttachedObjectSlotUsed(playerid, 9))
 				RemovePlayerAttachedObject(playerid, 9), PlayerHoldingObject[playerid][9] = 0;
@@ -1131,8 +1113,8 @@ CMD:bstore(playerid, params[])
 				}
 			}
 			if(pvid == -1) return SendClientMessageEx(playerid,COLOR_GREY,"You are not near any vehicle that you own.");
-			new engine,lights,alarm,doors,bonnet,boot,objective;
-			GetVehicleParamsEx(PlayerVehicleInfo[playerid][pvid][pvId],engine,lights,alarm,doors,bonnet,boot,objective);
+			new bool:boot;
+			GetVehicleParamsEx(PlayerVehicleInfo[playerid][pvid][pvId], .boot = boot);
 			if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET) return SendClientMessageEx(playerid, COLOR_GRAD3, "You can't take/put stuff inside the trunk if it's closed!(/car trunk to open it)");
 			if(GetVehicleModel(PlayerVehicleInfo[playerid][pvid][pvId]) == 481 || GetVehicleModel(PlayerVehicleInfo[playerid][pvid][pvId]) == 510)  return SendClientMessageEx(playerid,COLOR_GREY,"That vehicle doesn't have a trunk.");
 			new btype[7];
@@ -1208,7 +1190,7 @@ CMD:bopen(playerid, params[])
 			SendClientMessageEx(playerid, COLOR_GREY, string);
 			return 1;
 		}
-		ApplyAnimation(playerid, "BOMBER", "BOM_Plant", 4.0, 0, 0, 0, 0, 0, 1);
+		ApplyAnimation(playerid, "BOMBER", "BOM_Plant", 4.0, false, false, false, false, 0, SYNC_ALL);
 		format(string, sizeof(string), "{FF8000}** {C2A2DA}%s lays down and opens a backpack.", GetPlayerNameEx(playerid));
 		SetPlayerChatBubble(playerid, string, COLOR_PURPLE, 15.0, 5000);
 		// ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);

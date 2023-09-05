@@ -88,7 +88,7 @@ stock SetPlayerJoinCamera(playerid)
 	return 1;
 }
 
-stock ShowMainMenuDialog(playerid, frame)
+ShowMainMenuDialog(playerid, frame)
 {
 	new titlestring[64];
 	new string[512];
@@ -126,7 +126,7 @@ stock ShowMainMenuDialog(playerid, frame)
 	return 1;
 }
 
-stock SafeLogin(playerid, type)
+SafeLogin(playerid, type)
 {
 	switch(type)
 	{
@@ -151,7 +151,7 @@ stock SafeLogin(playerid, type)
 			else
 			{
 				Dialog_Show(playerid, -1, DIALOG_STYLE_MSGBOX, "ERROR: You were kicked!", "You're unable to create an account on this server!\n\nThis server is for the Beta Team only.\n\nIf you are a beta tester go to http://cp.ng-gaming.net and create an account.", "Close", "");
-				SetTimerEx("KickEx", 3000, 0, "i", playerid);
+				SetTimerEx("KickEx", 3000, false, "i", playerid);
 			}
 		}
 	}
@@ -159,7 +159,7 @@ stock SafeLogin(playerid, type)
 	return 1;
 }
 
-stock InvalidNameCheck(playerid) {
+InvalidNameCheck(playerid) {
 
 	new
 		arrForbiddenNames[][] = {
@@ -175,14 +175,14 @@ stock InvalidNameCheck(playerid) {
 	while(i < sizeof(arrForbiddenNames)) if(strcmp(arrForbiddenNames[i++], GetPlayerNameExt(playerid), true) == 0) {
 		SetPlayerName(playerid, "InvalidNick");
 		SendClientMessage(playerid, COLOR_RED, "You have been kicked & logged for using a forbidden username.");
-		SetTimerEx("KickEx", 1000, 0, "i", playerid);
+		SetTimerEx("KickEx", 1000, false, "i", playerid);
 		return 0;
 
 	}
 	return 1;
 }
 
-stock ShowMainMenuGUI(playerid)
+ShowMainMenuGUI(playerid)
 {
 	InsideMainMenu{playerid} = true;
 	MainMenuUpdateForPlayer(playerid);
@@ -203,7 +203,7 @@ stock ShowMainMenuGUI(playerid)
 	//SetTimerEx("loginCamera", 1000, false, "i", playerid);
 }
 
-stock HideMainMenuGUI(playerid)
+HideMainMenuGUI(playerid)
 {
 	InsideMainMenu{playerid} = false;
 
@@ -251,12 +251,12 @@ public LoginCheck(playerid)
 		Log("logs/security.log", string);
 		SendClientMessage(playerid, COLOR_WHITE, "SERVER: Login timeout - you must login within 60 seconds!");
 		ShowPlayerDialogEx(playerid, -1, DIALOG_STYLE_MSGBOX, "", "", "", "");
-		SetTimerEx("KickEx", 1000, 0, "i", playerid);
+		SetTimerEx("KickEx", 1000, false, "i", playerid);
 	}
 	return 1;
 }
 
-stock ShowLoginDialogs(playerid, index)
+ShowLoginDialogs(playerid, index)
 {
 	new string[128];
 	switch(index)
@@ -445,7 +445,7 @@ public loginCamera(playerid)
         
         SetPVarInt(playerid, "LoginCam", 1); 
         SetTimerEx("OnLoginCam", CAMERA_MOVE_SPEED, false, "i", playerid);
-        TogglePlayerControllable(playerid, 0);
+        TogglePlayerControllable(playerid, false);
         InterpolateCameraPos(playerid, PlayerInfo[playerid][pPos_x], PlayerInfo[playerid][pPos_y], PlayerInfo[playerid][pPos_z] + CAMERA_ZOOM_DISTANCE, PlayerInfo[playerid][pPos_x] + 3.255828, PlayerInfo[playerid][pPos_y] - 4.534179, PlayerInfo[playerid][pPos_z] + 1.047477, CAMERA_MOVE_SPEED, CAMERA_MOVE);
         InterpolateCameraLookAt(playerid, PlayerInfo[playerid][pPos_x], PlayerInfo[playerid][pPos_y] + CAMERA_ROTATION_ANGLE, PlayerInfo[playerid][pPos_z], PlayerInfo[playerid][pPos_x], PlayerInfo[playerid][pPos_y], PlayerInfo[playerid][pPos_z], CAMERA_MOVE_SPEED, CAMERA_MOVE);
         return 1;
@@ -456,7 +456,7 @@ public OnLoginCam(playerid)
 {
 	StopAudioStreamForPlayer(playerid);
 	SetCameraBehindPlayer(playerid);
-	TogglePlayerControllable(playerid, 1);
+	TogglePlayerControllable(playerid, true);
 	DeletePVar(playerid, "LoginCam");
 	return 1;
 }*/

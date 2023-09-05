@@ -1,4 +1,4 @@
-stock ExecuteNOPAction(playerid)
+ExecuteNOPAction(playerid)
 {
 	new string[128];
 	new newcar = GetPlayerVehicleID(playerid);
@@ -18,7 +18,7 @@ stock ExecuteNOPAction(playerid)
 	return 1;
 }
 
-stock ExecuteHackerAction( playerid, weaponid )
+ExecuteHackerAction( playerid, WEAPON:weaponid )
 {
 	if(!gPlayerLogged{playerid}) { return 1; }
 	if(PlayerInfo[playerid][pTut] == 0) { return 1; }
@@ -43,7 +43,7 @@ public sobeitCheck(playerid)
 	{
 	    if(PlayerInfo[playerid][pJailTime] > 0)
 		{
-	        SetTimerEx("sobeitCheck", 1000, 0, "i", playerid);
+	        SetTimerEx("sobeitCheck", 1000, false, "i", playerid);
 	        SetPVarInt(playerid, "JailDelay", 1);
 	        return 1;
 	    }
@@ -72,7 +72,7 @@ public sobeitCheck(playerid)
             DeletePVar(playerid,"PlayerPositionX");
             DeletePVar(playerid,"PlayerPositionY");
             DeletePVar(playerid,"PlayerPositionZ");
-            SetTimerEx("KickEx", 1000, 0, "i", playerid);
+            SetTimerEx("KickEx", 1000, false, "i", playerid);
             return 1;
         }
 	}
@@ -101,12 +101,12 @@ public sobeitCheck(playerid)
    			format(szString, sizeof(szString), "%s(%d) (IP: %s) has logged into the server with s0beit installed.", GetPlayerNameEx(playerid), GetPlayerSQLId(playerid), IP);
    			Log("logs/sobeit.log", szString);
    			IsPlayerFrozen[playerid] = 0;
-    		SetTimerEx("KickEx", 1000, 0, "i", playerid);
+    		SetTimerEx("KickEx", 1000, false, "i", playerid);
      	}
 
 	}
 	
-	if(playerTabbed[playerid] > 2) { SendClientMessageEx(playerid, COLOR_RED, "You have failed the account check, please relog."), SetTimerEx("KickEx", 1000, 0, "i", playerid); }
+	if(playerTabbed[playerid] > 2) { SendClientMessageEx(playerid, COLOR_RED, "You have failed the account check, please relog."), SetTimerEx("KickEx", 1000, false, "i", playerid); }
 
 	if(PlayerInfo[playerid][pVW] > 0 || PlayerInfo[playerid][pInt] > 0) HideNoticeGUIFrame(playerid);
 	sobeitCheckvar[playerid] = 1;
@@ -179,14 +179,14 @@ public LoginCheckEx(i)
 			Log("logs/security.log", string);
 			SendClientMessage(i, COLOR_WHITE, "SERVER: You have moved while being in the login screen!");
 			ShowPlayerDialogEx(i, -1, DIALOG_STYLE_MSGBOX, "", "", "", "");
-			SetTimerEx("KickEx", 1000, 0, "i", i);
+			SetTimerEx("KickEx", 1000, false, "i", i);
 		}
-		SetTimerEx("LoginCheckEx", 5000, 0, "i", i);
+		SetTimerEx("LoginCheckEx", 5000, false, "i", i);
 	}
 	return true;
 }
 
-stock CheckServerAd(szInput[]) {
+CheckServerAd(const szInput[]) {
 
 	new
 		iCount,
@@ -217,7 +217,7 @@ CMD:hackwarnings(playerid, params[])
 	
 	szMiscArray[0] = 0;
 
-	foreach(Player, i)
+	foreach(new i: Player)
 	{
 		if(playerTabbed[i] != 0) continue;
 		GetPlayerHealth(i, health);

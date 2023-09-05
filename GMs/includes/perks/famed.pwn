@@ -35,7 +35,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-stock IsFamedVeh(carid)
+IsFamedVeh(carid)
 {
 	for(new i = 0; i < sizeof(FamedVehicles); i++)
 	{
@@ -44,7 +44,7 @@ stock IsFamedVeh(carid)
 	return 0;
 }
 
-stock IsOSModel(carid)
+IsOSModel(carid)
 {
 	new Cars[] = {461, 559, 579, 426, 468};
 	for(new i = 0; i < sizeof(Cars); i++)
@@ -54,7 +54,7 @@ stock IsOSModel(carid)
 	return 0;
 }
 
-stock IsCOSModel(carid)
+IsCOSModel(carid)
 {
 	new Cars[] = {560, 506, 411};
 	for(new i = 0; i < sizeof(Cars); i++)
@@ -64,7 +64,7 @@ stock IsCOSModel(carid)
 	return 0;
 }
 
-stock IsFamedModel(carid)
+IsFamedModel(carid)
 {
 	new Cars[] = {415, 522, 480, 541, 429, 558};
 	for(new i = 0; i < sizeof(Cars); i++)
@@ -74,7 +74,7 @@ stock IsFamedModel(carid)
 	return 0;
 }
 
-stock GetFamedRankName(i)
+GetFamedRankName(i)
 {
 	new string[128];
 	switch(i)
@@ -115,7 +115,7 @@ stock GetFamedRankName(i)
 	return string;
 }
 
-stock SendFamedMessage(color, string[])
+SendFamedMessage(color, const string[])
 {
 	foreach(new i: Player)
 	{

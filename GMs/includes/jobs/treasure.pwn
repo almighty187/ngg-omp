@@ -393,7 +393,7 @@ CMD:search(playerid, params[])
 		}
 
         SetPlayerCheckpoint(playerid,HiddenTreasure[GetPVarInt(playerid, "HiddenTreasure")][0], HiddenTreasure[GetPVarInt(playerid, "HiddenTreasure")][1], HiddenTreasure[GetPVarInt(playerid, "HiddenTreasure")][2], 3);
-        SetTimerEx("DisableCheckPoint", 2000, 0, "i", playerid);
+        SetTimerEx("DisableCheckPoint", 2000, false, "i", playerid);
 
    		format(szMessage, 128, "You are %f meters away from the treasure. ", distance);
      	SendClientMessageEx(playerid, COLOR_WHITE, szMessage);

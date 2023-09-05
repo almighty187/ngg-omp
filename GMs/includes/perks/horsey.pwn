@@ -36,7 +36,7 @@
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <YSI\y_hooks>
+#include <YSI_Coding\y_hooks>
 
 CMD:placebet(playerid, params[])
 {
@@ -91,7 +91,7 @@ Dialog:PlaceHorseBet(playerid, response, listitem, inputtext[]) {
      		{
 				if(Businesses[InBusiness(playerid)][bSafeBalance] < 40000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
 				PlayerInfo[playerid][pHorse] = 1;
-				TogglePlayerControllable(playerid, 0);
+				TogglePlayerControllable(playerid, false);
 				GivePlayerCash(playerid, -18000);
 				format(string, sizeof(string), "%s has bet $18000 on a horse", GetPlayerNameEx(playerid));
 				Log("logs/horse.log", string);
@@ -112,7 +112,7 @@ Dialog:PlaceHorseBet(playerid, response, listitem, inputtext[]) {
      		{
 			if(Businesses[InBusiness(playerid)][bSafeBalance] < 70000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
 			PlayerInfo[playerid][pHorse] = 2;
-			TogglePlayerControllable(playerid, 0);
+			TogglePlayerControllable(playerid, false);
 			GivePlayerCash(playerid, -32000);
 			format(string, sizeof(string), "%s has bet $32000 on a horse", GetPlayerNameEx(playerid));
 			Log("logs/horse.log", string);
@@ -133,7 +133,7 @@ Dialog:PlaceHorseBet(playerid, response, listitem, inputtext[]) {
      		{
 				if(Businesses[InBusiness(playerid)][bSafeBalance] < 101000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
 				PlayerInfo[playerid][pHorse] = 3;
-				TogglePlayerControllable(playerid, 0);
+				TogglePlayerControllable(playerid, false);
 				GivePlayerCash(playerid, -46000);
 				format(string, sizeof(string), "%s has bet $46000 on a horse", GetPlayerNameEx(playerid));
 				Log("logs/horse.log", string);
@@ -154,7 +154,7 @@ Dialog:PlaceHorseBet(playerid, response, listitem, inputtext[]) {
      		{
      			if(Businesses[InBusiness(playerid)][bSafeBalance] < 123000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
 				PlayerInfo[playerid][pHorse] = 4;
-				TogglePlayerControllable(playerid, 0);
+				TogglePlayerControllable(playerid, false);
 				GivePlayerCash(playerid, -55000);
 				format(string, sizeof(string), "%s has bet $55000 on a horse", GetPlayerNameEx(playerid));
 				Log("logs/horse.log", string);
@@ -175,7 +175,7 @@ Dialog:PlaceHorseBet(playerid, response, listitem, inputtext[]) {
      		{
 				if(Businesses[InBusiness(playerid)][bSafeBalance] < 161000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
 				PlayerInfo[playerid][pHorse] = 5;
-				TogglePlayerControllable(playerid, 0);
+				TogglePlayerControllable(playerid, false);
 				GivePlayerCash(playerid, -73000);
 				format(string, sizeof(string), "%s has bet $73000 on a horse", GetPlayerNameEx(playerid));
 				Log("logs/horse.log", string);
@@ -196,7 +196,7 @@ Dialog:PlaceHorseBet(playerid, response, listitem, inputtext[]) {
      		{
 				if(Businesses[InBusiness(playerid)][bSafeBalance] < 330000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
 				PlayerInfo[playerid][pHorse] = 6;
-				TogglePlayerControllable(playerid, 0);
+				TogglePlayerControllable(playerid, false);
 				GivePlayerCash(playerid, -150000);
 				format(string, sizeof(string), "%s has bet $150000 on a horse", GetPlayerNameEx(playerid));
 				Log("logs/horse.log", string);
@@ -217,7 +217,7 @@ Dialog:PlaceHorseBet(playerid, response, listitem, inputtext[]) {
      		{
 				if(Businesses[InBusiness(playerid)][bSafeBalance] < 935000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
 				PlayerInfo[playerid][pHorse] = 7;
-				TogglePlayerControllable(playerid, 0);
+				TogglePlayerControllable(playerid, false);
 				GivePlayerCash(playerid, -425000);
 				format(string, sizeof(string), "%s has bet $425000 on a horse", GetPlayerNameEx(playerid));
 				Log("logs/horse.log", string);
@@ -238,7 +238,7 @@ Dialog:PlaceHorseBet(playerid, response, listitem, inputtext[]) {
      		{
 				if(Businesses[InBusiness(playerid)][bSafeBalance] < 1900000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
 				PlayerInfo[playerid][pHorse] = 8;
-				TogglePlayerControllable(playerid, 0);
+				TogglePlayerControllable(playerid, false);
 				GivePlayerCash(playerid, -875000);
 				format(string, sizeof(string), "%s has bet $875000 on a horse", GetPlayerNameEx(playerid));
 				Log("logs/horse.log", string);
@@ -259,7 +259,7 @@ Dialog:PlaceHorseBet(playerid, response, listitem, inputtext[]) {
      		{
 				if(Businesses[InBusiness(playerid)][bSafeBalance] < 22000000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
 				PlayerInfo[playerid][pHorse] = 9;
-				TogglePlayerControllable(playerid, 0);
+				TogglePlayerControllable(playerid, false);
 				GivePlayerCash(playerid, -10000000);
 				format(string, sizeof(string), "%s has bet $100000000 on a horse", GetPlayerNameEx(playerid));
 				Log("logs/horse.log", string);
@@ -299,7 +299,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                  		{
                  						if(Businesses[InBusiness(playerid)][bSafeBalance] < 40000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
                  						PlayerInfo[playerid][pHorse] = 1;
-                 						TogglePlayerControllable(playerid, 0);
+                 						TogglePlayerControllable(playerid, false);
 										GivePlayerCash(playerid, -18000);
 										format(string, sizeof(string), "%s has bet $18000 on a horse", GetPlayerNameEx(playerid));
                         				Log("logs/horse.log", string);
@@ -320,7 +320,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                  		{
 										if(Businesses[InBusiness(playerid)][bSafeBalance] < 70000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
                  						PlayerInfo[playerid][pHorse] = 2;
-                 						TogglePlayerControllable(playerid, 0);
+                 						TogglePlayerControllable(playerid, false);
 										GivePlayerCash(playerid, -32000);
 										format(string, sizeof(string), "%s has bet $32000 on a horse", GetPlayerNameEx(playerid));
                         				Log("logs/horse.log", string);
@@ -341,7 +341,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                  		{
                  						if(Businesses[InBusiness(playerid)][bSafeBalance] < 101000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
                  						PlayerInfo[playerid][pHorse] = 3;
-                 						TogglePlayerControllable(playerid, 0);
+                 						TogglePlayerControllable(playerid, false);
 										GivePlayerCash(playerid, -46000);
 										format(string, sizeof(string), "%s has bet $46000 on a horse", GetPlayerNameEx(playerid));
                         				Log("logs/horse.log", string);
@@ -362,7 +362,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                  		{
                  						if(Businesses[InBusiness(playerid)][bSafeBalance] < 123000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
                  						PlayerInfo[playerid][pHorse] = 4;
-                 						TogglePlayerControllable(playerid, 0);
+                 						TogglePlayerControllable(playerid, false);
 										GivePlayerCash(playerid, -55000);
 										format(string, sizeof(string), "%s has bet $55000 on a horse", GetPlayerNameEx(playerid));
                         				Log("logs/horse.log", string);
@@ -383,7 +383,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                  		{
                  						if(Businesses[InBusiness(playerid)][bSafeBalance] < 161000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
                  						PlayerInfo[playerid][pHorse] = 5;
-                 						TogglePlayerControllable(playerid, 0);
+                 						TogglePlayerControllable(playerid, false);
 										GivePlayerCash(playerid, -73000);
 										format(string, sizeof(string), "%s has bet $73000 on a horse", GetPlayerNameEx(playerid));
                         				Log("logs/horse.log", string);
@@ -404,7 +404,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                  		{
                  						if(Businesses[InBusiness(playerid)][bSafeBalance] < 330000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
                  						PlayerInfo[playerid][pHorse] = 6;
-                 						TogglePlayerControllable(playerid, 0);
+                 						TogglePlayerControllable(playerid, false);
 										GivePlayerCash(playerid, -150000);
 										format(string, sizeof(string), "%s has bet $150000 on a horse", GetPlayerNameEx(playerid));
                         				Log("logs/horse.log", string);
@@ -425,7 +425,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                  		{
                  						if(Businesses[InBusiness(playerid)][bSafeBalance] < 935000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
                  						PlayerInfo[playerid][pHorse] = 7;
-                 						TogglePlayerControllable(playerid, 0);
+                 						TogglePlayerControllable(playerid, false);
 										GivePlayerCash(playerid, -425000);
 										format(string, sizeof(string), "%s has bet $425000 on a horse", GetPlayerNameEx(playerid));
                         				Log("logs/horse.log", string);
@@ -446,7 +446,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                  		{
                  						if(Businesses[InBusiness(playerid)][bSafeBalance] < 1900000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
                  						PlayerInfo[playerid][pHorse] = 8;
-                 						TogglePlayerControllable(playerid, 0);
+                 						TogglePlayerControllable(playerid, false);
 										GivePlayerCash(playerid, -875000);
 										format(string, sizeof(string), "%s has bet $875000 on a horse", GetPlayerNameEx(playerid));
                         				Log("logs/horse.log", string);
@@ -467,7 +467,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                  		{
                  						if(Businesses[InBusiness(playerid)][bSafeBalance] < 22000000) return SendClientMessage(playerid, COLOR_GREY, "The casino doesn't have enough money.");
                  						PlayerInfo[playerid][pHorse] = 9;
-                 						TogglePlayerControllable(playerid, 0);
+                 						TogglePlayerControllable(playerid, false);
 										GivePlayerCash(playerid, -10000000);
 										format(string, sizeof(string), "%s has bet $100000000 on a horse", GetPlayerNameEx(playerid));
                         				Log("logs/horse.log", string);
@@ -492,7 +492,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 forward HorseTimer(playerid);
 public HorseTimer(playerid)
 {
-	TogglePlayerControllable(playerid, 1);
+	TogglePlayerControllable(playerid, true);
     new
 	a = PlayerInfo[playerid][pHorse];
 	switch (a)

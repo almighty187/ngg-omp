@@ -142,7 +142,7 @@ NationSel_HandleNationSelection(playerid)
 		RegistrationStep[playerid] = 0;
 	    PlayerInfo[playerid][pTut] = 1;
 		gOoc[playerid] = 0; gNews[playerid] = 0;
-		TogglePlayerControllable(playerid, 1);
+		TogglePlayerControllable(playerid, true);
 		SetCamBack(playerid);
 		DeletePVar(playerid, "MedicBill");
 		SetPlayerColor(playerid,TEAM_HIT_COLOR);
@@ -239,16 +239,7 @@ NationSel_HandleNationSelection(playerid)
 }*/
 
 
-stock NationCheck(playerid, giveplayerid) {
-
-	if(PlayerInfo[playerid][pNation] != PlayerInfo[giveplayerid][pNation]) {
-		SendClientMessageEx(playerid, COLOR_GRAD1, "This person is not part of your nation and can therefore not be processed.");
-		return 0;
-	}
-	return 1;
-}
-
-stock GetPlayerNation(playerid) {
+GetPlayerNation(playerid) {
 
 	szMiscArray[0] = 0;
 	switch(PlayerInfo[playerid][pNation]) {
@@ -312,7 +303,7 @@ CMD:deport(playerid, params[])
 			format(string, sizeof(string), "* You deported %s!", GetPlayerNameEx(giveplayerid));
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, string);
 			DeletePVar(giveplayerid, "IsFrozen");
-			TogglePlayerControllable(giveplayerid, 1);
+			TogglePlayerControllable(giveplayerid, true);
 			ClearAnimationsEx(giveplayerid);
 			SetPlayerSpecialAction(giveplayerid, SPECIAL_ACTION_NONE);
 			PlayerCuffed[giveplayerid] = 0;

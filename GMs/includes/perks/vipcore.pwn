@@ -34,7 +34,7 @@
 	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-stock IsVIPcar(carid)
+IsVIPcar(carid)
 {
 	for(new i = 0; i < sizeof(VIPVehicles); i++)
 	{
@@ -43,18 +43,8 @@ stock IsVIPcar(carid)
 	return 0;
 }
 
-stock IsVIPModel(carid)
-{
-	new Cars[] = { 451, 411, 429, 522, 444, 556, 557 };
-	for(new i = 0; i < sizeof(Cars); i++)
-	{
-		if(GetVehicleModel(carid) == Cars[i]) return 1;
-	}
-	return 0;
-}
 
-
-stock GetVIPRankName(i)
+GetVIPRankName(i)
 {
 	new string[128];
 	switch(i)
@@ -83,7 +73,7 @@ stock GetVIPRankName(i)
 	return string;
 }
 
-stock SendVIPMessage(color, string[])
+SendVIPMessage(color, const string[])
 {
 	foreach(new i: Player)
 	{
@@ -251,7 +241,7 @@ CMD:travel(playerid, params[])
 			}
             if(strcmp(params,"famed",true) == 0)
 			{
-				if (GetPlayerState(playerid) == 2)
+				if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 				{
 					new tmpcar = GetPlayerVehicleID(playerid);
 					SetVehiclePos(tmpcar, 1010.7523, -1121.7469, 24.1332);
@@ -272,7 +262,7 @@ CMD:travel(playerid, params[])
 			}
 			else if(strcmp(params,"trfamed",true) == 0)
 			{
-				if (GetPlayerState(playerid) == 2)
+				if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 				{
 					new tmpcar = GetPlayerVehicleID(playerid);
 					SetVehiclePos(tmpcar, -2419.3953,2328.9312,4.9921);
@@ -293,7 +283,7 @@ CMD:travel(playerid, params[])
 			}
 			else if(strcmp(params,"sffamed",true) == 0)
 			{
-				if (GetPlayerState(playerid) == 2)
+				if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 				{
 					new tmpcar = GetPlayerVehicleID(playerid);
 					SetVehiclePos(tmpcar, -2484.3599,59.7974,26.0415);
@@ -329,7 +319,7 @@ CMD:travel(playerid, params[])
 
 			if(strcmp(params,"ls",true) == 0)
 			{
-				if (GetPlayerState(playerid) == 2)
+				if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 				{
 					new tmpcar = GetPlayerVehicleID(playerid);
 					SetVehiclePos(tmpcar, 1529.6,-1691.2,13.3);
@@ -350,7 +340,7 @@ CMD:travel(playerid, params[])
 
 			if(strcmp(params,"sf",true) == 0)
 			{
-				if (GetPlayerState(playerid) == 2)
+				if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 				{
 					new tmpcar = GetPlayerVehicleID(playerid);
 					SetVehiclePos(tmpcar, -1605.0,720.0,12.0);
@@ -371,7 +361,7 @@ CMD:travel(playerid, params[])
 			}
 			if(strcmp(params,"rc",true) == 0)
 			{
-				if (GetPlayerState(playerid) == 2)
+				if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 				{
 					new tmpcar = GetPlayerVehicleID(playerid);
 					SetVehiclePos(tmpcar, 1253.70, 343.73, 19.41);
@@ -392,7 +382,7 @@ CMD:travel(playerid, params[])
 			}
 			if(strcmp(params,"lsvip",true) == 0)
 			{
-				if (GetPlayerState(playerid) == 2)
+				if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 				{
 					new tmpcar = GetPlayerVehicleID(playerid);
 					SetVehiclePos(tmpcar, 1826.76, -1538.57, 13.25);
@@ -414,7 +404,7 @@ CMD:travel(playerid, params[])
 			}
 			if(strcmp(params,"sfvip",true) == 0)
 			{
-				if (GetPlayerState(playerid) == 2)
+				if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 				{
 					new tmpcar = GetPlayerVehicleID(playerid);
 					SetVehiclePos(tmpcar, -2441.009521, 522.708923, 29.785852);
@@ -436,7 +426,7 @@ CMD:travel(playerid, params[])
 			}
 			if(strcmp(params,"apvip",true) == 0)
 			{
-				if (GetPlayerState(playerid) == 2)
+				if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 				{
 					new tmpcar = GetPlayerVehicleID(playerid);
 					SetVehiclePos(tmpcar, -2106.056396, -2403.133056, 31.089097);
@@ -459,7 +449,7 @@ CMD:travel(playerid, params[])
 			}
 			if(strcmp(params,"lvvip",true) == 0)
 			{
-				if (GetPlayerState(playerid) == 2)
+				if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 				{
 					new tmpcar = GetPlayerVehicleID(playerid);
 					SetVehiclePos(tmpcar, 1875.7731, 1366.0796, 16.8998);
@@ -481,7 +471,7 @@ CMD:travel(playerid, params[])
 			}
 			if(strcmp(params,"fc",true) == 0)
 			{
-				if (GetPlayerState(playerid) == 2)
+				if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 				{
 					new tmpcar = GetPlayerVehicleID(playerid);
 					SetVehiclePos(tmpcar, 162.7059, 1180.0232, 14.6859);
@@ -502,7 +492,7 @@ CMD:travel(playerid, params[])
 			}
 			if(strcmp(params,"bayside",true) == 0)
 			{
-				if (GetPlayerState(playerid) == 2)
+				if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 				{
 					new tmpcar = GetPlayerVehicleID(playerid);
 					SetVehiclePos(tmpcar, -2465.7285, 2238.6355, 4.6803);
@@ -524,7 +514,7 @@ CMD:travel(playerid, params[])
 			}
 			if(strcmp(params,"flint",true) == 0)
 			{
-				if (GetPlayerState(playerid) == 2)
+				if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 				{
 					new tmpcar = GetPlayerVehicleID(playerid);
 					SetVehiclePos(tmpcar, -79.608451, -1192.061157, 1.463104);
@@ -1344,7 +1334,7 @@ CMD:vipmods(playerid, params[])
 {
 	if(PlayerInfo[playerid][pShopTech] < 3) return SendClientMessageEx(playerid, COLOR_GRAD1, "You're not authorized to use this command!");
 	SendClientMessageEx(playerid, -1, "VIP Moderators Online:");
-	foreach(Player, i)
+	foreach(new i: Player)
 	{
 		if(PlayerInfo[i][pVIPMod])
 		{

@@ -55,10 +55,10 @@ SetPlayerSpawn(playerid)
 					PlayerInfo[playerid][pRewardDrawChance] += 10;
 					SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "** You have been given 10 Draw Chances for the Fall Into Fun Event.");
 					
-					for(new w = 0; w < 12; w++)
+					for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 					{
 						PlayerInfo[playerid][pGuns][w] = HungerPlayerInfo[playerid][hgLastWeapon][w];
-						if(PlayerInfo[playerid][pGuns][w] > 0 && PlayerInfo[playerid][pAGuns][w] == 0)
+						if(PlayerInfo[playerid][pGuns][w] > WEAPON_FIST && PlayerInfo[playerid][pAGuns][w] == WEAPON_FIST)
 						{
 							GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pGuns][w]);
 						}
@@ -84,10 +84,10 @@ SetPlayerSpawn(playerid)
 					PlayerInfo[playerid][pRewardDrawChance] += 25;
 					SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "** You have been given 25 Draw Chances for the Fall Into Fun Event.");
 						
-					for(new w = 0; w < 12; w++)
+					for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 					{
 						PlayerInfo[playerid][pGuns][w] = HungerPlayerInfo[playerid][hgLastWeapon][w];
-						if(PlayerInfo[playerid][pGuns][w] > 0 && PlayerInfo[playerid][pAGuns][w] == 0)
+						if(PlayerInfo[playerid][pGuns][w] > WEAPON_FIST && PlayerInfo[playerid][pAGuns][w] == WEAPON_FIST)
 						{
 							GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pGuns][w]);
 						}
@@ -115,10 +115,10 @@ SetPlayerSpawn(playerid)
 							SendClientMessageEx(i, COLOR_LIGHTBLUE, "** You have been given 50 Draw Chances for the Fall Into Fun Event.");
 							hgActive = 0;
 							
-							for(new w = 0; w < 12; w++)
+							for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 							{
 								PlayerInfo[i][pGuns][w] = HungerPlayerInfo[i][hgLastWeapon][w];
-								if(PlayerInfo[i][pGuns][w] > 0 && PlayerInfo[i][pAGuns][w] == 0)
+								if(PlayerInfo[i][pGuns][w] > WEAPON_FIST && PlayerInfo[i][pAGuns][w] == WEAPON_FIST)
 								{
 									GivePlayerValidWeapon(i, PlayerInfo[i][pGuns][w]);
 								}
@@ -158,10 +158,10 @@ SetPlayerSpawn(playerid)
 						
 					HideHungerGamesTextdraw(playerid);
 					
-					for(new w = 0; w < 12; w++)
+					for(new WEAPON_SLOT:w; w < WEAPON_SLOT_DETONATOR; w++)
 					{
 						PlayerInfo[playerid][pGuns][w] = HungerPlayerInfo[playerid][hgLastWeapon][w];
-						if(PlayerInfo[playerid][pGuns][w] > 0 && PlayerInfo[playerid][pAGuns][w] == 0)
+						if(PlayerInfo[playerid][pGuns][w] > WEAPON_FIST && PlayerInfo[playerid][pAGuns][w] == WEAPON_FIST)
 						{
 							GivePlayerValidWeapon(playerid, PlayerInfo[playerid][pGuns][w]);
 						}
@@ -290,7 +290,7 @@ SetPlayerSpawn(playerid)
 				{
 					format(szMiscArray, sizeof(szMiscArray), "Player was brutally slashed with a %s.", Weapon_ReturnName(aLastShotWeapon[playerid]));
 				}
-				case WEAPON_GRENADE, WEAPON_ROCKETLAUNCHER, WEAPON_HEATSEEKER, 51:
+				case WEAPON_GRENADE, WEAPON_ROCKETLAUNCHER, WEAPON_HEATSEEKER, REASON_EXPLOSION:
 				{
 					format(szMiscArray, sizeof(szMiscArray), "Player suffered critical damage from an explosive blast.");
 				}
@@ -315,7 +315,7 @@ SetPlayerSpawn(playerid)
 				{
 					format(szMiscArray, sizeof(szMiscArray), "Player lost consciousness through drowning.");
 				}
-				case 0: format(szMiscArray, sizeof(szMiscArray), "Player would appear to be brutally beaten by someone's fists.");
+				case WEAPON_FIST: format(szMiscArray, sizeof(szMiscArray), "Player would appear to be brutally beaten by someone's fists.");
 				default: format(szMiscArray, sizeof(szMiscArray), "Player passed away from unknown causes.");
 			}
 			strcat(szMiscArray, "\n{FF0000}(Player is critically injured).", sizeof(szMiscArray));
@@ -371,7 +371,7 @@ SetPlayerSpawn(playerid)
 					}
 					EventLastVW[playerid] = 0;
 					EventLastInt[playerid] = 0;
-					RemovePlayerWeapon(playerid, 38);
+					RemovePlayerWeapon(playerid, WEAPON_MINIGUN);
 					health = GetPVarFloat(playerid, "pPreGodHealth");
 					SetHealth(playerid,health);
 					armor = GetPVarFloat(playerid, "pPreGodArmor");
