@@ -581,7 +581,7 @@ CMD:quithma(playerid, params[])
 
 	SendClientMessage(playerid, COLOR_LIGHTBLUE, "*	You have quit the Hitman Agency. Your knife has been removed.");
 
-	if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == 4) RemovePlayerWeapon(playerid, WEAPON_KNIFE);
+	if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == WEAPON:4) RemovePlayerWeapon(playerid, WEAPON_KNIFE);
 	return 1;
 }
 
@@ -677,7 +677,7 @@ CMD:removehitman(playerid, params[])
 
 		format(szMiscArray, sizeof szMiscArray, "* %s %s has kicked you from the Hitman Agency. Your knife has been removed.", GetHitmanRank(playerid), GetPlayerNameEx(playerid));
 		SendClientMessage(iTarget, COLOR_LIGHTBLUE, szMiscArray);
-		if(PlayerInfo[iTarget][pGuns][WEAPON_SLOT_MELEE] == 4) RemovePlayerWeapon(iTarget, WEAPON_KNIFE);
+		if(PlayerInfo[iTarget][pGuns][WEAPON_SLOT_MELEE] == WEAPON:4) RemovePlayerWeapon(iTarget, WEAPON_KNIFE);
 
 		format(szMiscArray, sizeof szMiscArray, "%s %s has kicked %s from the Hitman Agency.", GetHitmanRank(playerid), GetPlayerNameEx(playerid), GetPlayerNameEx(iTarget));
 		new file[256], month, day, year;
@@ -702,7 +702,7 @@ CMD:removehitman(playerid, params[])
 
 		format(szMiscArray, sizeof szMiscArray, "* Administrator %s has kicked you from the Hitman Agency. Your knife has been removed.",  GetPlayerNameEx(playerid));
 		SendClientMessage(iTarget, COLOR_LIGHTBLUE, szMiscArray);
-		if(PlayerInfo[iTarget][pGuns][WEAPON_SLOT_MELEE] == 4) RemovePlayerWeapon(iTarget, WEAPON_KNIFE);
+		if(PlayerInfo[iTarget][pGuns][WEAPON_SLOT_MELEE] == WEAPON:4) RemovePlayerWeapon(iTarget, WEAPON_KNIFE);
 
 		format(szMiscArray, sizeof szMiscArray, "Administrator %s has kicked %s from the Hitman Agency.", GetPlayerNameEx(playerid), GetPlayerNameEx(iTarget));
 		new file[256], month, day, year;
@@ -1845,7 +1845,7 @@ CMD:knife(playerid, params[])
             SendClientMessageEx(playerid, COLOR_YELLOW, "You have pulled out your knife.");
         }
         else {
-            if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == 4) {
+            if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == WEAPON:4) {
                 RemovePlayerWeapon(playerid, WEAPON_KNIFE); // Remove Knife
                 SetPVarInt(playerid, "HidingKnife", 1);
                 SendClientMessageEx(playerid, COLOR_YELLOW, "You have hidden your knife.");

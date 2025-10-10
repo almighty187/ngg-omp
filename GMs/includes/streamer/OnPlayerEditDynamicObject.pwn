@@ -9,7 +9,7 @@ public OnPlayerEditGate(playerid, objectid, response, Float:x, Float:y, Float:z,
     CallLocalFunction("OnPlayerEditDynamicObject", "iddffffff", playerid, objectid, response, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz);
 }
 
-public OnPlayerEditObject(playerid, playerobject, objectid, EDIT_RESPONSE:response, Float:fX, Float:fY, Float:fZ, Float:rotationX, Float:rotationY, Float:rotationZ) {
+public OnPlayerEditObject(playerid, playerobject, objectid, EDIT_RESPONSE:response, Float:fX, Float:fY, Float:fZ, Float:fRotX, Float:fRotY, Float:fRotZ) {
 	return 0;
 }
 

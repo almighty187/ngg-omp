@@ -77,13 +77,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
- #define MAX_PLAYERS 500
- #include <open.mp>
+#define MAX_PLAYERS 500
+#include <open.mp>
 
 /*  ---------------- SCRIPT REVISION ----------------- */
 
 // Do not forget to change this everytime you commit - it's mandatory!
-#define SERVER_GM_TEXT "NG:RP v3.1.0"
+#define SERVER_GM_TEXT "NG:RP v3.1.1"
 
 #define YSI_NO_HEAP_MALLOC
 //#define AREA_DEBUG

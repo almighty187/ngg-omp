@@ -454,7 +454,7 @@ forward SetVehicleEngine(vehicleid, playerid);
 public SetVehicleEngine(vehicleid, playerid)
 {
 	new string[128];
-	new bool:engine;
+	new engine;
     GetVehicleParamsEx(vehicleid, engine);
     if(engine == VEHICLE_PARAMS_ON)
 	{

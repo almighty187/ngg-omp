@@ -24,13 +24,13 @@ timer Interact_Timer[1000](playerid) {
 	}
 }
 
-hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
+hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 
-	if(newkeys & KEY_LEFT || newkeys & KEY_FIRE) {
+	if(newkeys & _:KEY_LEFT || newkeys & _:KEY_FIRE) {
 
 		if(GetPVarType(playerid, PVAR_INTERACT_CANTRIGGER)) {
 
-			if(newkeys & GetInteractSpriteKey(GetPVarInt(playerid, "I2"))) InteractSpriteProcess(playerid, true);
+			if(newkeys & _:GetInteractSpriteKey(GetPVarInt(playerid, "I2"))) InteractSpriteProcess(playerid, true);
 			else InteractSpriteProcess(playerid, false);
 			DeletePVar(playerid, PVAR_INTERACT_CANTRIGGER);
 			return 1;
@@ -158,9 +158,9 @@ KEY:GetInteractSpriteKey(id) {
 	new KEY:iKeyID;
 	switch(id) {
 		case 0: {}
-		case 1: iKeyID = KEY_LEFT;
-		case 2: iKeyID = KEY_RIGHT;
-		default: iKeyID = KEY_FIRE;
+		case 1: iKeyID = KEY:KEY_LEFT;
+		case 2: iKeyID = KEY:KEY_RIGHT;
+		default: iKeyID = KEY:KEY_FIRE;
 	}
 	return iKeyID;
 }

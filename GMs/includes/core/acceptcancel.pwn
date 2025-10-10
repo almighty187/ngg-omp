@@ -2696,7 +2696,7 @@ CMD:repair(playerid, params[])
 						if(giveplayerid == playerid) { SendClientMessageEx(playerid, COLOR_GREY, "   Can't do that!"); return 1; }
 	                    if(!IsABike(closestcar) && !IsAPlane(closestcar))
 						{
-							new bool:bonnet;
+							new bonnet;
 							GetVehicleParamsEx(closestcar, .bonnet = bonnet);
 							if(bonnet == VEHICLE_PARAMS_OFF || bonnet == VEHICLE_PARAMS_UNSET)
 							{

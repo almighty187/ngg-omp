@@ -205,7 +205,7 @@ CMD:meterstatus(playerid, params[])
 CMD:rentmeter(playerid, params[])
 {
 	if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER) return SendClientMessageEx(playerid, COLOR_GREY, "You must be the driver of a vehicle to rent a parking meter.");
-	new vehicleid, bool:engine, meterid, string[128];
+	new vehicleid, engine, meterid, string[128];
 	meterid = GetNearestParkingMeter(playerid);
 	if(meterid == -1) return SendClientMessageEx(playerid, COLOR_GREY, "You are not in range of a parking meter.");
 	if(ParkingMeterInformation[meterid][AssignedVehicle] != INVALID_VEHICLE_ID) return SendClientMessageEx(playerid, COLOR_GREY, "This parking meter is already occupied. To add more time and renew it, use (/renewmeter).");

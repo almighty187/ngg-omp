@@ -50,78 +50,78 @@ GivePlayerValidWeapon( playerid, WEAPON:WeaponID )
    	if(zombieevent == 1 && GetPVarType(playerid, "pIsZombie")) return SendClientMessageEx(playerid, COLOR_GREY, "Zombies can't have guns.");
 	#endif
 	if(GetPVarType(playerid, "IsInArena") || GetPVarType(playerid, "EventToken")) {
-		GivePlayerWeapon(playerid, WeaponID, 99999);
+		GivePlayerWeapon(playerid, WEAPON:WeaponID, 99999);
 		return 1;
 	}
 	switch( WeaponID )
 	{
   		case WEAPON_FIST, WEAPON_BRASSKNUCKLE:
 		{
-			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_UNARMED ] = WeaponID;
-			GivePlayerWeapon( playerid, WeaponID, 99999 );
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_UNARMED ] = WEAPON:WeaponID;
+			GivePlayerWeapon( playerid, WEAPON:WeaponID, 99999 );
 		}
 		case WEAPON_GOLFCLUB, WEAPON_NITESTICK, WEAPON_KNIFE, WEAPON_BAT, WEAPON_SHOVEL, WEAPON_POOLSTICK, WEAPON_KATANA, WEAPON_CHAINSAW:
 		{
-			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] = WeaponID;
-			GivePlayerWeapon( playerid, WeaponID, 99999 );
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] = WEAPON:WeaponID;
+			GivePlayerWeapon( playerid, WEAPON:WeaponID, 99999 );
 		}
 		case WEAPON_COLT45, WEAPON_SILENCED, WEAPON_DEAGLE:
 		{
-			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] = WeaponID;
-			GivePlayerWeapon( playerid, WeaponID, 99999 );
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] = WEAPON:WeaponID;
+			GivePlayerWeapon( playerid, WEAPON:WeaponID, 99999 );
 		}
 		case WEAPON_SHOTGUN, WEAPON_SAWEDOFF, WEAPON_SHOTGSPA:
 		{
-			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] = WeaponID;
-			GivePlayerWeapon( playerid, WeaponID, 99999 );
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] = WEAPON:WeaponID;
+			GivePlayerWeapon( playerid, WEAPON:WeaponID, 99999 );
 		}
 		case WEAPON_UZI, WEAPON_MP5, WEAPON_TEC9:
 		{
-			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] = WeaponID;
-			GivePlayerWeapon( playerid, WeaponID, 99999 );
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] = WEAPON:WeaponID;
+			GivePlayerWeapon( playerid, WEAPON:WeaponID, 99999 );
 		}
 		case WEAPON_AK47, WEAPON_M4:
 		{
-			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] = WeaponID;
-			GivePlayerWeapon( playerid, WeaponID, 99999 );
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] = WEAPON:WeaponID;
+			GivePlayerWeapon( playerid, WEAPON:WeaponID, 99999 );
 		}
 		case WEAPON_RIFLE, WEAPON_SNIPER:
 		{
-			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] = WeaponID;
-			GivePlayerWeapon( playerid, WeaponID, 99999 );
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] = WEAPON:WeaponID;
+			GivePlayerWeapon( playerid, WEAPON:WeaponID, 99999 );
 		}
 		case WEAPON_ROCKETLAUNCHER, WEAPON_HEATSEEKER, WEAPON_FLAMETHROWER, WEAPON_MINIGUN:
 		{
-			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ARTILLERY ] = WeaponID;
-			GivePlayerWeapon( playerid, WeaponID, 99999 );
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ARTILLERY ] = WEAPON:WeaponID;
+			GivePlayerWeapon( playerid, WEAPON:WeaponID, 99999 );
 		}
 		case WEAPON_GRENADE, WEAPON_TEARGAS, WEAPON_MOLTOV, WEAPON_SATCHEL, WEAPON_BOMB:
 		{
-			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EXPLOSIVES ] = WeaponID;
-			GivePlayerWeapon( playerid, WeaponID, 99999 );
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EXPLOSIVES ] = WEAPON:WeaponID;
+			GivePlayerWeapon( playerid, WEAPON:WeaponID, 99999 );
 		}
 		case WEAPON_SPRAYCAN, WEAPON_FIREEXTINGUISHER, WEAPON_CAMERA:
 		{
-			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EQUIPMENT ] = WeaponID;
-			GivePlayerWeapon( playerid, WeaponID, 99999 );
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EQUIPMENT ] = WEAPON:WeaponID;
+			GivePlayerWeapon( playerid, WEAPON:WeaponID, 99999 );
 		}
 		case WEAPON_DILDO, WEAPON_DILDO2, WEAPON_VIBRATOR, WEAPON_VIBRATOR2, WEAPON_FLOWER, WEAPON_CANE:
 		{
-			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] = WeaponID;
-			GivePlayerWeapon( playerid, WeaponID, 99999 );
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] = WEAPON:WeaponID;
+			GivePlayerWeapon( playerid, WEAPON:WeaponID, 99999 );
 		}
 		case WEAPON_NIGHT_VISION_GOGGLES, WEAPON_THERMAL_GOGGLES, WEAPON_PARACHUTE:
 		{
-			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GADGET ] = WeaponID;
-			GivePlayerWeapon( playerid, WeaponID, 99999 );
+			PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GADGET ] = WEAPON:WeaponID;
+			GivePlayerWeapon( playerid, WEAPON:WeaponID, 99999 );
 		}
 	}
 
-	GivePlayerWeapon(playerid, WeaponID, 1);	
+	GivePlayerWeapon(playerid, WEAPON:WeaponID, 1);	
 	return 1;
 }
 
-IsWeaponHandgun(WEAPON:weaponid) {
+IsWeaponHandgun(weaponid) {
 	switch(weaponid) {
 		case WEAPON_GOLFCLUB..WEAPON_KATANA: return true;
 		case WEAPON_DILDO..WEAPON_DEAGLE: return true;
@@ -130,7 +130,7 @@ IsWeaponHandgun(WEAPON:weaponid) {
 	return false;
 }
 
-IsWeaponPrimary(WEAPON:weaponid) {
+IsWeaponPrimary(weaponid) {
 	switch(weaponid) {
 		case WEAPON_SHOTGUN..WEAPON_SNIPER: return true;
 		default: return false;
@@ -230,7 +230,7 @@ public UnholsterWeapon(playerid, WEAPON_SLOT:iWeaponSlot)
 	return 1;
 }
 
-ReturnWeaponName(WEAPON:iWeaponID) {
+ReturnWeaponName(iWeaponID) {
 
 	new
 		szName[32];
@@ -255,9 +255,9 @@ ReturnWeaponName(WEAPON:iWeaponID) {
 		case WEAPON_GRENADE: szName = "grenade";
 		case WEAPON_TEARGAS: szName = "tear gas";
 		case WEAPON_MOLTOV: szName = "molotov cocktail";
-		case (WEAPON:19): szName = "jetpack";
-		case (WEAPON:20): szName = "";
-		case (WEAPON:21): szName = "";
+		case (19): szName = "jetpack";
+		case (20): szName = "";
+		case (21): szName = "";
 		case WEAPON_COLT45: szName = "Colt .45";
 		case WEAPON_SILENCED: szName = "silenced Colt .45";
 		case WEAPON_DEAGLE: szName = "Desert Eagle";
@@ -287,7 +287,7 @@ ReturnWeaponName(WEAPON:iWeaponID) {
 	return szName;
 }
 
-OnPlayerChangeWeapon(playerid, WEAPON:newweapon)
+OnPlayerChangeWeapon(playerid, newweapon)
 {
 	if(pTazer{playerid} == 1) SetPlayerArmedWeapon(playerid,WEAPON_SILENCED);
 	if(GetPVarInt(playerid, "WeaponsHolstered") == 1)
@@ -323,11 +323,11 @@ OnPlayerChangeWeapon(playerid, WEAPON:newweapon)
 
 		if(GetPlayerState(playerid) == PLAYER_STATE_NONE || GetPlayerState(playerid) == PLAYER_STATE_DRIVER || GetPlayerState(playerid) == PLAYER_STATE_WASTED || GetPlayerState(playerid) == PLAYER_STATE_SPAWNED || GetPlayerState(playerid) == PLAYER_STATE_SPECTATING) return 1;
 
-		if(newweapon == WEAPON_PARACHUTE) PlayerInfo[playerid][pGuns][WEAPON_SLOT_GADGET] = WEAPON_PARACHUTE;
+		if(newweapon == _:WEAPON_PARACHUTE) PlayerInfo[playerid][pGuns][WEAPON_SLOT_GADGET] = WEAPON_PARACHUTE;
 
-		if(PlayerInfo[playerid][pGuns][GetWeaponSlot(newweapon)] != newweapon) {
+		if(_:PlayerInfo[playerid][pGuns][GetWeaponSlot(WEAPON:newweapon)] != newweapon) {
 			SendClientMessageEx(playerid, COLOR_LIGHTRED, "[SYSTEM]: Client weapon detected. Admins were notified: refrain from doing it again.");
-			ExecuteHackerAction(playerid, newweapon);
+			ExecuteHackerAction(playerid, WEAPON:newweapon);
 			SetPlayerWeaponsEx(playerid);
 			new iWarnings = GetPVarInt(playerid, "WpnHack_Warnings");
 			if(iWarnings > 3) {
@@ -338,7 +338,7 @@ OnPlayerChangeWeapon(playerid, WEAPON:newweapon)
 		}
 
 		/*
-		if( PlayerInfo[playerid][pGuns][GetWeaponSlot(newweapon)] != newweapon) {
+		if( PlayerInfo[playerid][pGuns][GetWeaponSlot(WEAPON:newweapon)] != newweapon) {
 			new iWarnings = GetPVarInt(playerid, "WpnHack_Warnings");
 			if(iWarnings > 3) {
 				KickEx(playerid);
@@ -350,12 +350,12 @@ OnPlayerChangeWeapon(playerid, WEAPON:newweapon)
 
 	if(GetPlayerState(playerid) == PLAYER_STATE_PASSENGER)
 	{
-	   	if(!IsADriveByWeapon(GetPlayerWeapon(playerid)) && !IsADriveByWeapon(WEAPON:GetPVarInt(playerid, "LastWeapon"))) SetPlayerArmedWeapon(playerid,WEAPON_FIST);
+	   	if(!IsADriveByWeapon(GetPlayerWeapon(playerid)) && !IsADriveByWeapon(GetPVarInt(playerid, "LastWeapon"))) SetPlayerArmedWeapon(playerid,WEAPON_FIST);
 	}
 	return 1;
 }
 
-Weapon_ReturnName(WEAPON:iModelID) {
+Weapon_ReturnName(iModelID) {
 
 	new
 		szWepName[32] = "(none)";
@@ -380,9 +380,9 @@ Weapon_ReturnName(WEAPON:iModelID) {
 		case WEAPON_GRENADE: szWepName = "Grenade";
 		case WEAPON_TEARGAS: szWepName = "Tear Gas";
 		case WEAPON_MOLTOV: szWepName = "Molotov Cocktail";
-		case (WEAPON:19): szWepName = "Jetpack";
-		case (WEAPON:20): szWepName = "";
-		case (WEAPON:21): szWepName = "";
+		case (19): szWepName = "Jetpack";
+		case (20): szWepName = "";
+		case (21): szWepName = "";
 		case WEAPON_COLT45: szWepName = "Colt .45";
 		case WEAPON_SILENCED: szWepName = "Silenced Colt .45";
 		case WEAPON_DEAGLE: szWepName = "Desert Eagle";
@@ -408,19 +408,19 @@ Weapon_ReturnName(WEAPON:iModelID) {
 		case WEAPON_NIGHT_VISION_GOGGLES: szWepName = "Nightvision Goggles";
 		case WEAPON_THERMAL_GOGGLES: szWepName = "Thermal Goggles";
 		case WEAPON_PARACHUTE: szWepName = "Parachute";
-		case (WEAPON:47): szWepName = "";
-		case (WEAPON:48): szWepName = "";
+		case (47): szWepName = "";
+		case (48): szWepName = "";
 		case REASON_VEHICLE: szWepName = "Vehicle";
 		case REASON_HELICOPTER_BLADES: szWepName = "Helicopter Blades";
 		case REASON_EXPLOSION: szWepName = "Explosion";
-		case (WEAPON:52): szWepName = "";
+		case (52): szWepName = "";
 		case REASON_DROWN: szWepName = "Drowning";
 		case REASON_COLLISION: szWepName = "Falling";
 	}
 	return szWepName;
 }
 
-IsNotAGun(WEAPON:weaponid)
+IsNotAGun(weaponid)
 {
 	switch(weaponid)
 	{
@@ -515,13 +515,13 @@ CMD:switchgun(playerid, params[])
 			else if(strcmp(weapon, "Tec9", true) == 0) id = WEAPON_TEC9;
 			else return SendClientMessageEx(playerid, COLOR_GREY, "Weapons: Fist, 9mm, Shotgun, Sawnoff, Spas12, UZI, MP5, M4, AK47, Tec9");
 
-			for (new WEAPON_SLOT:i; i <= WEAPON_SLOT_DETONATOR; i++) 
+			for (new WEAPON_SLOT:i; i <= WEAPON_SLOT_DETONATOR; i++)
 			{
-				GetPlayerWeaponData(playerid, i, WEAPON:weapons[i][0], weapons[i][1]);
-				if(PlayerInfo[playerid][pGuns][i] == id && weapons[i][0] == _:id)
+				GetPlayerWeaponData(playerid, i, WEAPON:weapons[_:i][0], weapons[_:i][1]);
+				if(PlayerInfo[playerid][pGuns][i] == id && WEAPON:weapons[_:i][0] == id)
 				{
 					SetPlayerArmedWeapon(playerid, id);
-					SetPVarInt(playerid, "LastWeapon", id);
+					SetPVarInt(playerid, "LastWeapon", _:id);
 					return 1;
 				}
 			}
@@ -607,9 +607,9 @@ CMD:giveweapon(playerid, params[])
 	if(IsPlayerInAnyVehicle(giveplayerid)) return SendClientMessageEx(playerid, COLOR_GRAD2, "Please exit the vehicle, before using this command.");
 	if(strcmp(weapon, "sdpistol", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == 23)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == WEAPON_SILENCED)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != 23 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != 24)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != WEAPON_SILENCED && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != WEAPON_DEAGLE)
 			{
 				//if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
@@ -636,9 +636,9 @@ CMD:giveweapon(playerid, params[])
 	}
 	if(strcmp(weapon, "9mm", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == 23)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == WEAPON_SILENCED)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != 23 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != 24)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != WEAPON_SILENCED && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != WEAPON_DEAGLE)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your 9mm pistol.");
 				format(string, sizeof(string), "* %s has given %s their 9mm pistol.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
@@ -663,9 +663,9 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "shotgun", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] == 25)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] == WEAPON_SHOTGUN)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_SHOTGUN ] != 25 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_SHOTGUN ] != 27)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_SHOTGUN ] != WEAPON_SHOTGUN && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_SHOTGUN ] != WEAPON_SHOTGSPA)
 			{
 				//if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
@@ -692,9 +692,9 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "mp5", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == 29)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == WEAPON_MP5)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 28 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 29 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 32)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != WEAPON_UZI && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != WEAPON_MP5 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != WEAPON_TEC9)
 			{
 				//if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
@@ -721,9 +721,9 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "uzi", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == 28)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == WEAPON_UZI)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 28 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 29 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 32)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != WEAPON_UZI && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != WEAPON_MP5 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != WEAPON_TEC9)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your Micro SMG.");
 				format(string, sizeof(string), "* %s has given %s their Micro SMG.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
@@ -748,9 +748,9 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "tec9", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == 32)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == WEAPON_TEC9)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 28 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 29 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != 32)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != WEAPON_UZI && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != WEAPON_MP5 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] != WEAPON_TEC9)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your Tec-9.");
 				format(string, sizeof(string), "* %s has given %s their Tec-9.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
@@ -775,9 +775,9 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "deagle", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == 24)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == WEAPON_DEAGLE)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != 24)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_PISTOL ] != WEAPON_DEAGLE)
 			{
 				//if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
@@ -804,9 +804,9 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "rifle", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] == 33)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] == WEAPON_RIFLE)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] != 33 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] != 34)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] != WEAPON_RIFLE && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] != WEAPON_SNIPER)
 			{
 				//if(PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away this weapon as you're Famed+!");
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your rifle.");
@@ -832,9 +832,9 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "ak47", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] == 30)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] == WEAPON_AK47)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] != 30 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] != 31)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] != WEAPON_AK47 && PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] != WEAPON_M4)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your AK-47.");
 				format(string, sizeof(string), "* %s has given %s their AK-47.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
@@ -859,9 +859,9 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "m4", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] == 31)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] == WEAPON_M4)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] != 31)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] != WEAPON_M4)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your M4.");
 				format(string, sizeof(string), "* %s has given %s their M4.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
@@ -886,9 +886,9 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "spas12", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] == 27)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] == WEAPON_SHOTGSPA)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_SHOTGUN ] != 27)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_SHOTGUN ] != WEAPON_SHOTGSPA)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your SPAS-12.");
 				format(string, sizeof(string), "* %s has given %s their SPAS-12.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
@@ -913,9 +913,9 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "sniper", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] == 34)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] == WEAPON_SNIPER)
 		{
-			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] != 34)
+			if(PlayerInfo[giveplayerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] != WEAPON_SNIPER)
 			{
 				SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your sniper rifle.");
 				format(string, sizeof(string), "* %s has given %s their sniper rifle.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
@@ -940,7 +940,7 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "flowers", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == 14)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == WEAPON_FLOWER)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your flowers.");
 			format(string, sizeof(string), "* %s has given %s their flowers.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
@@ -960,7 +960,7 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "knuckles", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_UNARMED ] == 1)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_UNARMED ] == WEAPON_BRASSKNUCKLE)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your brass knuckles.");
 			format(string, sizeof(string), "* %s has given %s their brass knuckles.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
@@ -980,7 +980,7 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "baseballbat", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 5)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == WEAPON_BAT)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your baseball bat.");
 			format(string, sizeof(string), "* %s has given %s their baseball bat.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
@@ -1000,7 +1000,7 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "cane", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == 15)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == WEAPON_CANE)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your cane.");
 			format(string, sizeof(string), "* %s has given %s their cane.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
@@ -1020,7 +1020,7 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "shovel", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 6)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == WEAPON_SHOVEL)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your shovel.");
 			format(string, sizeof(string), "* %s has given %s their shovel.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
@@ -1040,7 +1040,7 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "golfclub", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 2)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == WEAPON_GOLFCLUB)
 		{
 			if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
@@ -1062,7 +1062,7 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "katana") == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 8)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == WEAPON_KATANA)
 		{
 			if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
@@ -1084,7 +1084,7 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "dildo", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == 10)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == WEAPON_DILDO)
 		{
 			if(PlayerInfo[playerid][pDonateRank] > 2 || PlayerInfo[playerid][pFamed] > 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You can not give away weapons if you're Gold+ VIP/Famed+!");
 
@@ -1106,7 +1106,7 @@ CMD:giveweapon(playerid, params[])
 	}
 	else if(strcmp(weapon, "parachute", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GADGET ] == 46)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GADGET ] == WEAPON_PARACHUTE)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have given away your parachute.");
 			format(string, sizeof(string), "* %s has given %s their parachute.", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid));
@@ -1169,7 +1169,7 @@ CMD:dropgun(playerid, params[])
 	new string[128];
 	if(strcmp(params, "sdpistol", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == 23)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == WEAPON_SILENCED)
 		{
 			if(pTazer{playerid} == 1) return SendClientMessageEx(playerid, COLOR_RED, "You cannot drop your tazer.");
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your silenced pistol.");
@@ -1184,7 +1184,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "camera", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EQUIPMENT ] == 43)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EQUIPMENT ] == WEAPON_CAMERA)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your camera.");
 			format(string, sizeof(string), "* %s has dropped their camera.", GetPlayerNameEx(playerid));
@@ -1198,7 +1198,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "nitestick", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == 3)
+		if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_MELEE] == WEAPON_NITESTICK)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your nitestick.");
 			format(string, sizeof(string), "* %s has dropped their nitestick.", GetPlayerNameEx(playerid));
@@ -1212,7 +1212,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "mace", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_EQUIPMENT] == 41)
+		if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_EQUIPMENT] == WEAPON_SPRAYCAN)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your mace.");
 			format(string, sizeof(string), "* %s has dropped their mace.", GetPlayerNameEx(playerid));
@@ -1226,7 +1226,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "knife", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 4)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == WEAPON_KNIFE)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your knife.");
 			format(string, sizeof(string), "* %s has dropped their knife.", GetPlayerNameEx(playerid));
@@ -1240,7 +1240,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "9mm", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == 22)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == WEAPON_COLT45)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your 9mm pistol.");
 			format(string, sizeof(string), "* %s has dropped their 9mm pistol.", GetPlayerNameEx(playerid));
@@ -1254,7 +1254,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "shotgun", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] == 25)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] == WEAPON_SHOTGUN)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your shotgun.");
 			format(string, sizeof(string), "* %s has dropped their shotgun.", GetPlayerNameEx(playerid));
@@ -1268,7 +1268,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "mp5", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == 29)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == WEAPON_MP5)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your MP5.");
 			format(string, sizeof(string), "* %s has dropped their MP5.", GetPlayerNameEx(playerid));
@@ -1282,7 +1282,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "uzi", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == 28)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == WEAPON_UZI)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your Micro SMG.");
 			format(string, sizeof(string), "* %s has dropped their Micro SMG.", GetPlayerNameEx(playerid));
@@ -1296,7 +1296,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "tec9", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == 32)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MACHINE_GUN ] == WEAPON_TEC9)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your Tec-9.");
 			format(string, sizeof(string), "* %s has dropped their Tec-9.", GetPlayerNameEx(playerid));
@@ -1310,7 +1310,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "deagle", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == 24)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_PISTOL ] == WEAPON_DEAGLE)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your Desert Eagle.");
 			format(string, sizeof(string), "* %s has dropped their Desert Eagle.", GetPlayerNameEx(playerid));
@@ -1324,7 +1324,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "rifle", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] == 33)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] == WEAPON_RIFLE)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your rifle.");
 			format(string, sizeof(string), "* %s has dropped their rifle.", GetPlayerNameEx(playerid));
@@ -1338,7 +1338,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "ak47", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] == 30)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] == WEAPON_AK47)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your AK-47.");
 			format(string, sizeof(string), "* %s has dropped their AK-47.", GetPlayerNameEx(playerid));
@@ -1352,7 +1352,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "m4", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] == 31)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ASSAULT_RIFLE ] == WEAPON_M4)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your M4.");
 			format(string, sizeof(string), "* %s has dropped their M4.", GetPlayerNameEx(playerid));
@@ -1366,7 +1366,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "spas12", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] == 27)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_SHOTGUN ] == WEAPON_SHOTGSPA)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your SPAS-12.");
 			format(string, sizeof(string), "* %s has dropped their SPAS-12.", GetPlayerNameEx(playerid));
@@ -1380,7 +1380,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "sniper", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] == 34)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_LONG_RIFLE ] == WEAPON_SNIPER)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your sniper rifle.");
 			format(string, sizeof(string), "* %s has dropped their sniper rifle.", GetPlayerNameEx(playerid));
@@ -1394,7 +1394,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "flowers", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == 14)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == WEAPON_FLOWER)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your flowers.");
 			format(string, sizeof(string), "* %s has dropped their flowers.", GetPlayerNameEx(playerid));
@@ -1408,7 +1408,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "knuckles", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_UNARMED ] == 1)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_UNARMED ] == WEAPON_BRASSKNUCKLE)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your brass knuckles.");
 			format(string, sizeof(string), "* %s has dropped their brass knuckles.", GetPlayerNameEx(playerid));
@@ -1422,7 +1422,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "baseballbat", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 5)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == WEAPON_BAT)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your baseball bat.");
 			format(string, sizeof(string), "* %s has dropped their baseball bat.", GetPlayerNameEx(playerid));
@@ -1436,7 +1436,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "cane", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == 15)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == WEAPON_CANE)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your cane.");
 			format(string, sizeof(string), "* %s has dropped their cane.", GetPlayerNameEx(playerid));
@@ -1451,7 +1451,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "shovel", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 6)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == WEAPON_SHOVEL)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your shovel.");
 			format(string, sizeof(string), "* %s has dropped their shovel.", GetPlayerNameEx(playerid));
@@ -1465,7 +1465,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "golfclub", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 2)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == WEAPON_GOLFCLUB)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your golf club.");
 			format(string, sizeof(string), "* %s has dropped their golf club.", GetPlayerNameEx(playerid));
@@ -1479,7 +1479,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "katana") == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 8)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == WEAPON_KATANA)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your katana.");
 			format(string, sizeof(string), "* %s has dropped their katana.", GetPlayerNameEx(playerid));
@@ -1493,7 +1493,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "dildo", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == 10)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GIFT ] == WEAPON_DILDO)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your dildo.");
 			format(string, sizeof(string), "* %s has dropped their dildo.", GetPlayerNameEx(playerid));
@@ -1507,7 +1507,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "parachute", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GADGET ] == 46)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_GADGET ] == WEAPON_PARACHUTE)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your parachute.");
 			format(string, sizeof(string), "* %s has dropped their parachute.", GetPlayerNameEx(playerid));
@@ -1521,7 +1521,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "smoke", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EXPLOSIVES ] == 17)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EXPLOSIVES ] == WEAPON_TEARGAS)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your smoke grenade.");
 			format(string, sizeof(string), "* %s has dropped their smoke grenade.", GetPlayerNameEx(playerid));
@@ -1535,7 +1535,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "chainsaw", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 9)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == WEAPON_CHAINSAW)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your chainsaw.");
 			format(string, sizeof(string), "* %s has dropped their chainsaw.", GetPlayerNameEx(playerid));
@@ -1549,7 +1549,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "fire", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EQUIPMENT ] == 42)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_EQUIPMENT ] == WEAPON_FIREEXTINGUISHER)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your fire extinguisher.");
 			format(string, sizeof(string), "* %s has dropped their fire extinguisher.", GetPlayerNameEx(playerid));
@@ -1563,7 +1563,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "minigun", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ARTILLERY ] == 38)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_ARTILLERY ] == WEAPON_MINIGUN)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your minigun.");
 			format(string, sizeof(string), "* %s has dropped their minigun.", GetPlayerNameEx(playerid));
@@ -1577,7 +1577,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "poolcue", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == 7)
+		if(PlayerInfo[playerid][pGuns][ WEAPON_SLOT_MELEE ] == WEAPON_POOLSTICK)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your pool cue.");
 			format(string, sizeof(string), "* %s has dropped their pool cue.", GetPlayerNameEx(playerid));
@@ -1591,7 +1591,7 @@ CMD:dropgun(playerid, params[])
 	}
 	else if(strcmp(params, "goggles", true) == 0)
 	{
-		if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_GADGET] == 44 || PlayerInfo[playerid][pGuns][WEAPON_SLOT_GADGET] == 45)
+		if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_GADGET] == WEAPON_NIGHT_VISION_GOGGLES || PlayerInfo[playerid][pGuns][WEAPON_SLOT_GADGET] == WEAPON_THERMAL_GOGGLES)
 		{
 			SendClientMessageEx(playerid, COLOR_LIGHTBLUE, "You have dropped your goggles.");
 			format(string, sizeof(string), "* %s has dropped their goggles.", GetPlayerNameEx(playerid));
@@ -1654,7 +1654,7 @@ ReturnBoneName(iBoneID)
 	return szBone;
 }
 
-IsADriveByWeapon(WEAPON:iWeaponID) {
+IsADriveByWeapon(iWeaponID) {
 	switch(iWeaponID) {
 		case WEAPON_SHOTGSPA: return 1;
 		case WEAPON_SHOTGUN: return 1;

@@ -4547,7 +4547,7 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
 
 		new
 			newcar = GetPlayerVehicleID(playerid),
-			bool:engine, v;
+			engine, v;
 
 		gLastCar[playerid] = newcar;
 		if(GetPVarInt(playerid, "EventToken") == 1) {

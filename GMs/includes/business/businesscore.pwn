@@ -1151,7 +1151,7 @@ CMD:refuel(playerid, params[])
 		if (IsVIPcar(vehicleid)) return SendClientMessageEx(playerid, COLOR_RED, "This is a vehicle from the VIP garage and it has already unlimited amount of fuel.");
 		if (IsFamedVeh(vehicleid)) return SendClientMessageEx(playerid, COLOR_RED, "This is a vehicle from the Famed garage and it has already unlimited amount of fuel.");
 		if (IsAdminSpawnedVehicle(vehicleid)) return SendClientMessageEx(playerid, COLOR_RED, "This is an admin-spawned vehicle and it has already unlimited amount of fuel.");
-	    new bool:engine;
+	    new engine;
     	GetVehicleParamsEx(vehicleid,engine);
 	    if(engine == VEHICLE_PARAMS_ON) return SendClientMessageEx(playerid, COLOR_RED, "You need to shut off the engine before filling up (press ~k~~CONVERSATION_YES~).");
      	if (Businesses[iBusinessID][GasPumpGallons][iPumpID] == 0.0) return SendClientMessageEx(playerid, COLOR_RED, "No gas left in the gas station tank.");

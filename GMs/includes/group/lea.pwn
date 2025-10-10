@@ -418,7 +418,7 @@ CMD:placekit(playerid, params[]) {
 			if( vehicleid != INVALID_VEHICLE_ID && GetDistanceToCar(playerid, vehicleid) < 10 )
 			{
 				if(!IsABike(vehicleid) && !IsAPlane(vehicleid)) {
-					new bool:boot;
+					new boot;
 					GetVehicleParamsEx(vehicleid, .boot = boot);
 					if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET)
 					{
@@ -520,7 +520,7 @@ CMD:usekit(playerid, params[]) {
 		    if(VehInfo[vehicleid][vCarVestKit] > 0)
 		    {
 		    	if(!IsABike(vehicleid) && !IsAPlane(vehicleid)) {
-					new bool:boot;
+					new boot;
 					GetVehicleParamsEx(vehicleid, .boot = boot);
 					if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET)
 					{
@@ -574,7 +574,7 @@ CMD:searchcar(playerid, params[])
 	if(!IsPlayerInRangeOfVehicle(playerid, closestcar, 9.0)) return SendClientMessageEx(playerid,COLOR_GREY,"You are not near any vehicles.");
 	if(IsABike(closestcar) || IsAPlane(closestcar)) return SendClientMessageEx(playerid,COLOR_GREY,"You can't search this type of vehicle!");
 
-	new bool:boot;
+	new boot;
 	GetVehicleParamsEx(closestcar, .boot = boot);
 	if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET) return SendClientMessageEx(playerid, COLOR_GRAD1, "The vehicle's trunk must be opened in order to search it.");
 
@@ -637,7 +637,7 @@ CMD:takecarweapons(playerid, params[])
         SendClientMessageEx(playerid,COLOR_GREY,"You are not near any vehicles.");
         return 1;
     }
-	new bool:boot;
+	new boot;
 	GetVehicleParamsEx(closestcar, .boot = boot);
 	if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET)
 	{
@@ -1748,8 +1748,8 @@ CMD:tazer(playerid, params[])
 		{
 			if(TazerTimeout[playerid] > 0) return SendClientMessageEx(playerid, COLOR_WHITE, "Your tazer is reloading");
 
-			pTazerReplace{playerid} = WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL];
-			if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL] != 0) RemovePlayerWeapon(playerid, WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL]);
+			pTazerReplace{playerid} = PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL];
+			if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL] != WEAPON:0) RemovePlayerWeapon(playerid, PlayerInfo[playerid][pGuns][WEAPON_SLOT_PISTOL]);
 			format(string, sizeof(string), "* %s unholsters their tazer.", GetPlayerNameEx(playerid));
 			ProxDetector(4.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			GivePlayerValidWeapon(playerid, WEAPON_SILENCED);
@@ -1853,7 +1853,7 @@ CMD:radargun(playerid, params[])
 		if(SpeedRadar == 0)
 		{
 			SetPVarInt(playerid, "RadarReplacement", PlayerInfo[playerid][pGuns][WEAPON_SLOT_EQUIPMENT]);
-			if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_EQUIPMENT] != 0) RemovePlayerWeapon(playerid, WEAPON:PlayerInfo[playerid][pGuns][WEAPON_SLOT_EQUIPMENT]);
+			if(PlayerInfo[playerid][pGuns][WEAPON_SLOT_EQUIPMENT] != WEAPON:0) RemovePlayerWeapon(playerid, PlayerInfo[playerid][pGuns][WEAPON_SLOT_EQUIPMENT]);
 			format(string, sizeof(string), "* %s takes out a LIDAR speed gun.", GetPlayerNameEx(playerid));
 			ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			GivePlayerValidWeapon(playerid, WEAPON_CAMERA);

@@ -1364,7 +1364,7 @@ InvalidModCheck(model, partid) {
 
 SetVehicleLights(vehicleid, playerid)
 {
-	new bool:lights;
+	new lights;
     GetVehicleParamsEx(vehicleid, .lights = lights);
     if(lights == VEHICLE_PARAMS_ON)
 	{
@@ -1381,7 +1381,7 @@ SetVehicleLights(vehicleid, playerid)
 
 SetVehicleHood(vehicleid, playerid)
 {
-	new bool:bonnet;
+	new bonnet;
     GetVehicleParamsEx(vehicleid, .bonnet = bonnet);
     if(bonnet == VEHICLE_PARAMS_ON)
 	{
@@ -1398,7 +1398,7 @@ SetVehicleHood(vehicleid, playerid)
 
 SetVehicleTrunk(vehicleid, playerid)
 {
-	new bool:boot;
+	new boot;
     GetVehicleParamsEx(vehicleid, .boot = boot);
     if(boot == VEHICLE_PARAMS_ON)
 	{
@@ -1542,7 +1542,7 @@ public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
 	}
 	SetPVarInt(playerid, "LastWeapon", GetPlayerWeapon(playerid));
 
-	new bool:engine;
+	new engine;
 	GetVehicleParamsEx(vehicleid,engine);
 	if(engine == VEHICLE_PARAMS_UNSET) switch(GetVehicleModel(vehicleid)) {
 		case 509, 481, 510: VehicleFuel[vehicleid] = GetVehicleFuelCapacity(vehicleid), arr_Engine{vehicleid} = 1, SetVehicleParamsEx(vehicleid,VEHICLE_PARAMS_ON);
@@ -1817,7 +1817,7 @@ CMD:car(playerid, params[])
 	}
 	if(strcmp(choice, "engine", true) == 0 && IsPlayerInAnyVehicle(playerid) && GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 	{
-		new bool:engine,vehicleid;
+		new engine,vehicleid;
 		vehicleid = GetPlayerVehicleID(playerid);
 		if(GetVehicleModel(vehicleid) == 481 || GetVehicleModel(vehicleid) == 509 || GetVehicleModel(vehicleid) == 510 || DynVeh[vehicleid] != -1 && DynVehicleInfo[DynVeh[vehicleid]][gv_iType] == 1 && GetVehicleModel(vehicleid) == 592) return SendClientMessageEx(playerid,COLOR_WHITE,"This command can't be used in this vehicle.");
 		if(WheelClamp{vehicleid}) return SendClientMessageEx(playerid,COLOR_WHITE,"(( This vehicle has a wheel camp on its front tire, you will not be able to drive away with it. ))");
@@ -1899,7 +1899,7 @@ CMD:car(playerid, params[])
 	else if(strcmp(choice, "fuel", true) == 0 && IsPlayerInAnyVehicle(playerid) && GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 	{
 		new vehicleid = GetPlayerVehicleID(playerid);
-		new bool:engine,bool:lights,enginestatus[4],lightstatus[4];
+		new engine,lights,enginestatus[4],lightstatus[4];
 		GetVehicleParamsEx(vehicleid,engine,lights);
 		if(!IsRefuelableVehicle(vehicleid)) return SendClientMessageEx(playerid,COLOR_RED,"This vehicle doesn't need fuel.");
 		if(engine != VEHICLE_PARAMS_ON) strcpy(enginestatus, "OFF", 4);
@@ -1914,7 +1914,7 @@ CMD:car(playerid, params[])
 	else if(strcmp(choice, "status", true) == 0 && IsPlayerInAnyVehicle(playerid) && GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 	{
 		new vehicleid = GetPlayerVehicleID(playerid), slot = GetPlayerVehicle(playerid, vehicleid);
-		new bool:engine,bool:lights,enginestatus[4],lightstatus[4];
+		new engine,lights,enginestatus[4],lightstatus[4];
 		GetVehicleParamsEx(vehicleid,engine,lights);
 		if(!IsRefuelableVehicle(vehicleid)) return SendClientMessageEx(playerid,COLOR_RED,"This vehicle doesn't need fuel.");
 		if(engine != VEHICLE_PARAMS_ON) strcpy(enginestatus, "OFF", 4);

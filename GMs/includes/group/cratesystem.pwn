@@ -944,7 +944,7 @@ CMD:crate(playerid, params[]) {
 	}
 	else if(strcmp(choice, "store", true) == 0) {
 		szMiscArray[0] = 0;
-		new Float:vPos[3], inveh = GetPlayerVehicleID(playerid), bool:boot, VehFound = -1, boxid;
+		new Float:vPos[3], inveh = GetPlayerVehicleID(playerid), boot, VehFound = -1, boxid;
 		
 		for(new i = 0; i < MAX_CRATE_VEHCILES; i++) {
 			if(CrateVehicle[i][cvSpawnID] != INVALID_VEHICLE_ID) {
@@ -992,7 +992,7 @@ CMD:crate(playerid, params[]) {
 	}
 	else if(strcmp(choice, "take", true) == 0) {
 		szMiscArray[0] = 0;
-		new Float:vPos[3], inveh = GetPlayerVehicleID(playerid), bool:boot, VehFound = -1;
+		new Float:vPos[3], inveh = GetPlayerVehicleID(playerid), boot, VehFound = -1;
 		
 		for(new i = 0; i < MAX_CRATE_VEHCILES; i++) {
 			if(CrateVehicle[i][cvSpawnID] != INVALID_VEHICLE_ID) {

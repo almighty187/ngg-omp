@@ -193,10 +193,10 @@ Int_DestDyn3DTxtLabel(Text3D:id) {
 #endif
 
 #if defined AREA_DEBUG
-Internal_CreateDynamicSphere(Float:x, Float:y, Float:z, Float:size, worldid = -1, interiorid = -1, playerid = -1) {
+Internal_CreateDynamicSphere(Float:x, Float:y, Float:z, Float:size, worldid = -1, interiorid = -1, playerid = -1, priority = 0) {
 
-	new iTemp = CreateDynamicSphere(x, y, z, size, worldid, interiorid, playerid);
-	printf("[DEBUG][AREA][SPHERE][A%d] X: %f Y: %f Z: %f SIZE: %f WID: %d INTID: %d PID: %d", iTemp, x, y, z, size, worldid, interiorid, playerid);
+	new iTemp = CreateDynamicSphere(x, y, z, size, worldid, interiorid, playerid, priority);
+	printf("[DEBUG][AREA][SPHERE][A%d] X: %f Y: %f Z: %f SIZE: %f WID: %d INTID: %d PID: %d PRIORITY: %d", iTemp, x, y, z, size, worldid, interiorid, playerid, priority);
 	return iTemp;
 }
 
@@ -205,10 +205,10 @@ Internal_DestroyDynamicArea(areaid) {
 	return DestroyDynamicArea(areaid);
 }
 
-Internal_CreateDynamicCuboid(Float:minx, Float:miny, Float:minz, Float:maxx, Float:maxy, Float:maxz, worldid = -1, interiorid = -1, playerid = -1) {
+Internal_CreateDynamicCuboid(Float:minx, Float:miny, Float:minz, Float:maxx, Float:maxy, Float:maxz, worldid = -1, interiorid = -1, playerid = -1, priority = 0) {
 
-	new iTemp = CreateDynamicCuboid(minx, miny, minz, maxx, maxy, maxz, worldid, interiorid, playerid);
-	printf("[DEBUG][AREA][CUBOID][A%d] MINX: %f MINY: %f MINZ: %f MAXX: %f MAXY: %f MAXZ: %f WID: %d INTID: %d PID: %d", iTemp, minx, miny, minz, maxx, maxy, maxz, worldid, interiorid, playerid);
+	new iTemp = CreateDynamicCuboid(minx, miny, minz, maxx, maxy, maxz, worldid, interiorid, playerid, priority);
+	printf("[DEBUG][AREA][CUBOID][A%d] MINX: %f MINY: %f MINZ: %f MAXX: %f MAXY: %f MAXZ: %f WID: %d INTID: %d PID: %d PRIORITY: %d", iTemp, minx, miny, minz, maxx, maxy, maxz, worldid, interiorid, playerid, priority);
 	return iTemp;
 }
 

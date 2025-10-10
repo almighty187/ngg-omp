@@ -38,7 +38,7 @@
 UpdateVehicleHUDForPlayer(p, fuel, speed)
 {
 	new str[128], vehicleid = GetPlayerVehicleID(p), szColor[4];
-	new bool:lights;
+	new lights;
 	GetVehicleParamsEx(vehicleid, .lights = lights);
 	switch(speed)
 	{

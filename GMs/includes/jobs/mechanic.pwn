@@ -88,7 +88,7 @@ CMD:fix(playerid, params[])
 
   			if(IsPlayerInRangeOfVehicle(playerid, closestcar, 10.0))
   			{
-				new bool:bonnet;
+				new bonnet;
 				new level = PlayerInfo[playerid][pMechSkill];
 				GetVehicleParamsEx(closestcar, .bonnet = bonnet);
 				if(!IsABike(closestcar) && !IsAPlane(closestcar)) {

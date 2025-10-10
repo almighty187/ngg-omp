@@ -874,7 +874,7 @@ task PaintballArenaUpdate[1000]()
 // TickRate: 60 secs.
 task VehicleUpdate[60000]() {
 
-    static bool:engine;
+    static engine;
 
     foreach(new v : Vehicles) {
 
@@ -1463,7 +1463,7 @@ foreach(new i: Player)
 				SetPVarInt(i, "wheelclampcountdown", GetPVarInt(i, "wheelclampcountdown")-1);
 				new vehicleid = GetPVarInt(i, "wheelclampvehicle"),
 					Float:CarPos[3],
-					bool:vehEngine;
+					vehEngine;
 				GetVehiclePos(vehicleid, CarPos[0], CarPos[1], CarPos[2]);
 				if(!IsPlayerInRangeOfPoint(i, 5.0, CarPos[0], CarPos[1], CarPos[2]) || IsPlayerInAnyVehicle(i)) {
 					DeletePVar(i, "wheelclampvehicle");
@@ -2868,7 +2868,7 @@ ptask PlayerMicroBeat[500](i) {
 		Float: fVehicleHealth,
 		iVehicle,
 		//szSpeed[42],
-		bool:vehEngine;
+		vehEngine;
 
 	if(_vhudVisible[i] == 1 && !IsPlayerInAnyVehicle(i))
 	{

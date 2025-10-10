@@ -470,7 +470,7 @@ CMD:checkcargo(playerid, params[])
 			SendClientMessageEx(playerid, COLOR_GRAD1, "You cannot search the contents of this vehicle while inside a vehicle.");
 			return 1;
 		}
-		new bool:boot;
+		new boot;
 		GetVehicleParamsEx(closestcar, .boot = boot);
 		if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET)
 		{

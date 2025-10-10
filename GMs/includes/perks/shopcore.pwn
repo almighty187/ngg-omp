@@ -1655,7 +1655,7 @@ CMD:jumpstart(playerid, params[])
 	if(!IsPlayerInRangeOfVehicle(playerid, closestcar, 10.0)) return SendClientMessageEx(playerid, COLOR_GRAD1, "You are not close enough to any vehicle.");
 	if(!IsABike(closestcar) && !IsAPlane(closestcar))
 	{
-		new bool:bonnet;
+		new bonnet;
 		GetVehicleParamsEx(closestcar, .bonnet = bonnet);
 		if(bonnet == VEHICLE_PARAMS_OFF || bonnet == VEHICLE_PARAMS_UNSET) return SendClientMessageEx(playerid, COLOR_GRAD1, "The vehicle hood must be opened in order to jump start it.");
 	}

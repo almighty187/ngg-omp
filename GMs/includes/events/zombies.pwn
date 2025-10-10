@@ -586,7 +586,7 @@ CMD:z50cal(playerid, params[])
 {
 	if(!zombieevent) return SendClientMessageEx(playerid, COLOR_GREY, "There is currently no active Zombie Event!");
 	if(!PlayerInfo[playerid][mInventory][17]) return SendClientMessageEx(playerid, COLOR_GREY, "You do not have any .50 Caliber Ammo in your inventory, visit /microshop to purchase.");
-	if((GetPlayerWeapon(playerid) != WEAPON_RIFLE || PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE] != 33) && (GetPlayerWeapon(playerid) != WEAPON_SNIPER || PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE] != 34)) return SendClientMessageEx(playerid, COLOR_GREY, "You can only load a rifle or sniper rifle with .50 cal ammo.");
+	if((GetPlayerWeapon(playerid) != WEAPON_RIFLE || PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE] != WEAPON:33) && (GetPlayerWeapon(playerid) != WEAPON_SNIPER || PlayerInfo[playerid][pGuns][WEAPON_SLOT_LONG_RIFLE] != WEAPON:34)) return SendClientMessageEx(playerid, COLOR_GREY, "You can only load a rifle or sniper rifle with .50 cal ammo.");
 	if(!GetPVarType(playerid, "z50Cal"))
 	{
 		SendClientMessageEx(playerid, -1, "You have loaded a .50 Caliber bullet into your weapon.");
