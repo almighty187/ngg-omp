@@ -1757,14 +1757,14 @@ public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
 	return 1;
 }
 
-CMD:carhelp(playerid, params[])
+CMD:ncarhelp(playerid, params[])
 {
 	SetPVarInt(playerid, "HelpResultCat0", 3);
 	Help_ListCat(playerid, DIALOG_HELPCATOTHER1);
 	return 1;
 }
 
-CMD:ocarhelp(playerid, params[])
+CMD:carhelp(playerid, params[])
 {
     SendClientMessageEx(playerid, COLOR_GREEN,"_______________________________________");
     SendClientMessageEx(playerid, COLOR_WHITE,"*** CAR OWNERSHIP HELP *** - type a command for more infomation.");

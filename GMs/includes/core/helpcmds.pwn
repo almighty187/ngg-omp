@@ -1468,7 +1468,7 @@ CMD:rules(playerid, params[])
 	return 1;
 }
 
-CMD:help(playerid, params[])
+CMD:nhelp(playerid, params[])
 {
 	return Help_ListCat(playerid, DIALOG_HELPCATMAIN);
 }
@@ -1480,7 +1480,7 @@ CMD:reloadhelp(playerid, params[])
 	return RehashHelp();
 }
 
-CMD:ohelp(playerid, params[])
+CMD:help(playerid, params[])
 {
 	new string[512];
 	if(PlayerInfo[playerid][pLevel] <= 3)
@@ -1501,7 +1501,7 @@ CMD:ohelp(playerid, params[])
 		case 1: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /trace");
 		case 2: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /lawyerduty /free /defend /wanted /offerappeal /finishappeal");
 		case 3: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /sex");
-		case 4: cmd_odrughelp(playerid);
+		case 4: cmd_drughelp(playerid);
 		case 5: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /dropcar");
 		case 7: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /fix /nos /hyd /repair /refill /mechduty");
 		case 8: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /guard /frisk");
@@ -1522,7 +1522,7 @@ CMD:ohelp(playerid, params[])
 		case 1: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /trace");
 		case 2: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /lawyerduty /free /defend /wanted");
 		case 3: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /sex");
-		case 4: cmd_odrughelp(playerid);
+		case 4: cmd_drughelp(playerid);
 		case 5: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /dropcar");
 		case 7: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /fix /nos /hyd /repair /refill /mechduty");
 		case 8: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /guard /frisk");
@@ -1543,7 +1543,7 @@ CMD:ohelp(playerid, params[])
 		case 1: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /trace");
 		case 2: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /lawyerduty /free /defend /wanted");
 		case 3: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /sex");
-		case 4: cmd_odrughelp(playerid);
+		case 4: cmd_drughelp(playerid);
 		case 5: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /dropcar");
 		case 7: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /fix /nos /hyd /repair /refill /mechduty");
 		case 8: SendClientMessageEx(playerid,COLOR_WHITE,"*** JOB *** /guard /frisk");

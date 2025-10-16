@@ -1,5 +1,6 @@
 # Compiled sources
 *.amx
+*.xml
 
 # Compressed sources
 *.zip

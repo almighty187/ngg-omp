@@ -5295,20 +5295,20 @@ CMD:removemoderator(playerid, params[])
 	return 1;
 }
 
-CMD:ahelp(playerid, params[]) {
+CMD:nahelp(playerid, params[]) {
 	return cmd_ah(playerid, params);
 }
 
-CMD:ah(playerid, params[]) {
+CMD:nah(playerid, params[]) {
 	if(PlayerInfo[playerid][pAdmin] >= 1) Help_ListCat(playerid, DIALOG_HELPCATADMIN);
 	return 1;
 }
 
-CMD:oahelp(playerid, params[]) {
-	return cmd_oah(playerid, params);
+CMD:ahelp(playerid, params[]) {
+	return cmd_ah(playerid, params);
 }
 
-CMD:oah(playerid, params[])
+CMD:ah(playerid, params[])
 {
 	if(PlayerInfo[playerid][pAdmin] >= 1 || PlayerInfo[playerid][pHelper] >= 1) SendClientMessageEx(playerid, COLOR_GREEN,"_______________________________________");
 	if (PlayerInfo[playerid][pAdmin] >= 1)

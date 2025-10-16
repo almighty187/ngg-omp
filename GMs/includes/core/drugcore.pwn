@@ -2,7 +2,7 @@
 
 new dr_iPlayerTimeStamp[MAX_PLAYERS];
 
-CMD:odrughelp(playerid)
+CMD:drughelp(playerid)
 {
 	SendClientMessageEx(playerid, COLOR_WHITE,"-----------------------------------------------------------------------------------");
 	SendClientMessageEx(playerid, COLOR_GREY, "GENERAL: /mydrugs, /usedrug, /buypot, /buyopium, /plantpot, /plantopium, /pickplant, /checkplant /makeheroin");
