@@ -1,13 +1,10 @@
 // Furniture System - Empty Interiors 30 meters above the original (by Jingles)
 
-#define FILTERSCRIPT
-#define MAX_PLAYERS 500
-
 #include <open.mp>
 #include <streamer>
 
-public OnFilterScriptInit() {
-
+public OnFilterScriptInit()
+{
 	CreateDynamicObject(14743, 2458.00488, -1695.95447, 1044.28906,   0.00000, 0.00000, 0.00000);
 	CreateDynamicObject(14744, 2458.01563, -1695.93750, 1044.28906,   0.00000, 0.00000, 0.00000);
 	CreateDynamicObject(14746, 2451.96875, -1702.14063, 1044.28906,   0.00000, 0.00000, 0.00000);

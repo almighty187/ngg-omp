@@ -1,49 +1,12 @@
-/*
-
-	 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-	| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-	| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-	| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-	| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-	| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-	| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-	|__/  \__/ \______/         |__/  |__/|__/
-
-						Vehicle Functions
-
-				Next Generation Gaming, LLC
-	(created by Next Generation Gaming Development Team)
-					
-	* Copyright (c) 2016, Next Generation Gaming, LLC
-	*
-	* All rights reserved.
-	*
-	* Redistribution and use in source and binary forms, with or without modification,
-	* are not permitted in any case.
-	*
-	*
-	* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-	* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-	* A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-	* CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-	* EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-	* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-	* PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-	* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
 vehicle_lock_doors(vehicle) {
 
-	// if(IsABike(vehicle)) return SetVehicleParamsEx(vehicle, .doors = VEHICLE_PARAMS_OFF);
-	return SetVehicleParamsEx(vehicle, .doors = VEHICLE_PARAMS_ON);
+	// if(IsABike(vehicle)) return SetVehicleParamsEx(vehicle, -1, -1, -1, VEHICLE_PARAMS_OFF, -1, -1, -1);
+	return SetVehicleParamsEx(vehicle, -1, -1, -1, VEHICLE_PARAMS_ON, -1, -1, -1);
 }
 
 vehicle_unlock_doors(vehicle) {
 
-	return SetVehicleParamsEx(vehicle, .doors = VEHICLE_PARAMS_OFF);
+	return SetVehicleParamsEx(vehicle, -1, -1, -1, VEHICLE_PARAMS_OFF, -1, -1, -1);
 }
 
 IsSeatAvailable(vehicleid, seat)
@@ -1075,7 +1038,7 @@ TriggerVehicleAlarm(triggerid, ownerid, vehicleid)
 		format(szMessage, sizeof(szMessage), "SMS: Your %s(%d)'s Alarm at %s has been triggered, call 911, Sender: Vehicle Security Company", VehicleName[PlayerVehicleInfo[ownerid][slot][pvModelId] - 400], vehicleid, szCarLocation);
 		SendClientMessageEx(ownerid, COLOR_YELLOW, szMessage);
 		PlayerVehicleInfo[ownerid][slot][pvAlarmTriggered] = 1;
-		SetVehicleParamsEx(vehicleid, .alarm = VEHICLE_PARAMS_ON);
+		SetVehicleParamsEx(vehicleid, -1, -1, VEHICLE_PARAMS_ON, -1, -1, -1, -1);
 	}
 }
 
@@ -1365,15 +1328,16 @@ InvalidModCheck(model, partid) {
 SetVehicleLights(vehicleid, playerid)
 {
 	new lights;
-    GetVehicleParamsEx(vehicleid, .lights = lights);
+    new _engine, _alarm, _doors, _bonnet, _boot, _objective;
+    GetVehicleParamsEx(vehicleid, _engine, lights, _alarm, _doors, _bonnet, _boot, _objective);
     if(lights == VEHICLE_PARAMS_ON)
 	{
-		SetVehicleParamsEx(vehicleid, .lights = VEHICLE_PARAMS_OFF);
+		SetVehicleParamsEx(vehicleid, -1, VEHICLE_PARAMS_OFF, -1, -1, -1, -1, -1);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle lights successfully turned off.");
 	}
     else if(lights == VEHICLE_PARAMS_OFF || lights == VEHICLE_PARAMS_UNSET)
 	{
-		SetVehicleParamsEx(vehicleid, .lights = VEHICLE_PARAMS_ON);
+		SetVehicleParamsEx(vehicleid, -1, VEHICLE_PARAMS_ON, -1, -1, -1, -1, -1);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle lights successfully turned on.");
 	}
 	return 1;
@@ -1382,15 +1346,16 @@ SetVehicleLights(vehicleid, playerid)
 SetVehicleHood(vehicleid, playerid)
 {
 	new bonnet;
-    GetVehicleParamsEx(vehicleid, .bonnet = bonnet);
+    new _engine, _lights, _alarm, _doors, _boot, _objective;
+    GetVehicleParamsEx(vehicleid, _engine, _lights, _alarm, _doors, bonnet, _boot, _objective);
     if(bonnet == VEHICLE_PARAMS_ON)
 	{
-		SetVehicleParamsEx(vehicleid, .bonnet = VEHICLE_PARAMS_OFF);
+		SetVehicleParamsEx(vehicleid, -1, -1, -1, -1, VEHICLE_PARAMS_OFF, -1, -1);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle hood successfully closed.");
 	}
     else if(bonnet == VEHICLE_PARAMS_OFF || bonnet == VEHICLE_PARAMS_UNSET)
 	{
-		SetVehicleParamsEx(vehicleid, .bonnet = VEHICLE_PARAMS_ON);
+		SetVehicleParamsEx(vehicleid, -1, -1, -1, -1, VEHICLE_PARAMS_ON, -1, -1);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle hood successfully opened.");
 	}
 	return 1;
@@ -1399,15 +1364,16 @@ SetVehicleHood(vehicleid, playerid)
 SetVehicleTrunk(vehicleid, playerid)
 {
 	new boot;
-    GetVehicleParamsEx(vehicleid, .boot = boot);
+    new _engine, _lights, _alarm, _doors, _bonnet, _objective;
+    GetVehicleParamsEx(vehicleid, _engine, _lights, _alarm, _doors, _bonnet, boot, _objective);
     if(boot == VEHICLE_PARAMS_ON)
 	{
-		SetVehicleParamsEx(vehicleid, .boot = VEHICLE_PARAMS_OFF);
+		SetVehicleParamsEx(vehicleid, -1, -1, -1, -1, -1, VEHICLE_PARAMS_OFF, -1);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle trunk successfully closed.");
 	}
     else if(boot == VEHICLE_PARAMS_OFF || boot == VEHICLE_PARAMS_UNSET)
 	{
-		SetVehicleParamsEx(vehicleid, .boot = VEHICLE_PARAMS_ON);
+		SetVehicleParamsEx(vehicleid, -1, -1, -1, -1, -1, VEHICLE_PARAMS_ON, -1);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle trunk successfully opened.");
 	}
 	return 1;
@@ -1543,10 +1509,11 @@ public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
 	SetPVarInt(playerid, "LastWeapon", GetPlayerWeapon(playerid));
 
 	new engine;
-	GetVehicleParamsEx(vehicleid,engine);
+	new lights, alarm, doors, bonnet, boot, objective;
+	GetVehicleParamsEx(vehicleid, engine, lights, alarm, doors, bonnet, boot, objective);
 	if(engine == VEHICLE_PARAMS_UNSET) switch(GetVehicleModel(vehicleid)) {
-		case 509, 481, 510: VehicleFuel[vehicleid] = GetVehicleFuelCapacity(vehicleid), arr_Engine{vehicleid} = 1, SetVehicleParamsEx(vehicleid,VEHICLE_PARAMS_ON);
-		default: SetVehicleParamsEx(vehicleid,VEHICLE_PARAMS_OFF,VEHICLE_PARAMS_OFF), arr_Engine{vehicleid} = 0;
+		case 509, 481, 510: VehicleFuel[vehicleid] = GetVehicleFuelCapacity(vehicleid), arr_Engine{vehicleid} = 1, SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_ON, -1, -1, -1, -1, -1, -1);
+		default: SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, -1, -1, -1, -1, -1), arr_Engine{vehicleid} = 0;
 	}
 
 	if(GetPVarInt(playerid, "UsingSprunk") == 1)
@@ -1822,7 +1789,8 @@ CMD:car(playerid, params[])
 		if(GetVehicleModel(vehicleid) == 481 || GetVehicleModel(vehicleid) == 509 || GetVehicleModel(vehicleid) == 510 || DynVeh[vehicleid] != -1 && DynVehicleInfo[DynVeh[vehicleid]][gv_iType] == 1 && GetVehicleModel(vehicleid) == 592) return SendClientMessageEx(playerid,COLOR_WHITE,"This command can't be used in this vehicle.");
 		if(WheelClamp{vehicleid}) return SendClientMessageEx(playerid,COLOR_WHITE,"(( This vehicle has a wheel camp on its front tire, you will not be able to drive away with it. ))");
 
-		GetVehicleParamsEx(vehicleid,engine);
+		new lights, alarm, doors, bonnet, boot, objective;
+		GetVehicleParamsEx(vehicleid, engine, lights, alarm, doors, bonnet, boot, objective);
 		if(engine == VEHICLE_PARAMS_ON)
 		{
 			SetVehicleEngine(vehicleid, playerid);
@@ -2605,6 +2573,56 @@ CMD:sellmycar(playerid, params[])
     }
     SendClientMessageEx(playerid, COLOR_GREY, " You need to be inside a vehicle that you own.");
     return 1;
+}
+
+CMD:dvlock(playerid, params[])
+{
+	new nearestcar = GetClosestCar(playerid);
+
+	if(DynVeh[nearestcar] != -1)
+	{
+		new Float: x, Float: y, Float: z;
+		GetVehiclePos(nearestcar, x, y, z);
+		
+		if(!IsPlayerInRangeOfPoint(playerid, 4.0, x, y, z)) return SendClientMessageEx(playerid, COLOR_GREY, "You are not near any faction vehicle.");
+
+		new iDvSlotID = DynVeh[nearestcar], iGroupID = DynVehicleInfo[iDvSlotID][gv_igID];
+
+		if(iGroupID == PlayerInfo[playerid][pMember])
+		{
+			new vParamArr[7];
+			GetVehicleParamsEx(nearestcar, vParamArr[0], vParamArr[1], vParamArr[2], vParamArr[3], vParamArr[4], vParamArr[5], vParamArr[6]);
+			
+			new string[255];
+
+
+			if(vParamArr[3] == VEHICLE_PARAMS_OFF)
+			{
+				vehicle_lock_doors(nearestcar);
+				GameTextForPlayer(playerid,"~r~Vehicle Locked!",5000,6);
+				
+				format(string, sizeof(string), "{FF8000}* {C2A2DA}%s presses a button on their key fob to lock their vehicle.", GetPlayerNameEx(playerid));
+				if(PlayerInfo[playerid][pIsolated] != 0) ProxDetector(5.0, playerid, string, COLOR_PURPLE, COLOR_PURPLE, COLOR_PURPLE, COLOR_PURPLE, COLOR_PURPLE);
+				else ProxDetector(30.0, playerid, string, COLOR_PURPLE, COLOR_PURPLE, COLOR_PURPLE, COLOR_PURPLE, COLOR_PURPLE);
+
+			}
+			else
+			{
+				vehicle_unlock_doors(nearestcar);
+				GameTextForPlayer(playerid,"~g~Vehicle Unlocked!",5000,6);
+				
+				format(string, sizeof(string), "{FF8000}* {C2A2DA}%s presses a button on their key fob to unlock their vehicle.", GetPlayerNameEx(playerid));
+				if(PlayerInfo[playerid][pIsolated] != 0) ProxDetector(5.0, playerid, string, COLOR_PURPLE, COLOR_PURPLE, COLOR_PURPLE, COLOR_PURPLE, COLOR_PURPLE);
+				else ProxDetector(30.0, playerid, string, COLOR_PURPLE, COLOR_PURPLE, COLOR_PURPLE, COLOR_PURPLE, COLOR_PURPLE);
+			}
+
+		}
+		else 
+		{
+			SendClientMessageEx(playerid, COLOR_GREY, "You are not a member of this faction.");
+		}
+	}
+	return 1;
 }
 
 CMD:pvlock(playerid, params[])

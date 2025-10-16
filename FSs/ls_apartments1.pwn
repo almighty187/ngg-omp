@@ -32,16 +32,25 @@
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
+#define YSI_NO_HEAP_MALLOC
+#define YSI_NO_MODE_CACHE
+#define YSI_NO_OPTIMISATION_MESSAGE
+#define YSI_NO_VERSION_CHECK
+
+// -----------------------------------------------------------------------------
+// Includes
+// --------
+
+// SA-MP include
+#include <open.mp>
+#include <YSI_Data\y_iterate>
+
+// For PlaySoundForPlayersInRange()
+#include "../include/gl_common.inc"
 
 // -----------------------------------------------------------------------------
 // Defines
 // -------
-
-// Filterscript declaration
-#define FILTERSCRIPT
-
-// MAX_PLAYERS redefine
-#define MAX_PLAYERS			(500)
 
 // Movement speed of the elevator
 #define ELEVATOR_SPEED      (5.0)
@@ -77,17 +86,7 @@
 #define INVALID_FLOOR           (-1)
 
 // Used for chat text messages
-#define COLOR_MESSAGE_YELLOW        0xFFDD00AA
-
-// -----------------------------------------------------------------------------
-// Includes
-// --------
-
-// open.mp include
-#include <open.mp>
-
-// For PlaySoundForPlayersInRange()
-#include "../include/gl_common.inc"
+#define COLOR_MESSAGE_YELLOW        0xFFDD00AA6
 
 // -----------------------------------------------------------------------------
 // Constants
@@ -268,7 +267,7 @@ public OnFilterScriptInit()
     print("  |---------------------------------------------------");
     
     // Loop
-    for (new i = 0; i < MAX_PLAYERS; i++)
+    foreach(new i : Player)
     {
         // Check if the player is connected and not a NPC
         if (IsPlayerConnected(i) && !IsPlayerNPC(i))
@@ -495,7 +494,7 @@ public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 }
 
 // ------------------------ Functions ------------------------
-Elevator_Initialize()
+stock Elevator_Initialize()
 {
 	// Create the elevator and elevator door objects
 	Obj_Elevator 			= CreateObject(18755, X_ELEVATOR_POS, Y_ELEVATOR_POS, GROUND_Z_COORD + ELEVATOR_OFFSET, 0.000000, 0.000000, 0.000000);
@@ -533,7 +532,7 @@ Elevator_Initialize()
 	return 1;
 }
 
-Elevator_Destroy()
+stock Elevator_Destroy()
 {
 	// Destroys the elevator.
 
@@ -552,7 +551,7 @@ Elevator_Destroy()
 	return 1;
 }
 
-Elevator_OpenDoors()
+stock Elevator_OpenDoors()
 {
 	// Opens the elevator's doors.
 
@@ -565,7 +564,7 @@ Elevator_OpenDoors()
 	return 1;
 }
 
-Elevator_CloseDoors()
+stock Elevator_CloseDoors()
 {
     // Closes the elevator's doors.
 
@@ -581,7 +580,7 @@ Elevator_CloseDoors()
 	return 1;
 }
 
-Floor_OpenDoors(floorid)
+stock Floor_OpenDoors(floorid)
 {
     // Opens the doors at the specified floor.
 
@@ -593,7 +592,7 @@ Floor_OpenDoors(floorid)
 	return 1;
 }
 
-Floor_CloseDoors(floorid)
+stock Floor_CloseDoors(floorid)
 {
     // Closes the doors at the specified floor.
 
@@ -605,7 +604,7 @@ Floor_CloseDoors(floorid)
 	return 1;
 }
 
-Elevator_MoveToFloor(floorid)
+stock Elevator_MoveToFloor(floorid)
 {
 	// Moves the elevator to specified floor (doors are meant to be already closed).
 
@@ -645,7 +644,7 @@ public Elevator_TurnToIdle()
 	return 1;
 }
 
-RemoveFirstQueueFloor()
+stock RemoveFirstQueueFloor()
 {
 	// Removes the data in ElevatorQueue[0], and reorders the queue accordingly.
 
@@ -657,7 +656,7 @@ RemoveFirstQueueFloor()
 	return 1;
 }
 
-AddFloorToQueue(floorid)
+stock AddFloorToQueue(floorid)
 {
  	// Adds 'floorid' at the end of the queue.
 
@@ -686,7 +685,7 @@ AddFloorToQueue(floorid)
 	return 0;
 }
 
-ResetElevatorQueue()
+stock ResetElevatorQueue()
 {
 	// Resets the queue.
 
@@ -699,7 +698,7 @@ ResetElevatorQueue()
 	return 1;
 }
 
-IsFloorInQueue(floorid)
+stock IsFloorInQueue(floorid)
 {
 	// Checks if the specified floor is currently part of the queue.
 
@@ -710,7 +709,7 @@ IsFloorInQueue(floorid)
 	return 0;
 }
 
-ReadNextFloorInQueue()
+stock ReadNextFloorInQueue()
 {
 	// Reads the next floor in the queue, closes doors, and goes to it.
 
@@ -723,7 +722,7 @@ ReadNextFloorInQueue()
 	return 1;
 }
 
-DidPlayerRequestElevator(playerid)
+stock DidPlayerRequestElevator(playerid)
 {
 	for(new i; i < sizeof(FloorRequestedBy); i ++)
 	    if(FloorRequestedBy[i] == playerid)
@@ -732,7 +731,7 @@ DidPlayerRequestElevator(playerid)
 	return 0;
 }
 
-ShowElevatorDialog(playerid)
+stock ShowElevatorDialog(playerid)
 {
 	new string[512];
 	for(new i; i < sizeof(ElevatorQueue); i ++)
@@ -749,7 +748,7 @@ ShowElevatorDialog(playerid)
 	return 1;
 }
 
-CallElevator(playerid, floorid)
+stock CallElevator(playerid, floorid)
 {
 	// Calls the elevator (also used with the elevator dialog).
 
@@ -762,13 +761,13 @@ CallElevator(playerid, floorid)
 	return 1;
 }
 
-Float:GetElevatorZCoordForFloor(floorid)
+stock Float:GetElevatorZCoordForFloor(floorid)
 {
     // Return Z height value plus a small offset
     return (GROUND_Z_COORD + FloorZOffsets[floorid] + ELEVATOR_OFFSET);
 }
 
-Float:GetDoorsZCoordForFloor(floorid)
+stock Float:GetDoorsZCoordForFloor(floorid)
 {
 	// Return Z height value plus a small offset
 	return (GROUND_Z_COORD + FloorZOffsets[floorid] + ELEVATOR_OFFSET);

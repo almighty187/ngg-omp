@@ -196,7 +196,7 @@ public MetDet_OnSaveMetDet(id)
 
 CMD:createmetaldetector(playerid, params[])
 {
-	if(PlayerInfo[playerid][pAdmin] > 2) MetDet_CreateMetDet(playerid);
+	if(PlayerInfo[playerid][pAdmin] > 3) MetDet_CreateMetDet(playerid);
 	else SendClientMessageEx(playerid, COLOR_GRAD1, "You are not authorized to use this command.");
 	return 1;
 }
@@ -208,7 +208,7 @@ CMD:metaldetector(playerid, params[])
 		id,
 		amount,
 		iAssignData[2];
-	if(PlayerInfo[playerid][pAdmin] < 2) return SendClientMessageEx(playerid, COLOR_GRAD1, "You are not authorized to use this command.");
+	if(PlayerInfo[playerid][pAdmin] < 3) return SendClientMessageEx(playerid, COLOR_GRAD1, "You are not authorized to use this command.");
 	if(sscanf(params, "s[32]dD(1)", choice, id, amount))
 	{
 		SendClientMessageEx(playerid, COLOR_GRAD1, "Usage: /metaldetector [choice] [ID] [value]");
@@ -248,7 +248,7 @@ CMD:metaldetector(playerid, params[])
 
 CMD:metdets(playerid, params[])
 {
-	if(PlayerInfo[playerid][pAdmin] > 2) MetDet_CheckMetDets(playerid);
+	if(PlayerInfo[playerid][pAdmin] > 3) MetDet_CheckMetDets(playerid);
 	else SendClientMessageEx(playerid, COLOR_GRAD1, "You are not authorized to use this command.");
 	return 1;
 }

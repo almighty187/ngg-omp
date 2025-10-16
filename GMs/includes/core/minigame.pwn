@@ -1,8 +1,3 @@
-/*
-	Minigame: Player Interaction
-	- Jingles (September 2015)
-*/
-
 #include <YSI_Coding\y_hooks>
 
 #define PVAR_INTERACT "1000"

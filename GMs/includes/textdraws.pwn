@@ -1,38 +1,3 @@
-/*
-    	 		 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-				| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-				| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-				| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-				| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-				| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-				| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-				|__/  \__/ \______/         |__/  |__/|__/
-
-//--------------------------------[TEXTDRAWS.PWN]--------------------------------
-
-
- * Copyright (c) 2016, Next Generation Gaming, LLC
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are not permitted in any case.
- *
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
- 
 // Poker Table Textdraw - Credits to GhoulSlayer
 CreatePokerGUI(playerid)
 {
@@ -435,15 +400,15 @@ public LoadTextDraws() {
 	TextDrawTextSize(MainMenuTxtdraw[3], 770.000000, 138.000000);
 	textdrawscount++;
 
-	// NG-RP Title
-	MainMenuTxtdraw[4] = TextDrawCreate(263.000000, 10.000000, "NG-RP");
+	// NG-GR Title
+	MainMenuTxtdraw[4] = TextDrawCreate(263.000000, 10.000000, "NG-GR");
 	TextDrawFont(MainMenuTxtdraw[4], TEXT_DRAW_FONT_2);
 	TextDrawLetterSize(MainMenuTxtdraw[4], 0.910000, 4.400001);
 	TextDrawColour(MainMenuTxtdraw[4], -1);
 	TextDrawSetShadow(MainMenuTxtdraw[4], 1);
 	textdrawscount++;
 
-	// NG-RP Subtitle
+	// NG-GR Subtitle
 	MainMenuTxtdraw[5] = TextDrawCreate(256.000000, 45.000000, "Next Generation Role Play");
 	TextDrawFont(MainMenuTxtdraw[5], TEXT_DRAW_FONT_2);
 	TextDrawLetterSize(MainMenuTxtdraw[5], 0.200000, 1.200001);
@@ -451,7 +416,7 @@ public LoadTextDraws() {
 	TextDrawSetShadow(MainMenuTxtdraw[5], 1);
 	textdrawscount++;
 
-	// NG-RP Version
+	// NG-GR Version
 	MainMenuTxtdraw[6] = TextDrawCreate(283.000000, 58.000000, SERVER_GM_TEXT);
 	TextDrawFont(MainMenuTxtdraw[6], TEXT_DRAW_FONT_2);
 	TextDrawLetterSize(MainMenuTxtdraw[6], 0.200000, 1.200001);
@@ -459,7 +424,7 @@ public LoadTextDraws() {
 	TextDrawSetShadow(MainMenuTxtdraw[6], 1);
 	textdrawscount++;
 
-	// NG-RP Tooltips
+	// NG-GR Tooltips
 	MainMenuTxtdraw[7] = TextDrawCreate(319.000000, 391.000000, Tooltips[random(sizeof(Tooltips))]);
 	TextDrawAlignment(MainMenuTxtdraw[7], TEXT_DRAW_ALIGN_CENTRE);
 	TextDrawFont(MainMenuTxtdraw[7], TEXT_DRAW_FONT_2);
@@ -602,7 +567,7 @@ public LoadTextDraws() {
 	textdrawscount++;
 
 	// Tutorial (Logo 2)
-	TutTxtdraw[3] = TextDrawCreate(259.000000, 286.000000, "Next Generation Gaming");
+	TutTxtdraw[3] = TextDrawCreate(259.000000, 286.000000, "New Generation Gaming Roleplay");
 	TextDrawBackgroundColour(TutTxtdraw[3], 75);
 	TextDrawLetterSize(TutTxtdraw[3], 0.259999, 1.599997);
 	TextDrawColour(TutTxtdraw[3], 0);
@@ -1490,7 +1455,7 @@ public LoadTextDraws() {
 	TextDrawSetOutline(TutTxtdraw[113], 1);
 	textdrawscount++;
 
-	TD_LoginScreen = TextDrawCreate(0.000000, 0.000000, "NGRP:loginscreen");
+	TD_LoginScreen = TextDrawCreate(0.000000, 0.000000, "NGGR:loginscreen");
 	TextDrawAlignment(TD_LoginScreen, TEXT_DRAW_ALIGN_CENTRE);
 	TextDrawFont(TD_LoginScreen, TEXT_DRAW_FONT_SPRITE_DRAW);
 	TextDrawLetterSize(TD_LoginScreen, 0.500000, 1.000000);

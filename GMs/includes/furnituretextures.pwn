@@ -1,5 +1,3 @@
-// GTA:SA Textures. Compiled by Pottus.
-
 #define GetTextureModel(%0) arrTextures[%0][text_TModel]
 #define GetTextureTXDName(%0) arrTextures[%0][text_TXDName]
 #define GetTextureName(%0) arrTextures[%0][text_TextureName]

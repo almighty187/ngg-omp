@@ -1,39 +1,3 @@
-/*
-    	 		 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-				| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-				| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-				| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-				| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-				| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-				| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-				|__/  \__/ \______/         |__/  |__/|__/
-
-//--------------------------------[WRAPPERS.PWN]--------------------------------
-
-
- * Copyright (c) 2016, Next Generation Gaming, LLC
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are not permitted in any case.
- *
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-			/*  ---------------- WRAPPERS ----------------- */
-
 Internal_SetPlayerPos(playerid, Float:X, Float:Y, Float:Z) {
 
 	Bit_On(arrPAntiCheat[playerid], ac_bitValidPlayerPos);
@@ -251,6 +215,9 @@ HidePlayerDialogEx(playerid) {
 	return HidePlayerDialog(playerid);
 }
 
+#if defined PutPlayerInVehicle
+	#undef PutPlayerInVehicle
+#endif
 #define PutPlayerInVehicle(%0) Internal_PutPlayerInVehicle(%0)
 #define SetPlayerWeather(%0) Internal_SetPlayerWeather(%0)
 #define SetPlayerTime(%0) Internal_SetPlayerTime(%0)
@@ -270,10 +237,21 @@ HidePlayerDialogEx(playerid) {
 	#define _ALS_DestroyVehicle
 #endif
 #define DestroyVehicle(%0) Internal_DestroyVehicle(%0)
+
+#if defined SetPlayerPos
+	#undef SetPlayerPos
+#endif
 #define SetPlayerPos(%0) Internal_SetPlayerPos(%0)
+
+#if defined TogglePlayerSpectating
+	#undef TogglePlayerSpectating
+#endif
 #define TogglePlayerSpectating(%0) Internal_TogglePlayerSpectating(%0)
 //#define ShowPlayerNameTagForPlayer(%0) Internal_ShowPlayerNameTag(%0)
 
+#if defined SetPlayerInterior
+	#undef SetPlayerInterior
+#endif
 //#define SetPlayerHealth(%0) Internal_SetPlayerHealth(%0)
 //#define SetPlayerArmour(%0) Internal_SetPlayerArmour(%0)
 

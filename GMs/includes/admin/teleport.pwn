@@ -6,10 +6,10 @@ CMD:goto(playerid, params[])
 		if(sscanf(params, "s[25]D(0)D(0)", location, vw, int))
 		{
 			SendClientMessageEx(playerid, COLOR_GREY, "USAGE: /goto [location] [(optional) virtual world] [(optional) interior]");
-			SendClientMessageEx(playerid, COLOR_GRAD1, "Locations 1: LS,SF,LV,RC,ElQue,Bayside,LSVIP,SFVIP,LVVIP,Famed,MHC,stadium1");
-			SendClientMessageEx(playerid, COLOR_GRAD2, "Locations 2: stadium2,stadium3,stadium4,int1,mark,mark2,sfairport,dillimore,cave,doc,bank,mall,allsaints");
-			SendClientMessageEx(playerid, COLOR_GRAD3, "Locations 3: countygen,cracklab,gym,rodeo,flint,idlewood,fbi,island,demorgan,doc,icprison,oocprison");
-			SendClientMessageEx(playerid, COLOR_GRAD4, "Locations 4: garagesm,garagemed,garagelg,garagexlg,glenpark,palomino,nggshop, fc, unity, (l)os(c)olinas, SFDocks");
+			SendClientMessageEx(playerid, COLOR_GRAD1, "Locations 1: LS, SF, LV, RC, fc, lc, ElQue, Bayside, allsaints, countygen, glenpark, palomino, rodeo, flint, idlewood, unity");
+			SendClientMessageEx(playerid, COLOR_GRAD3, "Locations 2: dillimore, bank, mall, cracklab, gym, fbi, island, demorgan, doc, LSDocks, SFDocks, sfairport, cave");
+			SendClientMessageEx(playerid, COLOR_GRAD2, "Locations 3: LSVIP, SFVIP, LVVIP, Famed, MHC, stadium1, stadium2, stadium3, stadium4, int1, mark, mark2");
+			SendClientMessageEx(playerid, COLOR_GRAD4, "Locations 4: icprison, oocprison, garagesm, garagemed, garagelg, garagexlg, nggshop");
 			return 1;
 		}
 		if(GetPlayerState(playerid) == PLAYER_STATE_SPECTATING)
@@ -80,6 +80,18 @@ CMD:goto(playerid, params[])
 				fVehSpeed[playerid] = 0.0;
 			}
 			else SetPlayerPos(playerid, -1576.40, 79.49, 3.55);
+		}
+		else if(strcmp(location,"lsdocks", true) == 0)
+		{
+			if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
+			{
+				new tmpcar = GetPlayerVehicleID(playerid);
+				SetVehiclePos(tmpcar, 2676.2310, -2485.3652, 13.6537);
+				LinkVehicleToInterior(tmpcar, 0);
+				SetVehicleVirtualWorld(tmpcar, 0);
+				fVehSpeed[playerid] = 0.0;
+			}
+			else SetPlayerPos(playerid, 2676.2310, -2485.3652, 13.6537);
 		}
 		else if(strcmp(location,"ls",true) == 0)
 		{
@@ -618,10 +630,10 @@ CMD:goto(playerid, params[])
 		else
 		{
 			SendClientMessageEx(playerid, COLOR_GREY, "USAGE: /goto [location] [(optional) virtual world] [(optional) interior]");
-			SendClientMessageEx(playerid, COLOR_GRAD1, "Locations 1: LS,SF,LV,RC,ElQue,Bayside,LSVIP,SFVIP,LVVIP,Famed,MHC,stadium1");
-			SendClientMessageEx(playerid, COLOR_GRAD2, "Locations 2: stadium2,stadium3,stadium4,int1,mark,mark2,sfairport,dillimore,cave,doc,bank,mall,allsaints");
-			SendClientMessageEx(playerid, COLOR_GRAD3, "Locations 3: countygen,cracklab,gym,rodeo,flint,idlewood,fbi,island,demorgan,doc,icprison,oocprison");
-			return SendClientMessageEx(playerid, COLOR_GRAD4, "Locations 4: garagesm,garagemed,garagelg,garagexlg,glenpark,palomino,nggshop, fc, unity, (l)os(c)olinas");
+			SendClientMessageEx(playerid, COLOR_GRAD1, "Locations 1: LS, SF, LV, RC, fc, lc, ElQue, Bayside, allsaints, countygen, glenpark, palomino, rodeo, flint, idlewood, unity");
+			SendClientMessageEx(playerid, COLOR_GRAD3, "Locations 2: dillimore, bank, mall, cracklab, gym, fbi, island, demorgan, doc, LSDocks, SFDocks, sfairport, cave");
+			SendClientMessageEx(playerid, COLOR_GRAD2, "Locations 3: LSVIP, SFVIP, LVVIP, Famed, MHC, stadium1, stadium2, stadium3, stadium4, int1, mark, mark2");
+			SendClientMessageEx(playerid, COLOR_GRAD4, "Locations 4: icprison, oocprison, garagesm, garagemed, garagelg, garagexlg, nggshop");
 		}
 		SetPlayerVirtualWorld(playerid, vw);
 		SetPlayerInterior(playerid, int);
@@ -644,11 +656,11 @@ CMD:sendto(playerid, params[])
 		new string[128], location[32], giveplayerid;
 		if(sscanf(params, "s[32]u", location, giveplayerid))
 		{
-			SendClientMessageEx(playerid, COLOR_GREY, "USAGE: /sendto [location] [player]");
-			SendClientMessageEx(playerid, COLOR_GRAD1, "Locations 1: LS,SF,LV,RC,ElQue,Bayside,LSVIP,SFVIP,LVVIP,MHC,Famed,stadium1");
-			SendClientMessageEx(playerid, COLOR_GRAD2, "Locations 2: stadium2,stadium3,stadium4,int1,mark,mark2,sfairport,dillimore,cave,doc,bank,mall,allsaints");
-			SendClientMessageEx(playerid, COLOR_GRAD3, "Locations 3: countygen,cracklab,gym,rodeo,flint,idlewood,fbi,island,demorgan,doc,icprison,oocprison");
-			SendClientMessageEx(playerid, COLOR_GRAD3, "Locations 4: glenpark, palomino, nggshop, fc, unity, LC (loscolinas), SFDocks");
+			SendClientMessageEx(playerid, COLOR_GREY, "USAGE: /goto [location] [(optional) virtual world] [(optional) interior]");
+			SendClientMessageEx(playerid, COLOR_GRAD1, "Locations 1: LS, SF, LV, RC, fc, lc, ElQue, Bayside, allsaints, countygen, glenpark, palomino, rodeo, flint, idlewood, unity");
+			SendClientMessageEx(playerid, COLOR_GRAD3, "Locations 2: dillimore, bank, mall, cracklab, gym, fbi, island, demorgan, doc, LSDocks, SFDocks, sfairport, cave");
+			SendClientMessageEx(playerid, COLOR_GRAD2, "Locations 3: LSVIP, SFVIP, LVVIP, Famed, MHC, stadium1, stadium2, stadium3, stadium4, int1, mark, mark2");
+			SendClientMessageEx(playerid, COLOR_GRAD4, "Locations 4: icprison, oocprison, garagesm, garagemed, garagelg, garagexlg, nggshop");
 			return 1;
 		}
 		if (!IsPlayerConnected(giveplayerid))
@@ -776,6 +788,28 @@ CMD:sendto(playerid, params[])
 				SetPlayerPos(giveplayerid, -1576.40, 79.49, 3.55);
 			}
 			format(string, sizeof(string), " You have sent %s to the SF Docks.", GetPlayerNameEx(giveplayerid));
+			SendClientMessageEx(playerid, COLOR_WHITE, string);
+			SendClientMessageEx(giveplayerid, COLOR_GRAD1, "   You have been teleported!");
+			SetPlayerInterior(giveplayerid,0);
+			PlayerInfo[giveplayerid][pInt] = 0;
+			SetPlayerVirtualWorld(giveplayerid, 0);
+			PlayerInfo[giveplayerid][pVW] = 0;
+		}
+		else if(strcmp(location,"lsdocks", true) == 0)
+		{
+			if(GetPlayerState(giveplayerid) == PLAYER_STATE_DRIVER)
+			{
+				new tmpcar = GetPlayerVehicleID(giveplayerid);
+				SetVehiclePos(tmpcar, 2676.2310, -2485.3652, 13.6537);
+				LinkVehicleToInterior(tmpcar, 0);
+				SetVehicleVirtualWorld(tmpcar, 0);
+				fVehSpeed[giveplayerid] = 0.0;
+			}
+			else
+			{
+				SetPlayerPos(giveplayerid, 2676.2310, -2485.3652, 13.6537);
+			}
+			format(string, sizeof(string), " You have sent %s to the LS Docks.", GetPlayerNameEx(giveplayerid));
 			SendClientMessageEx(playerid, COLOR_WHITE, string);
 			SendClientMessageEx(giveplayerid, COLOR_GRAD1, "   You have been teleported!");
 			SetPlayerInterior(giveplayerid,0);

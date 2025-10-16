@@ -1,25 +1,3 @@
-/*
-
-	 		/$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-			| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-			| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-			| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-			| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-			| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-			| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-			|__/  \__/ \______/         |__/  |__/|__/
-
-                  Next Generation RolePlay Animations
-		(created by Next Generation Gaming Development Team)
-
-		Combined Credits:
-		(***) GhoulSlayeR
-		(***) Zhao
-		(***) Kye
-		(**)  Ivy
-
-*/
-
 #include <a_samp>
 #include <zcmd>
 

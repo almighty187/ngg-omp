@@ -13,7 +13,7 @@
 	And it'll hopefully work like a charm! :)
 */
 
-#define 		ENTRANCE_SHORTCUT		KEY_NO
+#define 		ENTRANCE_SHORTCUT		KEY_YES
 
 new iNewEnterSystem, DoorTimer[MAX_PLAYERS];
 

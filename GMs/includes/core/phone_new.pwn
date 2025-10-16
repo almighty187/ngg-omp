@@ -35,7 +35,7 @@ new szPhoneWP[][] = {
 	"LD_DUAL:Health",
 	"splash1:splash1",
 	"splash2:splash2",
-	"NGRP:background",
+	"NGGR:background",
 	"load0uk:load0uk",
 	"loadsc1:loadsc1",
 	"loadsc2:loadsc2",
@@ -1593,7 +1593,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[16], 14.000000, 15.000000);
 	TextDrawSetSelectable(PhoneTD[16], 0);
 
-	PhoneTD[17] = TextDrawCreate(505.000000, 208.000000, "NGRP:background");
+	PhoneTD[17] = TextDrawCreate(505.000000, 208.000000, "NGGR:background");
 	TextDrawBackgroundColor(PhoneTD[17], 255);
 	TextDrawFont(PhoneTD[17], 4);
 	TextDrawLetterSize(PhoneTD[17], 0.500000, 1.000000);
@@ -1720,7 +1720,7 @@ Phone_InitTD(playerid) {
 	TextDrawSetShadow(PhoneTD[28], 1);
 	TextDrawSetSelectable(PhoneTD[28], 1);
 
-	PhoneTD[29] = TextDrawCreate(505.000000, 208.000000, "NGRP:background");
+	PhoneTD[29] = TextDrawCreate(505.000000, 208.000000, "NGGR:background");
 	TextDrawBackgroundColor(PhoneTD[29], 255);
 	TextDrawFont(PhoneTD[29], 4);
 	TextDrawLetterSize(PhoneTD[29], 0.500000, 1.000000);
@@ -1733,7 +1733,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[29], 102.000000, 165.000000);
 	TextDrawSetSelectable(PhoneTD[29], 0);
 
-	PhoneTD[30] = TextDrawCreate(496.000000, 344.000000, "NGRP:blur");
+	PhoneTD[30] = TextDrawCreate(496.000000, 344.000000, "NGGR:blur");
 	TextDrawAlignment(PhoneTD[30], 2);
 	TextDrawBackgroundColor(PhoneTD[30], 255);
 	TextDrawFont(PhoneTD[30], 4);
@@ -1747,7 +1747,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[30], 124.000000, 31.000000);
 	TextDrawSetSelectable(PhoneTD[30], 0);
 
-	PhoneTD[31] = TextDrawCreate(507.000000, 349.000000, "NGRP:phone");
+	PhoneTD[31] = TextDrawCreate(507.000000, 349.000000, "NGGR:phone");
 	TextDrawAlignment(PhoneTD[31], 2);
 	TextDrawBackgroundColor(PhoneTD[31], 255);
 	TextDrawFont(PhoneTD[31], 4);
@@ -1761,7 +1761,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[31], 25.000000, 22.000000);
 	TextDrawSetSelectable(PhoneTD[31], 1);
 
-	PhoneTD[32] = TextDrawCreate(581.000000, 349.000000, "NGRP:Music");
+	PhoneTD[32] = TextDrawCreate(581.000000, 349.000000, "NGGR:Music");
 	TextDrawAlignment(PhoneTD[32], 2);
 	TextDrawBackgroundColor(PhoneTD[32], 255);
 	TextDrawFont(PhoneTD[32], 4);
@@ -1775,7 +1775,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[32], 25.000000, 22.000000);
 	TextDrawSetSelectable(PhoneTD[32], 1);
 
-	PhoneTD[33] = TextDrawCreate(531.000000, 210.000000, "NGRP:contacts");
+	PhoneTD[33] = TextDrawCreate(531.000000, 210.000000, "NGGR:contacts");
 	TextDrawAlignment(PhoneTD[33], 2);
 	TextDrawBackgroundColor(PhoneTD[33], 255);
 	TextDrawFont(PhoneTD[33], 4);
@@ -1789,7 +1789,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[33], 25.000000, 22.000000);
 	TextDrawSetSelectable(PhoneTD[33], 1);
 
-	PhoneTD[34] = TextDrawCreate(531.000000, 349.000000, "NGRP:camera");
+	PhoneTD[34] = TextDrawCreate(531.000000, 349.000000, "NGGR:camera");
 	TextDrawAlignment(PhoneTD[34], 2);
 	TextDrawBackgroundColor(PhoneTD[34], 255);
 	TextDrawFont(PhoneTD[34], 4);
@@ -1803,7 +1803,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[34], 25.000000, 22.000000);
 	TextDrawSetSelectable(PhoneTD[34], 1);
 
-	PhoneTD[35] = TextDrawCreate(506.000000, 210.000000, "NGRP:message");
+	PhoneTD[35] = TextDrawCreate(506.000000, 210.000000, "NGGR:message");
 	TextDrawAlignment(PhoneTD[35], 2);
 	TextDrawBackgroundColor(PhoneTD[35], 255);
 	TextDrawFont(PhoneTD[35], 4);
@@ -1817,7 +1817,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[35], 25.000000, 22.000000);
 	TextDrawSetSelectable(PhoneTD[35], 1);
 
-	PhoneTD[36] = TextDrawCreate(556.000000, 210.000000, "NGRP:ads");
+	PhoneTD[36] = TextDrawCreate(556.000000, 210.000000, "NGGR:ads");
 	TextDrawAlignment(PhoneTD[36], 2);
 	TextDrawBackgroundColor(PhoneTD[36], 255);
 	TextDrawFont(PhoneTD[36], 4);
@@ -1831,7 +1831,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[36], 25.000000, 22.000000);
 	TextDrawSetSelectable(PhoneTD[36], 1);
 
-	PhoneTD[37] = TextDrawCreate(581.000000, 210.000000, "NGRP:home");
+	PhoneTD[37] = TextDrawCreate(581.000000, 210.000000, "NGGR:home");
 	TextDrawAlignment(PhoneTD[37], 2);
 	TextDrawBackgroundColor(PhoneTD[37], 255);
 	TextDrawFont(PhoneTD[37], 4);
@@ -1845,7 +1845,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[37], 25.000000, 22.000000);
 	TextDrawSetSelectable(PhoneTD[37], 1);
 
-	PhoneTD[38] = TextDrawCreate(531.000000, 234.000000, "NGRP:Maps");
+	PhoneTD[38] = TextDrawCreate(531.000000, 234.000000, "NGGR:Maps");
 	TextDrawAlignment(PhoneTD[38], 2);
 	TextDrawBackgroundColor(PhoneTD[38], 255);
 	TextDrawFont(PhoneTD[38], 4);
@@ -1859,7 +1859,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[38], 25.000000, 22.000000);
 	TextDrawSetSelectable(PhoneTD[38], 1);
 
-	PhoneTD[39] = TextDrawCreate(506.000000, 234.000000, "NGRP:shows");
+	PhoneTD[39] = TextDrawCreate(506.000000, 234.000000, "NGGR:shows");
 	TextDrawAlignment(PhoneTD[39], 2);
 	TextDrawBackgroundColor(PhoneTD[39], 255);
 	TextDrawFont(PhoneTD[39], 4);
@@ -1873,7 +1873,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[39], 25.000000, 22.000000);
 	TextDrawSetSelectable(PhoneTD[39], 1);
 
-	PhoneTD[40] = TextDrawCreate(556.000000, 234.000000, "NGRP:Health");
+	PhoneTD[40] = TextDrawCreate(556.000000, 234.000000, "NGGR:Health");
 	TextDrawAlignment(PhoneTD[40], 2);
 	TextDrawBackgroundColor(PhoneTD[40], 255);
 	TextDrawFont(PhoneTD[40], 4);
@@ -1887,7 +1887,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[40], 25.000000, 22.000000);
 	TextDrawSetSelectable(PhoneTD[40], 1);
 
-	PhoneTD[41] = TextDrawCreate(581.000000, 234.000000, "NGRP:mdc");
+	PhoneTD[41] = TextDrawCreate(581.000000, 234.000000, "NGGR:mdc");
 	TextDrawAlignment(PhoneTD[41], 2);
 	TextDrawBackgroundColor(PhoneTD[41], 255);
 	TextDrawFont(PhoneTD[41], 4);
@@ -1901,7 +1901,7 @@ Phone_InitTD(playerid) {
 	TextDrawTextSize(PhoneTD[41], 25.000000, 22.000000);
 	TextDrawSetSelectable(PhoneTD[41], 1);
 
-	PhoneTD[42] = TextDrawCreate(506.000000, 258.000000, "NGRP:settings");
+	PhoneTD[42] = TextDrawCreate(506.000000, 258.000000, "NGGR:settings");
 	TextDrawAlignment(PhoneTD[42], 2);
 	TextDrawBackgroundColor(PhoneTD[42], 255);
 	TextDrawFont(PhoneTD[42], 4);

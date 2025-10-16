@@ -1,4 +1,3 @@
-// Area debugging
 #include <YSI_Coding\y_hooks>
 
 hook OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {

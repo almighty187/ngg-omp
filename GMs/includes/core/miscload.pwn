@@ -1,7 +1,3 @@
-/* 	Misc Variables load
-	Secondary Chatbox
-*/
-
 #include <YSI_Coding\y_hooks>
 
 hook OnGameModeInit() {

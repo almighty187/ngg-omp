@@ -1,40 +1,3 @@
-/*
-
-	 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-	| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-	| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-	| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-	| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-	| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-	| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-	|__/  \__/ \______/         |__/  |__/|__/
-
-						Shop Core
-
-				Next Generation Gaming, LLC
-	(created by Next Generation Gaming Development Team)
-					
-	* Copyright (c) 2016, Next Generation Gaming, LLC
-	*
-	* All rights reserved.
-	*
-	* Redistribution and use in source and binary forms, with or without modification,
-	* are not permitted in any case.
-	*
-	*
-	* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-	* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-	* A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-	* CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-	* EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-	* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-	* PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-	* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
 CreateHouseSaleSign(houseid)
 {
 	if(!HouseInfo[houseid][hSign][0]) return 1;
@@ -99,7 +62,7 @@ public JumpStart(playerid, vehicleid)
 		RepairVehicle(GetVehicleTrailer(vehicleid));
 		Vehicle_Armor(GetVehicleTrailer(vehicleid));
 	}
-	SetVehicleParamsEx(vehicleid, .bonnet = VEHICLE_PARAMS_ON);
+	SetVehicleParamsEx(vehicleid, -1, -1, -1, -1, VEHICLE_PARAMS_ON, -1, -1);
 	new string[128];
 	format(string, sizeof(string), "%s has jump started their vehicle.", GetPlayerNameEx(playerid));
 	ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
@@ -376,72 +339,6 @@ CMD:resetstpay(playerid, params[])
 		    SetPVarInt(playerid, "resetstpay", 1);
 		}
 	}
-	return 1;
-}
-
-CMD:changeuserpin(playerid, params[])
-{
-	if(PlayerInfo[playerid][pAdmin] < 1337 && PlayerInfo[playerid][pShopTech] < 2)
-	{
-        SendClientMessageEx(playerid, COLOR_GRAD1, "You are not authorized to use that command!");
-        return 1;
-    }
-
-    new string[128], accountName[20], password[64], query[512];
-    if(sscanf(params, "s[20]s[64]", accountName, password))
-		return SendClientMessageEx(playerid, COLOR_WHITE, "USAGE: /changeuserpin [player name] [new pin]");
-
-    if(strlen(password) > 4 || !IsNumeric(password))
-        return SendClientMessageEx(playerid, COLOR_GREY, "The pin must be numbers, and must have 4 digits.");
-
-    new passbuffer[129];
-    WP_Hash(passbuffer, sizeof(passbuffer), password);
-
-	format(string, sizeof(string), "Attempting to change %s's pin...", accountName);
-    SendClientMessageEx(playerid, COLOR_YELLOW, string);
-
-	format(string, sizeof(string), "AdmCmd: %s's pin was changed by %s.", accountName, GetPlayerNameEx(playerid));
-    Log("logs/pin.log", string);
-
-	SetPVarInt(playerid, "ChangePin", 1);
-
-	new tmpName[24];
-	mysql_escape_string(accountName, tmpName);
-
-    mysql_format(MainPipeline, query,sizeof(query),"UPDATE `accounts` SET `Pin`='%s' WHERE `Username`='%s' AND `AdminLevel` < 2", passbuffer, tmpName);
-	mysql_tquery(MainPipeline, query, "OnChangeUserPassword", "i", playerid);
-	SetPVarString(playerid, "OnChangeUserPassword", tmpName);
-	return 1;
-}
-
-CMD:changeuserpassword(playerid, params[])
-{
-	if(PlayerInfo[playerid][pAdmin] < 1337)
-	{
-        SendClientMessageEx(playerid, COLOR_GRAD1, "You are not authorized to use that command!");
-        return 1;
-    }
-
-    new string[128], accountName[20], password[64], query[512];
-    if(sscanf(params, "s[20]s[64]", accountName, password)) return SendClientMessageEx(playerid, COLOR_WHITE, "USAGE: /changeuserpassword [player name] [new password]");
-
-    new passbuffer[129], salt[11];
-	randomString(salt);
-	format(string, sizeof(string), "%s%s", password, salt);
-    WP_Hash(passbuffer, sizeof(passbuffer), string);
-
-	format(string, sizeof(string), "Attempting to change %s's password...", accountName);
-    SendClientMessageEx(playerid, COLOR_YELLOW, string);
-
-	format(string, sizeof(string), "AdmCmd: %s's password was changed by %s.", accountName, GetPlayerNameEx(playerid));
-    Log("logs/password.log", string);
-
-	new tmpName[24];
-	mysql_escape_string(accountName, tmpName);
-
-    mysql_format(MainPipeline, query,sizeof(query),"UPDATE `accounts` SET `Key`='%s', `Salt`='%s' WHERE `Username`='%s' AND `AdminLevel` < 2", passbuffer, salt, tmpName);
-	mysql_tquery(MainPipeline, query, "OnChangeUserPassword", "i", playerid);
-	SetPVarString(playerid, "OnChangeUserPassword", tmpName);
 	return 1;
 }
 
@@ -1656,7 +1553,8 @@ CMD:jumpstart(playerid, params[])
 	if(!IsABike(closestcar) && !IsAPlane(closestcar))
 	{
 		new bonnet;
-		GetVehicleParamsEx(closestcar, .bonnet = bonnet);
+		new _engine, _lights, _alarm, _doors, _boot, _objective;
+		GetVehicleParamsEx(closestcar, _engine, _lights, _alarm, _doors, bonnet, _boot, _objective);
 		if(bonnet == VEHICLE_PARAMS_OFF || bonnet == VEHICLE_PARAMS_UNSET) return SendClientMessageEx(playerid, COLOR_GRAD1, "The vehicle hood must be opened in order to jump start it.");
 	}
 	new string[61];

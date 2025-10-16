@@ -1,16 +1,3 @@
-/*
-	SA News - Faction Update (2015)
-	by Jingles
-	
-	-- MAIN FILE --
-	Make sure to read the "Install instructions" to get this plug-and-play script set up.
-*/
-
-
-/*
-	-- DEFINITIONS / VARIABLES (new)
-*/
-
 #include <YSI_Coding\y_hooks>
 
 #define			MAX_SANCHANNELS			8

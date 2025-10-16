@@ -1,39 +1,3 @@
-/*
-
-	 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-	| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-	| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-	| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-	| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-	| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-	| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-	|__/  \__/ \______/         |__/  |__/|__/
-
-						Dynamic Group Core
-
-				Next Generation Gaming, LLC
-	(created by Next Generation Gaming Development Team)
-
-	* Copyright (c) 2016, Next Generation Gaming, LLC
-	*
-	* All rights reserved.
-	*
-	* Redistribution and use in source and binary forms, with or without modification,
-	* are not permitted in any case.
-	*
-	*
-	* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-	* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-	* A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-	* CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-	* EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-	* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-	* PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-	* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
 #include <YSI_Coding\y_hooks>
 
 Group_DisbandGroup(iGroupID) {
@@ -79,7 +43,7 @@ Group_DisbandGroup(iGroupID) {
 	arrGroupData[iGroupID][g_iDrugs][4] = 0;
 
 	szMiscArray[0] = 0;
-	format(szMiscArray, sizeof(szMiscArray), "UPDATE `gWeaponsNew` SET `1` = '0'");
+	format(szMiscArray, sizeof(szMiscArray), "UPDATE `gweaponsnew` SET `1` = '0'");
 	for(new x = 2; x < 47; x++) format(szMiscArray, sizeof(szMiscArray), "%s, `%d` = '0'", szMiscArray, x);
 	mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "%s WHERE `id` = '%d'", szMiscArray, iGroupID + 1);
 	mysql_tquery(MainPipeline, szMiscArray, "OnQueryFinish", "ii", SENDDATA_THREAD, iGroupID);
@@ -231,7 +195,7 @@ public SaveGroup(iGroupID) {
 
 	for(i = 0; i != MAX_GROUP_RIVALS; ++i) {
 		format(szMiscArray, sizeof(szMiscArray), "gRival%i", i);
-		SaveString(query, "groups", iGroupID+1, szMiscArray, arrGroupData[iGroupID][g_iRivals][i]);
+		SaveInteger(query, "groups", iGroupID+1, szMiscArray, arrGroupData[iGroupID][g_iRivals][i]);
 	}
 	for(i = 0; i != MAX_GROUP_RANKS; ++i) {
 		format(szMiscArray, sizeof(szMiscArray), "GClothes%i", i);
@@ -1255,13 +1219,13 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					format(szTitle, sizeof szTitle, "Edit Group Radio Color {%s}(%s)", Group_NumToDialogHex(arrGroupData[iGroupID][g_hDutyColour]), arrGroupData[iGroupID][g_szGroupName]);
 					ShowPlayerDialogEx(playerid, DIALOG_GROUP_RADIOCOL, DIALOG_STYLE_INPUT, szTitle, "Enter a colour in hexadecimal format (for example, BCA3FF). This colour will be used for the group's in-character radio chat.", "Confirm", "Cancel");
 				}
-				case 6 .. 9, 11, 13, 15 .. 22: {
+				case 6 .. 9, 13, 15 .. 22: {
 
 					new
 						szDialog[((32 + 5) * MAX_GROUP_RANKS) + 24];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -1276,7 +1240,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[((32 + 5) * MAX_GROUP_RANKS) + 24];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -1284,13 +1248,27 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					format(szTitle, sizeof szTitle, "Edit Group %s", szTitle);
 					ShowPlayerDialogEx(playerid, DIALOG_GROUP_FINDACC, DIALOG_STYLE_LIST, szTitle, szDialog, "Select", "Cancel");
 				}
+				case 11: {
+
+					new
+						szDialog[((32 + 5) * MAX_GROUP_RANKS) + 24];
+
+					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+
+					strcat(szDialog, "\nRevoke from Group");
+
+					strmid(szTitle, inputtext, 0, strfind(inputtext, ":", true));
+					format(szTitle, sizeof szTitle, "Edit Group %s", szTitle);
+					ShowPlayerDialog(playerid, DIALOG_GROUP_GOVACC, DIALOG_STYLE_LIST, szTitle, szDialog, "Select", "Cancel");
+				}
 				case 12: {
 					
 					new
 						szDialog[((32 + 5) * MAX_GROUP_RANKS) + 24];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -1303,8 +1281,8 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					new
 						szDialog[((32 + 5) * MAX_GROUP_DIVS) + 24];
 
-					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupDivisions[iGroupID][i][0]) ? (arrGroupDivisions[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+					for(new i = 0; i != MAX_GROUP_DIVS; ++i)
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupDivisions[iGroupID][i][0]) ? (arrGroupDivisions[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -1335,7 +1313,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[(GROUP_MAX_RANK_LEN + 8) * MAX_GROUP_RANKS];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i) {
-						format(szDialog, sizeof szDialog, "%s\nRank %i (%s):    $%s", szDialog, i, arrGroupRanks[iGroupID][i], number_format(arrGroupData[iGroupID][g_iPaycheck][i]));
+						format(szDialog, sizeof szDialog, "%s\nRank %i (%s):    $%s", szDialog, i + 1, arrGroupRanks[iGroupID][i], number_format(arrGroupData[iGroupID][g_iPaycheck][i]));
 					}
 
 					format(szTitle, sizeof szTitle, "Edit Group Paychecks {%s}(%s)", Group_NumToDialogHex(arrGroupData[iGroupID][g_hDutyColour]), arrGroupData[iGroupID][g_szGroupName]);
@@ -1359,7 +1337,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[(GROUP_MAX_RANK_LEN + 8) * MAX_GROUP_RANKS];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i) {
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 					}
 
 					format(szTitle, sizeof szTitle, "Edit Group Ranks {%s}(%s)", Group_NumToDialogHex(arrGroupData[iGroupID][g_hDutyColour]), arrGroupData[iGroupID][g_szGroupName]);
@@ -1394,7 +1372,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[((32 + 5) * MAX_GROUP_RANKS) + 24];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -1406,7 +1384,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[((32 + 5) * MAX_GROUP_RANKS) + 24];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -1418,7 +1396,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[((32 + 5) * MAX_GROUP_RANKS) + 24];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -1430,7 +1408,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[((32 + 5) * MAX_GROUP_DIVS) + 24];
 
 					for(new i = 0; i != MAX_GROUP_DIVS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupDivisions[iGroupID][i][0]) ? (arrGroupDivisions[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupDivisions[iGroupID][i][0]) ? (arrGroupDivisions[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -1442,7 +1420,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[((32 + 5) * MAX_GROUP_RANKS) + 24];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -1454,7 +1432,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[((32 + 5) * MAX_GROUP_RANKS) + 24];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -1466,7 +1444,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[((32 + 5) * MAX_GROUP_RANKS) + 24];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -1478,7 +1456,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[((32 + 5) * MAX_GROUP_RANKS) + 24];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -1494,7 +1472,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[(GROUP_MAX_RANK_LEN + 8) * MAX_GROUP_RANKS];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i) {
-						format(szDialog, sizeof szDialog, "%s\nRank %i (%s): Skin ID:%i", szDialog, i, arrGroupRanks[iGroupID][i], arrGroupData[iGroupID][g_iClothes][i]);
+						format(szDialog, sizeof szDialog, "%s\nRank %i (%s): Skin ID:%i", szDialog, i + 1, arrGroupRanks[iGroupID][i], arrGroupData[iGroupID][g_iClothes][i]);
 					}
 
 					format(szTitle, sizeof szTitle, "Edit Group Clothes {%s}(%s)", Group_NumToDialogHex(arrGroupData[iGroupID][g_hDutyColour]), arrGroupData[iGroupID][g_szGroupName]);
@@ -1505,7 +1483,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[((32 + 5) * MAX_GROUP_RANKS) + 24];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -1518,7 +1496,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 						szDialog[((32 + 5) * MAX_GROUP_RANKS) + 24];
 
 					for(new i = 0; i != MAX_GROUP_RANKS; ++i)
-						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
+						format(szDialog, sizeof szDialog, "%s\n(%i) %s", szDialog, i + 1, ((arrGroupRanks[iGroupID][i][0]) ? (arrGroupRanks[iGroupID][i]) : ("{BBBBBB}(undefined){FFFFFF}")));
 
 					strcat(szDialog, "\nRevoke from Group");
 
@@ -2140,7 +2118,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			new
 				iGroupID = GetPVarInt(playerid, "Group_EditID"),
 				iDivID = GetPVarInt(playerid, "Group_EditDiv"),
-				szTitle[32 + GROUP_MAX_NAME_LEN];
+				szTitle[64 + GROUP_MAX_NAME_LEN];
 
 			if(response) {
 				if(strlen(inputtext) >= GROUP_MAX_DIV_LEN) {
@@ -2205,7 +2183,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					DestroyDynamic3DTextLabel(arrGroupLockers[iGroupID][iLocker][g_tLocker3DLabel]);
 					DestroyDynamicArea(arrGroupLockers[iGroupID][iLocker][g_iLockerAreaID]);
 
-					format(szMiscArray, sizeof szMiscArray, "%s Locker\n{1FBDFF}Press ~k~~CONVERSATION_YES~ {FFFF00} to use\n ID: %i", arrGroupData[iGroupID][g_szGroupName], arrGroupLockers[iGroupID][iLocker]);
+					format(szMiscArray, sizeof szMiscArray, "%s Locker\n{1FBDFF}Press ~k~~CONVERSATION_YES~{FFFF00} to use\n ID: %i", arrGroupData[iGroupID][g_szGroupName], arrGroupLockers[iGroupID][iLocker]);
 					arrGroupLockers[iGroupID][iLocker][g_tLocker3DLabel] = CreateDynamic3DTextLabel(szMiscArray, arrGroupData[iGroupID][g_hDutyColour] * 256 + 0xFF, arrGroupLockers[iGroupID][iLocker][g_fLockerPos][0], arrGroupLockers[iGroupID][iLocker][g_fLockerPos][1], arrGroupLockers[iGroupID][iLocker][g_fLockerPos][2], 15.0, .testlos = 1, .worldid = arrGroupLockers[iGroupID][iLocker][g_iLockerVW]);
 					arrGroupLockers[iGroupID][iLocker][g_iLockerAreaID] = CreateDynamicSphere(arrGroupLockers[iGroupID][iLocker][g_fLockerPos][0], arrGroupLockers[iGroupID][iLocker][g_fLockerPos][1], arrGroupLockers[iGroupID][iLocker][g_fLockerPos][2], 3.0, .worldid = arrGroupLockers[iGroupID][iLocker][g_iLockerVW]);
 
@@ -6413,6 +6391,53 @@ CMD:orgs(playerid, params[])
 	return 1;
 }
 
+CMD:factions(playerid, params[])
+{
+	if(PlayerInfo[playerid][pAdmin] < 2) return SendClientMessage(playerid, COLOR_GRAD2, "You must be admin level 2 or higher to use this command.");
+
+	if(isnull(params))
+	{
+		szMiscArray[0] = 0;
+		SendClientMessage(playerid, COLOR_GRAD2, "USAGE: /factions [id]");
+		for(new i = 0; i < MAX_GROUPS; i++)
+		{
+			if(arrGroupData[i][g_iGroupType] != GROUP_TYPE_CRIMINAL && strlen(arrGroupData[i][g_szGroupName]) > 0)
+			{
+				new iMemberCount = 0;
+				foreach(new x: Player)
+				{
+					if(PlayerInfo[x][pMember] == i) iMemberCount++;
+				}
+
+				format(szMiscArray, sizeof szMiscArray, "** %s (%d) | Total Members: %d | Members Online: %d", arrGroupData[i][g_szGroupName], i, arrGroupData[i][g_iMemberCount], iMemberCount);
+				SendClientMessage(playerid, COLOR_GRAD1, szMiscArray);
+			}
+		}
+	}
+	else
+	{
+		new grp = strval(params);
+		if(grp < 0 || grp > MAX_GROUPS || strlen(arrGroupData[grp][g_szGroupName]) == 0) return SendClientMessage(playerid, COLOR_GRAD2, "Invalid group ID specified.");
+
+		if(arrGroupData[grp][g_iGroupType] == GROUP_TYPE_CRIMINAL) return SendClientMessage(playerid, COLOR_GRAD2, "That group is not a faction (it's a family/gang).");
+
+		new iCount = 0;
+
+		foreach(new i: Player)
+		{
+			if(PlayerInfo[i][pMember] == grp)
+			{
+				format(szMiscArray, sizeof szMiscArray, "** %s (ID: %d) - %s (%d)", GetPlayerNameEx(i), i, arrGroupRanks[grp][PlayerInfo[i][pRank]], PlayerInfo[i][pRank]);
+				SendClientMessage(playerid, COLOR_GRAD1, szMiscArray);
+				iCount++;
+			}
+		}
+
+		if(iCount == 0) SendClientMessage(playerid, COLOR_GRAD3, "There are no players online in this faction.");
+	}
+	return 1;
+}
+
 CMD:clothes(playerid, params[])
 {
 	new biz = InBusiness(playerid);
@@ -6540,7 +6565,7 @@ WithdrawGroupSafeWeapon(playerid, iGroupID, iWeaponID, iAmount = 1) {
 
 	if(PlayerInfo[playerid][pRank] < arrGroupData[iGroupID][g_iWithdrawRank][3] && playerid != INVALID_PLAYER_ID) return SendClientMessageEx(playerid, COLOR_WHITE, "You are not authorized to withdraw weapons from the locker!");
 
-	mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "UPDATE `gWeaponsNew` SET `%d` = `%d` - %d WHERE `id` = '%d'", iWeaponID, iWeaponID, iAmount, iGroupID+1);
+	mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "UPDATE `gweaponsnew` SET `%d` = `%d` - %d WHERE `id` = '%d'", iWeaponID, iWeaponID, iAmount, iGroupID+1);
 
 	//format(szMiscArray, sizeof(szMiscArray), "DELETE FROM `gWeapons` WHERE `Group_ID` = '%d' AND `Weapon_ID` = '%d' LIMIT 1", iGroupID, iWeaponID);
 	mysql_tquery(MainPipeline, szMiscArray, "OnWithdrawGroupWeapons", "iiii", playerid, iGroupID+1, iWeaponID, iAmount);
@@ -6579,7 +6604,7 @@ AddGroupSafeWeapon(playerid, iGroupID, WEAPON:iWeaponID, iAmount = 1) {
 
 	if(playerid != INVALID_PLAYER_ID && PlayerInfo[playerid][pGuns][GetWeaponSlot(iWeaponID)] == WEAPON_FIST) return 1;
 
-	mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "UPDATE `gWeaponsNew` SET `%d` = `%d` + %d WHERE `id` = '%d'", iWeaponID, iWeaponID, iAmount, iGroupID+1);
+	mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "UPDATE `gweaponsnew` SET `%d` = `%d` + %d WHERE `id` = '%d'", iWeaponID, iWeaponID, iAmount, iGroupID+1);
 	//mysql_format(MainPipeline, szMiscArray, sizeof(szMiscArray), "INSERT INTO `gWeapons` (`Group_ID`, `Weapon_ID`) VALUES ('%d', '%d') ", iGroupID, iWeaponID);
 	mysql_tquery(MainPipeline, szMiscArray, "OnAddGroupSafeWeapon", "iiii", playerid, iGroupID+1, iWeaponID, iAmount);
 	return 1;

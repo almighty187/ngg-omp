@@ -1,37 +1,3 @@
-/*
-    	 		 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-				| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-				| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-				| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-				| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-				| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-				| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-				|__/  \__/ \______/         |__/  |__/|__/
-
-//--------------------------------[ONPLAYERLOAD.PWN]--------------------------------
-
-
- * Copyright (c) 2016, Next Generation Gaming, LLC
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are not permitted in any case.
- *
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
- 
 forward OnPlayerLoad(playerid);
 public OnPlayerLoad(playerid)
 {
@@ -210,7 +176,7 @@ public OnPlayerLoad(playerid)
 		PlayerInfo[playerid][pConnectHours] = 0;
 		PlayerInfo[playerid][pReg] = 0;
 		PlayerInfo[playerid][pSex] = 0;
-		strcpy(PlayerInfo[playerid][pBirthDate], "0000-00-00", 64);
+		strcpy(PlayerInfo[playerid][pBirthDate], "1970-01-01", 64);
 		PlayerInfo[playerid][pRingtone] = 0;
 		PlayerInfo[playerid][pWallpaper] = 0;
 		PlayerInfo[playerid][pVIPM] = 0;
@@ -712,7 +678,7 @@ public OnPlayerLoad(playerid)
 	printf("%s has logged in.", GetPlayerNameEx(playerid));
 	format(string, sizeof(string), "SERVER: Welcome, %s.", GetPlayerNameEx(playerid));
 	SendClientMessageEx(playerid, COLOR_WHITE, string);
-	SetSpawnInfo(playerid, 0, PlayerInfo[playerid][pModel], PlayerInfo[playerid][pPos_x], PlayerInfo[playerid][pPos_y], PlayerInfo[playerid][pPos_z], 1.0);
+	SetSpawnInfo(playerid, 0, PlayerInfo[playerid][pModel], PlayerInfo[playerid][pPos_x], PlayerInfo[playerid][pPos_y], PlayerInfo[playerid][pPos_z], 1.0, WEAPON_FIST, 0, WEAPON_FIST, 0, WEAPON_FIST, 0);
 	defer SkinDelay(playerid);
 
 	gPlayerLogged{playerid} = 1;
@@ -1083,7 +1049,7 @@ public OnPlayerLoad(playerid)
 	if(!fexist("NoWhitelist.h")) CountryCheck(playerid);
 	if(2 <= PlayerInfo[playerid][pAdmin] <= 4) ResetPlayerCash(playerid), PlayerInfo[playerid][pAccount] = 0;
 	CallLocalFunction("NotifyInactiveStatus", "i", playerid);
-	if(PlayerInfo[playerid][pTut] && emailcheck) InvalidEmailCheck(playerid, PlayerInfo[playerid][pEmail], 1);
+	if(PlayerInfo[playerid][pTut] && emailcheck && !GetPVarInt(playerid, "EmailConfirmed")) InvalidEmailCheck(playerid, PlayerInfo[playerid][pEmail], 1);
 	if(month == 4 && (day == 25 || day == 26)) // NGG B-Day 2015
 	{
 		if(PlayerInfo[playerid][pLevel] >= 3 && !PlayerInfo[playerid][pDonateRank])

@@ -1,11 +1,3 @@
-/*
-	Furniture System
-		by Jingles
-
-
-	Integrated the Texture Studio by Pottus.
-*/
-
 #include <YSI_Coding\y_hooks>
 
 #define 		MAX_CATALOG 					1000

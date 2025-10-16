@@ -1,37 +1,3 @@
-/*
-    	 		 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-				| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-				| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-				| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-				| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-				| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-				| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-				|__/  \__/ \______/         |__/  |__/|__/
-
-//--------------------------------[MYSQL.PWN]--------------------------------
-
-
- * Copyright (c) 2016, Next Generation Gaming, LLC
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are not permitted in any case.
- *
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 SQLUpdateBuild(query[], const table[], sqlplayerid)
 {
 	new querylen = strlen(query);
@@ -851,32 +817,39 @@ public OnQueryFinish(resultid, extraid, handleid)
 				cache_get_value_name(i, "Key", szResult, 129);
 				cache_get_value_name(i, "Salt", salt, 11);
 				GetPVarString(extraid, "PassAuth", szBuffer, sizeof(szBuffer));
-				if(!isnull(salt)) strcat(szBuffer, salt);
-				WP_Hash(szPass, sizeof(szPass), szBuffer);
-				/*if(cache_get_value_name_int(i, "Online")) {
-					SendClientMessage(extraid, COLOR_RED, "SERVER: This account has already logged in.");
-					SetTimerEx("KickEx", 1000, 0, "i", extraid);
-					return 1;
-				}*/
 
-				if((isnull(szPass)) || (isnull(szResult)) || (strcmp(szPass, szResult) != 0)) {
-					// Invalid Password - Try Again!
-					ShowMainMenuDialog(extraid, 3);
-					HideNoticeGUIFrame(extraid);
-					if(++gPlayerLogTries[extraid] == 2) {
-						SendClientMessage(extraid, COLOR_RED, "SERVER: Wrong password, you have been kicked out automatically.");
-						SetTimerEx("KickEx", 1000, false, "i", extraid);
+				// Check if using old Whirlpool hash (has salt) or new bcrypt (no salt)
+				if(!isnull(salt))
+				{
+					// Old Whirlpool system - verify with Whirlpool then migrate to bcrypt
+					strcat(szBuffer, salt);
+					WP_Hash(szPass, sizeof(szPass), szBuffer);
+
+					if((isnull(szPass)) || (isnull(szResult)) || (strcmp(szPass, szResult) != 0))
+					{
+						// Invalid Password - Try Again!
+						ShowMainMenuDialog(extraid, 3);
+						HideNoticeGUIFrame(extraid);
+						if(++gPlayerLogTries[extraid] == 2)
+						{
+							SendClientMessage(extraid, COLOR_RED, "SERVER: Wrong password, you have been kicked out automatically.");
+							SetTimerEx("KickEx", 1000, false, "i", extraid);
+						}
+						return 1;
 					}
+
+					// Password correct - migrate to bcrypt
+					GetPVarString(extraid, "PassAuth", szBuffer, sizeof(szBuffer));
+					bcrypt_hash(extraid, "OnMigrationPasswordHashed", szBuffer, BCRYPT_COST);
 					return 1;
 				}
-				if(PassComplexCheck && CheckPasswordComplexity(szBuffer) != 1) ShowLoginDialogs(extraid, 0);
-				break;
+				else
+				{
+					// New bcrypt system - verify with bcrypt
+					bcrypt_verify(extraid, "OnPasswordVerified", szBuffer, szResult);
+					return 1;
+				}
 			}
-			GetPVarString(extraid, "PassAuth", PlayerInfo[extraid][pLastPass], 65);
-			DeletePVar(extraid, "PassAuth");
-			HideNoticeGUIFrame(extraid);
-			g_mysql_LoadAccount(extraid);
-			return 1;
 		}
 		case REGISTER_THREAD:
 		{
@@ -1435,7 +1408,8 @@ g_mysql_AccountOnlineReset()
 }
 
 // g_mysql_CreateAccount(int playerid, string accountPassword[])
-// Description: Creates a new account in the database.
+// Description: Creates a new account in the database. (DEPRECATED - Now uses bcrypt via OnPasswordHashed callback)
+#pragma unused g_mysql_CreateAccount
 g_mysql_CreateAccount(playerid, accountPassword[])
 {
 	new string[300];
@@ -5116,44 +5090,15 @@ public OnPinCheck2(index)
    			}
    			else
    			{
-   			    new passbuffer[256], passbuffer2[64];
+   			    new passbuffer2[64];
             	GetPVarString(index, "PinNumber", passbuffer2, sizeof(passbuffer2));
-				WP_Hash(passbuffer, sizeof(passbuffer), passbuffer2);
-				if (strcmp(passbuffer, Pin) == 0)
-				{
-				    SetPVarInt(index, "PinConfirmed", 1);
-					SendClientMessageEx(index, COLOR_CYAN, "Pin confirmed, you will now be able to spend credits.");
-					switch(GetPVarInt(index, "OpenShop"))
-					{
-	    				case 1:
-						{
-							new szDialog[1024];
-							format(szDialog, sizeof(szDialog), "Poker Table (Credits: {FFD700}%s{A9C4E4})\nBoombox (Credits: {FFD700}%s{A9C4E4})\n100 Paintball Tokens (Credits: {FFD700}%s{A9C4E4})\nEXP Token (Credits: {FFD700}%s{A9C4E4})\nFireworks x5 (Credits: {FFD700}%s{A9C4E4})\nCustom License Plate (Credits: {FFD700}%s{A9C4E4})",
-							number_format(ShopItems[6][sItemPrice]), number_format(ShopItems[7][sItemPrice]), number_format(ShopItems[8][sItemPrice]), number_format(ShopItems[9][sItemPrice]),
-							number_format(ShopItems[10][sItemPrice]), number_format(ShopItems[22][sItemPrice]));
-							format(szDialog, sizeof(szDialog), "%s\nRestricted Last Name (NEW) (Credits: {FFD700}%s{A9C4E4})\nRestricted Last Name (CHANGE) (Credits: {FFD700}%s{A9C4E4})\nCustom User Title (NEW) (Credits: {FFD700}%s{A9C4E4})\nCustom User Title (CHANGE) (Credits: {FFD700}%s{A9C4E4})\nTeamspeak User Channel (Credits: {FFD700}%s{A9C4E4})\nBackpacks\nDeluxe Car Alarm (Credits: {FFD700}%s{A9C4E4})",
-							szDialog, number_format(ShopItems[31][sItemPrice]), number_format(ShopItems[32][sItemPrice]), number_format(ShopItems[33][sItemPrice]), number_format(ShopItems[34][sItemPrice]), number_format(ShopItems[35][sItemPrice]), number_format(ShopItems[39][sItemPrice]));
-							ShowPlayerDialogEx(index, DIALOG_MISCSHOP, DIALOG_STYLE_LIST, "Misc Shop", szDialog, "Select", "Cancel");
-						}
-						case 2: SetPVarInt(index, "RentaCar", 1), ShowModelSelectionMenu(index, CarList2, "Rent a Car!");
-						case 3: ShowModelSelectionMenu(index, CarList2, "Car Shop");
-						case 4: ShowPlayerDialogEx( index, DIALOG_HOUSESHOP, DIALOG_STYLE_LIST, "House Shop", "Purchase House\nHouse Interior Change\nHouse Move\nGarage - Small\nGarage - Medium\nGarage - Large\nGarage - Extra Large","Select", "Exit" );
-						case 5: ShowPlayerDialogEx( index, DIALOG_VIPSHOP, DIALOG_STYLE_LIST, "VIP Shop", "Purchase VIP\nRenew Gold VIP","Continue", "Exit" );
-						case 6: ShowPlayerDialogEx(index, DIALOG_SHOPBUSINESS, DIALOG_STYLE_LIST, "Businesses Shop", "Purchase Business\nRenew Business", "Select", "Exit");
-						case 7: ShowModelSelectionMenu(index, PlaneList, "Plane Shop");
-						case 8: ShowModelSelectionMenu(index, BoatList, "Boat Shop");
-						case 9: ShowModelSelectionMenu(index, CarList3, "Restricted Car Shop");
-						case 10: cmd_changename(index);
-						case 11: cmd_microshop(index);
-					}
-					DeletePVar(index, "OpenShop");
-				}
-				else
-				{
-					ShowPlayerDialogEx(index, DIALOG_ENTERPIN, DIALOG_STYLE_INPUT, "Pin Number", "(INVALID PIN)\n\nEnter your pin number to access credit shops.", "Confirm", "Exit");
-				}
-				DeletePVar(index, "PinNumber");
-  			}
+
+				// Store PIN and hash for verification
+				SetPVarString(index, "StoredPinHash", Pin);
+
+				// Use bcrypt to verify the PIN
+				bcrypt_verify(index, "OnPinVerified", passbuffer2, Pin);
+   			}
 		}
 		else
 		{
@@ -5309,7 +5254,7 @@ public Group_QueryFinish(iType, iExtraID) {
 
 			if(arrGroupLockers[iGroup][iLocker][g_fLockerPos][0] != 0.0)
 			{
-				format(szResult, sizeof szResult, "%s Locker\n{1FBDFF}Press ~k~~CONVERSATION_YES~ {FFFF00} to use\n ID: %i", arrGroupData[iGroup][g_szGroupName], arrGroupLockers[iGroup][iLocker]);
+				format(szResult, sizeof szResult, "%s Locker\n{1FBDFF}Press ~k~~CONVERSATION_YES~{FFFF00} to use\n ID: %i", arrGroupData[iGroup][g_szGroupName], arrGroupLockers[iGroup][iLocker]);
 				arrGroupLockers[iGroup][iLocker][g_tLocker3DLabel] = CreateDynamic3DTextLabel(szResult, arrGroupData[iGroup][g_hDutyColour] * 256 + 0xFF, arrGroupLockers[iGroup][iLocker][g_fLockerPos][0], arrGroupLockers[iGroup][iLocker][g_fLockerPos][1], arrGroupLockers[iGroup][iLocker][g_fLockerPos][2], 15.0, .testlos = 1, .worldid = arrGroupLockers[iGroup][iLocker][g_iLockerVW]);
 
 				arrGroupLockers[iGroup][iLocker][g_iLockerAreaID] = CreateDynamicSphere(arrGroupLockers[iGroup][iLocker][g_fLockerPos][0], arrGroupLockers[iGroup][iLocker][g_fLockerPos][1], arrGroupLockers[iGroup][iLocker][g_fLockerPos][2], 3.0, .worldid = arrGroupLockers[iGroup][iLocker][g_iLockerVW]);

@@ -98,13 +98,13 @@ ShowMainMenuDialog(playerid, frame)
 		case 1:
 		{
 			format(titlestring, sizeof(titlestring), "{3399FF}Login - %s", GetPlayerNameEx(playerid));
-			format(string, sizeof(string), "{FFFFFF}Welcome to Next Generation Roleplay, %s.\n\nThe name that you are using is registered, please enter a password to login:", GetPlayerNameEx(playerid));
+			format(string, sizeof(string), "{FFFFFF}Welcome to Next Generation Gaming Roleplay, %s.\n\nThe name that you are using is registered, please enter a password to login:", GetPlayerNameEx(playerid));
 			ShowPlayerDialogEx(playerid,MAINMENU,DIALOG_STYLE_PASSWORD,titlestring,string,"Login","Exit");
 		}
 		case 2:
 		{
 			format(titlestring, sizeof(titlestring), "{3399FF}Register - %s", GetPlayerNameEx(playerid));
-			format(string, sizeof(string), "{FFFFFF}Welcome to Next Generation Roleplay, %s.\n\n{FFFFFF}You may {AA3333}register {FFFFFF}an account by entering a desired password here:", GetPlayerNameEx(playerid));
+			format(string, sizeof(string), "{FFFFFF}Welcome to Next Generation Gaming Roleplay, %s.\n\n{FFFFFF}You may {AA3333}register {FFFFFF}an account by entering a desired password here:", GetPlayerNameEx(playerid));
 			if(PassComplexCheck) strcat(string, "\n\n- You can't select a password that's below 8 or above 64 characters\n\
 			- Your password must contain a combination of letters, numbers and special characters.\n\
 			- Invalid Character: %");
@@ -113,7 +113,7 @@ ShowMainMenuDialog(playerid, frame)
 		case 3:
 		{
 			format(titlestring, sizeof(titlestring), "{3399FF}Login - %s", GetPlayerNameEx(playerid));
-			format(string, sizeof(string), "{FFFFFF}Invalid Password!\n\nWelcome to Next Generation Roleplay, %s.\n\nThe name that you are using is registered, please enter a password to login:", GetPlayerNameEx(playerid));
+			format(string, sizeof(string), "{FFFFFF}Invalid Password!\n\nWelcome to Next Generation Gaming Roleplay, %s.\n\nThe name that you are using is registered, please enter a password to login:", GetPlayerNameEx(playerid));
 			ShowPlayerDialogEx(playerid,MAINMENU,DIALOG_STYLE_PASSWORD,titlestring,string,"Login","Exit");
 		}
 		case 4:
@@ -136,6 +136,11 @@ SafeLogin(playerid, type)
 		}
 		case 2: // No Account Exists
 		{
+			if (!registrationEnabled)
+			{
+				SendClientMessage(playerid, COLOR_RED, "Registration is currently disabled. Please try again later.");
+				SetTimerEx("KickEx", 3000, 0, "i", playerid);
+			}
 			if(betaserver == 0 || betaserver == 2)
 			{
 				if(!IsValidName(GetPlayerNameExt(playerid)))

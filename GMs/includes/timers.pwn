@@ -1,39 +1,3 @@
-/*
-    	 		 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-				| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-				| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-				| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-				| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-				| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-				| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-				|__/  \__/ \______/         |__/  |__/|__/
-
-//--------------------------------[TIMERS.PWN]--------------------------------
-
-
- * Copyright (c) 2016, Next Generation Gaming, LLC
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are not permitted in any case.
- *
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-
- // Timer Name: SkinDelay(playerid)
 timer SkinDelay[1000](playerid)
 {
 	SetPlayerSkin(playerid, PlayerInfo[playerid][pModel]);
@@ -884,18 +848,19 @@ task VehicleUpdate[60000]() {
     		case 481, 509, 510: {}
     		default: {
 
-    			GetVehicleParamsEx(v, engine);
+    			new lights, alarm, doors, bonnet, boot, objective;
+    			GetVehicleParamsEx(v, engine, lights, alarm, doors, bonnet, boot, objective);
 
 			    if(engine == VEHICLE_PARAMS_ON) {
 
-					if(arr_Engine{v} == 0) SetVehicleParamsEx(v, VEHICLE_PARAMS_OFF);
+					if(arr_Engine{v} == 0) SetVehicleParamsEx(v, VEHICLE_PARAMS_OFF, -1, -1, -1, -1, -1, -1);
 
 					else if(!IsVIPcar(v) && !IsFamedVeh(v)) {
 
 						if(VehicleFuel[v] > 0.0) {
 
 							VehicleFuel[v] -= 1.0;
-							if(VehicleFuel[v] <= 0.0) SetVehicleParamsEx(v, VEHICLE_PARAMS_OFF);
+							if(VehicleFuel[v] <= 0.0) SetVehicleParamsEx(v, VEHICLE_PARAMS_OFF, -1, -1, -1, -1, -1, -1);
 						}
 					}
 				}
@@ -1184,7 +1149,7 @@ foreach(new i: Player)
 			}
 		}
 
-		if(playerTabbed[i] == 0) {
+		if(playerTabbed[i] == 0 || PlayerInfo[i][pAdmin] >= 2) {
 
 			switch(PlayerInfo[i][pLevel]) {
 
@@ -1287,7 +1252,7 @@ foreach(new i: Player)
 							PlayerInfo[i][pLockPickVehCount] = 0;
 						}
 						ClearCheckpoint(i);
-						SetVehicleParamsEx(vehicleid, .alarm = VEHICLE_PARAMS_OFF);
+						SetVehicleParamsEx(vehicleid, -1, -1, VEHICLE_PARAMS_OFF, -1, -1, -1, -1);
 						SendClientMessageEx(i, COLOR_YELLOW, "You have successfully picked this vehicle lock, you may now deliver this to the checkpoint mark to get money.");
 						if(PlayerInfo[i][pCrowBar] > 0) SendClientMessageEx(i, COLOR_CYAN, "Optionally, you may try to open the trunk to see what's inside (/cracktrunk).");
 						PlayerPlaySound(i, 1145, 0.0, 0.0, 0.0);
@@ -1385,7 +1350,7 @@ foreach(new i: Player)
 							ownerid = GetPVarInt(i, "LockPickPlayer");
 						SendClientMessageEx(i, COLOR_PURPLE, "(( The trunk cracks, you begin to search for any items ))");
 						PlayerPlaySound(i, 1145, 0.0, 0.0, 0.0);
-						SetVehicleParamsEx(vehicleid, .boot = VEHICLE_PARAMS_ON);
+						SetVehicleParamsEx(vehicleid, -1, -1, -1, -1, -1, VEHICLE_PARAMS_ON, -1);
 						ClearAnimationsEx(i, SYNC_ALL);
 						SetPlayerSkin(i, GetPlayerSkin(i));
 						SetPlayerSpecialAction(i, SPECIAL_ACTION_NONE);
@@ -1473,8 +1438,9 @@ foreach(new i: Player)
 				else if(GetPVarInt(i, "wheelclampcountdown") <= 0) {
 					WheelClamp{vehicleid} = 1;
 					arr_Engine{vehicleid} = 0;
-					GetVehicleParamsEx(vehicleid, vehEngine);
-					if(vehEngine == VEHICLE_PARAMS_ON) SetVehicleParamsEx(vehicleid,VEHICLE_PARAMS_OFF);
+					new lights, alarm, doors, bonnet, boot, objective;
+					GetVehicleParamsEx(vehicleid, vehEngine, lights, alarm, doors, bonnet, boot, objective);
+					if(vehEngine == VEHICLE_PARAMS_ON) SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_OFF, -1, -1, -1, -1, -1, -1);
 					DeletePVar(i, "wheelclampvehicle");
 					DeletePVar(i, "wheelclampcountdown");
 					format(szMiscArray, sizeof(szMiscArray), "* %s has attached a Wheel Clamp on the %s's front tire.", GetPlayerNameEx(i), GetVehicleName(vehicleid), vehicleid);
@@ -2909,10 +2875,11 @@ ptask PlayerMicroBeat[500](i) {
 			if(fVehicleHealth < 350.0)
 			{
 				SetVehicleHealth(iVehicle, 251.0);
-				GetVehicleParamsEx(iVehicle, vehEngine);
+				new lights, alarm, doors, bonnet, boot, objective;
+				GetVehicleParamsEx(iVehicle, vehEngine, lights, alarm, doors, bonnet, boot, objective);
 				if(vehEngine == VEHICLE_PARAMS_ON)
 				{
-					SetVehicleParamsEx(iVehicle,VEHICLE_PARAMS_OFF);
+					SetVehicleParamsEx(iVehicle, VEHICLE_PARAMS_OFF, -1, -1, -1, -1, -1, -1);
 					/*if(!PlayerInfo[i][pShopNotice])
 					{
 						PlayerTextDrawSetString(i, MicroNotice[i], ShopMsg[8]);

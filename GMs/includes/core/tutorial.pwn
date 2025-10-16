@@ -1,41 +1,3 @@
-/*
-
-	 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-	| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-	| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-	| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-	| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-	| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-	| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-	|__/  \__/ \______/         |__/  |__/|__/
-
-						Tutorial System
-								Winterfield
-
-				Next Generation Gaming, LLC
-	(created by Next Generation Gaming Development Team)
-					
-	* Copyright (c) 2016, Next Generation Gaming, LLC
-	*
-	* All rights reserved.
-	*
-	* Redistribution and use in source and binary forms, with or without modification,
-	* are not permitted in any case.
-	*
-	*
-	* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-	* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-	* A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-	* CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-	* EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-	* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-	* PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-	* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
 #include <YSI_Coding\y_hooks>
 
 new TutorialTime[MAX_PLAYERS];
@@ -179,7 +141,7 @@ AdvanceTutorial(playerid)
 		{
 			if(IsSpawned[playerid] == 0) return 1;
 			SendClientMessageEx(playerid, COLOR_GREY, "-----------------------------");
-			SendClientMessageEx(playerid, COLOR_WHITE, "You have completed the objectives tutorial. Welcome to Next Generation Gaming!");
+			SendClientMessageEx(playerid, COLOR_WHITE, "You have completed the objectives tutorial. Welcome to New Generation Gaming Roleplay!");
 			SendClientMessageEx(playerid, COLOR_GREY, "-----------------------------");
 
 			PlayerInfo[playerid][pTut] = -1;
@@ -217,7 +179,7 @@ CharacterCreation(playerid)
 				GetPlayerNation(playerid),
 				GetPlayerAccent(playerid),
 				PlayerInfo[playerid][pModel]);
-			return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_CREATION, DIALOG_STYLE_TABLIST, "NG:RP | Character Creation", szMiscArray, "Select", "");
+			return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_CREATION, DIALOG_STYLE_TABLIST, "NG-GR | Character Creation", szMiscArray, "Select", "");
 		}
 		case 14: {
 
@@ -231,7 +193,7 @@ CharacterCreation(playerid)
 			SetHealth(playerid, 100);
 			ClearChatbox(playerid);
 
-			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG:RP Tutorial - Welcome", "Would you like to have the server provide you with objectives to guide you around the server?", "Yes, please!", "No, thanks.");
+			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG-GR Tutorial - Welcome", "Would you like to have the server provide you with objectives to guide you around the server?", "Yes, please!", "No, thanks.");
 		}
 	}
 	return 1;
@@ -250,11 +212,11 @@ ShowTutorialDialog(playerid, stage)
 		{
 			if(betaserver == 0) {
 				szMiscArray = "{FFFFFF}_______________________________________________________________________________________________________________________________________________________\n\n\n";
-				strcat(szMiscArray, "{7091B8}Welcome to Next Generation Gaming!{FFFFFF}\n\n");
-				strcat(szMiscArray, "We are an english speaking community. At NG:RP, we specialize in Roleplay, the act of taking on the role of a character and acting as that character\n");
+				strcat(szMiscArray, "{7091B8}Welcome to New Generation Gaming Roleplay!{FFFFFF}\n\n");
+				strcat(szMiscArray, "We are an english speaking community. At NG-GR, we specialize in Roleplay, the act of taking on the role of a character and acting as that character\n");
 				strcat(szMiscArray, "as you would in real life. Along the way your character learns new information and allows them to develop.\n\n");
 				strcat(szMiscArray, "As a community, we've been around since 2010 and have grown significantly since then.\n\n");
-				strcat(szMiscArray, "{FF0000}NG:RP Related Services{FFFFFF}:\n");
+				strcat(szMiscArray, "{FF0000}NG-GR Related Services{FFFFFF}:\n");
 				strcat(szMiscArray, "\t{F69500}Website{FFFFFF}: ng-gaming.net - Sign up on our forums and interact with the community!\n");
 				strcat(szMiscArray, "\t{F69500}User Control Panel{FFFFFF}: cp.ng-gaming.net - Control your account and take measures to ensure your account's security!\n");
 				strcat(szMiscArray, "\t{F69500}Shop{FFFFFF}: shop.ng-gaming.net - Purchase credits from the shop and purchase items in game!\n");
@@ -262,15 +224,15 @@ ShowTutorialDialog(playerid, stage)
 				strcat(szMiscArray, "\t{F69500}Image Sharing{FFFFFF}: ngg.up - Share your favourite images with your friends, with the press of a button.\n\n");
 				strcat(szMiscArray, "Please make sure you read this tutorial as you will be asked questions at the end.");
 				strcat(szMiscArray, "\n\n\n{FFFFFF}_______________________________________________________________________________________________________________________________________________________");
-				ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG:RP Tutorial - Welcome", szMiscArray, countstring, "");
+				ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG-GR Tutorial - Welcome", szMiscArray, countstring, "");
 			}
 			else {
 				szMiscArray = "{FFFFFF}___________________________________________________________________________________________\n\n\n";
-				strcat(szMiscArray, "{7091B8}Welcome to Next Generation Gaming Beta Server!{FFFFFF}\n\n");
+				strcat(szMiscArray, "{7091B8}Welcome to New Generation Gaming Roleplay Beta Server!{FFFFFF}\n\n");
 				strcat(szMiscArray, "You are not required to sit through the tutorial, please just press \"Got it\" at the bottom.\n");
 				strcat(szMiscArray, "You'll be taken stright to the character creation screen.\n\n");
 				strcat(szMiscArray, "\n\n\n{FFFFFF}_______________________________________________________________________________");
-				ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG:RP Beta Server - Welcome", szMiscArray, "Got It", "");
+				ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG-GR Beta Server - Welcome", szMiscArray, "Got It", "");
 			}
 		}
 		case 1:
@@ -279,7 +241,7 @@ ShowTutorialDialog(playerid, stage)
 			strcat(szMiscArray, "{F69500}Roleplay{FFFFFF}\n\n");
 			strcat(szMiscArray, "In order to roleplay, you should create a character. Every character should have a story, every character needs a story! Who are they? Where do\n");
 			strcat(szMiscArray, "they come from? Why are they in San Andreas? That's all up to you!\n\n");
-			strcat(szMiscArray, "But first you should get to know some of the terminology we use at Next Generation Gaming.\n\n");
+			strcat(szMiscArray, "But first you should get to know some of the terminology we use at New Generation Gaming Roleplay.\n\n");
 			strcat(szMiscArray, "\t{FF0000}In Character (IC){FFFFFF}: Anything that constitutes your character, or involves them. This is accomponied by the in-game text chat, radio's, cell phones, etc.\n");
 			strcat(szMiscArray, "\t\tExample: Your character is talking to another character. You might say \"Hi, what's your name?\" This conversation is in character.\n\n");
 			strcat(szMiscArray, "\t{FF0000}Out Of Character (OOC){FFFFFF}: This is you speaking, not your character! Anything that has to do with you personally is considered out of character. Out of\n");
@@ -293,13 +255,13 @@ ShowTutorialDialog(playerid, stage)
 			strcat(szMiscArray, "\t\tExample: /do The stick is brown.\n\n");
 			strcat(szMiscArray, "Please read these definitions carefully as you will be quizzed on them afterwards.");
 			strcat(szMiscArray, "\n\n\n{FFFFFF}_______________________________________________________________________________________________________________________________________________________");
-			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG:RP Tutorial - Roleplay", szMiscArray, countstring, "");
+			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG-GR Tutorial - Roleplay", szMiscArray, countstring, "");
 		}
 		case 2:
 		{
 			szMiscArray = "{FFFFFF}_______________________________________________________________________________________________________________________________________________________\n\n\n";
 			strcat(szMiscArray, "{F69500}Rules{FFFFFF}\n\n");
-			strcat(szMiscArray, "Next, you should learn some common roleplay rules that are vital in ensuring you have the best possible experience on NG:RP.\n\n");
+			strcat(szMiscArray, "Next, you should learn some common roleplay rules that are vital in ensuring you have the best possible experience on NG-GR.\n\n");
 			strcat(szMiscArray, "\t{FF0000}Metagaming (MG){FFFFFF}: Mixing IC information with OOC information, or vice versa.\n");
 			strcat(szMiscArray, "\t\tExample: John_Doe doesn't know Jane_Doe, but he reports a crime she's commited to the police and tells the officer her name is Jane_Doe.\n");
 			strcat(szMiscArray, "\t\tExample: John_Doe is really upset, so he decides to put a frowny face in the in character chat.\n\n");
@@ -313,14 +275,14 @@ ShowTutorialDialog(playerid, stage)
 			strcat(szMiscArray, "\t\tExample: Jane_Doe kills John_Doe, John_Doe goes back up to Jane_Doe and roleplays killing her.\n\n");
 			strcat(szMiscArray, "Please read these rules carefully as you will be quizzed on them afterwards, and you may be punished if you break one!");
 			strcat(szMiscArray, "\n\n\n{FFFFFF}_______________________________________________________________________________________________________________________________________________________");
-			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG:RP Tutorial - Rules", szMiscArray, countstring, "");
+			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG-GR Tutorial - Rules", szMiscArray, countstring, "");
 		}
 		case 3:
 		{
 			szMiscArray = "{FFFFFF}_______________________________________________________________________________________________________________________________________________________\n\n\n";
 			strcat(szMiscArray, "{F69500}Groups{FFFFFF}\n\n");
 			strcat(szMiscArray, "It's fun to be a civilian, but it's more fun to join a group.\n\n");
-			strcat(szMiscArray, "\tAt Next Generation Gaming, we offer more of a diverse selection of groups that players can join. There are many different types of groups:\n");
+			strcat(szMiscArray, "\tAt New Generation Gaming Roleplay, we offer more of a diverse selection of groups that players can join. There are many different types of groups:\n");
 			strcat(szMiscArray, "\t{FF0000}Government (GOV){FFFFFF}: The government imposes new laws and manages the budget of San Andreas.\n");
 			strcat(szMiscArray, "\t{FF0000}Judicial (JUD){FFFFFF}: They manage the constitution of San Andreas and manage court cases against people and agencies.\n");
 			strcat(szMiscArray, "\t{FF0000}Law Enforcement Agency (LEA){FFFFFF}: They enfroce the laws written by the government and arrest violators of the law.\n");
@@ -332,7 +294,7 @@ ShowTutorialDialog(playerid, stage)
 			strcat(szMiscArray, "\t{FF0000}Criminal{FFFFFF}: A group of criminals who do illegal things.\n\n");
 			strcat(szMiscArray, "Some groups allow you to apply to join them once you meet certain requirements! Check out all the groups at ng-gaming.net.");
 			strcat(szMiscArray, "\n\n\n{FFFFFF}_______________________________________________________________________________________________________________________________________________________");
-			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG:RP Tutorial - Groups", szMiscArray, countstring, "");
+			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG-GR Tutorial - Groups", szMiscArray, countstring, "");
 		}
 		case 4:
 		{
@@ -347,7 +309,7 @@ ShowTutorialDialog(playerid, stage)
 			strcat(szMiscArray, "\t{FF0000}Vehicles{FFFFFF}: Players may purchase vehicles from dealerships at any time, and use them when they wish.\n\n");
 			strcat(szMiscArray, "You can enter and exit property by pressing 'N' on your keyboard when near the icon.");
 			strcat(szMiscArray, "\n\n\n{FFFFFF}_______________________________________________________________________________________________________________________________________________________");
-			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG:RP Tutorial - Groups", szMiscArray, countstring, "");
+			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG-GR Tutorial - Groups", szMiscArray, countstring, "");
 		}
 		case 5:
 		{
@@ -358,7 +320,7 @@ ShowTutorialDialog(playerid, stage)
 			strcat(szMiscArray, "\tIf you get any question wrong, you will be forced to retake the tutorial and will be quizzed again afterwards.\n\n");
 			strcat(szMiscArray, "{FF0000}What would you like to do?{FFFFFF}");
 			strcat(szMiscArray, "\n\n\n{FFFFFF}_______________________________________________________________________________________________________________________________________________________");
-			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG:RP Tutorial - Groups", szMiscArray, "Continue", "Repeat");
+			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG-GR Tutorial - Groups", szMiscArray, "Continue", "Repeat");
 		}
 		case 6:
 		{
@@ -378,7 +340,7 @@ ShowTutorialDialog(playerid, stage)
 		{
 			szMiscArray = "{FFFFFF}_______________________________________________________________________________________________________________________________________________________\n\n\n";
 			strcat(szMiscArray, "{F69500}Useful Commands{FFFFFF}\n\n");
-			strcat(szMiscArray, "At Next Generation Gaming, we have a lot of commands you can use to enhance your experience. You may use /help to refer to some of these.\n\n");
+			strcat(szMiscArray, "At New Generation Gaming Roleplay, we have a lot of commands you can use to enhance your experience. You may use /help to refer to some of these.\n\n");
 			strcat(szMiscArray, "\t{FF0000}/newb(ie){FFFFFF} - Ask a question, and one of our Advisors will answer it!\n");
 			strcat(szMiscArray, "\t{FF0000}/(cancel)report{FFFFFF} - Contact an administrator if you need one or report another player for breaking the rules.\n");
 			strcat(szMiscArray, "\t{FF0000}/stats{FFFFFF} - View various information attached to your account.\n");
@@ -386,7 +348,7 @@ ShowTutorialDialog(playerid, stage)
 			strcat(szMiscArray, "\t{FF0000}/interact{FFFFFF} - Interact with another player by giving/selling items, etc. (You may also use RMB+Y over a player to perform this)\n");
 			strcat(szMiscArray, "\t{FF0000}/pay{FFFFFF} - Pay another player a certain amount of money.\n");
 			strcat(szMiscArray, "\n\n\n{FFFFFF}_______________________________________________________________________________________________________________________________________________________");
-			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG:RP Tutorial - Commands", szMiscArray, "Continue", "");
+			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG-GR Tutorial - Commands", szMiscArray, "Continue", "");
 		}
 		case 12:
 		{
@@ -410,7 +372,7 @@ ShowTutorialDialog(playerid, stage)
 				\t\t\tJingles\tBehemoth\tWesten\n\
 				\t\t\tConnolly\n");
 			strcat(szMiscArray, "\n\n{FFFFFF}_______________________________________________________________________________________________________________________________________________________");
-			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG:RP - Developers", szMiscArray, "Continue", "");
+			ShowPlayerDialogEx(playerid, DIALOG_TUTORIAL, DIALOG_STYLE_MSGBOX, "NG-GR - Developers", szMiscArray, "Continue", "");
 		}
 	}
 	return 1;
@@ -561,7 +523,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					{
 						PlayerInfo[playerid][pTut] = -1;
 						DisablePlayerCheckpoint(playerid);
-						return SendClientMessageEx(playerid, -1, "Welcome to Next Generation Gaming! Remember to use /help if you need a refresher on commands or /newb(ie) to ask for help!");
+						return SendClientMessageEx(playerid, -1, "Welcome to New Generation Gaming Roleplay! Remember to use /help if you need a refresher on commands or /newb(ie) to ask for help!");
 					}
 					else
 					{
@@ -578,9 +540,9 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			switch(listitem)
 			{
 				case 0: return CharacterCreation(playerid);
-				case 1: return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_SEX, DIALOG_STYLE_LIST, "NG:RP Character Creation | Select Gender", "Male\nFemale", "Select", "<<");
+				case 1: return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_SEX, DIALOG_STYLE_LIST, "NG-GR Character Creation | Select Gender", "Male\nFemale", "Select", "<<");
 				case 2: return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_MONTH, DIALOG_STYLE_LIST, "{FF0000}Which month was your character born?", "January\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember", "Select", "<<");
-				case 3: return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_NATION, DIALOG_STYLE_LIST, "NG:RP Character Creation | Nation", "San Andreas\nNew Robada", "Select", "<<");
+				case 3: return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_NATION, DIALOG_STYLE_LIST, "NG-GR Character Creation | Nation", "San Andreas\nNew Robada", "Select", "<<");
 				case 4:
 				{
 					szMiscArray[0] = 0;
@@ -612,16 +574,16 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					French accent\n\
 					Korean accent\n\
 					Thai accent";
-					return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_ACCENT, DIALOG_STYLE_LIST, "NG:RP Character Creation | Accent", szMiscArray, "Select", "<<");
+					return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_ACCENT, DIALOG_STYLE_LIST, "NG-GR Character Creation | Accent", szMiscArray, "Select", "<<");
 				}
 				case 5:
 				{
 					if(PlayerInfo[playerid][pSex] == 0) { 
 						SendClientMessage(playerid, COLOR_YELLOW, "Please select your gender first.");
-						return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_SEX, DIALOG_STYLE_LIST, "NG:RP Character Creation | Skin Model", "Male\nFemale", "Select", "<<");
+						return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_SEX, DIALOG_STYLE_LIST, "NG-GR Character Creation | Skin Model", "Male\nFemale", "Select", "<<");
 					}
 
-               		ShowPlayerDialogEx(playerid, DIALOG_REGISTER_SKIN, DIALOG_STYLE_INPUT, "NG:RP Character Creation | Skin Model", "Please enter a skin ID for your character.", "Select", "<<");
+               		ShowPlayerDialogEx(playerid, DIALOG_REGISTER_SKIN, DIALOG_STYLE_INPUT, "NG-GR Character Creation | Skin Model", "Please enter a skin ID for your character.", "Select", "<<");
                	}
 				
 				case 6:
@@ -629,16 +591,16 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 					if(PlayerInfo[playerid][pSex] == 0)
 					{
 						SendClientMessage(playerid, COLOR_YELLOW, "Please pick a gender.");
-						return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_SEX, DIALOG_STYLE_LIST, "NG:RP Character Creation | Skin Model", "Male\nFemale", "Select", "<<");
+						return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_SEX, DIALOG_STYLE_LIST, "NG-GR Character Creation | Skin Model", "Male\nFemale", "Select", "<<");
 
 					}
-					if(strcmp(PlayerInfo[playerid][pBirthDate], "0000-00-00") == 0)
+					if(strcmp(PlayerInfo[playerid][pBirthDate], "1970-01-01") == 0)
 					{
 						SendClientMessage(playerid, COLOR_YELLOW, "Please specify your birthdate.");
 						return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_MONTH, DIALOG_STYLE_LIST, "{FF0000}Which month was your character born?", "January\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember", "Select", "<<");
 					}
 
-					if(PlayerInfo[playerid][pNation] != 0 && PlayerInfo[playerid][pNation] != 1) return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_NATION, DIALOG_STYLE_LIST, "NG:RP Character Creation | Nation", "San Andreas\nNew Robada", "Select", "<<");
+					if(PlayerInfo[playerid][pNation] != 0 && PlayerInfo[playerid][pNation] != 1) return ShowPlayerDialogEx(playerid, DIALOG_REGISTER_NATION, DIALOG_STYLE_LIST, "NG-GR Character Creation | Nation", "San Andreas\nNew Robada", "Select", "<<");
 
 					ShowPlayerDialogEx(playerid, DIALOG_REGISTER_REFERRED, DIALOG_STYLE_INPUT, "{FF0000}Referral System", "Have you been referred to our server by one of our players?\nIf so, please enter the player name below.\n\nIf you haven't been referred by anyone, you may press the skip button.\n\n{FF0000}Note: You must enter the player name with a underscore (Example: FirstName_LastName)", "Enter", "Skip");
 					return 1;
@@ -908,7 +870,7 @@ hook OnPlayerDisconnect(playerid, reason)
 
 CMD:forcetutorial(playerid, params[])
 {
-	if(PlayerInfo[playerid][pAdmin] >= 3)
+	if(PlayerInfo[playerid][pAdmin] >= 4)
 	{
 		new id;
 		if(sscanf(params, "u", id)) return SendClientMessageEx(playerid, COLOR_WHITE, "SYNTAX: /forcetutorial [playerid]");

@@ -1,39 +1,3 @@
-/*
-
-	 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-	| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-	| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-	| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-	| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-	| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-	| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-	|__/  \__/ \______/         |__/  |__/|__/
-
-					  Damage System
-
-				Next Generation Gaming, LLC
-	(created by Next Generation Gaming Development Team)
-
-	* Copyright (c) 2016, Next Generation Gaming, LLC
-	*
-	* All rights reserved.
-	*
-	* Redistribution and use in source and binary forms, with or without modification,
-	* are not permitted in any case.
-	*
-	*
-	* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-	* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-	* A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-	* CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-	* EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-	* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-	* PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-	* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
 #include <YSI_Coding\y_hooks>
 /*
 static Float:WeaponRange[] = {
@@ -401,7 +365,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, WEAPON:weaponid, bo
 				SetPVarInt(playerid, "ExecutionMode", 0);
 				SetPVarInt(playerid, "KillShotCooldown", gettime());
 				SetHealth(damagedid, 0);
-				OnPlayerDeath(damagedid, playerid, weaponid);
+				// OnPlayerDeath will be called automatically by SetHealth(damagedid, 0)
 				return 1;
 			}
 			else
@@ -512,7 +476,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, WEAPON:weaponid, bo
 			if(difference < 0.1)
 			{
 				SetHealth(damagedid, 0.0);
-				OnPlayerDeath(damagedid, playerid, weaponid);
+				// OnPlayerDeath will be called automatically by SetHealth(damagedid, 0)
 			}
 			else SetHealth(damagedid, difference);
 		}
@@ -525,7 +489,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, WEAPON:weaponid, bo
 				health += difference;
 				if(health < 0.1) {
 					SetHealth(damagedid, 0.0);
-					OnPlayerDeath(damagedid, playerid, weaponid);
+					// OnPlayerDeath will be called automatically by SetHealth(damagedid, 0)
 				}
 				else SetHealth(damagedid, health);
 			}
@@ -707,7 +671,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bod
 			if(difference < 0.1)
 			{
 				SetHealth(playerid, 0.0);
-				OnPlayerDeath(playerid, issuerid, weaponid);
+				// OnPlayerDeath will be called automatically by SetHealth(playerid, 0.0)
 			}
 			else SetHealth(playerid, difference);
 		}
@@ -718,7 +682,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bod
 				if(difference < 0.1)
 				{
 					SetHealth(playerid, 0.0);
-					OnPlayerDeath(playerid, issuerid, weaponid);
+					// OnPlayerDeath will be called automatically by SetHealth(playerid, 0.0)
 				}
 				else SetHealth(playerid, difference);
 			}
@@ -731,7 +695,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bod
 					health += difference;
 					if(health < 0.1) {
 						SetHealth(playerid, 0.0);
-						OnPlayerDeath(playerid, issuerid, weaponid);
+						// OnPlayerDeath will be called automatically by SetHealth(playerid, 0.0)
 					}
 					else SetHealth(playerid, health);
 				}
@@ -758,7 +722,7 @@ public OnPlayerWeaponShot(playerid, WEAPON:weaponid, BULLET_HIT_TYPE:hittype, hi
 }
 */
 
-public OnPlayerDeath(playerid, killerid, WEAPON:reason)
+public OnPlayerDeath(playerid, killerid, reason)
 {
 	if(IsPlayerNPC(playerid)) return 1;
 	// if(GetPVarType(playerid, "pTut")) return 1;
@@ -913,7 +877,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
 			KillTimer(GetPVarInt(playerid, "InjectHeroin"));
 		}
 		new weaponname[32];
-		GetWeaponName(reason, weaponname, sizeof(weaponname));
+		GetWeaponName(WEAPON:reason, weaponname, sizeof(weaponname));
 
 		new query[256];
 		mysql_format(MainPipeline, query, sizeof(query), "INSERT INTO `kills` (`id`, `killerid`, `killedid`, `date`, `weapon`) VALUES (NULL, %d, %d, NOW(), '%e')", GetPlayerSQLId(killerid), GetPlayerSQLId(playerid), weaponname);
@@ -1028,7 +992,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
 				}
 			}
 		}
-		if(reason >= WEAPON_FIST && reason <= WEAPON_PARACHUTE)
+		if(WEAPON:reason >= WEAPON_FIST && WEAPON:reason <= WEAPON_PARACHUTE)
 		{
 			new weapon[24];
 			++PlayerInfo[killerid][pKills];
@@ -1066,7 +1030,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
 				++PaintBallArena[iKiller][pbTeamBlueKills];
 				++PaintBallArena[iPlayer][pbTeamRedDeaths];
 			}
-			GetWeaponName(reason,weapon,sizeof(weapon));
+			GetWeaponName(WEAPON:reason,weapon,sizeof(weapon));
 			if(PaintBallArena[iKiller][pbTimeLeft] < 12)
 			{
 				GivePlayerCash(killerid, 1000);
@@ -1074,7 +1038,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
 				SendPaintballArenaMessage(iKiller, COLOR_YELLOW, szMessage);
 				////SendAudioToPlayer(killerid, 19, 100);
 			}
-			if(reason == WEAPON_FIST) format(szMessage,sizeof(szMessage),"[Paintball Arena] %s has killed %s with their bare hands!",GetPlayerNameEx(killerid),GetPlayerNameEx(playerid));
+			if(WEAPON:reason == WEAPON_FIST) format(szMessage,sizeof(szMessage),"[Paintball Arena] %s has killed %s with their bare hands!",GetPlayerNameEx(killerid),GetPlayerNameEx(playerid));
 			else format(szMessage,sizeof(szMessage),"[Paintball Arena] %s has killed %s with a %s.",GetPlayerNameEx(killerid),GetPlayerNameEx(playerid),weapon);
 		}
 		else
@@ -1151,7 +1115,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
 				GoChase[killerid] = INVALID_PLAYER_ID;
 
 				new weaponname[32];
-				GetWeaponName(reason, weaponname, sizeof(weaponname));
+				GetWeaponName(WEAPON:reason, weaponname, sizeof(weaponname));
 				new iHitPercent = floatround(takemoney * 0.10);
 				iHMASafe_Val += iHitPercent;
 				format(szMiscArray, sizeof szMiscArray, "[hit] %s (%d) has killed %s (%d) [%s] for $%s ($%s deposited to safe).", GetPlayerNameEx(killerid), GetPlayerSQLId(killerid), GetPlayerNameEx(playerid), GetPlayerSQLId(playerid), weaponname, number_format(takemoney), number_format(iHitPercent));
@@ -1176,7 +1140,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
 			GoChase[playerid] = INVALID_PLAYER_ID;
 
 			new weaponname[32], iGroupID = PlayerInfo[killerid][pMember];
-			GetWeaponName(reason, weaponname, sizeof(weaponname));
+			GetWeaponName(WEAPON:reason, weaponname, sizeof(weaponname));
 			format(szMessage, sizeof szMessage, "[HMA] %s (%d) has has failed to kill %s (%d) with a %s.", GetPlayerNameEx(playerid), GetPlayerSQLId(playerid), GetPlayerNameEx(killerid), GetPlayerSQLId(killerid), weaponname);
 			GroupLog(iGroupID, szMessage);
 		}

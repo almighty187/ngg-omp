@@ -1,45 +1,8 @@
-/*
-
-	 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-	| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-	| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-	| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-	| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-	| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-	| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-	|__/  \__/ \______/         |__/  |__/|__/
-
-    	    		  Point System (Re-done)
-    			        by Shane Roberts
-
-				Next Generation Gaming, LLC
-	(created by Next Generation Gaming Development Team)
-
-	* Copyright (c) 2016, Next Generation Gaming, LLC
-	*
-	* All rights reserved.
-	*
-	* Redistribution and use in source and binary forms, with or without modification,
-	* are not permitted in any case.
-	*
-	*
-	* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-	* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-	* A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-	* CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-	* EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-	* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-	* PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-	* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
 #include <YSI_Coding\y_hooks>
 
 CMD:getmats(playerid, params[])
 {
+	if(MatsAmount[playerid] > 0) return SendClientMessageEx(playerid, COLOR_RED, "You already have a material package!");
 	if(PlayerInfo[playerid][pJob] != 9 && PlayerInfo[playerid][pJob2] != 9 && PlayerInfo[playerid][pJob3] != 9 && PlayerInfo[playerid][pJob] != 18 && PlayerInfo[playerid][pJob2] != 18 && PlayerInfo[playerid][pJob3] != 18) return SendClientMessageEx(playerid,COLOR_GREY,"   You are not an Arms Dealer or Craftsman!");
 	if(CheckPointCheck(playerid)) return SendClientMessageEx(playerid, COLOR_WHITE, "Please ensure that your current checkpoint is destroyed first (you either have material packages, or another existing checkpoint).");
 	new point, drank[64], vip = ((0 <= PlayerInfo[playerid][pDonateRank] < 5) ? PlayerInfo[playerid][pDonateRank] : 0);
@@ -144,6 +107,31 @@ CMD:pointtime(playerid, params[])
 	} else {
 		SendClientMessageEx(playerid, COLOR_GRAD1, "Invalid point ID given - You can only select from 1 - %d!", MAX_POINTS);
 	}
+	return 1;
+}
+
+CMD:pointinfo(playerid, params[])
+{
+	new
+		iCount,
+		szMessage[128];
+
+	SendClientMessageEx(playerid, 0x3399FF00, "Point Info:");
+	for(new i; i < MAX_POINTS; i++) {
+		if(DynPoints[i][poCapperGroup] != INVALID_GROUP_ID)  {
+			if(DynPoints[i][poTimeLeft] == 1) {
+				format(szMessage, sizeof(szMessage), "* %s | Capper: %s | Gang: %s | Time left: Less than 1 minute", DynPoints[i][poName], DynPoints[i][poPName], arrGroupData[DynPoints[i][poCapperGroup]][g_szGroupName]);
+				SendClientMessageEx(playerid, COLOR_WHITE, szMessage);
+				iCount++;
+			} else {
+				format(szMessage, sizeof(szMessage), "* %s | Capper: %s | Gang: %s | Time left: %d minutes", DynPoints[i][poName], DynPoints[i][poPName], arrGroupData[DynPoints[i][poCapperGroup]][g_szGroupName], DynPoints[i][poTimeLeft]);
+				SendClientMessageEx(playerid, COLOR_WHITE, szMessage);
+				iCount++;
+			}
+		}
+	}
+	if(iCount == 0)
+		return SendClientMessageEx(playerid, COLOR_WHITE, "No gang has attempted to capture a point at this time.");
 	return 1;
 }
 

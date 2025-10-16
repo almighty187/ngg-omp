@@ -1,6 +1,6 @@
 InitiateGamemode()
 {
-	AddPlayerClass(0, 1715.1201, -1903.1711, 13.5665, 360.0);
+	AddPlayerClass(0, 1715.1201, -1903.1711, 13.5665, 360.0, WEAPON_FIST, 0, WEAPON_FIST, 0, WEAPON_FIST, 0);
 	
 	SetGameModeText(SERVER_GM_TEXT);
     
@@ -120,9 +120,7 @@ InitiateGamemode()
     //Poll_LoadPolls();
 
 	print("\n-------------------------------------------");
-	print("Next Generation Roleplay\n");
-	print("Copyright (C) Next Generation Gaming, LLC (2010-2014)");
-	print("All Rights Reserved");
+	print("Next Generation Gaming Roleplay (2009-2017)\n");
 	print("-------------------------------------------\n");
 	print("Successfully initiated the gamemode...");
 	return 1;

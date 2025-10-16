@@ -206,34 +206,3 @@ CheckServerAd(const szInput[]) {
 
 	return 0;
 }
-
-CMD:hackwarnings(playerid, params[])
-{
-	if(PlayerInfo[playerid][pAdmin] < 2) return 1;
-	new Float: health,
-		Float: rhealth,
-		Float: armor,
-		Float: rarmor;
-	
-	szMiscArray[0] = 0;
-
-	foreach(new i: Player)
-	{
-		if(playerTabbed[i] != 0) continue;
-		GetPlayerHealth(i, health);
-		GetHealth(i, rhealth);
-		GetPlayerArmour(i, armor);
-		GetArmour(i, rarmor);
-		if(health > rhealth)
-		{
-			format(szMiscArray, sizeof(szMiscArray), "%s (ID: %i, Level: %d) - Health - Recorded: %f - Current: %f", GetPlayerNameEx(i), i, PlayerInfo[i][pLevel], rhealth, health);
-			SendClientMessage(playerid, COLOR_WHITE, szMiscArray);
-		}
-		if(armor > rarmor)
-		{
-			format(szMiscArray, sizeof(szMiscArray), "%s (ID: %i, Level: %d) - Armor - Recorded: %f - Current: %f", GetPlayerNameEx(i), i, PlayerInfo[i][pLevel], rarmor, armor);
-			SendClientMessage(playerid, COLOR_WHITE, szMiscArray);
-		}
-	}
-	return 1;
-}

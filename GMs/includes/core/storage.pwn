@@ -1,40 +1,3 @@
-/*
-
-	 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-	| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-	| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-	| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-	| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-	| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-	| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-	|__/  \__/ \______/         |__/  |__/|__/
-
-						Storage System
-
-				Next Generation Gaming, LLC
-	(created by Next Generation Gaming Development Team)
-					
-	* Copyright (c) 2016, Next Generation Gaming, LLC
-	*
-	* All rights reserved.
-	*
-	* Redistribution and use in source and binary forms, with or without modification,
-	* are not permitted in any case.
-	*
-	*
-	* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-	* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-	* A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-	* CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-	* EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-	* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-	* PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-	* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
 #include <YSI_Coding\y_hooks>
 
 /*ShowStorageDialog(playerid, fromplayerid, fromstorageid, itemid, amount, price, special)
@@ -1536,6 +1499,63 @@ TransferStorage(playerid, storageid, fromplayerid, fromstorageid, itemid, amount
 	return 0;
 }
 
+/*ShowInventory(playerid,targetid)
+{
+	if(IsPlayerConnected(targetid))
+	{
+		new str[256];
+
+		SendClientMessageEx(playerid, COLOR_GREEN, "_______________________________________________");
+		format(str, sizeof(str), "<< %s's Inventory >>", GetPlayerNameEx(targetid));
+		SendClientMessageEx(playerid, COLOR_YELLOW, str);
+
+		// Basic materials and items
+		format(str, sizeof(str), "Materials: %s | Rope: %s | Rags: %s | Paper: %s", number_format(PlayerInfo[targetid][pMats]), number_format(PlayerInfo[targetid][pRope]), number_format(PlayerInfo[targetid][pRags]), number_format(PlayerInfo[targetid][pPaper]));
+		SendClientMessageEx(playerid, COLOR_WHITE, str);
+
+		// Consumables
+		format(str, sizeof(str), "Cigars: %s | Sprunk: %s | Spraycans: %s", number_format(PlayerInfo[targetid][pCigar]), number_format(PlayerInfo[targetid][pSprunk]), number_format(PlayerInfo[targetid][pSpraycan]));
+		SendClientMessageEx(playerid, COLOR_WHITE, str);
+
+		// Craft/Tool items
+		format(str, sizeof(str), "Screwdriver: %s | Tire: %s | Lock: %s | Firstaid: %s", number_format(PlayerInfo[targetid][pScrewdriver]), number_format(PlayerInfo[targetid][pTire]), number_format(PlayerInfo[targetid][pLock]), number_format(PlayerInfo[targetid][pFirstaid]));
+		SendClientMessageEx(playerid, COLOR_WHITE, str);
+
+		// Surveillance/Electronics
+		format(str, sizeof(str), "Receiver: %s | GPS: %s | Bug Sweep: %s | Rccam: %s", number_format(PlayerInfo[targetid][pReceiver]), number_format(PlayerInfo[targetid][pGPS]), number_format(PlayerInfo[targetid][pSweep]), number_format(PlayerInfo[targetid][pRccam]));
+		SendClientMessageEx(playerid, COLOR_WHITE, str);
+
+		// SMS/Watch/Surveillance additional
+		format(str, sizeof(str), "Smslog: %s | Wristwatch: %s | Surveillance: %s", number_format(PlayerInfo[targetid][pSmslog]), number_format(PlayerInfo[targetid][pWristwatch]), number_format(PlayerInfo[targetid][pSurveillance]));
+		SendClientMessageEx(playerid, COLOR_WHITE, str);
+
+		// Special items
+		format(str, sizeof(str), "Firework: %s | Boombox: %s | Mailbox: %s | Rim Kit: %s", number_format(PlayerInfo[targetid][pFirework]), number_format(PlayerInfo[targetid][pBoombox]), number_format(PlayerInfo[targetid][pMailbox]), number_format(PlayerInfo[targetid][pRimMod]));
+		SendClientMessageEx(playerid, COLOR_WHITE, str);
+
+		// Tool Box and Crowbar
+		if(PlayerInfo[targetid][pToolBox] >= 1) format(str, sizeof(str), "Tool Box: 1 (Usages: %s) | Crowbar: %d", number_format(PlayerInfo[targetid][pToolBox]), PlayerInfo[targetid][pCrowBar]);
+		else format(str, sizeof(str), "Tool Box: 0 | Crowbar: %d", PlayerInfo[targetid][pCrowBar]);
+		SendClientMessageEx(playerid, COLOR_WHITE, str);
+
+		// Checks and slots
+		format(str, sizeof(str), "Checks: %s | Vehicle Slots: %s | Toy Slots: %s", number_format(PlayerInfo[targetid][pChecks]), number_format(PlayerInfo[targetid][pVehicleSlot]), number_format(PlayerInfo[targetid][pToySlot]));
+		SendClientMessageEx(playerid, COLOR_WHITE, str);
+
+		// Zombie event items (if active)
+		if(zombieevent)
+		{
+			format(str, sizeof(str), "Cure Vials: %d | Scrap Metal: %d | Antibiotics: %d | .50 Cals: %d | Survivor Kits: %d | Fuel: %d%%",
+				PlayerInfo[targetid][pVials], PlayerInfo[targetid][mInventory][16], PlayerInfo[targetid][mInventory][17],
+				PlayerInfo[targetid][mPurchaseCount][18], PlayerInfo[targetid][mInventory][19], PlayerInfo[targetid][zFuelCan]);
+			SendClientMessageEx(playerid, COLOR_WHITE, str);
+		}
+
+		SendClientMessageEx(playerid, COLOR_GREEN, "_______________________________________________");
+	}
+	return 1;
+}*/
+
 ShowInventory(playerid,targetid)
 {
 	if(IsPlayerConnected(targetid))
@@ -1551,7 +1571,7 @@ ShowInventory(playerid,targetid)
 
 		if(PlayerInfo[targetid][pToolBox] >= 1) format(toolboxstring, 50, "Tool Box: 1, (Usages: %s)", number_format(PlayerInfo[targetid][pToolBox]));
 		else format(toolboxstring, 50, "Tool Box: 0");
-		
+
 		SetPVarInt(playerid, "ShowInventory", targetid);
 		format(header, sizeof(header), "%s's Inventory", GetPlayerNameEx(targetid));
 		format(resultline, sizeof(resultline),"{FFFFFF}Total Wealth: $%s\n\
@@ -1580,7 +1600,7 @@ ShowInventory(playerid,targetid)
 		number_format(PlayerInfo[targetid][pRags]),
 		number_format(PlayerInfo[targetid][pScrewdriver]),
 		number_format(PlayerInfo[targetid][pTire]),
-		number_format(PlayerInfo[targetid][pPaper]),		
+		number_format(PlayerInfo[targetid][pPaper]),
 		number_format(PlayerInfo[targetid][pCigar]),
 		number_format(PlayerInfo[targetid][pSprunk]),
 		number_format(PlayerInfo[targetid][pSpraycan]),
@@ -1676,15 +1696,6 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 	}
 	return 0;
 }
-
-/*CMD:storagehelp(playerid, params[])
-{
-	SendClientMessageEx(playerid, COLOR_GREEN,"_______________________________________");
-    SendClientMessageEx(playerid, COLOR_WHITE,"*** HELP *** - type a command for more infomation.");
-    SendClientMessageEx(playerid, COLOR_GRAD3,"*** STORAGE *** /(vs)viewstorage /(es)equipstorage /personalwithdraw /personaldeposit /storagegive");
-	SendClientMessageEx(playerid, COLOR_GRAD3,"*** STORAGE *** /transferstorage");
-    return 1;
-}*/
 
 CMD:inv(playerid, params[]) {
 	return cmd_inventory(playerid, params);

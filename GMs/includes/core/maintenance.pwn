@@ -181,7 +181,7 @@ public Maintenance()
 
     ABroadCast(COLOR_YELLOW, "{AA3333}Maintenance{FFFF00}: Force Saving Accounts...", 1);
 	SendRconCommand("password asdatasdhwda");
-	SendRconCommand("hostname Next Generation Roleplay [Restarting for Maintenance]");
+	SendRconCommand("hostname Next Generation Gaming Roleplay [Restarting for Maintenance]");
 	foreach(new i: Player)
 	{
 		if(gPlayerLogged{i}) {

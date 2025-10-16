@@ -1,39 +1,4 @@
 /*
-
-	 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-	| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-	| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-	| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-	| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-	| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-	| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-	|__/  \__/ \______/         |__/  |__/|__/
-
-						Help Commands
-
-				Next Generation Gaming, LLC
-	(created by Next Generation Gaming Development Team)
-
-	* Copyright (c) 2016, Next Generation Gaming, LLC
-	*
-	* All rights reserved.
-	*
-	* Redistribution and use in source and binary forms, with or without modification,
-	* are not permitted in any case.
-	*
-	*
-	* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-	* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-	* A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-	* CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-	* EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-	* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-	* PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-	* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-	* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 	Types/Subtypes
 	1) Administrator
 		0) All/undefined
@@ -117,7 +82,7 @@
 		8) Towing
 		9) Criminal/Gang
 		10) Racing
-	11) Business
+	12) Business
 		1) Gas Station
 		2) Clothing
 		3) Restaurant
@@ -131,12 +96,12 @@
 		11) Sex Shop
 		12) Gym
 		13) Casino
-	12) VIP
+	13) VIP
 		2) Silver VIP
 		3) Gold VIP
 		4) Platinum VIP
 		5) VIP Moderator
-	13) Other
+	14) Other
 		1) Animation
 		2) Backpack
 		3) Car
@@ -224,6 +189,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					case 8: Help_ListCat(playerid, DIALOG_HELPCATSHOP, response, listitem);
 					case 9: Help_ListCat(playerid, DIALOG_HELPCATJOB, response, listitem);
 					case 10: Help_ListCat(playerid, DIALOG_HELPCATGROUP, response, listitem);
+					case 11: Help_ListCat(playerid, DIALOG_HELPCATGROUP, response, listitem);
 					case 12: Help_ListCat(playerid, DIALOG_HELPCATBUSINESS, response, listitem);
 					case 13: Help_ListCat(playerid, DIALOG_HELPCATVIP, response, listitem);
 					case 14: Help_ListCat(playerid, DIALOG_HELPCATOTHER, response, listitem);
@@ -352,88 +318,89 @@ public OnLoadHelp()
 Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0, inputtext[] = 0)
 {
 	new string[256];
+	new dialogList[4096]; // Local buffer for building dialog content
 	switch(dialogid)
 	{
 		case DIALOG_HELPCATMAIN:
 		{
 			new iGroupID = PlayerInfo[playerid][pMember], j = 0;
-			format(szMiscArray, sizeof(szMiscArray), "Search\n");
+			format(dialogList, sizeof(dialogList), "Search\n");
 			format(string, sizeof(string), "HelpResultMainCat%i", j);
 			SetPVarInt(playerid, string, 0);
 			j++;
 			if(PlayerInfo[playerid][pAdmin] >= 1)
 			{
-				format(szMiscArray, sizeof(szMiscArray), "%sAdministrator\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sAdministrator\n", dialogList);
 				format(string, sizeof(string), "HelpResultMainCat%i", j);
 				SetPVarInt(playerid, string, 1);
 				j++;
 			}
 			if(PlayerInfo[playerid][pHelper] >= 1)
 			{
-				format(szMiscArray, sizeof(szMiscArray), "%sAdvisor\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sAdvisor\n", dialogList);
 				format(string, sizeof(string), "HelpResultMainCat%i", j);
 				SetPVarInt(playerid, string, 2);
 				j++;
 			}
 			if(PlayerInfo[playerid][pFamed] >= 1)
 			{
-				format(szMiscArray, sizeof(szMiscArray), "%sFamed\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sFamed\n", dialogList);
 				format(string, sizeof(string), "HelpResultMainCat%i", j);
 				SetPVarInt(playerid, string, 3);
 				j++;
 			}
 			if(PlayerInfo[playerid][pLevel] <= 3)
 			{
-				format(szMiscArray, sizeof(szMiscArray), "%sNewbie Help\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sNewbie Help\n", dialogList);
 				format(string, sizeof(string), "HelpResultMainCat%i", j);
 				SetPVarInt(playerid, string, 4);
 				j++;
 			}
-			format(szMiscArray, sizeof(szMiscArray), "%sGeneral\n", szMiscArray);
+			format(dialogList, sizeof(dialogList), "%sGeneral\n", dialogList);
 			format(string, sizeof(string), "HelpResultMainCat%i", j);
 			SetPVarInt(playerid, string, 5);
 			j++;
-			format(szMiscArray, sizeof(szMiscArray), "%sAccount\n", szMiscArray);
+			format(dialogList, sizeof(dialogList), "%sAccount\n", dialogList);
 			format(string, sizeof(string), "HelpResultMainCat%i", j);
 			SetPVarInt(playerid, string, 6);
 			j++;
-			format(szMiscArray, sizeof(szMiscArray), "%sChat\n", szMiscArray);
+			format(dialogList, sizeof(dialogList), "%sChat\n", dialogList);
 			format(string, sizeof(string), "HelpResultMainCat%i", j);
 			SetPVarInt(playerid, string, 7);
 			j++;
-			format(szMiscArray, sizeof(szMiscArray), "%sShop\n", szMiscArray);
+			format(dialogList, sizeof(dialogList), "%sShop\n", dialogList);
 			format(string, sizeof(string), "HelpResultMainCat%i", j);
 			SetPVarInt(playerid, string, 8);
 			j++;
-			format(szMiscArray, sizeof(szMiscArray), "%sJob\n", szMiscArray);
+			format(dialogList, sizeof(dialogList), "%sJob\n", dialogList);
 			format(string, sizeof(string), "HelpResultMainCat%i", j);
 			SetPVarInt(playerid, string, 9);
 			j++;
 			if(iGroupID != INVALID_GROUP_ID)
 			{
-				format(szMiscArray, sizeof(szMiscArray), "%sGroup\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sGroup\n", dialogList);
 				format(string, sizeof(string), "HelpResultMainCat%i", j);
 				SetPVarInt(playerid, string, 10);
 				j++;
 			}
 			if(IsValidBusinessID(PlayerInfo[playerid][pBusiness]))
 			{
-				format(szMiscArray, sizeof(szMiscArray), "%sBusiness\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sBusiness\n", dialogList);
 				format(string, sizeof(string), "HelpResultMainCat%i", j);
 				SetPVarInt(playerid, string, 11);
 				j++;
 			}
 			if(PlayerInfo[playerid][pDonateRank] || PlayerInfo[playerid][pVIPMod])
 			{
-				format(szMiscArray, sizeof(szMiscArray), "%sVIP\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sVIP\n", dialogList);
 				format(string, sizeof(string), "HelpResultMainCat%i", j);
 				SetPVarInt(playerid, string, 12);
 				j++;
 			}
-			format(szMiscArray, sizeof(szMiscArray), "%sOther", szMiscArray);
+			format(dialogList, sizeof(dialogList), "%sOther", dialogList);
 			format(string, sizeof(string), "HelpResultMainCat%i", j);
 			SetPVarInt(playerid, string, 13);
-			ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 		}
 		case DIALOG_HELPSEARCH0: ShowPlayerDialogEx(playerid, DIALOG_HELPSEARCH1, DIALOG_STYLE_LIST, "Help System - Search", "Search by Command & Description\nSearch by Command Only\nSearch by Description Only", "Select", "Go Back");
 		case DIALOG_HELPSEARCH1:
@@ -451,7 +418,9 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 			Help_GenerateCMDList(playerid, GetPVarInt(playerid, "HelpSearchType"), -1, 0, 0, inputtext);
 			DeletePVar(playerid, "HelpSearchType");
 			format(string, sizeof(string), "Help System - Search Results for '%s'", inputtext);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPSEARCH3, DIALOG_STYLE_LIST, string, szMiscArray, "Select", "Go Back");
+			// Copy to local buffer immediately to prevent race conditions
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPSEARCH3, DIALOG_STYLE_LIST, string, dialogList, "Select", "Go Back");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPSEARCH0, DIALOG_STYLE_MSGBOX, string, "No results found! Please try another search term.", "Go Back", "");
 		}
 		case DIALOG_HELPSEARCH3:
@@ -477,129 +446,130 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 1);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "Retired Administrator\n");
+				format(dialogList, sizeof(dialogList), "Retired Administrator\n");
 			}
 			if(Help_Perm(playerid, 1, 2, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 2);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sServer Moderator\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sServer Moderator\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 3, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 3);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sWatchdog\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sWatchdog\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 4, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 4);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sJunior Administrator\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sJunior Administrator\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 5, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 5);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sGeneral Administrator\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sGeneral Administrator\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 6, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 6);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sAssistant Shift Manager\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sAssistant Shift Manager\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 7, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 7);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sSenior Administrator\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sSenior Administrator\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 8, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 8);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sHead Administrator\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sHead Administrator\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 9, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 9);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sExecutive Administrator\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sExecutive Administrator\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 10, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 10);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sSA-MP Operations\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sSA-MP Operations\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 11, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 11);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sHuman Resources\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sHuman Resources\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 12, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 12);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sFaction Moderator\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sFaction Moderator\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 13, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 13);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sGang Moderator\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sGang Moderator\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 14, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 14);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sBusiness Moderator\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sBusiness Moderator\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 15, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 15);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sSpecial Operations\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sSpecial Operations\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 16, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 16);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sShop Technician\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sShop Technician\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 17, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 17);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sPublic Relations\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sPublic Relations\n", dialogList);
 			}
 			if(Help_Perm(playerid, 1, 18, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 18);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sBan Appealer\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sBan Appealer\n", dialogList);
 			}
 			Help_GenerateCMDList(playerid, 3, j, 1, 0);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATADMIN, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATADMIN, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 		}
 		case DIALOG_HELPCATADMIN1:
@@ -609,7 +579,8 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 			{
 				Help_GenerateCMDList(playerid, 3, -1, 1, GetPVarInt(playerid, string));
 				ClearHelpSearch(playerid, 0, 1);
-				if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATADMIN, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+				format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+				if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATADMIN, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 				else
 				{
 					SetPVarInt(playerid, "HelpResultMainCat0", 1);
@@ -632,31 +603,32 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 1);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "Helper\n");
+				format(dialogList, sizeof(dialogList), "Helper\n");
 			}
 			if(Help_Perm(playerid, 2, 2, 2))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 2);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%Community Advisor\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sCommunity Advisor\n", dialogList);
 			}
 			if(Help_Perm(playerid, 2, 3, 3))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 3);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%Senior Advisor\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sSenior Advisor\n", dialogList);
 			}
 			if(Help_Perm(playerid, 2, 4, 4))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 4);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sChief Advisor\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sChief Advisor\n", dialogList);
 			}
 			Help_GenerateCMDList(playerid, 3, j, 2, 0);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATADVISOR, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATADVISOR, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 		}
 		case DIALOG_HELPCATADVISOR1:
@@ -666,7 +638,8 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 			{
 				Help_GenerateCMDList(playerid, 3, -1, 2, GetPVarInt(playerid, string));
 				ClearHelpSearch(playerid, 0, 1);
-				if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATADVISOR, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+				format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+				if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATADVISOR, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 				else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 			}
 			else
@@ -685,38 +658,39 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 1);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "Old-School\n");
+				format(dialogList, sizeof(dialogList), "Old-School\n");
 			}
 			if(Help_Perm(playerid, 3, 2, 2))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 2);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sChartered Old-School\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sChartered Old-School\n", dialogList);
 			}
 			if(Help_Perm(playerid, 3, 3, 3))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 3);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%Famed\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sFamed\n", dialogList);
 			}
 			if(Help_Perm(playerid, 3, 4, 4))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 4);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sFamed Commissioner\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sFamed Commissioner\n", dialogList);
 			}
 			if(Help_Perm(playerid, 3, 6, 6))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 6);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sFamed Vice-Chairman\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sFamed Vice-Chairman\n", dialogList);
 			}
 			Help_GenerateCMDList(playerid, 3, j, 3, 0);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATFAMED, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATFAMED, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 		}
 		case DIALOG_HELPCATFAMED1:
@@ -726,7 +700,8 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 			{
 				Help_GenerateCMDList(playerid, 3, -1, 3, GetPVarInt(playerid, string));
 				ClearHelpSearch(playerid, 0, 1);
-				if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATFAMED, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+				format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+				if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATFAMED, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 				else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 			}
 			else
@@ -740,7 +715,8 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 		case DIALOG_HELPCATNEWB:
 		{
 			Help_GenerateCMDList(playerid, 3, -1, 4, 0);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATNEWB, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATNEWB, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 		}
 		case DIALOG_HELPCATNEWB1:
@@ -753,7 +729,8 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 		case DIALOG_HELPCATGENERAL:
 		{
 			Help_GenerateCMDList(playerid, 3, -1, 5, 0);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATGENERAL, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATGENERAL, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 		}
 		case DIALOG_HELPCATGENERAL1:
@@ -766,7 +743,8 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 		case DIALOG_HELPCATACCOUNT:
 		{
 			Help_GenerateCMDList(playerid, 3, -1, 6, 0);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATACCOUNT, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATACCOUNT, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 		}
 		case DIALOG_HELPCATACCOUNT1:
@@ -779,7 +757,8 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 		case DIALOG_HELPCATCHAT:
 		{
 			Help_GenerateCMDList(playerid, 3, -1, 7, 0);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATCHAT, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATCHAT, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 		}
 		case DIALOG_HELPCATCHAT1:
@@ -792,7 +771,8 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 		case DIALOG_HELPCATSHOP:
 		{
 			Help_GenerateCMDList(playerid, 3, -1, 8, 0);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATSHOP, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATSHOP, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 		}
 		case DIALOG_HELPCATSHOP1:
@@ -810,28 +790,28 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 1);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "Detective\n");
+				format(dialogList, sizeof(dialogList), "Detective\n");
 			}
 			if(Help_Perm(playerid, 9, 2, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 2);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sLawyer\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sLawyer\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 3, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 3);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sWhore\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sWhore\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 4, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 4);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sDrug Dealer\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sDrug Dealer\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 5, 0))
 			{
@@ -839,7 +819,7 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 5);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%s[PLACEHOLDER]\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%s[PLACEHOLDER]\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 6, 0))
 			{
@@ -847,35 +827,35 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 6);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%s[PLACEHOLDER]\n");
+				format(dialogList, sizeof(dialogList), "%s[PLACEHOLDER]\n");
 			}
 			if(Help_Perm(playerid, 9, 7, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 7);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sMechanic\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sMechanic\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 8, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 8);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sBodyguard\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sBodyguard\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 9, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 9);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sArms Dealer\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sArms Dealer\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 10, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 10);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sCar Dealer\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sCar Dealer\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 11, 0))
 			{
@@ -883,14 +863,14 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 11);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%s[PLACEHOLDER]\n");
+				format(dialogList, sizeof(dialogList), "%s[PLACEHOLDER]\n");
 			}
 			if(Help_Perm(playerid, 9, 12, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 12);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sBoxer\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sBoxer\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 13, 0))
 			{
@@ -898,65 +878,66 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 13);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%s[PLACEHOLDER]\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%s[PLACEHOLDER]\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 14, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 14);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sDrug Smuggler\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sDrug Smuggler\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 15, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 15);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sPaper Boy\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sPaper Boy\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 16, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 16);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sTrucker\n");
+				format(dialogList, sizeof(dialogList), "%sTrucker\n");
 			}
 			if(Help_Perm(playerid, 9, 17, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 17);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sTaxi Driver\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sTaxi Driver\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 18, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 18);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sCraftsman\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sCraftsman\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 19, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 19);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sBartender\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sBartender\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 20, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 20);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sShipment Contractor\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sShipment Contractor\n", dialogList);
 			}
 			if(Help_Perm(playerid, 9, 21, 0))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 21);
-				format(szMiscArray, sizeof(szMiscArray), "%sPizza Boy\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sPizza Boy\n", dialogList);
 			}
 			Help_GenerateCMDList(playerid, 3, -1, 9, 0);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATJOB, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATJOB, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 		}
 		case DIALOG_HELPCATJOB1:
@@ -966,7 +947,8 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 			{
 				Help_GenerateCMDList(playerid, 3, -1, 9, GetPVarInt(playerid, string));
 				ClearHelpSearch(playerid, 0, 1);
-				if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATJOB, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+				format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+				if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATJOB, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 				else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 			}
 			else
@@ -985,10 +967,11 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 1);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "Leadership\n");
+				format(dialogList, sizeof(dialogList), "Leadership\n");
 			}
 			Help_GenerateCMDList(playerid, 3, j, 10, arrGroupData[PlayerInfo[playerid][pMember]][g_iGroupType]);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATGROUP, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATGROUP, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 		}
 		case DIALOG_HELPCATGROUP1:
@@ -998,7 +981,8 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 			{
 				Help_GenerateCMDList(playerid, 3, -1, 11, arrGroupData[PlayerInfo[playerid][pMember]][g_iGroupType]);
 				ClearHelpSearch(playerid, 0, 1);
-				if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATGROUP, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+				format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+				if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATGROUP, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 				else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 			}
 			else
@@ -1012,7 +996,8 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 		case DIALOG_HELPCATBUSINESS:
 		{
 			Help_GenerateCMDList(playerid, 3, -1, 12, 0);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATBUSINESS, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATBUSINESS, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 		}
 		case DIALOG_HELPCATBUSINESS1:
@@ -1030,30 +1015,31 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 5);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "VIP Moderator\n");
+				format(dialogList, sizeof(dialogList), "VIP Moderator\n");
 			}
 			if(Help_Perm(playerid, 13, 2, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 2);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sSilver VIP\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sSilver VIP\n", dialogList);
 			}
 			if(Help_Perm(playerid, 13, 3, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 3);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sGold VIP\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sGold VIP\n", dialogList);
 			}
 			if(Help_Perm(playerid, 13, 4, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 4);
-				format(szMiscArray, sizeof(szMiscArray), "%sPlatinum VIP\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sPlatinum VIP\n", dialogList);
 			}
 			Help_GenerateCMDList(playerid, 3, -1, 13, 0);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATVIP, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATVIP, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 		}
 		case DIALOG_HELPCATVIP1:
@@ -1063,7 +1049,8 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 			{
 				Help_GenerateCMDList(playerid, 3, -1, 13, GetPVarInt(playerid, string));
 				ClearHelpSearch(playerid, 0, 1);
-				if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATVIP, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+				format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+				if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATVIP, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 				else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 			}
 			else
@@ -1082,72 +1069,74 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 1);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "Animation\n");
+				format(dialogList, sizeof(dialogList), "Animation\n");
 			}
 			if(Help_Perm(playerid, 14, 2, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 2);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sBackpack\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sBackpack\n", dialogList);
 			}
 			if(Help_Perm(playerid, 14, 3, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 3);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sCar\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sCar\n", dialogList);
 			}
 			if(Help_Perm(playerid, 14, 4, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 4);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sCellphone\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sCellphone\n", dialogList);
 			}
 			if(Help_Perm(playerid, 14, 5, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 5);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sFish\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sFish\n", dialogList);
 			}
 			if(Help_Perm(playerid, 14, 6, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 6);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sHouse\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sHouse\n", dialogList);
 			}
 			if(Help_Perm(playerid, 14, 7, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 7);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sMail\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sMail\n", dialogList);
 			}
 			if(Help_Perm(playerid, 14, 8, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 8);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sRent\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sRent\n", dialogList);
 			}
 			if(Help_Perm(playerid, 14, 9, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 9);
 				j++;
-				format(szMiscArray, sizeof(szMiscArray), "%sToy\n", szMiscArray);
+				format(dialogList, sizeof(dialogList), "%sToy\n", dialogList);
 			}
 			if(Help_Perm(playerid, 14, 10, 1))
 			{
 				format(string, sizeof(string), "HelpResultCat%i", j);
 				SetPVarInt(playerid, string, 10);
-				format(szMiscArray, sizeof(szMiscArray), "%sVoucher\n", szMiscArray);
+				j++;
+				format(dialogList, sizeof(dialogList), "%sVoucher\n", dialogList);
 			}
-			Help_GenerateCMDList(playerid, 3, -1, 14, 0);
-			if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATOTHER, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+			Help_GenerateCMDList(playerid, 3, j, 14, 0);
+			format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+			if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATOTHER, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 			else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 		}
 		case DIALOG_HELPCATOTHER1:
@@ -1157,13 +1146,14 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 			{
 				Help_GenerateCMDList(playerid, 3, -1, 14, GetPVarInt(playerid, string));
 				ClearHelpSearch(playerid, 0, 1);
-				if(!isnull(szMiscArray)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATOTHER, DIALOG_STYLE_LIST, "Help System", szMiscArray, "Select", "Cancel");
+				format(dialogList, sizeof(dialogList), "%s", szMiscArray);
+				if(!isnull(dialogList)) ShowPlayerDialogEx(playerid, DIALOG_HELPCATOTHER, DIALOG_STYLE_LIST, "Help System", dialogList, "Select", "Cancel");
 				else ShowPlayerDialogEx(playerid, DIALOG_HELPCATMAIN, DIALOG_STYLE_MSGBOX, "Help System", "No commands found for this category.", "Go Back", "");
 			}
 			else
 			{
 				format(string, sizeof(string), "HelpResult%i", listitem);
-				SetPVarInt(playerid, "HelpCancelCopy", 13);
+				SetPVarInt(playerid, "HelpCancelCopy", 14);
 				Help_ShowCMD(playerid, GetPVarInt(playerid, string), DIALOG_HELPSEARCH4);
 				ClearHelpSearch(playerid);
 			}
@@ -1175,6 +1165,7 @@ Help_ListCat(playerid, dialogid = DIALOG_HELPCATMAIN, response = 0, listitem = 0
 Help_GenerateCMDList(playerid, listtype, listitem = -1, type = 0, subtype = 0, const param[] = 0)
 {
 	new string[256], j = 0;
+	szMiscArray[0] = 0; // Clear the buffer at the start
 	for(new i = 0; i < sizeof(Help); i++)
 	{
 		switch(listtype)
@@ -1259,18 +1250,20 @@ Help_GenerateCMDList(playerid, listtype, listitem = -1, type = 0, subtype = 0, c
 Help_ShowCMD(playerid, cmd, dialog)
 {
 	new string[256];
+	new dialogContent[512];
 	SetPVarInt(playerid, "TmpCMD", cmd);
 	format(string, sizeof(string), "Command Help for %s", Help[cmd][HelpName]);
-	format(szMiscArray, sizeof(szMiscArray), "{FFFFFF}Usage: {AFAFAF}%s %s\n\n{FFFFFF}Description: {AFAFAF}%s\n\t\t\t\t\t", Help[cmd][HelpName], Help[cmd][HelpParam], Help[cmd][HelpDesc]);
-	return ShowPlayerDialogEx(playerid, dialog, DIALOG_STYLE_MSGBOX, string, szMiscArray, "Copy", "Exit");
+	format(dialogContent, sizeof(dialogContent), "{FFFFFF}Usage: {AFAFAF}%s %s\n\n{FFFFFF}Description: {AFAFAF}%s\n\t\t\t\t\t", Help[cmd][HelpName], Help[cmd][HelpParam], Help[cmd][HelpDesc]);
+	return ShowPlayerDialogEx(playerid, dialog, DIALOG_STYLE_MSGBOX, string, dialogContent, "Copy", "Exit");
 }
 
 Help_SendToChat(playerid, response, cmd)
 {
 	if(response)
 	{
-		format(szMiscArray, sizeof(szMiscArray), "USAGE: %s %s", Help[cmd][HelpName], Help[cmd][HelpParam]);
-		SendClientMessageEx(playerid, COLOR_GREY, szMiscArray);
+		new message[256];
+		format(message, sizeof(message), "USAGE: %s %s", Help[cmd][HelpName], Help[cmd][HelpParam]);
+		SendClientMessageEx(playerid, COLOR_GREY, message);
 	}
 }
 
@@ -1397,7 +1390,7 @@ Help_Perm(playerid, type, subtype, level)
 		{
 			if(subtype > 0)
 			{
-				if(PlayerInfo[playerid][pLeader] == subtype) return 1;
+				if(arrGroupData[PlayerInfo[playerid][pLeader]][g_iGroupType] == subtype) return 1;
 				else return 0;
 			}
 			return 1;
@@ -1471,7 +1464,7 @@ CMD:rules(playerid, params[])
 	format(szMiscArray, sizeof(szMiscArray), "%s\n\nMetagaming: Mixing of out of character and in character information. Using IC info oocly or using OOC info icly. Use of acronyms or smilies. (ex. 'wtf' or :)", szMiscArray);
 	format(szMiscArray, sizeof(szMiscArray), "%s\n\nNon-roleplay behavior: Acting in a manner that is deemed unrealstic or non-roleplay, including but not limited to: improper use of toys,\n ramming vehicles into players excessively, car surfing etc", szMiscArray);
 	format(szMiscArray, sizeof(szMiscArray), "%s\n\nAvoiding Roleplay: Disconnecting or using /kill to avoid roleplay/arrest etc.", szMiscArray);
-	ShowPlayerDialogEx(playerid, DIALOG_NOTHING, DIALOG_STYLE_MSGBOX, "NG-RP: Server Offences", szMiscArray, "Okay", "");
+	ShowPlayerDialogEx(playerid, DIALOG_NOTHING, DIALOG_STYLE_MSGBOX, "NG-GR: Server Offences", szMiscArray, "Okay", "");
 	return 1;
 }
 

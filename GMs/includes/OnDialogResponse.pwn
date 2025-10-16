@@ -1,37 +1,3 @@
-/*
-				 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-				| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-				| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-				| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-				| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-				| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-				| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-				|__/  \__/ \______/         |__/  |__/|__/
-
-//-------------------------[OnDialogResponse.PWN]--------------------------------
-
-
- * Copyright (c) 2016, Next Generation Gaming, LLC
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are not permitted in any case.
- *
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #include <YSI_Coding\y_hooks>
 
 // This is the first hooked OnDialogResponse. It's used to check dialog spoofing.
@@ -94,7 +60,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			else ShowPlayerDialogEx(playerid, REGISTERSEX, DIALOG_STYLE_LIST, "{FF0000}Is your character male or female?", "Male\nFemale", "Submit", "");
 		}
 	}
-	if(RegistrationStep[playerid] != 0 || strcmp(PlayerInfo[playerid][pBirthDate], "0000-00-00", true) == 0)
+	if(RegistrationStep[playerid] != 0 || strcmp(PlayerInfo[playerid][pBirthDate], "1970-01-01", true) == 0)
 	{
 		if(dialogid == REGISTERMONTH)
 		{
@@ -146,7 +112,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				DeletePVar(playerid, "RegisterDay");
 				if(RegistrationStep[playerid] != 0)
 				{
-					ShowPlayerDialogEx(playerid, REGISTERREF, DIALOG_STYLE_INPUT, "{FF0000}Next Generation Roleplay Referral System", "Have you been referred to our server by one of our players?\nIf so, please enter the player name below.\n\nIf you haven't been referred by anyone, you may press the skip button.\n\n{FF0000}Note: You must enter the player name with a underscore (Example: FirstName_LastName)", "Enter", "Skip");
+					ShowPlayerDialogEx(playerid, REGISTERREF, DIALOG_STYLE_INPUT, "{FF0000}Next Generation Gaming Roleplay Referral System", "Have you been referred to our server by one of our players?\nIf so, please enter the player name below.\n\nIf you haven't been referred by anyone, you may press the skip button.\n\n{FF0000}Note: You must enter the player name with a underscore (Example: FirstName_LastName)", "Enter", "Skip");
 				}
 				else return SendClientMessageEx(playerid, COLOR_LIGHTRED, "Your birthdate has been successfully set.");
 			}
@@ -2107,7 +2073,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			if(!isnull(inputtext) && strlen(inputtext) <= 64)
 			{
 				SetPVarString(playerid, "PassAuth", inputtext);
-				g_mysql_CreateAccount(playerid, inputtext);
+				// Use bcrypt to hash the password
+				bcrypt_hash(playerid, "OnPasswordHashed", inputtext, BCRYPT_COST);
 			}
 			else ShowMainMenuDialog(playerid, 2);
 		}
@@ -2611,6 +2578,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 		{
 			PlayerVehicleInfo[giveplayerid][listitem][pvMods][m] = 0;
 		}
+		g_mysql_SaveVehicle(giveplayerid, listitem);
 		format(string, sizeof(string), "AdmCmd: Admin %s has deleted one of %s's(%d) vehicles (VehModel:%d)", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid), GetPlayerSQLId(giveplayerid), model);
 		Log("logs/admin.log", string);
 		format(string, sizeof(string), "AdmCmd: Admin %s has deleted one of %s's vehicles (VehModel:%d)", GetPlayerNameEx(playerid), GetPlayerNameEx(giveplayerid), model);
@@ -3066,20 +3034,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 			if(PassComplexCheck && CheckPasswordComplexity(inputtext) != 1) return ShowLoginDialogs(playerid, 0);
 			if(strlen(inputtext) > 64) return ShowLoginDialogs(playerid, 0), SendClientMessageEx(playerid, COLOR_GREY, "You can't select a password that's above 64 characters.");
 			if(!strcmp(PlayerInfo[playerid][pLastPass], inputtext, true)) return ShowLoginDialogs(playerid, 0), SendClientMessageEx(playerid, COLOR_RED, "There was an issue with processing your request.");
-			new
-				szBuffer[129],
-				szQuery[256],
-				salt[11];
 
 			SetPVarString(playerid, "PassChange", inputtext);
-			randomString(salt);
-			format(szQuery, sizeof(szQuery), "%s%s", inputtext, salt);
-			WP_Hash(szBuffer, sizeof(szBuffer), szQuery);
-			mysql_format(MainPipeline, szQuery, sizeof(szQuery), "UPDATE `accounts` SET `Key` = '%s', `Salt` = '%s' WHERE `id` = '%i'", szBuffer, salt, PlayerInfo[playerid][pId]);
-			mysql_tquery(MainPipeline, szQuery, "OnPlayerChangePass", "i", playerid);
+			// Use bcrypt to hash the new password
+			bcrypt_hash(playerid, "OnPasswordChangeHashed", inputtext, BCRYPT_COST);
 			SendClientMessageEx(playerid, COLOR_YELLOW, "Processing your request...");
 
-			if(strcmp(PlayerInfo[playerid][pBirthDate], "0000-00-00", true) == 0 && PlayerInfo[playerid][pTut] != 0) ShowLoginDialogs(playerid, 1);
+			if(strcmp(PlayerInfo[playerid][pBirthDate], "1970-01-01", true) == 0 && PlayerInfo[playerid][pTut] != 0) ShowLoginDialogs(playerid, 1);
 			else if(pMOTD[0] && GetPVarInt(playerid, "ViewedPMOTD") != 1) ShowLoginDialogs(playerid, 4);
 			else if(PlayerInfo[playerid][pReceivedCredits] != 0) ShowLoginDialogs(playerid, 5);
 		}
@@ -3095,18 +3056,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				- Invalid Character: %", "Change", "Exit" );
 			if(strlen(inputtext) > 64) return SendClientMessageEx(playerid, COLOR_WHITE, "You can't select a password that's above 64 characters.");
 			if(!strcmp(PlayerInfo[playerid][pLastPass], inputtext, true)) return SendClientMessageEx(playerid, COLOR_RED, "There was an issue with processing your request.");
-			new
-				szBuffer[129],
-				szQuery[256],
-				salt[11];
 
 			SetPVarString(playerid, "PassChange", inputtext);
-			randomString(salt);
-			format(szQuery, sizeof(szQuery), "%s%s", inputtext, salt);
-			WP_Hash(szBuffer, sizeof(szBuffer), szQuery);
-
-			mysql_format(MainPipeline, szQuery, sizeof(szQuery), "UPDATE `accounts` SET `Key` = '%s', `Salt` = '%s' WHERE `id` = '%i'", szBuffer, salt, PlayerInfo[playerid][pId]);
-			mysql_tquery(MainPipeline, szQuery, "OnPlayerChangePass", "i", playerid);
+			// Use bcrypt to hash the new password
+			bcrypt_hash(playerid, "OnPasswordChangeHashed", inputtext, BCRYPT_COST);
 			SendClientMessageEx(playerid, COLOR_YELLOW, "Processing your request...");
 		}
 	}
@@ -9435,12 +9388,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 				format(string, sizeof(string), "Your new pin number is '%s.'", inputtext);
 				SendClientMessageEx(playerid, COLOR_CYAN, string);
 
-				new passbuffer[258];
-				WP_Hash(passbuffer, sizeof(passbuffer), inputtext);
+				// Store the PIN for bcrypt callback
+				SetPVarString(playerid, "NewPinNumber", inputtext);
 
-				new query[256];
-				mysql_format(MainPipeline, query, sizeof(query), "UPDATE `accounts` SET `Pin`='%s' WHERE `id` = %d", passbuffer, GetPlayerSQLId(playerid));
-				mysql_tquery(MainPipeline, query, "OnQueryFinish", "ii", SENDDATA_THREAD, playerid);
+				// Use bcrypt to hash the PIN
+				bcrypt_hash(playerid, "OnPinNumberHashed", inputtext, BCRYPT_COST);
+
 				DeletePVar(playerid, "PinConfirm");
 				DeletePVar(playerid, "ChangePin");
 			}

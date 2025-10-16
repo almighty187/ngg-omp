@@ -1,39 +1,3 @@
-/*
-    	 		 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-				| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-				| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-				| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-				| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-				| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-				| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-				|__/  \__/ \______/         |__/  |__/|__/
-
-//--------------------------------[CALLBACKS.PWN]--------------------------------
-
-
- * Copyright (c) 2016, Next Generation Gaming, LLC
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are not permitted in any case.
- *
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
- //====================[Official SA:MP/Streamer Callbacks]============================
-
 public OnVehicleSpawn(vehicleid) {
 	new Float:X, Float:Y, Float:Z;
 	new Float:XB, Float:YB, Float:ZB;
@@ -119,6 +83,7 @@ public OnVehicleSpawn(vehicleid) {
 			SendClientMessageEx(i, COLOR_WHITE, "The airplane has been damaged, you cannot be inside it!");
 		}
 	}
+	return 1;
 }
 
 public OnVehicleMod(playerid, vehicleid, componentid)
@@ -323,12 +288,15 @@ public OnPlayerLeaveDynamicArea(playerid, areaid)
 public OnPlayerUpdate(playerid)
 {
 	// Do not put heavy cpu checks in here. Use the 1 second timer.
+	// Commented out: OnPlayerDeath is hooked by nex-ac and cannot be called directly
+	/*
 	new Float:health;
 	GetHealth(playerid, health);
 	if(health <= 0)
 	{
 		OnPlayerDeath(playerid, INVALID_PLAYER_ID, WEAPON_FIST);
 	}
+	*/
 	if(playerTabbed[playerid] >= 1)
 	{
 		playerTabbed[playerid] = 0;
@@ -558,6 +526,7 @@ public OnPlayerInteriorChange(playerid,newinteriorid,oldinteriorid)
 			SetTimerEx("SpecUpdate", 1500, false, "i", i);
 		}
 	}
+	return 1;
 }
 
 public OnPlayerPressButton(playerid, buttonid)
@@ -815,6 +784,7 @@ public OnPlayerPressButton(playerid, buttonid)
 public OnEnterExitModShop( playerid, enterexit, interiorid ) {
 	if(!enterexit && GetPlayerVehicle(playerid, GetPlayerVehicleID(playerid)) > -1) UpdatePlayerVehicleMods(playerid, GetPlayerVehicle(playerid, GetPlayerVehicleID(playerid)));
 	if(!enterexit && DynVeh[GetPlayerVehicleID(playerid)] != -1) UpdateGroupVehicleMods(GetPlayerVehicleID(playerid));
+	return 1;
 }
 
 public OnVehiclePaintjob(playerid, vehicleid, paintjobid)
@@ -1588,7 +1558,7 @@ public OnPlayerConnect(playerid)
 	SetPlayerVirtualWorld(playerid, 1);
 
 	SetPlayerColor(playerid,TEAM_HIT_COLOR);
-	SendClientMessage( playerid, COLOR_WHITE, "SERVER: Welcome to Next Generation Roleplay." );
+	SendClientMessage( playerid, COLOR_WHITE, "SERVER: Welcome to Next Generation Gaming Roleplay." );
 
 	SyncPlayerTime(playerid);
 
@@ -2636,7 +2606,7 @@ public OnRconLoginAttempt(ip[], password[], success)
     return 1;
 }
 
-public OnVehicleDeath(vehicleid) {
+public OnVehicleDeath(vehicleid, killerid) {
 	new Float:X, Float:Y, Float:Z;
 	new Float:XB, Float:YB, Float:ZB;
 	VehicleStatus{vehicleid} = 1;
@@ -2679,6 +2649,7 @@ public OnVehicleDeath(vehicleid) {
 		DynVeh_Spawn(DynVeh[vehicleid]);
 	}*/
 	arr_Engine{vehicleid} = 0;
+	return 1;
 }
 
 public OnPlayerSpawn(playerid)
@@ -4586,7 +4557,7 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
 					SendClientMessageEx(playerid, COLOR_GREY, string);
 				}
 				else if(PlayerVehicleInfo[i][v][pvLocked] == 1 && PlayerVehicleInfo[i][v][pvLock] == 1) {
-					SetVehicleParamsEx(newcar, .alarm = VEHICLE_PARAMS_ON);
+					SetVehicleParamsEx(newcar, -1, -1, VEHICLE_PARAMS_ON, -1, -1, -1, -1);
 					SetTimerEx("DisableVehicleAlarm", 20000, false, "d",  newcar);
 				}
 				else if(PlayerVehicleInfo[i][v][pvLocked] == 1 && PlayerVehicleInfo[i][v][pvLock] == 2 && PlayerVehicleInfo[i][v][pvLocksLeft] > 0) { // Electronic Lock System
@@ -4767,7 +4738,8 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
 	        SendClientMessageEx(playerid, COLOR_GRAD1, "Crate Related Commands: /loadforklift /(un)loadplane /cargo /announcetakeoff /cgun /crates /destroycrate /cratelimit");
 	        SendClientMessageEx(playerid, COLOR_GRAD1, " /(un)loadcrate /delivercrate");
 	    }
-		GetVehicleParamsEx(newcar,engine);
+		new lights, alarm, doors, bonnet, boot, objective;
+		GetVehicleParamsEx(newcar, engine, lights, alarm, doors, bonnet, boot, objective);
 		if((engine == VEHICLE_PARAMS_UNSET || engine == VEHICLE_PARAMS_OFF) && GetVehicleModel(newcar) != 509 && GetVehicleModel(newcar) != 481 && GetVehicleModel(newcar) != 510 && (DynVeh[newcar] != -1 && GetVehicleModel(newcar) == 592 && DynVehicleInfo[DynVeh[newcar]][gv_iType] != 1) ) {
 			SendClientMessageEx(playerid, COLOR_WHITE, "This vehicle's engine is not running - if you wish to start it, press ~k~~CONVERSATION_YES~.");
 		}

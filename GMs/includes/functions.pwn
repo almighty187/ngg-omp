@@ -1,39 +1,3 @@
-/*
-    	 		 /$$   /$$  /$$$$$$          /$$$$$$$  /$$$$$$$
-				| $$$ | $$ /$$__  $$        | $$__  $$| $$__  $$
-				| $$$$| $$| $$  \__/        | $$  \ $$| $$  \ $$
-				| $$ $$ $$| $$ /$$$$ /$$$$$$| $$$$$$$/| $$$$$$$/
-				| $$  $$$$| $$|_  $$|______/| $$__  $$| $$____/
-				| $$\  $$$| $$  \ $$        | $$  \ $$| $$
-				| $$ \  $$|  $$$$$$/        | $$  | $$| $$
-				|__/  \__/ \______/         |__/  |__/|__/
-
-//--------------------------------[FUNCTIONS.PWN]--------------------------------
-
-
- * Copyright (c) 2016, Next Generation Gaming, LLC
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are not permitted in any case.
- *
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-			/*  ---------------- FUNCTIONS ----------------- */
-			
 #if defined zombiemode
 
 Float:GetPointDistanceToPoint(Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2)
@@ -326,7 +290,7 @@ public killPlayer(playerid)
 forward DisableVehicleAlarm(vehicleid);
 public DisableVehicleAlarm(vehicleid)
 {
-    SetVehicleParamsEx(vehicleid, .alarm = VEHICLE_PARAMS_OFF);
+    SetVehicleParamsEx(vehicleid, -1, -1, VEHICLE_PARAMS_OFF, -1, -1, -1, -1);
 	return 1;
 }
 
@@ -455,10 +419,11 @@ public SetVehicleEngine(vehicleid, playerid)
 {
 	new string[128];
 	new engine;
-    GetVehicleParamsEx(vehicleid, engine);
+    new lights, alarm, doors, bonnet, boot, objective;
+    GetVehicleParamsEx(vehicleid, engine, lights, alarm, doors, bonnet, boot, objective);
     if(engine == VEHICLE_PARAMS_ON)
 	{
-		SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_OFF);
+		SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_OFF, -1, -1, -1, -1, -1, -1);
 		SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle engine stopped successfully.");
 		arr_Engine{vehicleid} = 0;
 	}
@@ -480,7 +445,7 @@ public SetVehicleEngine(vehicleid, playerid)
 			}*/
 			return SendClientMessageEx(playerid, COLOR_RED, "The car won't start - there's no fuel in the tank!");
 		}
-		SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_ON);
+		SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_ON, -1, -1, -1, -1, -1, -1);
 		if(DynVeh[vehicleid] != -1 && DynVehicleInfo[DynVeh[vehicleid]][gv_iType] == 1 && IsAPlane(vehicleid)) { SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle engine started successfully (/announcetakeoff to turn the engine off)."); }
 		else SendClientMessageEx(playerid, COLOR_WHITE, "Vehicle engine started successfully (press ~k~~CONVERSATION_YES~ to turn the engine off).");
 		arr_Engine{vehicleid} = 1;
@@ -2140,6 +2105,8 @@ GetLastName(playerid)
 	return ShowPlayerDialogEx(playerid, DIALOG_HOLSTER, DIALOG_STYLE_LIST, "Holster Menu", szString, "Select", "Cancel"); 
 }*/
 
+// DEPRECATED: randomString is kept for legacy g_mysql_CreateAccount function (Whirlpool salt generation, now using bcrypt without salt)
+#pragma unused randomString
 randomString(strDest[], strLen = 10)
 {
 	while(strLen--) strDest[strLen] = random(2) ? (random(26) + (random(2) ? 'a' : 'A')) : (random(10) + '0');

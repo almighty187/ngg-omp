@@ -91,12 +91,14 @@
 
 
 
-
-
+#define YSI_NO_HEAP_MALLOC
+#define YSI_NO_MODE_CACHE
+#define YSI_NO_OPTIMISATION_MESSAGE
+#define YSI_NO_VERSION_CHECK
 
 /*----------------------------------------------------------------------------*/
-#define MAX_PLAYERS (500)
 #include <open.mp>
+#include <YSI_Data\y_iterate>
 #include <streamer>
 
 #define INVALID_BUTTON_ID   -1
@@ -127,14 +129,6 @@ new ButtonInfo[MAX_BUTTONS+1][BUTTON_INFOS];
 
 #endif
 /*----------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
 
 
 /*----------------------------------------------------------------------------*/
@@ -227,7 +221,7 @@ public FS_CreateButton(Float:X, Float:Y, Float:Z, Float:Angle, VW)
 	ButtonInfo[buttonid][Moving]	= false;
 	ButtonInfo[buttonid][Created]	= true;
 	
-	for (new playerid = 0; playerid < MAX_PLAYERS; playerid ++)
+	foreach(new playerid : Player)
 	    ButtonInfo[buttonid][Usable][playerid] = true;
 
 	return buttonid;
@@ -237,6 +231,10 @@ public FS_CreateButton(Float:X, Float:Y, Float:Z, Float:Angle, VW)
 
 /*----------------------------------------------------------------------------*/
 forward bool:FS_IsValidButton(buttonid);
+public bool:FS_IsValidButton(buttonid)
+{
+	return (buttonid <= MAX_BUTTONS && ButtonInfo[buttonid][Created]);
+}
 /*----------------------------------------------------------------------------*/
 
 
@@ -322,12 +320,6 @@ public FS_StopButton(buttonid)
 
 
 
-/*----------------------------------------------------------------------------*/
-public bool:FS_IsValidButton(buttonid)
-{
-	return (buttonid <= MAX_BUTTONS && ButtonInfo[buttonid][Created]);
-}
-/*----------------------------------------------------------------------------*/
 
 
 /*----------------------------------------------------------------------------*/
@@ -475,7 +467,7 @@ forward FS_ToggleButtonEnabled(buttonid, bool:enabled);
 public FS_ToggleButtonEnabled(buttonid, bool:enabled)
 {
 	if (FS_IsValidButton(buttonid))
-	    for (new playerid = 0; playerid < MAX_PLAYERS; playerid ++)
+	    foreach(new playerid : Player)
 			ButtonInfo[buttonid][Usable][playerid] = enabled;
 }
 /*----------------------------------------------------------------------------*/
@@ -606,7 +598,7 @@ public OnPlayerConnect(playerid)
     		KillTimer(PlayerInfo[playerid][TimerID]);
 		}
 	#endif
-	
+
     ApplyAnimation(playerid, "HEIST9", "Use_SwipeCard", 10.0, false, false, false, false, 0);
     return 1;
 }
